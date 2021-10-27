@@ -40,7 +40,8 @@ def send_response(event, context, responseStatus, resourceId, reason):
 def lambda_handler(event, context):
     try:
         request_type = event['RequestType'].upper() if ('RequestType' in event) else ""
-        if 'CREATE' in request_type:
+        # fix for update
+        if 'CREATE' in request_type or 'UPDATE' in request_type:
             path = event['ResourceProperties']['MountPath']
 
             for url in event['ResourceProperties']['Objects']:

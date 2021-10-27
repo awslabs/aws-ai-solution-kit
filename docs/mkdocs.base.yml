@@ -1,0 +1,19 @@
+site_name: AI Solution Kit Docs
+site_url: https://www.amazonaws.cn/solutions/ai-solution-kit/
+repo_url: https://github.com/aws-samples/aws-ai-solution-kit
+theme:
+  name: material
+  features:
+    - tabs
+    - search.suggest
+    - search.highlight
+plugins:
+  - search
+extra:
+  alternate:
+    - name: English
+      link: /ai-solution-kit/en/
+      lang: en
+    - name: 中文
+      link: /ai-solution-kit/cn/
+      lang: zh

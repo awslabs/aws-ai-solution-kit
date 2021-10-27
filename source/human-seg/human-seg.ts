@@ -9,10 +9,16 @@ export class HumanSegStack extends cdk.Stack {
         super(app, id, props);
         this.templateOptions.description = `(SO8023-seg) - AI Solution Kits - Human Image Segmentation. Template version v1.0.0`;
 
+        const modelVersion = new cdk.CfnParameter(this, "modelVersion", {
+            default: 'v1.0.0',
+            type: 'String',
+            description: 'Pre-trained model version, this parameter works only for testing, please do NOT change the default value.'
+        });
+
         const human_seg_lambda = new EfsModelLambda(this, 'human_seg_lambda', {
             mountPath: '/mnt/lambda',
             objects: [
-                'https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/human-seg-model/v1.0.0/humanseg_720.onnx',
+                `https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/human-seg-model/${modelVersion.valueAsString}/humanseg_720.onnx`,
             ],
             handler: 'human_seg_app.lambda_handler',
             code: lambda.Code.fromAsset(path.join(__dirname, './src'), {

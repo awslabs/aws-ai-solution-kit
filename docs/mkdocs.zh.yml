@@ -1,0 +1,17 @@
+INHERIT: ./mkdocs.base.yml
+site_name: AI Solution Kit 部署文档
+# site_name: AI 解决方案合集 - 通用文字识别 部署文档
+# site_name: AI 解决方案合集 - 色情图片识别 部署文档
+# site_name: AI 解决方案合集 - 智能人像分割 部署文档
+# site_name: AI 解决方案合集 - 图像超分辨率 部署文档
+site_description: AI 解决方案合集
+docs_dir: zh
+site_dir: ./site/zh
+theme:
+  language: zh
+nav:
+  - 部署文档 - 通用文本识别: deploy-ocr-zh.md
+  - 部署文档 - 内容审核-色情图片: deploy-porn-zh.md
+  - 部署文档 - 图像超分辨率: deploy-sr-zh.md
+  - 部署文档 - 智能人像分割: deploy-seg-zh.md
+  - 常见问题: faq-zh.md

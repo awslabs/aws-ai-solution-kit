@@ -33,6 +33,12 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             allowedValues: ['NONE', 'AWS_IAM']
         });
 
+        const modelVersion = new cdk.CfnParameter(this, "modelVersion", {
+            default: 'latest',
+            type: 'String',
+            description: 'Pre-trained model version, this parameter works only for testing, please do NOT change the default value.'
+        });
+
         const authType = agw.AuthorizationType.IAM;
 
         // /*-------------------------------------------------------------------------------*/
@@ -42,7 +48,6 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             this,
             'sagemakerExecuteRole',
             {
-                roleName: `ai-kits-super-resolution-sagemaker-execution-role-cdk`,
                 assumedBy: new iam.ServicePrincipal('sagemaker.amazonaws.com'),
                 managedPolicies: [
                     iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess'),
@@ -59,8 +64,8 @@ export class SuperResolutionGpuStack extends cdk.Stack {
 
         const imageUrl = cdk.Fn.conditionIf(
             'IsChinaRegionCondition',
-            `753680513547.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com.cn/ai-kits-super-resolution-gpu:latest`,
-            `753680513547.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/ai-kits-super-resolution-gpu:latest`
+            `753680513547.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com.cn/ai-kits-super-resolution-gpu:${modelVersion.valueAsString}`,
+            `366590864501.dkr.ecr.${cdk.Aws.REGION}.amazonaws.com/ai-kits-super-resolution-gpu:${modelVersion.valueAsString}`
         );
 
         // create model
@@ -68,7 +73,6 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             this,
             'sagemakerEndpointModel',
             {
-                modelName: `ai-kits-super-resolution-endpoint-model`,
                 executionRoleArn: sagemakerExecuteRole.roleArn,
                 containers: [
                     {
@@ -85,7 +89,6 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             this,
             'sagemakerEndpointConfig',
             {
-                endpointConfigName: `ai-kits-super-resolution-endpoint-config`,
                 productionVariants: [{
                     initialInstanceCount: 1,
                     initialVariantWeight: 1,
@@ -101,7 +104,7 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             this,
             'sagemakerEndpoint',
             {
-                endpointName: `ai-kits-super-resolution-endpoint`,
+                endpointName: `super-resolution-gpu-endpoint`,
                 endpointConfigName: sagemakerEndpointConfig.attrEndpointConfigName
             }
         );
@@ -116,7 +119,6 @@ export class SuperResolutionGpuStack extends cdk.Stack {
             this,
             'apiGatewayAccessToSageMakerRole',
             {
-                roleName: `ai-kits-super-resolution-sagemaker-access-role`,
                 assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
                 managedPolicies: [iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AmazonAPIGatewayPushToCloudWatchLogs")],
                 inlinePolicies: {
@@ -134,7 +136,7 @@ export class SuperResolutionGpuStack extends cdk.Stack {
         // api gateway provision
         const apiRouter = new agw.RestApi(
             this,
-            'SuperResolutionInf1RESTAPI',
+            'SuperResolutionGPU1RESTAPI',
             {
                 deploy: false,
                 endpointConfiguration: {

@@ -9,11 +9,17 @@ export class SuperResolutionStack extends cdk.Stack {
         super(app, id, props);
         this.templateOptions.description = `(SO8023-sr) - AI Solution Kits - Super Resolution. Template version v1.0.0`;
 
+        const modelVersion = new cdk.CfnParameter(this, "modelVersion", {
+            default: 'v1.0.0',
+            type: 'String',
+            description: 'Pre-trained model version, this parameter works only for testing, please do NOT change the default value.'
+        });
+
         const human_seg_lambda = new EfsModelLambda(this, 'human_seg_lambda', {
             mountPath: '/mnt/lambda',
             objects: [
-                'https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/super-resolution-model/v1.0.0/Real_ESRGAN_x2.onnx',
-                'https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/super-resolution-model/v1.0.0/Real_ESRGAN_x4.onnx'
+                'https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/super-resolution-model/${modelVersion.valueAsString}/Real_ESRGAN_x2.onnx',
+                'https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/super-resolution-model/${modelVersion.valueAsString}/Real_ESRGAN_x4.onnx'
             ],
             handler: 'super_resolution_app.lambda_handler',
             code: lambda.Code.fromAsset(path.join(__dirname, './src'), {

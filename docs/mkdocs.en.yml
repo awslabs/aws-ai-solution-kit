@@ -1,0 +1,12 @@
+INHERIT: ./mkdocs.base.yml
+site_name: AI Solution Kit Deployment Guide
+docs_dir: en
+site_dir: ./site/en
+theme:
+  language: en
+nav:
+  - Deployment - Chinese OCR: deploy-ocr-en.md
+  - Deployment - Porn Image Detection: deploy-porn-en.md
+  - Deployment - Image Super Resolution: deploy-sr-en.md
+  - Deployment - Human Image Segmentation: deploy-seg-en.md
+  - FAQ: faq-en.md

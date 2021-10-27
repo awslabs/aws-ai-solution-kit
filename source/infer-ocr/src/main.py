@@ -1,6 +1,7 @@
 import copy
 import math
 import time
+import os
 
 import numpy as np
 import onnxruntime
@@ -39,7 +40,7 @@ def draw_ocr_box_txt(image,
     return img_left
 class TextClassifier():
     def __init__(self):
-        self.weights_path = '/mnt/lambda/text_classifier.onnx'
+        self.weights_path = '/mnt/lambda/classifier.onnx'
 
         self.cls_image_shape = [3, 48, 192]
         self.cls_batch_num = 30
@@ -115,7 +116,8 @@ class TextClassifier():
 
 class TextDetector():
     def __init__(self):
-        self.weights_path = '/mnt/lambda/text_detector.onnx'
+        modelName = 'det_' + os.environ['MODEL_NAME'] + '.onnx'
+        self.weights_path = '/mnt/lambda/' + modelName
 
         self.det_algorithm = 'DB'
         self.use_zero_copy_run = False
@@ -231,8 +233,8 @@ class TextDetector():
 
 class TextRecognizer():
     def __init__(self):
-
-        self.weights_path = '/mnt/lambda/text_recognizer.onnx'
+        modelName = 'rec_' + os.environ['MODEL_NAME'] + '.onnx'
+        self.weights_path = '/mnt/lambda/' + modelName
 
         self.limited_max_width = 1280
         self.limited_min_width = 16
@@ -245,7 +247,7 @@ class TextRecognizer():
         postprocess_params = {
             'name': 'CTCLabelDecode',
             "character_type": 'ch',
-            "character_dict_path": '/mnt/lambda/ppocr_keys_v1.txt',
+            "character_dict_path": '/mnt/lambda/keys_v1.txt',
             "use_space_char": True
         }
         self.postprocess_op = build_post_process(postprocess_params)
