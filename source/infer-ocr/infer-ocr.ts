@@ -15,9 +15,7 @@ export class InferOCRStack extends cdk.Stack {
             description: 'OCR model type, please find the model description in deployment guide, default is Standard.',
             allowedValues: [
                 'Standard',
-                'Lite',
-                'Standard-Apache',
-                'Lite-Apache'
+                'Lite'
             ]
         });
 
