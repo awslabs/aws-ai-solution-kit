@@ -187,14 +187,17 @@ export class SuperResolutionInf1Stack extends cdk.Stack {
             }
         );
 
-        new cdk.CfnOutput(this, 'InvokeURLArn', {value: post.methodArn});
+        const methodResource = post.node.findChild('Resource') as agw.CfnMethod
+        methodResource.addPropertyOverride('AuthorizationType', customAuthType.valueAsString)
+
+        new cdk.CfnOutput(this, 'InvokeURLArn', { value: post.methodArn });
 
         const invokeUrl = cdk.Fn.conditionIf(
             'IsChinaRegionCondition',
             `https://${post.api.restApiId}.execute-api.${cdk.Aws.REGION}.amazonaws.com.cn/${customStageName.valueAsString}/resolution`,
             `https://${post.api.restApiId}.execute-api.${cdk.Aws.REGION}.amazonaws.com/${customStageName.valueAsString}/resolution`
         );
-        new cdk.CfnOutput(this, 'InvokeURL', {value: invokeUrl.toString()});
+        new cdk.CfnOutput(this, 'InvokeURL', { value: invokeUrl.toString() });
     }
 }
 
