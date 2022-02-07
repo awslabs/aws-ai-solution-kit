@@ -17,12 +17,12 @@ npm install
 
 Set AWS_IAM as the authorization for API Gateway
 ```
-npx run cdk deploy AIKits-OCR-CN-Business-License-Stack
+npx cdk deploy AIKits-OCR-CN-Business-License-Stack
 ```
 
 Set NONE as the authorization for API Gateway
 ```
-npx run cdk deploy AIKits-OCR-CN-Business-License-Stack --parameters customAuthType=NONE
+npx cdk deploy AIKits-OCR-CN-Business-License-Stack --parameters customAuthType=NONE
 ```
 
 ### Outputs
