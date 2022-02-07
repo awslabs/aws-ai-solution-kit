@@ -36,7 +36,7 @@ export class OCRBusinessLicenseSolutionCDKStack extends Stack {
             this,
             'OCRBusinessLicense',
             {
-                code: DockerImageCode.fromImageAsset('src/OCR-China-business-license/model'),
+                code: DockerImageCode.fromImageAsset('source/ocr-cn-business-license/model'),
                 timeout: Duration.seconds(15),
                 memorySize: 10240,
                 environment: {
