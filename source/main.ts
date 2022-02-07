@@ -8,6 +8,7 @@ import {HumanSegStack} from './human-seg/human-seg';
 import {SuperResolutionStack} from './super-resolution/super-resolution';
 import {SuperResolutionInf1Stack} from './super-resolution-inf1/super-resolution-inf1';
 import {SuperResolutionGpuStack} from './super-resolution-gpu/super-resolution-gpu';
+import {OCRBusinessLicenseSolutionCDKStack} from './ocr-cn-business-license/template/ocr-business-license-cdk-stack';
 
 
 const app = new App();
@@ -17,6 +18,7 @@ new HumanSegStack(app, "AIKits-Human-Seg-Stack", {synthesizer: synthesizer()});
 new SuperResolutionStack(app, "AIKits-Super-Resolution-Stack", {synthesizer: synthesizer()});
 new SuperResolutionInf1Stack(app, "AIKits-Super-Resolution-Inf1-Stack", {synthesizer: synthesizer()});
 new SuperResolutionGpuStack(app, "AIKits-Super-Resolution-GPU-Stack", {synthesizer: synthesizer()});
+new OCRBusinessLicenseSolutionCDKStack(app, "AIKits-OCR-CN-Business-License-Stack", {synthesizer: synthesizer()});
 app.synth()
 
 function synthesizer() {
