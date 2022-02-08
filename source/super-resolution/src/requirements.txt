@@ -1,4 +1,4 @@
 base64image==0.5.1
-numpy==1.19.5
-Pillow==8.1.1
+numpy==1.21
+Pillow==9.0.0
 onnxruntime==1.8.1
