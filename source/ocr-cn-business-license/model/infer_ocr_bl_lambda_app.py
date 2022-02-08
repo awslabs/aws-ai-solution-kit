@@ -128,9 +128,9 @@ def crop_result(image, left, top, width, bottom):
         width, height = pil_image_crop.size
         if 0 < height < 50 or 0 < width < 50:
             pil_image_crop = pil_image_crop.resize((width * 4, height * 4), Image.ANTIALIAS)
-            if 'ENHANCE_MODE' in environ and os.getenv('ENHANCE_MODE').lower() == 'true':
-                pil_image_crop = pil_image_crop.filter(ImageFilter.DETAIL)
-                pil_image_crop = pil_image_crop.filter(ImageFilter.SHARPEN)
+        if 'ENHANCE_MODE' in environ and os.getenv('ENHANCE_MODE').lower() == 'true':
+            pil_image_crop = pil_image_crop.filter(ImageFilter.DETAIL)
+            pil_image_crop = pil_image_crop.filter(ImageFilter.SHARPEN)
 
         img = np.array(pil_image_crop)[:, :, :3][:, :, ::-1]
         dt_boxes, rec_res = text_sys(img)
