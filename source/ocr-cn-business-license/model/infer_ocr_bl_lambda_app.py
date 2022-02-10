@@ -122,7 +122,11 @@ def crop_result(image, left, top, width, bottom):
     try:
         width, height = image.size
         pil_image_crop = image.crop((left, top, width, bottom))
-        # pil_image_crop = trim_crop(pil_image_crop)
+        if 'DENOISING_MODE' in environ and os.getenv('DENOISING_MODE').lower() == 'true':
+            cv_image = cv2.cvtColor(np.array(pil_image_crop), cv2.COLOR_RGB2BGR)
+            denoise_image = cv2.fastNlMeansDenoisingColored(cv_image, None, None, None, 1, 6)
+            pil_image_crop = Image.fromarray(denoise_image)
+        
         width, height = pil_image_crop.size
         if 0 < height < 50 or 0 < width < 50:
             pil_image_crop = pil_image_crop.resize((width * 4, height * 4), Image.ANTIALIAS)

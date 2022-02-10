@@ -47,6 +47,7 @@ After the deployment, the variable for OCR can be adjusted by Lambda function va
 |**REFERECNE_SCORE**    |*float*   |Reference score for accurate detection, default: 0.90|
 |**AUTO_ROTATION**    |*bool*   |Auto retation for input image, default: true |
 |**ENHANCE_MODE**    |*bool*   |Enhance the detail for input image, default: true |
+|**DENOISING_MODE**    |*bool*   |Denoising for input image, default: true |
 
 ### Invoking URL
 

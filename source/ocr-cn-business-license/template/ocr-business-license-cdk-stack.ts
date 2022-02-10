@@ -47,7 +47,8 @@ export class OCRBusinessLicenseSolutionCDKStack extends Stack {
                     MODEL_PATH: '/opt/program/model/',
                     REFERECNE_SCORE: '0.90',
                     AUTO_ROTATION: 'true',
-                    ENHANCE_MODE: 'true'
+                    ENHANCE_MODE: 'true',
+                    DENOISING_MODE: 'true'
                 }
             }
         );
