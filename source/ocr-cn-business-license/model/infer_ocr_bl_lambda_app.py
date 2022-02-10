@@ -105,8 +105,6 @@ class TextSystem:
         return filter_boxes, filter_rec_res
 
 
-# environ["MODEL_NAME"] = "standard_cn_business_license"
-# environ["MODEL_PATH"] = "./model/"
 text_sys = TextSystem()
 
 
@@ -174,7 +172,7 @@ def match_license_id(str_content):
     if license_id == '':
         license_id = ''.join(re.findall(r"码([0-9a-zA-Z!\)]{18})", str_content)).strip()
     if license_id == '':
-        license_id = ''.join(re.findall(r"([0-9]{2}[0-9A-Z!\)]{16})", str_content)).strip()
+        license_id = ''.join(re.findall(r"[^0-9a-zA-Z]([0-9]{2}[0-9A-Z!\)]{16})[^0-9a-zA-Z]", str_content)).strip()
     if license_id == '':
         license_id = ''.join(re.findall(r"注册号([0-9a-zA-Z!\)]{15})", str_content)).strip()
     if license_id == '':
@@ -363,34 +361,3 @@ def simple_form(result):
     sorted_word_list = sorted(word_list, key=functools.cmp_to_key(simple_form_sort_row_first))
     return sorted_word_list
 
-
-# def main():
-#     sample_dir = '/Users/yiyanz/Downloads/Test_Business_Licnese'
-#
-#     with open('output-license.txt', 'w') as output:
-#         output.write('[')
-#     for root, dirs, files in os.walk(sample_dir, topdown=False):
-#         for f in files:
-#             start_time = time.time()
-#             if os.path.join(root, f).endswith('.jpg'):
-#                 tmp_png = open(os.path.join(root, f), 'rb')  # 转为二进制格式
-#                 base64_data = base64.b64encode(tmp_png.read())  # 使用base64 编码
-#                 event = {
-#                     "body": {
-#                         "img": str(base64_data, encoding="utf-8"),
-#                     }
-#                 }
-#
-#                 cells = handler(event=event, context=None)
-#
-#                 cells['image_name'] = f
-#
-#                 print('cells')
-#                 print(cells)
-#
-#                 with open('output-license.txt', 'a') as output:
-#                     output.write(str(cells).replace('\'', '"') + ',')
-#
-#
-# if __name__ == '__main__':
-#     main()

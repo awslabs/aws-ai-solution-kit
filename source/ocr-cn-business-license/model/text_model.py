@@ -13,6 +13,8 @@ from imaug import create_operators, transform
 from postprocess import build_post_process
 
 
+onnxruntime.set_default_logger_severity(3)
+
 def draw_ocr_box_txt(image,
                      boxes,
                      txts,
