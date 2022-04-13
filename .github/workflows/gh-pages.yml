@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-      - master  # Set a branch name to trigger deployment
+      - main  # Set a branch name to trigger deployment
   pull_request:
 
 jobs:
@@ -23,7 +23,8 @@ jobs:
         run: |
           python3 -m pip install mkdocs            # install mkdocs 
           python3 -m pip install mkdocs-material   # install material theme
-      
+          python3 -m pip install mkdocs-include-markdown-plugin
+          python3 -m pip install mkdocs-macros-plugin
       - name: Build mkdocs
         run: |
           sed -i 's/zh-branded/zh/g' docs/mkdocs.zh.yml
@@ -33,7 +34,7 @@ jobs:
           cp -av ./docs/index.html ./docs/site
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/site
