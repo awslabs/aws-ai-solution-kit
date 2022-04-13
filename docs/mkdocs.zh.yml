@@ -12,33 +12,33 @@ theme:
 nav:
   - AI Solution Kit 实施指南:
     - 概述: index.md
-    - 成本预估: cost-zh.md
-    - 架构概览: design-zh.md
-    - 安全信息: security-zh.md
-    - 区域支持: region-zh.md
-    - 模板信息: stack-zh.md
-    - 部署解决方案: deployment-zh.md
-    - 更多资源: resource-zh.md
-    - 常见问题解答: faq-zh.md
-    - API 资源浏览器: api-explorer-zh.md
-    - 源代码: github-zh.md
-    - 版本发布说明: changelog-zh.md
-    - 升级步骤: upgrade-zh.md
+    - 成本预估: cost.md
+    - 架构概览: design.md
+    - 安全信息: security.md
+    - 区域支持: region.md
+    - 模板信息: stack.md
+    - 部署解决方案: deployment.md
+    - 更多资源: resource.md
+    - 常见问题解答: faq.md
+    - API 资源浏览器: api-explorer.md
+    - 源代码: github.md
+    - 版本发布说明: changelog.md
+    - 升级步骤: upgrade.md
   - 视觉技术:
-    - 通用文字识别: deploy-general-ocr-zh.md
-    - 图像超分辨率: deploy-image-super-resolution-zh.md
-    - 智能人像分割: deploy-human-image-segmentation-zh.md
-    - 色情内容审核: deploy-nudity-detection-zh.md
-    - 通用文字识别（繁体中文）: deploy-general-ocr-traditional-zh.md
-    - 自定义模版文字识别: deploy-custom-ocr-zh.md
-    - 通用物体识别: deploy-object-recognition-zh.md
-    - 人脸识别: deploy-face-detection-zh.md
-    - 人脸相似度比对: deploy-face-comparison-zh.md
-    - 人体结构化属性: deploy-human-attribute-recognition-zh.md
-    - 车牌信息识别: deploy-car-license-plate-zh.md
+    - 通用文字识别: deploy-general-ocr.md
+    - 图像超分辨率: deploy-image-super-resolution.md
+    - 智能人像分割: deploy-human-image-segmentation.md
+    - 色情内容审核: deploy-nudity-detection.md
+    - 通用文字识别（繁体中文）: deploy-general-ocr-traditional.md
+    - 自定义模版文字识别: deploy-custom-ocr.md
+    - 通用物体识别: deploy-object-recognition.md
+    - 人脸识别: deploy-face-detection.md
+    - 人脸相似度比对: deploy-face-comparison.md
+    - 人体结构化属性: deploy-human-attribute-recognition.md
+    - 车牌信息识别: deploy-car-license-plate.md
 
   - 自然语言处理技术: 
-    - 文本相似度: deploy-text-similarity-zh.md
+    - 文本相似度: deploy-text-similarity.md
 
   # - 语音技术:
-  #   - 语音技术: audio-zh.md
+  #   - 语音技术: audio.md
