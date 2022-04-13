@@ -1,17 +1,44 @@
 INHERIT: ./mkdocs.base.yml
-site_name: AI Solution Kit 部署文档
-# site_name: AI 解决方案合集 - 通用文字识别 部署文档
-# site_name: AI 解决方案合集 - 色情图片识别 部署文档
-# site_name: AI 解决方案合集 - 智能人像分割 部署文档
-# site_name: AI 解决方案合集 - 图像超分辨率 部署文档
-site_description: AI 解决方案合集
+site_name: AI Solution Kit 实施指南
+site_description: AI Solution Kit Deployment Guide
 docs_dir: zh
 site_dir: ./site/zh
 theme:
   language: zh
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.instant
 nav:
-  - 部署文档 - 通用文本识别: deploy-ocr-zh.md
-  - 部署文档 - 内容审核-色情图片: deploy-porn-zh.md
-  - 部署文档 - 图像超分辨率: deploy-sr-zh.md
-  - 部署文档 - 智能人像分割: deploy-seg-zh.md
-  - 常见问题: faq-zh.md
+  - AI Solution Kit 实施指南:
+    - 概述: overview-zh.md
+    - 成本预估: cost-zh.md
+    - 架构概览: design-zh.md
+    - 安全信息: security-zh.md
+    - 区域支持: region-zh.md
+    - 模板信息: stack-zh.md
+    - 部署解决方案: deployment-zh.md
+    - 更多资源: resource-zh.md
+    - 常见问题解答: faq-zh.md
+    - API 资源浏览器: api-explorer-zh.md
+    - 源代码: github-zh.md
+    - 版本发布说明: changelog-zh.md
+    - 升级步骤: upgrade-zh.md
+  - 视觉技术:
+    - 通用文字识别: deploy-general-ocr-zh.md
+    - 图像超分辨率: deploy-image-super-resolution-zh.md
+    - 智能人像分割: deploy-human-image-segmentation-zh.md
+    - 色情内容审核: deploy-nudity-detection-zh.md
+    - 通用文字识别（繁体中文）: deploy-general-ocr-traditional-zh.md
+    - 自定义模版文字识别: deploy-custom-ocr-zh.md
+    - 通用物体识别: deploy-object-recognition-zh.md
+    - 人脸识别: deploy-face-detection-zh.md
+    - 人脸相似度比对: deploy-face-comparison-zh.md
+    - 人体结构化属性: deploy-human-attribute-recognition-zh.md
+    - 车牌信息识别: deploy-car-license-plate-zh.md
+
+  - 自然语言处理技术: 
+    - 文本相似度: deploy-text-similarity-zh.md
+
+  # - 语音技术:
+  #   - 语音技术: audio-zh.md
