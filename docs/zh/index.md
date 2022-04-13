@@ -21,22 +21,22 @@ AI Solution Kit 人工智能解决方案合集提供了一系列基于亚马逊�
 ### **视觉技术**
 |    **名称**   | **描述**    | **部署说明** |
 |--------------|------------|-------------|
-|通用文字识别|基于人工智能OCR（光学字符识别）技术可自动完成图片中文字的识别，并返回文字在图片中的坐标位置、置信度等信息|[详细](deploy-general-ocr-zh.md)|
-|图像超分辨率|将单幅图片进行智能放大，从而获得清晰度高、细节丰富的图像|[详细](deploy-image-super-resolution-zh.md)|
-|智能人像分割|识别图像中的人体轮廓，与背景进行分离|[详细](deploy-human-image-segmentation-zh.md)|
-|色情内容审核|对图片进行审核，识别并获取色情量化程度信息|[详细](deploy-nudity-detection-zh.md)|
-|通用文字识别（繁体中文）|基于人工智能OCR（光学字符识别）技术可自动完成图片中文字的识别，并返回文字在图片中的坐标位置、置信度等信息，支持繁体中文|[详细](deploy-general-ocr-traditional-zh.md)|
-|自定义模板文字识别|用户可以创建结构化模板，通过自助服务模板进行自动识别并输出结构化结果|[详细](deploy-custom-ocr-zh.md)|
-|通用物体识别|检测图像中的对象和场景，并返回它们以及每个对象和场景的置信度百分比|[详细](deploy-object-recognition-zh.md)|
-|人脸识别|检测和定位图片或视频流中的人脸，返回高精度的人脸框坐标信息|[详细](deploy-face-detection-zh.md)|
-|人脸相似度比对|对图片中人脸面部特征进行高精准提取分析，获取两张人脸的相似度|[详细](deploy-face-comparison-zh.md)|
-|人体结构化属性|检测图片中人体的属性|[详细](deploy-human-attribute-recognition-zh.md)|
-|车牌信息识别|识别中华人民共和国境内动车号牌信息|[详细](deploy-car-license-plate-zh.md)|
+|通用文字识别|基于人工智能OCR（光学字符识别）技术可自动完成图片中文字的识别，并返回文字在图片中的坐标位置、置信度等信息|[详细](deploy-general-ocr.md)|
+|图像超分辨率|将单幅图片进行智能放大，从而获得清晰度高、细节丰富的图像|[详细](deploy-image-super-resolution.md)|
+|智能人像分割|识别图像中的人体轮廓，与背景进行分离|[详细](deploy-human-image-segmentation.md)|
+|色情内容审核|对图片进行审核，识别并获取色情量化程度信息|[详细](deploy-nudity-detection.md)|
+|通用文字识别（繁体中文）|基于人工智能OCR（光学字符识别）技术可自动完成图片中文字的识别，并返回文字在图片中的坐标位置、置信度等信息，支持繁体中文|[详细](deploy-general-ocr-traditional.md)|
+|自定义模板文字识别|用户可以创建结构化模板，通过自助服务模板进行自动识别并输出结构化结果|[详细](deploy-custom-ocr.md)|
+|通用物体识别|检测图像中的对象和场景，并返回它们以及每个对象和场景的置信度百分比|[详细](deploy-object-recognition.md)|
+|人脸识别|检测和定位图片或视频流中的人脸，返回高精度的人脸框坐标信息|[详细](deploy-face-detection.md)|
+|人脸相似度比对|对图片中人脸面部特征进行高精准提取分析，获取两张人脸的相似度|[详细](deploy-face-comparison.md)|
+|人体结构化属性|检测图片中人体的属性|[详细](deploy-human-attribute-recognition.md)|
+|车牌信息识别|识别中华人民共和国境内动车号牌信息|[详细](deploy-car-license-plate.md)|
 
 ### **自然语言处理技术**
 |    **名称**   | **描述**    | **部署说明** |
 |--------------|------------|-------------|
-|文本相似度|评估两个单词、句子、段落或文档的相似性。对两个文本的相似或不同程度进行评分|[详细](deploy-text-similarity-zh.md)|
+|文本相似度|评估两个单词、句子、段落或文档的相似性。对两个文本的相似或不同程度进行评分|[详细](deploy-text-similarity.md)|
 
 <!--
 ### **语音技术**
