@@ -16,8 +16,8 @@ markdown_extensions:
 extra:
   alternate:
     - name: English
-      link: /ai-solution-kit/en/
+      link: /aws-ai-solution-kit/en/
       lang: en
     - name: 中文
-      link: /ai-solution-kit/cn/
+      link: /aws-ai-solution-kit/zh/
       lang: zh
