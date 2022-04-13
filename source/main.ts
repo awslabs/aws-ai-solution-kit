@@ -9,8 +9,8 @@ import {BootstraplessStackSynthesizer} from 'cdk-bootstrapless-synthesizer';
 // import {SuperResolutionInf1Stack} from './super-resolution-inf1/super-resolution-inf1';
 // import {SuperResolutionGpuStack} from './super-resolution-gpu/super-resolution-gpu';
 // import {OCRBusinessLicenseSolutionCDKStack} from './ocr-cn-business-license/template/ocr-business-license-cdk-stack';
-// import {AISolutionKitStack} from './api-deployment/ai-solution-kit-stack';
-import {OCRShippedFromSolutionCDKStack} from './ocr-shipped-from/template/ocr-shipped-from-cdk-stack';
+import {AISolutionKitStack} from './api-deployment/ai-solution-kit-stack';
+// import {OCRShippedFromSolutionCDKStack} from './ocr-shipped-from/template/ocr-shipped-from-cdk-stack';
 
 
 const app = new App();
@@ -21,8 +21,8 @@ const app = new App();
 // new SuperResolutionInf1Stack(app, "AIKits-Super-Resolution-Inf1-Stack", {synthesizer: synthesizer()});
 // new SuperResolutionGpuStack(app, "AIKits-Super-Resolution-GPU-Stack", {synthesizer: synthesizer()});
 // new OCRBusinessLicenseSolutionCDKStack(app, "AIKits-OCR-CN-Business-License-Stack", {synthesizer: synthesizer()});
-// new AISolutionKitStack(app, "AISolutionKitStack3", {synthesizer: synthesizer()});
-new OCRShippedFromSolutionCDKStack(app, "AIKits-OCR-Shipped-From-Stack", {synthesizer: synthesizer()});
+new AISolutionKitStack(app, "AI-Solution-Kit", {synthesizer: synthesizer()});
+// new OCRShippedFromSolutionCDKStack(app, "AIKits-OCR-Shipped-From-Stack", {synthesizer: synthesizer()});
 
 app.synth()
 

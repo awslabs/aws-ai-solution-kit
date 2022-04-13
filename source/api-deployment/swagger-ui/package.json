@@ -1,0 +1,22 @@
+{
+  "name": "ai-solution-kit-open-api-lambda-function",
+  "author": "yiyanz@amazon.com",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "description": "Open API Lambda function for AI Solution Kit. You can find out more about photo super resolution at https://www.amazonaws.cn/solutions/ai-solution-kit/",
+  "homepage": "https://www.amazonaws.cn/solutions/ai-solution-kit/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aws-samples/aws-ai-solution-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aws-samples/aws-ai-solution-kit/Issues"
+  },
+  "main": "app.js",
+  "dependencies": {
+    "express": "4.17.3",
+    "serverless-http": "2.7.0",
+    "swagger-ui-express": "4.3.0",
+    "yamljs": "0.3.0"
+  }
+}

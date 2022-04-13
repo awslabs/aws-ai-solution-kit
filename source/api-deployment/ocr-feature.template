@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: (SO8023-ocr) - AWS AI Solution Kit - OCR
+Metadata:
+Parameters:
+  CustomResourceLambdaArn:
+    Description: 'The ARN of the encryptor Lambda function.'
+    Type: String
+  CustomResourceServiceToken:
+    Description: 'The Token of CustomResourceServiceToken.'
+    Type: String
+  InstallOCR:
+    Description: Install OCR feature nested CF.
+    Default: 'yes'
+    Type: String
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    ConstraintDescription: Install OCR featuree nested CF.
+    
+Conditions:
+  CreateProdResources: !Equals 
+    - !Ref EnvType
+    - prod
+  InstallOCR: !Equals 
+    - !Ref InstallOCR
+    - 'yes'
+  InstallSR: !Equals 
+    - !Ref InstallSR
+    - 'yes'
+
+# Resources:
+#   InstallOCRFeatureStack:
+#     Type: 'Custom::InstallOCRFeature'
+#     Condition: InstallOCR
+#     # DependsOn: InstallOCR
+#     Properties:
+#       ServiceToken: !Ref CustomResourceLambdaArn
+#       StackName: !Ref 'AWS::StackName'
+#       FeatureName: 'ocr'
+#       FeatureImage: '295155050487.dkr.ecr.us-west-2.amazonaws.com/aikits:ocr-lite'

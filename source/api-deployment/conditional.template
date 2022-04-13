@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: (SO8023-ocr) - AWS AI Solution Kit - OCR
+Metadata:
+Parameters:
+#  CustomResourceLambdaArn:
+#    Description: 'The ARN of the encryptor Lambda function.'
+#    Type: String
+#  CustomResourceServiceToken:
+#    Description: 'The Token of CustomResourceServiceToken.'
+#    Type: String
+  EnvType:
+    Description: Environment type.
+    Default: test
+    Type: String
+    AllowedValues:
+      - prod
+      - test
+    ConstraintDescription: must specify prod or test.
+  InstallOCR:
+    Description: Install OCR feature.
+    Default: 'yes'
+    Type: String
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    ConstraintDescription: Install OCR feature.
+  InstallSR:
+    Description: Install SR feature.
+    Default: 'yes'
+    Type: String
+    AllowedValues:
+      - 'yes'
+      - 'no'
+    ConstraintDescription: Install SR feature.
+Conditions:
+  CreateProdResources: !Equals 
+    - !Ref EnvType
+    - prod
+  InstallOCR: !Equals 
+    - !Ref InstallOCR
+    - 'yes'
+  InstallSR: !Equals 
+    - !Ref InstallSR
+    - 'yes'
+
+Mappings:
+    SourceCode:
+        General:
+            TemplateBucket: '%TEMPLATE_OUTPUT_BUCKET%'
+            SourceBucket: '%DIST_OUTPUT_BUCKET%'
+            KeyPrefix: '%SOLUTION_NAME%/%VERSION%'
+            
+# Resources:
+#   FeatureOCRStack:
+#       Type: 'AWS::CloudFormation::Stack'
+#       Condition: InstallOCR
+#       # DependsOn: CheckRequirements
+#       Properties:
+#         TemplateURL: ./ocr-feature.template
+
+#   InstallOCRFeatureStack:
+#     Type: 'Custom::InstallOCRFeature'
+#     Condition: InstallOCR
+#     # DependsOn: InstallOCR
+#     Properties:
+#       ServiceToken: !Ref CustomResourceLambdaArn
+#       StackName: !Ref 'AWS::StackName'
+#       FeatureName: 'ocr'
+#       FeatureImage: '295155050487.dkr.ecr.us-west-2.amazonaws.com/aikits:ocr-lite'

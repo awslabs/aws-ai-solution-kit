@@ -1,0 +1,38 @@
+baseURL = "https://aws-samples.github.io/aws-ai-solution-kit/"
+languageCode = "en-US"
+defaultContentLanguage = "zh"
+title = "Learn AI Solution Kit"
+theme = "hugo-theme-learn"
+metaDataFormat = "yaml"
+defaultContentLanguageInSubdir= "false"
+uglyurls = "true"
+enableEmoji = true
+
+[params]
+  author = "Yi YAN"
+  description = "AI Solution Kit Workshop"
+  showVisitedLinks = true
+  disableSearch = false
+  disableAssetsBusting = false
+  disableInlineCopyToClipBoard = false
+  disableShortcutsTitle = false
+  disableLanguageSwitchingButton = false
+  disableBreadcrumb = false
+  disableNextPrev = false
+  ordersectionsby = "weight"
+  themeVariant = "ai-solution-kit"
+  disableLandingPageButton = true
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+  [languages.zh]
+    languageName = "中文"
+    weight = 1
+    title = 'AI 解决方案合集'
+
+[languages]
+  [languages.en]
+    languageName = "English"
+    weight = 2
+    title = 'AI Solution Kit'

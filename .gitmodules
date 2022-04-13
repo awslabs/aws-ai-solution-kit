@@ -1,0 +1,12 @@
+[submodule "themes/hugo-theme-learn"]
+	path = themes/hugo-theme-learn
+	url = https://github.com/matcornic/hugo-theme-learn.git
+[submodule "themes/hugo-notice"]
+	path = themes/hugo-notice
+	url = https://github.com/martignoni/hugo-notice.git
+[submodule "themes/ananke"]
+	path = themes/ananke
+	url = https://github.com/theNewDynamic/gohugo-theme-ananke.git
+[submodule "learn/themes/hugo-theme-learn"]
+	path = learn/themes/hugo-theme-learn
+	url = https://github.com/matcornic/hugo-theme-learn.git

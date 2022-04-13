@@ -1,0 +1,293 @@
+openapi: 3.0.0
+info:
+  description: |
+    You can find out more about AI Solution Kit at
+    [https://github.com/aws-samples/aws-ai-solution-kit](https://github.com/aws-samples/aws-ai-solution-kit/) or on
+    [https://www.amazonaws.cn/solutions/ai-solution-kit](https://www.amazonaws.cn/solutions/ai-solution-kit/?nc1=h_ls).
+  version: "1.0.0"
+  title: AI Solution Kit Open API
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    url: https://www.amazonaws.cn/contact-us
+    name: Amazon Web Services Solutions
+  termsOfService: https://www.amazonaws.cn/en/terms/?nc1=f_cc
+servers:
+  - url: 'https://petstore.swagger.io/v2'
+tags:
+  - name: OCR
+    description: Recognizes text on image as text and returns text with coordinates
+    externalDocs:
+      description: Find out more
+      url: 'https://www.amazonaws.cn/en/solutions/ai-solution-kit'
+  - name: segmentation
+    description: Identify the outline of the person and body-part in the image
+    externalDocs:
+      description: Find out more
+      url: 'https://www.amazonaws.cn/en/solutions/ai-solution-kit'
+  - name: resolution
+    description: Enhancing the resolution of an image from low-resolution to high
+    externalDocs:
+      description: Find out more
+      url: 'https://www.amazonaws.cn/en/solutions/ai-solution-kit'
+  - name: pornographic
+    description: identifies and obtains multidimensional pornographic quantitative information 
+    externalDocs:
+      description: Find out more
+      url: 'https://www.amazonaws.cn/en/solutions/ai-solution-kit'
+paths:
+  /general-ocr:
+    post:
+      tags:
+        - OCR
+      summary: Send image request
+      operationId: ocrPostImage
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OcrResponse'
+        '400':
+          description: Internal Server Error
+      requestBody:
+        $ref: '#/components/requestBodies/OcrRequest'
+  /seg:
+    post:
+      tags:
+        - segmentation
+      summary: Send image request
+      operationId: segPostImage
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegResponse'
+        '400':
+          description: Internal Server Error
+      requestBody:
+        $ref: '#/components/requestBodies/SegRequest'
+  /resolution:
+    post:
+      tags:
+        - resolution
+      summary: Send image request
+      operationId: resolutionPostImage
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResolutionResponse'
+        '400':
+          description: Internal Server Error
+      requestBody:
+        $ref: '#/components/requestBodies/ResolutionRequest'
+  /porn:
+    post:
+      tags:
+        - pornographic
+      summary: Send image request
+      operationId: pornPostImage
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PornResponse'
+        '400':
+          description: Internal Server Error
+      requestBody:
+        $ref: '#/components/requestBodies/PornRequest'
+externalDocs:
+  description: Find out more about AI Solution Kit
+  url: 'https://github.com/aws-samples/aws-ai-solution-kit'
+components:
+  schemas:
+    OcrRequest:
+      type: object
+      required:
+        - img
+        - url
+      properties:
+        img:
+          type: string
+          description: Base64-encoded image data.
+          example: base64
+        url:
+          type: string
+          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
+          example: url
+    OcrResponse:
+      type: object
+      required:
+        - words
+        - location
+        - score
+      properties:
+        words:
+          type: string
+          description: Base64-encoded image data.
+          example: 'example'
+        location:
+          type: object
+          required:
+            - top
+            - left
+            - width
+            - height
+          properties:
+            top:
+              type: integer
+              format: int64
+            left:
+              type: integer
+              format: int64
+            width:
+              type: integer
+              format: int64
+            height:
+              type: integer
+              format: int64
+          description: Recognized text in the image coordinate values, including top, left, width, height integer value
+          example: '{
+            "top": 36,
+            "left": 71,
+            "width": 321,
+            "height": 17
+          }'
+        score:
+          type: integer
+          format: int64
+          description: The confidence of the recognized text
+          example: 0.9825196266174316
+    SegRequest:
+      type: object
+      required:
+        - img
+        - url
+      properties:
+        img:
+          type: string
+          description: Base64-encoded image data.
+          example: base64
+        url:
+          type: string
+          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
+          example: url
+    SegResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: Base64 encoded Alpha channel image data after removing the background.
+          example: 'Base64-encoded image data'
+    ResolutionRequest:
+      type: object
+      required:
+        - img
+        - url
+        - scale
+      properties:
+        img:
+          type: string
+          description: Base64-encoded image data.
+          example: base64
+        url:
+          type: string
+          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
+          example: url
+        scale:
+          type: integer
+          format: int64
+          description: The support magnification is 2 or 4, the default value is 2
+          example: 2
+    ResolutionResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: string
+          description: The base64 encoded image data after scaling.
+          example: 'Base64-encoded image data'
+    PornRequest:
+      type: object
+      required:
+        - img
+        - url
+      properties:
+        img:
+          type: string
+          description: Base64-encoded image data.
+          example: base64
+        url:
+          type: string
+          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
+          example: url
+    PornResponse:
+      type: object
+      required:
+        - normal
+        - sexy
+        - porn
+      properties:
+        normal:
+          type: number
+          format: float
+          description: Identify the image’s normal dimensions of the image
+          example: 0.15993066132068634
+        sexy:
+          type: number
+          format: float
+          description: Identify the image’s sexy dimension
+          example: 0.5451669692993164
+        porn:
+          type: number
+          format: float
+          description: Identify the pornographic dimensions of recognized images
+          example: 0.2949024438858032
+  requestBodies:
+    OcrRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OcrRequest'
+      description: List of user object
+      required: true
+    SegRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SegRequest'
+      description: List of user object
+      required: true
+    ResolutionRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResolutionRequest'
+      description: List of user object
+      required: true
+    PornRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PornRequest'
+      description: Request of pornographic image detection request
+      required: true
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
