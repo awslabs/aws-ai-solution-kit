@@ -4,9 +4,40 @@ docs_dir: en
 site_dir: ./site/en
 theme:
   language: en
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.instant
 nav:
-  - Deployment - Chinese OCR: deploy-ocr-en.md
-  - Deployment - Porn Image Detection: deploy-porn-en.md
-  - Deployment - Image Super Resolution: deploy-sr-en.md
-  - Deployment - Human Image Segmentation: deploy-seg-en.md
-  - FAQ: faq-en.md
+  - AI Solution Kit Deployment Guide:
+    - Welcome: index.md
+    - Cost: cost-en.md
+    - Architecture overview: design-en.md
+    - Security: security-en.md
+    - Supported regions: region-en.md
+    - CloudFormation template: stack-en.md
+    - Automated deployment: deployment-en.md
+    - Additional resources: resource-en.md
+    - FAQ: faq-en.md
+    - API Explorer: api-explorer-en.md
+    - Source code: github-en.md
+    - Release Notes: changelog-en.md
+    - Upgrade: upgrade-en.md
+  - Vision:
+    - General OCR: deploy-general-ocr-en.md
+    - Image Super Resolution: deploy-image-super-resolution-en.md
+    - Human Image Segmentation: deploy-human-image-segmentation-en.md
+    - Nudity Detection: deploy-nudity-detection-en.md
+    - General OCR (Traditional Chinese): deploy-general-ocr-traditional-en.md
+    - Custom OCR: deploy-custom-ocr-en.md
+    - Object Recognition: deploy-object-recognition-en.md
+    - Face Detection: deploy-face-detection-en.md
+    - Face Comparison: deploy-face-comparison-en.md
+    - Human Attribute Recognition: deploy-human-attribute-recognition-en.md
+    - Car License Plate: deploy-car-license-plate-en.md
+
+  - Natural Language: 
+    - Text Similarity: deploy-text-similarity-en.md
+
+  # - 语音技术:
+  #   - 语音技术: audio-en.md

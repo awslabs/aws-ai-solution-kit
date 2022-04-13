@@ -9,6 +9,10 @@ theme:
     - search.highlight
 plugins:
   - search
+  - include-markdown
+  - macros
+markdown_extensions:
+  - admonition
 extra:
   alternate:
     - name: English

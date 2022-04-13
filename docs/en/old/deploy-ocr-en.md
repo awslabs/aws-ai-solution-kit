@@ -1,19 +1,18 @@
 ## Background
 
-This deployment guide describes how to deploy **AI Solution Kit - Porn Image Detection** solution by Amazon CloudFormation templates.
+This deployment guide describes how to deploy **AI Solution Kit - Chinese Optical Character Recognition(OCR)** solution by Amazon CloudFormation templates.
 
-The AI and ML driven applications are maturing rapidly and creating new demands on enterprises, the AI Solution Kit provides diversified leading AI/ML solutions that are easy to use. Customers can easily work with the REST API or software development kit (SDK) provided by AI/ML solution. Based on AI/ML image recognition technology, Porn Image Detection solution automatically audits pictures, identifies and obtains multidimensional pornographic quantitative information (normal, sexy, porn).
-
+The AI and ML driven applications are maturing rapidly and creating new demands on enterprises, the AI Solution Kit provides diversified leading AI/ML solutions that are easy to use. Customers can easily work with the REST API or software development kit (SDK) provided by AI/ML solution. The Chinese OCR solution based on AI/ML text recognition technologies, it can automatically extract the text in all kinds of pictures, and returns the text and the coordinates of the text in the picture. The OCR solution  support for Simplified Chinese, Traditional Chinese, English languages and numbers. This solution also supports the most commonly used Hong Kong Supplementary Character Set (HKSCS) extensions of traditional Chinese.
 
 ## Solution Description
-Once the solution deployed by Amazon CloudFormation template, customers can use this solution feature by calling HTTP (s) or API interfaces, the REST API interface which created by Amazon API Gateway provides customers the AI services and customers can send request (pictures) to the Amazon API Gateway via HTTP POST method, then the Amazon Lambda function is invoked by the Amazon API Gateway to finish the image recognition and return the results (in JSON format).
+Once the solution deployed by Amazon CloudFormation template, customers can use this solution feature by calling HTTP (s) or API interfaces, the REST API interface which created by Amazon API Gateway provides customers the AI services and customers can send request (pictures or text) to the Amazon API Gateway via HTTP POST method, then the Amazon Lambda function is invoked by the Amazon API Gateway to finish the text recognition and return the results (in JSON format).
 
 By using a serverless architecture, such as Amazon Lambda, Amazon API Gateway, serverless works in a pay-as-you-go manner, which means that customers only pay for those resources which they actually use.
 
 ## System Architecture
 Starting from the API User(s) side, the API user sends an HTTP request to Amazon API Gateway to pass payload parameters. The API Gateway is a layer that provides the RESTful API to the client for the AI applications.
 
- - Lambda Integration (the first diagram):
+ - Lambda Integration
 
 The ML models are stored in Amazon EFS, the AI algorithm are implemented in the Lambda function, the Lambda function parses the values from API Gateway and performs model in EFS. After that, it returns a value (JSON format) and sends it back to the API Gateway.
 
@@ -59,21 +58,21 @@ You can also download the template as a starting point for your own implementati
 
 | Launch Solution                                                                                                                                                                                                                                               | Description                                        |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| [Beijing Region](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsPornImageStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Porn-Image-Detection-Stack.template)            |  AI Solution Kit - Porn Image Detection in Beijing, China region  |
-| [Ningxia Region](https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AIKitsPornImageStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Porn-Image-Detection-Stack.template)        |  AI Solution Kit - Porn Image Detection in Beijing, China region  |
-| [Global Regions](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsPornImageStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Porn-Image-Detection-Stack.template)                                  |  AI Solution Kit - Porn Image Detection in Beijing, China region  |
+| [Beijing Region](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Infer-OCR-Stack.template)            |  AI Solution Kit - Chinese OCR in Beijing, China region |
+| [Ningxia Region](https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Infer-OCR-Stack.template)        |  AI Solution Kit - Chinese OCR in Ningxia, China region  |
+| [Global Regions](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Infer-OCR-Stack.template)                                  |  AI Solution Kit - Chinese OCR  |
 
 | CloudFormation template                                                                                                                                                                       |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [AIKits-Porn-Image-Detection-Stack.template](https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Porn-Image-Detection-Stack.template) |
+| [AIKits-Infer-OCR-Stack.template](https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.0.0/AIKits-Infer-OCR-Stack.template) |
 
 >By default, the template will start after you log in after the default console area. To launch the solution in a designated Amazon Web Service region, please select it from the region drop-down list in the console navigation bar.
 
 On the Specify template page, verify that you selected the correct template and choose Next.
 
-![](./images/ocr-deploy-1-zh.png)
+![](./images/ocr-deploy-1-en.png)
 
-On the Specify stack details page, assign a name to AI Solution Kit - Porn Image Detection in the Stack name field.
+On the Specify stack details page, assign a name to AI Solution Kit - Chinese OCR in the Stack name field.
 
 Under **Parameters**, review the parameters for the template, and modify them as necessary. To opt out of a particular feature, choose none or no as applicable. 
 
@@ -82,21 +81,21 @@ Under **Parameters**, review the parameters for the template, and modify them as
 | **customStageName**  | prod | The name of the stage, which API Gateway uses as the first path segment in the invoked Uniform Resource Identifier (URI).|
 | **customAuthType**    | AWS_IAM    | Authorization for API Gateway. Valid Values are *AWS_IAM* and *NONE*. |
 
-![](./images/ocr-deploy-2-zh.png)
+![](./images/ocr-deploy-2-en.png)
 
 On the Review page, review and confirm the settings. Check the boxes acknowledging that the template will create Amazon Web Service Identity and Access Management (IAM) resources and any additional capabilities required.
 
 
-![](./images/ocr-deploy-3-zh.png)
+![](./images/ocr-deploy-3-en.png)
 
 Choose Create to deploy the stack. 
 View the status of the stack in the Amazon CloudFormation console in the Status column. You should receive a status of **CREATE_COMPLETE** in approximately 15 minutes.
 
-![](./images/ocr-deploy-4-zh.png)
+![](./images/ocr-deploy-4-en.png)
 
 To see details for the stack resources, choose the Outputs tab. This will include the **aikitsInvokeURL** value, which is the API Gateway endpoint.
 
-![](./images/ocr-deploy-5-zh.png)
+![](./images/ocr-deploy-5-en.png)
 
 ## Get Started
 
@@ -112,11 +111,11 @@ You can find the REST API inviking URL with name **aikitsInvokeURL** in the Outp
 |url&nbsp;&nbsp;&nbsp;&nbsp;       |*String*     |Use *img* or *url* | URL address of the image. Supports HTTP/HTTPS and S3 protocols. Required image format jpg / jpeg / png / bmp, not exceeding the longest side 4096px.|
 |img       |*String*     |Use *img* or *url*|Base64-encoded image data|
 
-- Sample Request Body
+- Sample Request Body 
 
 ``` json
 {
-  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg"
+  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg"
 }
 ```
 
@@ -130,27 +129,45 @@ You can find the REST API inviking URL with name **aikitsInvokeURL** in the Outp
 
 | **Name**  | **Type**  |  **Description**  |
 |----------|-----------|------------|
-|normal    |*Float*   |Identify the image’s normal dimensions of the image|
-|sexy      |*Float*   |Identify the image’s sexy dimension|
-|porn      |*Float*   |Identify the pornographic dimensions of recognized images|
+|words    |*String*   |Identify text content |
+|location |*JSON*     |Recognized text in the image coordinate values, including top, left, width, height integer value|
+|score    |*Float*   |The confidence of the recognized text|
 
 - Sample Response
 ``` json
-{ 
-   “normal”  : 0.15993066132068634,
-   “sexy”    : 0.5451669692993164, 
-   “porn”    : 0.2949024438858032 
-}
+[
+    {
+        "words": "香港永久性居民身份證",
+        "location": {
+            "top": 18,
+            "left": 148,
+            "width": 169,
+            "height": 17
+        },
+        "score": 0.9923796653747559
+    },
+    {
+        "words": "HONG KONG PERMANENTIDENTITYCARD",
+        "location": {
+            "top": 36,
+            "left": 71,
+            "width": 321,
+            "height": 17
+        },
+        "score": 0.9825196266174316
+    }
+
+]
 ```
 
 ###  Sample Request Code
 
 **cURL**
 ``` bash
-curl --location --request POST 'https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/porn' \
+curl --location --request POST 'https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/ocr' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-  "url":"https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg"
+  "url":"https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg"
 }'
 ```
 
@@ -159,10 +176,10 @@ curl --location --request POST 'https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazon
 import requests
 import json
 
-url = "https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/porn"
+url = "https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/ocr"
 
 payload = json.dumps({
-  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg"
+  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg"
 })
 headers = {
   'Content-Type': 'application/json'
@@ -179,9 +196,9 @@ print(response.text)
 OkHttpClient client = new OkHttpClient().newBuilder()
   .build();
 MediaType mediaType = MediaType.parse("application/json");
-RequestBody body = RequestBody.create(mediaType, "{\n  \"url\":\"https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg\"\n}");
+RequestBody body = RequestBody.create(mediaType, "{\n  \"url\":\"https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg\"\n}");
 Request request = new Request.Builder()
-  .url("https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/porn")
+  .url("https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/ocr")
   .method("POST", body)
   .addHeader("Content-Type", "application/json")
   .build();
@@ -195,7 +212,7 @@ Response response = client.newCall(request).execute();
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/porn',
+  CURLOPT_URL => 'https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/prod/ocr',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
@@ -204,7 +221,7 @@ curl_setopt_array($curl, array(
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => 'POST',
   CURLOPT_POSTFIELDS =>'{
-  "url":"https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg"
+  "url":"https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg"
 }',
   CURLOPT_HTTPHEADER => array(
     'Content-Type: application/json'
@@ -221,22 +238,22 @@ echo $response;
 
 Create a new tab in Postman and enter the API invoke URL in the previous step into the address bar. Select POST as the HTTP verb. 
 
-![](./images/ocr-postman-1-zh.png)
+![](./images/ocr-postman-1-en.png)
 
 Select Amazon Web Service Signature in the Authorization tab, and enterauth details like AccessKey, SecretKey and Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).
 
-![](./images/ocr-postman-2-zh.png)
+![](./images/ocr-postman-2-en.png)
 
 Click the Body tab and select the option raw and then choose the JSON format.
 Enter the test data in the Body and click the Send button to see the response result.
 
 ``` json
 {
-  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/detect-1.jpg"
+  "url": "https://aikits.demo.solutions.aws.a2z.org.cn/img/ocr-2.jpg"
 }
 ```
 
-![](./images/ocr-postman-3-zh.png)
+![](./images/ocr-postman-3-en.png)
 
 ## Uninstall
 
@@ -247,6 +264,3 @@ To uninstall the solution, delete the CloudFormation stacks:
 3. Choose **Delete**.
 
 You can undeploy the stack in Amazon CloudFormation console. The deletion process takes about 10 minutes.
-
-
-
