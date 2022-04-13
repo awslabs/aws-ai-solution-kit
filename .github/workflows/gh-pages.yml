@@ -1,34 +1,39 @@
-name: AI Solution Kit GH-Pages
+name: GitHub Pages
 
 on:
   push:
     branches:
-      - main  # trigger main branch
-    paths:
-      - learn/**/*
+      - master  # Set a branch name to trigger deployment
+  pull_request:
 
 jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-    - name: Checkout repository and submodules
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          submodules: recursive
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          hugo-version: '0.85.0'
-          extended: true
+          python-version: '3.8'
 
-      - name: Build
+      - name: Install dependencies
         run: |
-          cd learn
-          hugo --minify
+          python3 -m pip install mkdocs            # install mkdocs 
+          python3 -m pip install mkdocs-material   # install material theme
+      
+      - name: Build mkdocs
+        run: |
+          sed -i 's/zh-branded/zh/g' docs/mkdocs.zh.yml
+          sed -i 's/en-branded/en/g' docs/mkdocs.en.yml
+          mkdocs build -f ./docs/mkdocs.en.yml
+          mkdocs build -f ./docs/mkdocs.zh.yml
+          cp -av ./docs/index.html ./docs/site
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./docs/site
