@@ -6,7 +6,7 @@ markdown_extensions:
 plugins:
   - mkpdfs:
       author: !ENV [VERSION, 'v0.0.1']
-      company: haha
+      company: Amazon.com
       toc_title: Index
       # toc_position: center
       design: docs/report.css
