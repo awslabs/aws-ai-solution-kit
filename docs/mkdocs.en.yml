@@ -12,31 +12,34 @@ nav:
   - AI Solution Kit Deployment Guide:
     - Welcome: index.md
     - Cost: cost.md
-    - Architecture overview: design.md
+    - Architecture overview: architecture.md
     - Security: security.md
-    - Supported regions: region.md
-    - CloudFormation template: stack.md
+    - Supported regions: regions.md
+    - CloudFormation template: template.md
     - Automated deployment: deployment.md
-    - Additional resources: resource.md
-    - FAQ: faq.md
     - API Explorer: api-explorer.md
-    - Source code: github.md
-    - Release Notes: changelog.md
-    - Upgrade: upgrade.md
-  - Vision:
+    - Additional resources: additional-resources.md
+    - FAQ: faq.md
+    - Source code: source.md
+    - Release Notes: revisions.md
+    - How to Upgrade: upgrade.md
+  - OCR:
     - General OCR: deploy-general-ocr.md
-    - Image Super Resolution: deploy-image-super-resolution.md
-    - Human Image Segmentation: deploy-human-image-segmentation.md
-    - Nudity Detection: deploy-nudity-detection.md
     - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
     - Custom OCR: deploy-custom-ocr.md
-    - Object Recognition: deploy-object-recognition.md
-    - Face Detection: deploy-face-detection.md
-    - Face Comparison: deploy-face-comparison.md
-    - Human Attribute Recognition: deploy-human-attribute-recognition.md
     - Car License Plate: deploy-car-license-plate.md
-
-  - Natural Language: 
+  - Facial & Body:
+    - Face Comparison: deploy-face-comparison.md
+    - Face Detection: deploy-face-detection.md
+    - Human Attribute Recognition: deploy-human-attribute-recognition.md
+    - Human Image Segmentation: deploy-human-image-segmentation.md
+  - Image Understanding:
+    - Image Similarity: deploy-image-similarity.md
+    - Object Recognition: deploy-object-recognition.md
+    - Pornography Detection: deploy-pornography-detection.md
+  - Computer Vision Production:
+    - Image Super Resolution: deploy-image-super-resolution.md
+  - Natural Language Understanding: 
     - Text Similarity: deploy-text-similarity.md
 
   # - 语音技术:

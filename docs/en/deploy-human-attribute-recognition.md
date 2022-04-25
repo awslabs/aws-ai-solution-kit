@@ -1,17 +1,39 @@
 ---
-feature_id: CustomOCR
+feature_id: HumanAttributeRecognition
 feature_name: 自定义模板文字识别
 feature_endpoint: custom_ocr
 deployment_time: TODO
 destroy_time: TODO
 sample_image: TODO
-feature_description: TODO
-feature_scenario: TODO
+feature_description: 识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。
+
+feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场景。
 ---
 
 {%
   include "include-deploy-description.md"
 %}
+
+## 属性说明
+
+| 名称     | 语义值          |
+| ------ | ------------ |
+| 上身服饰   | 短袖、长袖        |
+| 下身服饰   | 短裤/裙、长裤/裙    |
+| 上身服饰纹理 | 图案、纯色、格子/条纹  |
+| 背包     | 无包、有包        |
+| 是否戴眼镜  | 无、有          |
+| 是否戴帽子  | 无、有          |
+| 人体朝向   | 正面、背面、左面、右面  |
+| 上方截断   | 无、有          |
+| 下方截断   | 无、有          |
+| 遮挡情况   | 无、轻、重        |
+| 是否戴口罩  | 无、有          |
+| 性别     | 男、女          |
+| 年龄     | 幼儿、青少年、中年、老年 |
+| 吸烟     | 无、有          |
+| 电话     | 无、有          |
+| 拿东西    | 无、有          |
 
 {%
   include "include-deploy-lambda.md"

@@ -5,8 +5,8 @@ feature_endpoint: car_license_plate
 deployment_time: TODO
 destroy_time: TODO
 sample_image: TODO
-feature_description: TODO
-feature_scenario: TODO
+feature_description: 识别中华人民共和国境内常见机动车号牌，提取机动车号牌信息中的地区编号和车牌号。
+feature_scenario: 可应用于停车场、小区自动识别车辆号牌信息，或车辆违章信息检测等场景。
 ---
 
 {%

@@ -13,32 +13,34 @@ nav:
   - AI Solution Kit 实施指南:
     - 概述: index.md
     - 成本预估: cost.md
-    - 架构概览: design.md
+    - 架构概览: architecture.md
     - 安全信息: security.md
-    - 区域支持: region.md
-    - 模板信息: stack.md
+    - 区域支持: regions.md
+    - 模板信息: template.md
     - 部署解决方案: deployment.md
-    - 更多资源: resource.md
-    - 常见问题解答: faq.md
     - API 资源浏览器: api-explorer.md
-    - 源代码: github.md
-    - 版本发布说明: changelog.md
-    - 升级步骤: upgrade.md
-  - 视觉技术:
-    - 通用文字识别: deploy-general-ocr.md
-    - 图像超分辨率: deploy-image-super-resolution.md
-    - 智能人像分割: deploy-human-image-segmentation.md
-    - 色情内容审核: deploy-nudity-detection.md
+    - 更多资源: additional-resources.md
+    - 常见问题解答: faq.md
+    - 源代码: source.md
+    - 版本发布说明: revisions.md
+    - 升级说明: upgrade.md
+  - 文字识别:
+    - 通用文字识别（简体中文）: deploy-general-ocr.md
     - 通用文字识别（繁体中文）: deploy-general-ocr-traditional.md
     - 自定义模版文字识别: deploy-custom-ocr.md
-    - 通用物体识别: deploy-object-recognition.md
+    - 车牌信息识别: deploy-car-license-plate.md
+  - 人脸与人体:
     - 人脸识别: deploy-face-detection.md
     - 人脸相似度比对: deploy-face-comparison.md
     - 人体结构化属性: deploy-human-attribute-recognition.md
-    - 车牌信息识别: deploy-car-license-plate.md
-
-  - 自然语言处理技术: 
+    - 智能人像分割: deploy-human-image-segmentation.md
+  - 图像理解:
+    - 图像相似度: deploy-image-similarity.md
+    - 通用物体识别: deploy-object-recognition.md
+    - 色情内容审核: deploy-pornography-detection.md
+  - 视觉内容生产:
+    - 图像超分辨率: deploy-image-super-resolution.md
+  - 自然语言理解:
     - 文本相似度: deploy-text-similarity.md
-
   # - 语音技术:
   #   - 语音技术: audio.md

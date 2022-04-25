@@ -5,8 +5,8 @@ feature_endpoint: general_ocr
 deployment_time: 15 分钟
 destroy_time: 15 分钟
 sample_image: https://images-cn.ssl-images-amazon.cn/images/G/28/AGS/LIANG/Deals/2020/Dealpage_KV/1500300.jpg
-feature_description: 通用文本识别解决方案基于人工智能文本识别技术，自动完成各类场景中文字的识别，并返回文字在图片中的坐标位置等信息以便于客户进行比对或结构化等操作，对客户的工作流程和业务流程进行了极大的改进，可满足医疗、金融、政务、法务、教育等行业文档快速录入的需求，有效降低企业人力成本，提高信息录入效率。目前支持识别简体/繁体中文，英文和数字。可将图片上的文字识别为文本，并返回对应文字的坐标与置信度，并且本解决方案还增强了对中文语言的处理与识别能力，结合精准的语言模型和大词库，如香港增补字符集（HKSCS）等大字符集识别，从而提高输入转化效率。
-feature_scenario: 通用文本识别解决方案具有中文识别精度（准确率）高、价格低、处理速度快、可私有化部署等优势，能有效保护用户隐私数据。可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
+feature_description: 适用于通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于用户进行比对或结构化操作。支持识别**简体中文**、英文、数字和常用符号。
+feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
 ---
 
 {%
@@ -17,9 +17,41 @@ feature_scenario: 通用文本识别解决方案具有中文识别精度（准�
   include "include-deploy-lambda.md"
 %}
 
-{%
-  include "include-deploy-cost.md"
-%}
+## 成本预估 
+
+您需要承担运行 AI Solution Kit 解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年4月，影响解决方案的成本因素主要包括：
+
+- Amazon Lambda调用
+- Amazon Lambda运行
+- Amazon API Gateway调用
+- Amazon API Gateway数据输出
+- Amazon CloudWatch Logs
+- Amazon Elastic Container Registry存储
+
+以图像大小1MB，处理时间1秒进行估算
+### 宁夏
+| 服务                                  | 用量                  | 费用      |
+|-------------------------------------|---------------------|---------|
+| Amazon Lambda调用                     | 百万次                 | ¥1.36   |
+| Amazon Lambda运行                     | 内存4096MB，每次运行1秒     | ¥453.9  |
+| Amazon API Gateway调用                | 百万次                 | ¥28.94  |
+| Amazon API Gateway数据输出              | 以每次10KB计算,¥0.933/GB | ¥9.33   |
+| Amazon CloudWatch Logs              | 每次10KB,¥6.228/GB    | ¥62.28  |
+| Amazon Elastic Container Registry存储 | 0.5GB,每月每GB¥0.69    | ¥0.35   |
+| 合计                                  |   | ¥556.16 |
+
+​
+### 美国东部(俄亥俄)
+
+| 服务                                  | 用量                 | 费用     |
+|-------------------------------------|--------------------|--------|
+| Amazon Lambda调用                     | 百万次                | $0.20  |
+| Amazon Lambda运行                     | 内存4096MB，每次运行1秒    | $66.7  |
+| Amazon API Gateway调用                | 百万次                | $3.5   |
+| Amazon API Gateway数据输出              | 以每次10KB计算,$0.09/GB | $0.9   |
+| Amazon CloudWatch Logs              | 每次10KB,$0.50/GB    | $5     |
+| Amazon Elastic Container Registry存储 | 0.5GB,每月每GB$0.1    | $0.05  |
+| 合计                                  |   | $76.35 |
 
 {%
   include "include-deploy.md"

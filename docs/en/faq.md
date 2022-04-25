@@ -1,40 +1,420 @@
-# 常见问题
+### Frequently Asked Questions
 
-## 这个解决方案是什么？
+### What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?
 
-本解决方案提供了一系列云上 AI 功能，如：通用文本识别、图像超分辨率、色情图片审核、智能人像分割等。客户可以进行一键式私有化部署。AI 功能将以 API 的形式提供，客户可以直接调用 API 或使用软件开发工具包（SDK）调用服务。
+The following permissions are required to deploy the solution and call the API via API Gateway after deployment, with **sagemaker:** limited to the **Image Super Resolution** API.
 
-## 这个解决方案的适用于什么场景？
+| Actions |
+| ------------------------------------- |
+| apigateway:DELETE |
+| apigateway:GET |
+| apigateway:PATCH |
+| apigateway:POST |
+| apigateway:PUT |
+| cloudformation:CancelUpdateStack |
+| cloudformation:ContinueUpdateRollback |
+| cloudformation:CreateChangeSet |
+| cloudformation:CreateStack |
+| cloudformation:DeleteStack |
+| cloudformation:DescribeChangeSet | cloudformation:DescribeChangeSet
+| cloudformation:DescribeStackEvents |
+| cloudformation:DescribeStackResources |
+| cloudformation:DescribeStackStacks |
+| cloudformation:GetStackPolicy | | cloudformation:GetStackPolicy
+| cloudformation:GetTemplateSummary |
+| cloudformation:ListChangeSets |
+| cloudformation:ListStackResources |
+| cloudformation:ListStacks |
+| cloudformation:RollbackStack |
+| cloudformation:UpdateStack | cloudformation:UpdateStack
+| cloudformation:UpdateStackSet |
+| cloudformation:UpdateStackSet | cloudformation:UpdateStackSet | cloudformation:BatchCheckLayerAvailability |
+| ecr:BatchDeleteImage |
+| ecr:BatchGetImage |
+| ecr:CreateRepository |
+| ecr:DeleteRepository |
+| ecr:DescribeRepositories |
+| ecr:GetDownloadUrlForLayer |
+| ecr:GetRepositoryPolicy |
+| ecr:InitiateLayerUpload |
+| ecr:PutImage |
+| ecr:SetRepositoryPolicy |
+| iam:AttachRolePolicy |
+| iam:CreateRole |
+| iam:DeleteRole |
+| iam:DeleteRolePolicy | iam:DeleteRolePolicy
+| iam:DetachRolePolicy | iam:GetRolePolicy
+| iam:GetRole |
+| iam:ListRoles |
+| iam:PassRole |
+| iam:PutRolePolicy |
+| lambda:AddPermission |
+| lambda:CreateFunction |
+| lambda:DeleteFunction |
+| lambda:GetFunction |
+| lambda:InvokeFunction |
+| lambda:RemovePermission |
+| lambda:UpdateFunctionConfiguration |
+| s3:GetObject |
+| sagemaker:CreateEndpoint |
+| sagemaker:CreateEndpointConfig |
+| sagemaker:CreateModel |
+| sagemaker:DeleteEndpoint | | sagemaker:DeleteEndpoint
+| sagemaker:DeleteEndpointConfig | sagemaker:DeleteEndpointConfig |
+| sagemaker:DeleteModel |
+| sagemaker:DescribeEndpoint | | sagemaker:DescribeEndpoint
+| sagemaker:DescribeEndpointConfig |
+| sagemaker:DescribeModel |
+| sagemaker:InvokeEndpoint |
+| sns:ListTopics |
 
-1. 通用文本识别：可应用于纸质文档电子化，证件识别，内容审核等多种场景。
-2. 内容审核-色情图片：可应用于社交应用、论坛、社区等需要自动审核图像的场景，提升平台内容质量。
-3. 图像超分辨率：可应用于需要对原始图片提升分辨率的场景，如拍照效果增强、文字档案翻拍、医学图像处理等场景。也可在工业自动化领域用于提高传感器成像精度，提高识别率。
-4. 智能人像分割：可应用于照片背景替换、证件照制作，人像抠图美化等场景。
+### How to resolve *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances* encountered when deploying the solution?
 
-## 这个解决方案的是如何运作的？
+1. visit aws console https://console.aws.amazon.com/
+2. click on support on the top right corner
+3. click create a case (orange button)
+4. select Service Limit Increase radio button
+5. For Limit Type, Search and Select SageMaker Notebook Instances
+6. Write a short Use case description
+7. For Limit, Select ml.[x]. [x] (in your case, ml.g4dn.xlarge)
 
-用户或程序发送 API 请求至 Amazon API Gateway，请求 payload 中需要包含被处理的图片或文字信息，Amazon API Gateway 接收到 HTTP 到请求后，将请求数据发送给对应的 Lambda 函数或 SageMaker Endpoint，从而实现推理过程，并将推理结果（通常为JSON格式数据）返回。
+### Deploying solution encountered *Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*. How do I resolve this?
 
-本解决方案架构中包含两类 AI 功能的实现方式（SageMaker 架构只适用于图像超分辨率方案）
+//TODO
 
-1. 基于Lambda 实现： Amazon API Gateway 将接收到的用户请求直接发送给 Lambda 函数，Lambda 函数通过调用存储在 Amazon EFS 里面的模型完成推理计算，最后将结果返回给调用端。
-![](./images/arch-lambda.png)
+### How do I consistently switch how APIs are authenticated for access in Amazon API Gateway?
 
-2. SageMaker 实现： 首先 API Gateway 将用户请求发送到 Lambda（invoke endpoint）函数，通过 Lambda 调用 SageMaker Endpoint，在 SageMaker 中执行推理过程并返回推理结果。
-![](./images/arch-sagemaker.png)
+With Amazon CloudFormation, you can change the properties of existing resources in your stack, and if you need to add or remove deployed AI features, you can do so by updating your stack.
 
-## 我需要在启动前注意哪些前提条件？
+1. On the Amazon CloudFormation console, select the completed AI Solution Kit stack in the Stack list. 2.
 
-1. 确保您拥有一个已经ICP备案的域名。
+In the stack details pane, select Update. 3.
 
-## 此解决方案支持在哪些区域运行？
+In the Template Parameters section, modify the **API Gateway Authorization** parameter, and select Next. 4.
 
-您可以部署到 Amazon Web Service 全球主要区域，包括由西云数据运营的 Amazon Web Service （宁夏）区域和由光环新网运营的 Amazon Web Service （北京）区域。
+4. On the **Configure Stack Options** page, select **Next**. 5.
 
-## 如何快速开始使用这个方案？
+5. On the **Audit** page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select **Next**. 6.
 
-用户可以在直接部署页面的部署按钮开始部署。详情请见部署手册。
+6. If you are satisfied with the changes you have made, select Updata stack to complete the access rights update.
 
-## 使用这个解决方案后续的开发量是多少？
+### How do I individually switch the access authentication method for APIs in Amazon API Gateway?
+1. Open the Services panel in the Amazon Web Service console, find Application Services, and click API Gateway. 2.
+2. Select the most recently created AI Solution Kit API in the API list, or sort by 'Created' to make it easier to find, then click the name link to open the API details page
+3. Expand the resource tree, find the 'OPTIONS' node under the path of the resource you need to modify the access rights, and click it to display the method execution configuration page. Click the Method Request link under Method Execution
+4. Then click the Edit button on the right side of the authorization, expand the drop-down list, select 'Amazon IAM', select it and click the Update button to complete the modification.
+5. After updating, the authorization item should be displayed as 'Amazon IAM'. 6.
+6. Next, click the POST button under OPTIONS in the resource tree, and modify the method of OPTIONS, change the authorization method to Amazon IAM in the method request, and then click the Update button.
+7. Click on the 'Actions' drop-down button on the left side of the method execution, and click on the 'Deploy API' option under API Actions
+8. In the Deploy API dialog box, select 'prod' or a custom name for the deployment phase, do not select [New Phase], and then click the Deploy button below to complete the deployment
 
-用户部署本解决方案后，需要按请求 HTTP 接口说明，开发相应接口的调用功能，也可以在 Amazon API Gateway 中生成相应 SDK 代码，与业务逻辑集成。
+### Create and use a usage plan with API key
+This solution supports API Usage Plans. After deploying the solution and testing the APIs, you can implement API Gateway Usage Plans and offer them as a customer-facing product/service. You can configure usage plans and API keys to allow customers to access selected APIs at agreed request rates and quotas that meet their business needs and budget constraints, and you can set default method level limits for APIs or set limits for individual API methods if desired. The API caller must provide an assigned API key in the x-api-key header of the API request. 
+
+If you need to configure an *API usage plan* please refer to: [Configure Usage Plan](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/api-gateway-create-usage-plans.html )
+
+### What target identification is currently supported by the Universal Target Detection API?
+The following is a list of supported entities for target detection.
+
+| ID                    |
+| ---------------------------- |
+| accordion                    |
+| airplane                     |
+| alligator                    |
+| apple                        |
+| army\_tank                   |
+| awning                       |
+| backpack                     |
+| ball                         |
+| balloon                      |
+| banana                       |
+| barrel                       |
+| baseball                     |
+| baseball\_bat                |
+| baseball\_glove              |
+| basket                       |
+| bathtub                      |
+| bear                         |
+| bed                          |
+| bee                          |
+| beer\_bottle                 |
+| bell\_pepper                 |
+| belt                         |
+| bench                        |
+| bicycle                      |
+| billboard                    |
+| bird                         |
+| blackboard                   |
+| boat                         |
+| book                         |
+| bookcase                     |
+| boot                         |
+| bottle                       |
+| bowl                         |
+| bowling\_ball                |
+| box                          |
+| bracelet                     |
+| brassiere                    |
+| bread                        |
+| broccoli                     |
+| building                     |
+| bus\_(vehicle)               |
+| butterfly                    |
+| cabinet                      |
+| cake                         |
+| camel                        |
+| camera                       |
+| can                          |
+| candle                       |
+| candy\_bar                   |
+| cannon                       |
+| canoe                        |
+| car\_(automobile)            |
+| carrot                       |
+| cart                         |
+| castle                       |
+| cat                          |
+| caterpillar                  |
+| cello                        |
+| cellular\_telephone          |
+| chair                        |
+| chicken\_(animal)            |
+| chopping\_board              |
+| chopstick                    |
+| christmas\_tree              |
+| clock                        |
+| coat                         |
+| cocktail                     |
+| coffee\_table                |
+| coin                         |
+| computer\_keyboard           |
+| computer\_monitor            |
+| cone                         |
+| cookie                       |
+| cow                          |
+| cowboy\_hat                  |
+| crab\_(animal)               |
+| crown                        |
+| cucumber                     |
+| cup                          |
+| cupboard                     |
+| curtain                      |
+| deer                         |
+| desk                         |
+| dessert                      |
+| dinosaur                     |
+| dog                          |
+| doll                         |
+| dolphin                      |
+| door                         |
+| doorknob                     |
+| doughnut                     |
+| dragonfly                    |
+| drawer                       |
+| dress                        |
+| drum\_(musical\_instrument)  |
+| duck                         |
+| duffel\_bag                  |
+| eagle                        |
+| earring                      |
+| egg                          |
+| elephant                     |
+| fan                          |
+| faucet                       |
+| fireplace                    |
+| fireplug                     |
+| fish                         |
+| flag                         |
+| flower\_arrangement          |
+| flowerpot                    |
+| football\_helmet             |
+| fork                         |
+| fountain                     |
+| french\_fries                |
+| frisbee                      |
+| frog                         |
+| fruit                        |
+| fruit\_juice                 |
+| frying\_pan                  |
+| gazelle                      |
+| giraffe                      |
+| glass\_(drink\_container)    |
+| glove                        |
+| goat                         |
+| goggles                      |
+| goose                        |
+| grape                        |
+| guitar                       |
+| gun                          |
+| hamburger                    |
+| hamster                      |
+| handbag                      |
+| handle                       |
+| harbor\_seal                 |
+| hat                          |
+| headset                      |
+| helicopter                   |
+| helmet                       |
+| high\_heels                  |
+| hog                          |
+| horse                        |
+| house                        |
+| icecream                     |
+| insect                       |
+| jacket                       |
+| jaguar                       |
+| jean                         |
+| jellyfish                    |
+| kitchen\_table               |
+| kite                         |
+| knife                        |
+| ladder                       |
+| lamp                         |
+| lantern                      |
+| laptop\_computer             |
+| lavender                     |
+| lemon                        |
+| lettuce                      |
+| license\_plate               |
+| life\_jacket                 |
+| lightbulb                    |
+| lighthouse                   |
+| lily                         |
+| lion                         |
+| lizard                       |
+| maple                        |
+| mask                         |
+| microphone                   |
+| microwave\_oven              |
+| minivan                      |
+| mirror                       |
+| monkey                       |
+| motorcycle                   |
+| mouse\_(computer\_equipment) |
+| muffin                       |
+| mug                          |
+| mushroom                     |
+| musical\_instrument          |
+| napkin                       |
+| necklace                     |
+| necktie                      |
+| nightstand                   |
+| onion                        |
+| orange\_(fruit)              |
+| oven                         |
+| owl                          |
+| paddle                       |
+| painting                     |
+| palm\_tree                   |
+| parachute                    |
+| parking\_meter               |
+| parrot                       |
+| pasta                        |
+| pastry                       |
+| pen                          |
+| penguin                      |
+| person                       |
+| piano                        |
+| pillow                       |
+| pizza                        |
+| plastic\_bag                 |
+| plate                        |
+| polar\_bear                  |
+| pool\_table                  |
+| porch                        |
+| poster                       |
+| potted\_plant                |
+| pumpkin                      |
+| rabbit                       |
+| refrigerator                 |
+| remote\_control              |
+| ring                         |
+| roller\_skate                |
+| rose                         |
+| salad                        |
+| sandal\_(type\_of\_shoe)     |
+| sandwich                     |
+| saucer                       |
+| saxophone                    |
+| scarf                        |
+| scissors                     |
+| sculpture                    |
+| sheep                        |
+| shirt                        |
+| shoe                         |
+| short\_pants                 |
+| shrimp                       |
+| sink                         |
+| skateboard                   |
+| ski                          |
+| skirt                        |
+| skullcap                     |
+| snake                        |
+| snowboard                    |
+| soccer\_ball                 |
+| sock                         |
+| sofa                         |
+| sofa\_bed                    |
+| sparrow                      |
+| speaker\_(stero\_equipment)  |
+| spectacles                   |
+| spider                       |
+| spoon                        |
+| sportswear                   |
+| squirrel                     |
+| stool                        |
+| stop\_sign                   |
+| stove                        |
+| straw\_(for\_drinking)       |
+| strawberry                   |
+| street\_sign                 |
+| streetlight                  |
+| suit\_(clothing)             |
+| suitcase                     |
+| sunflower                    |
+| sunglasses                   |
+| sunhat                       |
+| surfboard                    |
+| sushi                        |
+| swimming\_pool               |
+| swimsuit                     |
+| table                        |
+| tablet\_computer             |
+| taxi                         |
+| teddy\_bear                  |
+| telephone                    |
+| television\_set              |
+| tennis\_ball                 |
+| tennis\_racket               |
+| tent                         |
+| tiger                        |
+| toilet                       |
+| toilet\_tissue               |
+| tomato                       |
+| toothbrush                   |
+| towel                        |
+| tower                        |
+| toy                          |
+| traffic\_light               |
+| train\_(railroad\_vehicle)   |
+| trash\_can                   |
+| tray                         |
+| tree                         |
+| tripod                       |
+| trousers                     |
+| truck                        |
+| trumpet                      |
+| turtle                       |
+| umbrella                     |
+| vase                         |
+| vegetables                   |
+| violin                       |
+| wall\_socket                 |
+| watch                        |
+| water\_jug                   |
+| whale                        |
+| wheel                        |
+| wheelchair                   |
+| window                       |
+| wineglass                    |
+| zebra                        |

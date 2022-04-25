@@ -7,7 +7,7 @@
 - 部署基于 Amazon SageMaker 架构的 AI 应用：约**20**分钟
 
 !!! 注意
-    以上为部署 AI 应用的平均时间，具体信息请参考各个应用对应的技术手册
+    以上为部署 AI 应用的平均时间，具体信息请参考各个应用对应的技术手册，当用户在Amazon CloudFormation中同时激活多个 API 时，部署时间为 各个独立 API 的叠加时间。
 
 ## 部署概述
 
@@ -43,19 +43,20 @@
 
     #### **AI 应用列表参数**
 
-    |  参数名称   |  默认值 |  描述 |
+    |  参数 ID   |  默认值 |  描述 |
     |  ----------  | ---------| -----------  |
     | **GeneralOCR**  | no  | 部署**通用文字识别**，如需部署请选中'yes'，详情请见[通用文字识别技术手册](deploy-general-ocr.md) |
-    | **ImageSuperResolution**  | no  | 部署**图像超分辨率**，如需部署请选中'yes'，详情请见[图像超分辨率技术手册](deploy-image-super-resolution.md) |
-    | **HumanImageSegmentation**  | no  | 部署**智能人像分割**，如需部署请选中'yes'，详情请见[智能人像分割技术手册](deploy-human-image-segmentation.md) |
-    | **NudityDetection**  | no  | 部署**色情内容审核**，如需部署请选中'yes'，详情请见[色情内容审核技术手册](deploy-nudity-detection.md) |
     | **GeneralOCRTraditional**  | no  | 部署**通用文字识别（繁体中文）**，如需部署请选中'yes'，详情请见[通用文字识别（繁体中文）技术手册](deploy-general-ocr-traditional.md) |
     | **CustomOCR**  | no  | 部署**自定义模板文字识别**，如需部署请选中'yes'，详情请见[自定义模板文字识别技术手册](deploy-custom-ocr.md) |
+    | **CarLicensePlate**  | no  | 部署**车牌信息识别**，如需部署请选中'yes'，详情请见[车牌信息识别技术手册](deploy-car-license-plate.md) |
+    | **PornographyDetection**  | no  | 部署**色情内容审核**，如需部署请选中'yes'，详情请见[色情内容审核技术手册](deploy-pornography-detection.md) |
+    | **ImageSimilarity**  | no  | 部署**图片相似度**，如需部署请选中'yes'，详情请见[图片相似度技术手册](deploy-image-similarity.md) |
+    | **HumanImageSegmentation**  | no  | 部署**智能人像分割**，如需部署请选中'yes'，详情请见[智能人像分割技术手册](deploy-human-image-segmentation.md) |
     | **ObjectRecognition**  | no  | 部署**通用物体识别**，如需部署请选中'yes'，详情请见[通用文字识别技术手册](deploy-object-recognition.md) |
     | **FaceDetection**  | no  | 部署**人脸识别**，如需部署请选中'yes'，详情请见[通用物体识别技术手册](deploy-face-detection.md) |
     | **FaceComparison**  | no  | 部署**人脸相似度比对**，如需部署请选中'yes'，详情请见[人脸识别技术手册](deploy-face-comparison.md) |
     | **HumanAttributeRecognition**  | no  | 部署**人体结构化属性**，如需部署请选中'yes'，详情请见[人体结构化属性技术手册](deploy-human-attribute-recognition.md) |
-    | **CarLicensePlate**  | no  | 部署**车牌信息识别**，如需部署请选中'yes'，详情请见[车牌信息识别技术手册](deploy-car-license-plate.md) |
+    | **ImageSuperResolution**  | no  | 部署**图像超分辨率**，如需部署请选中'yes'，详情请见[图像超分辨率技术手册](deploy-image-super-resolution.md) |
     | **TextSimilarity**  | no  | 部署**文本相似度**，如需部署请选中'yes'，详情请见[文本相似度技术手册](deploy-text_similarity.md) |
 
 6. 在**配置堆栈选项**页面，选择**下一步**。
@@ -65,6 +66,9 @@
 8. 选择**创建堆栈**以部署堆栈。
 
 您可以在AWS CloudFormation控制台的**状态**列中查看堆栈的状态。创建完成后即可看到状态为**CREATE_COMPLETE**。
+
+!!! 提示
+    部署成功后，可以打开 AWS CloudFormation 的控制台中 **AI Solution Kit** 主堆栈，并切换至 **Outputs** （输出）标签页，通过对应**参数 ID**即可查询基于 Amazon API Gateway 的调用 URL。
 
 ### 更新 Amazon CloudFormation 堆栈
 

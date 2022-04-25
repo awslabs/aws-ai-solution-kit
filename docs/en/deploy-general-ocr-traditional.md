@@ -5,8 +5,8 @@ feature_endpoint: general_ocr_traditional
 deployment_time: TODO
 destroy_time: TODO
 sample_image: TODO
-feature_description: TODO
-feature_scenario: TODO
+feature_description: 适用于通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于用户进行比对或结构化操作。支持识别**繁体中文**、英文、数字和常用符号。
+feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
 ---
 
 {%

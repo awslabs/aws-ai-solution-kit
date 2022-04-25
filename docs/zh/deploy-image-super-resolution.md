@@ -5,8 +5,8 @@ feature_endpoint: image_super_resolution
 deployment_time: 20 分钟
 destroy_time: 15 分钟
 sample_image: https://aikits.demo.solutions.aws.a2z.org.cn/img/sr-5.jpg
-feature_description: 图像超分辨率方案基于 AI 推理，可将图片进行智能放大2到4倍，并保持结果图像的清晰度，从而获取清晰度更高、细节丰富的图像，解决原始图片分辨率不足的问题。
-feature_scenario: 本解决方案具有处理速度快、价格低、可私有化部署等优势，能有效保护用户隐私数据。可以解决图像放大之后模糊失真的问题，提升细节保持结果图像的清晰度。应用于等多种场景，解决原始图片分辨率不足的问题，大幅提升信息处理效率。
+feature_description: 可将图片智能放大2或4倍，从而获取清晰度更高、细节丰富的图像，解决原始图片分辨率不足的问题。
+feature_scenario: 可应用于等多种场景，解决原始图片分辨率不足的问题。
 ---
 
 {%
@@ -19,9 +19,21 @@ feature_scenario: 本解决方案具有处理速度快、价格低、可私有�
 
 ## 成本预估 
 
-处理一张图按1秒计算，Amazon SageMaker 终端节点实例开启时会一直计费，这里仅计算处理完1百万图片需要消耗时长对应的实例费用
+您需要承担运行 AI Solution Kit 解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年4月，影响解决方案的成本因素主要包括：
+
+- Amazon Lambda调用
+- Amazon Lambda运行
+- Amazon API Gateway调用
+- Amazon API Gateway数据输出
+- Amazon CloudWatch Logs
+- Amazon Elastic Container Registry存储
+- Amazon SageMaker 终端节点实例
+- Amazon SageMaker 终端节点数据输入
+- Amazon SageMaker 终端节点数据输出
 
 ### 美国东部(俄亥俄)
+处理一张图按1秒计算，Amazon SageMaker 终端节点实例开启时会一直计费，这里仅计算处理完1百万图片需要消耗时长对应的实例费用
+​
 
 | 服务                                  | 用量                                 | 费用      |
 |-------------------------------------|------------------------------------|---------|
@@ -35,7 +47,6 @@ feature_scenario: 本解决方案具有处理速度快、价格低、可私有�
 | Amazon SageMaker 终端节点数据输入         | 以每次1MB计算，$0.016/GB                 | $16     |
 | Amazon SageMaker 终端节点数据输出         | 以每次4MB计算，$0.016/GB                 | $64     |
 | 合计                                  |   | $593.07 |
-
 
 {%
   include "include-deploy.md"

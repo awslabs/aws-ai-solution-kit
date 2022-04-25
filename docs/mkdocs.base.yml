@@ -1,6 +1,6 @@
 site_name: AI Solution Kit Docs
 site_url: https://www.amazonaws.cn/solutions/ai-solution-kit/
-repo_url: https://github.com/yanbasic/aws-ai-solution-kit
+repo_url: https://github.com/aws-samples/aws-ai-solution-kit
 theme:
   name: material
   features:

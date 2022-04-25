@@ -5,8 +5,8 @@ feature_endpoint: text_similarity
 deployment_time: TODO
 destroy_time: TODO
 sample_image: TODO
-feature_description: TODO
-feature_scenario: TODO
+feature_description: 比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。
+feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自动应答、命名实体识别、拼写纠错等场景。
 ---
 
 {%

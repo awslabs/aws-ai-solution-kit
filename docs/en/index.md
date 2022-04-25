@@ -1,5 +1,6 @@
 AI Solution Kit provides solutions of various use cases, allowing you to use out-of-box AI solutions, such as text recognition (OCR) solution, image super resolution solution, pornography detection solution, human segmentation solution.
 
+
 ## Benefits
 *  Best practices for multiple scenarios
 
@@ -14,27 +15,40 @@ The solutions automatically create RESTful APIs through Amazon API Gateway. Afte
 All the solutions are open sourced. You can use the solutions and applications for free. If you have different use cases, you can take the source code as reference to make your own implementation.
 
 
-## AI features
+## APIs
 
-### **Vision**
-|    **Feature Name**   | **Description**    | **Deployment** |
+### **Optical Character Recognition(OCR) APIs**
+|    **API Name**   | **Description**    |  |
 |--------------|------------|-------------|
-|General OCR|Based on artificial intelligence OCR (Optical Character Recognition) technology, which can automatically recognize text from images, and return the coordinate position and confidence scores of the text|[Get started](deploy-general-ocr.md)|
-|Image Super Resolution|Upscale the resolution of images and increase the details in the images|[Get started](deploy-image-super-resolution.md)|
-|Human Image Segmentation|Segment human bodies from background|[Get started](deploy-human-image-segmentation.md)|
-|Nudity Detection|Provide confidence scores of the images in multiple dimensions (normal, sexy, porn)|[Get started](deploy-nudity-detection.md)|
-|General OCR (Traditional Chinese)|Based on artificial intelligence OCR (Optical Character Recognition) technology, it can automatically recognize the text in the picture, and return the coordinate position, confidence and other information of the text in the picture, support traditional Chinese|[Get started](deploy-general-ocr-traditional.md)|
-|Custom OCR|Users can create structured templates, automatically identify and output structured results through self-service templates|[Get started](deploy-custom-ocr.md)|
-|Object Recognition|Detects objects and scenes in the image and returns them and the confidence percentage for each object and scene|[Get started](deploy-object-recognition.md)|
-|Face Detection|Detect and locate the face in the picture or video stream, and return the high-precision coordinate information of the face frame|[Get started](deploy-face-detection.md)|
-|Face Comparison|The facial features of the face in the picture were extracted and analyzed with high precision to obtain the similarity of two faces|[Get started](deploy-face-comparison.md)|
-|Human Attribute Recognition |Detect the attributes of the human body in the picture|[Get started](deploy-human-attribute-recognition.md)|
-|Car License Plate|Identifying the number plate information of motor vehicles within China|[Get started](deploy-car-license-plate.md)|
+|General OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols|[Get started](deploy-general-ocr.md)|
+|General OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols|[Get started](deploy-general-ocr-traditional.md)|
+|Custom OCR|Recognize and extract estructured text by predefined OCR templates|[Get started](deploy-custom-ocr.md)|
+|Car License Plate|Recognize text on Chinese car license plate|[Get started](deploy-car-license-plate.md)|
 
-### **Natural Language **
-|    **Feature Name**   | **Description**    | **Deployment** |
+### **Facial & Body APIs**
+|    **API Name**   | **Description**    |  |
 |--------------|------------|-------------|
-|Text Similarity|Evaluate the similarity of two words, sentences, paragraphs or documents. Score how similar or different two texts are|[Get started](deploy-text-similarity.md)|
+|Face Comparison|Compare two faces of same person and return a confidence score of the similarity|[Get started](deploy-face-comparison.md)|
+|Face Detection|Detect the face in a image and return coordinate information of the face|[Get started](deploy-face-detection.md)|
+|Human Attribute Recognition |Recognize the attributes of the human body in the image|[Get started](deploy-human-attribute-recognition.md)|
+|Human Image Segmentation|Segment human bodies from background and return the alpha channel|[Get started](deploy-human-image-segmentation.md)|
+
+### **Image Understanding APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Image Similarity|Compare two images and return similarity score|[Get started](deploy-text-similarity.md)|
+|Object Recognition|Segment human bodies from background and return the alpha channel|[Get started](deploy-object-recognition.md)|
+|Pornography Detection|Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores|[Get started](deploy-nudity-detection.md)|
+
+### **Computer Vision Production APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Image Super Resolution|Upscale the resolution and enhance details in the images|[Get started](deploy-image-super-resolution.md)|
+
+### **Natural Language Understanding(NLU) APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Text Similarity|Compare two Chinese words or sentences and return similarity score|[Get started](deploy-text-similarity.md)|
 
 <!--
 ### **语音技术**

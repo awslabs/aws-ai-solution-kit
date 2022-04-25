@@ -1,3 +1,3 @@
-### v1.0.0 升级步骤
+`Updated: 2022-05-05`
 
-//TODO
+When you have deployed and are using some of the API features from version 1.0.0, you can continue to use the original APIs that have been deployed inside your AWS account while deploying the features provided in the new APIs available in 1.2.0. If you want to switch the original API call URL to the new version, you can find the call URL from the corresponding AWS CloudFormation stack Outputs tab after the new version is deployed, and replace the original URL with the one from the four APIs included in the current 1.0.0 release (Universal Text Recognition, Image Super Resolution, Intelligent Portrait Segmentation, and Pornography Review). The interface definition parameters of the four APIs (Universal Text Recognition, Image Super Resolution, Smart Portrait Segmentation, Pornography Review) in the 1.0.0 release are identical to the same four functions in the 1.2.0 release, and you only need to replace the original URLs to use them. After the switch is complete, you can completely remove the original stack in the AWS CloudFormation console, which takes about 10 minutes.
