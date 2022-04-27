@@ -1,7 +1,12 @@
 ## 快速部署
 
-您可以通过 Amazon CloudFormation 部署 **{{ page.meta.feature_name }}** 功能，具体步骤请见 [**概述: 部署解决方案**](deployment.md)，并在**参数**部分确认 **{{ page.meta.feature_id }}** 参数设置为 *yes* 。在部署完成后，在 Amazon CloudFormation 控制台上的堆栈列表里可以查看到包含 **{{ page.meta.feature_id }}** 名称的嵌套堆栈（Nested Stack）。
+1. 登录[AWS管理控制台](https://console.aws.amazon.com/)。 
 
-!!! 信息
-    部署时间大约需要：**{{ page.meta.deployment_time }}**
+2. 通过Amazon CloudFormation部署 **{{ page.meta.feature_name }}**功能，具体步骤可参见 [**部署解决方案**](deployment.md)。请务必确认在**参数**部分将 **{{ page.meta.feature_id }}** 参数设置为 *yes* 。
+
+3. 访问[AWS CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)。
+
+4. 从堆栈列表中查看包含 **{{ page.meta.feature_id }}** 名称的嵌套堆栈（Nested Stack）。
+
+部署时间：**{{ page.meta.deployment_time }}**
 

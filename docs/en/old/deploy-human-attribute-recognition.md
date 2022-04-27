@@ -1,12 +1,12 @@
 ---
-feature_id: TextSimilarity
-feature_name: 文本相似度
-feature_endpoint: text_similarity
-deployment_time: 15 分钟
-destroy_time: 10 分钟
+feature_id: CustomOCR
+feature_name: 自定义模板文字识别
+feature_endpoint: custom_ocr
+deployment_time: TODO
+destroy_time: TODO
 sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
-feature_description: 比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。
-feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自动应答、命名实体识别、拼写纠错等场景。
+feature_description: TODO
+feature_scenario: TODO
 ---
 
 {%
@@ -27,9 +27,9 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 
 ## 开始使用
 
-{%
-  include "include-call-url.md"
-%}
+### 调用 URL
+
+您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
 
 ### REST API接口参考
 

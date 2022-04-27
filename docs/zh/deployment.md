@@ -1,29 +1,40 @@
-本部分介绍如何通过 **Amazon CloudFormation** 部署 **AI Solution Kit** 解决方案。对于解决方案中包含的 AI 应用的详细部署与使用说明，在对应的技术手册中有详细说明。在部署解决方案之前，建议您先查看本指南中有关架构图和区域支持等信息，然后按照下面的说明配置解决方案并将其部署到您的帐户中。
+在部署解决方案之前，建议您先查看本指南中有关架构图和区域支持等信息，然后按照下面的说明配置解决方案并将其部署到您的帐户中。
 
 **部署时间**
 
-- 部署基于 Amazon Lambda 架构的 AI 应用：约**10**分钟
+- 部署基于AWS Lambda架构的AI应用：约**10**分钟
 
-- 部署基于 Amazon SageMaker 架构的 AI 应用：约**20**分钟
+- 部署基于Amazon SageMaker架构的AI应用：约**20**分钟
 
-!!! 注意
-    以上为部署 AI 应用的平均时间，具体信息请参考各个应用对应的技术手册，当用户在Amazon CloudFormation中同时激活多个 API 时，部署时间为 各个独立 API 的叠加时间。
+!!! Important "重要提示"
+    以上为部署AI应用的平均时间，对于解决方案中包含的AI应用的具体部署时间，请查看各个AI应用的技术手册。当您在AWS CloudFormation中同时部署使用多个API时，API应用在同时部署时会并发执行，部署时间为叠加值。
 
 ## 部署概述
 
-**前提条件（中国区域）**
+您可以在AWS云上部署并使用解决方案：
 
-本解决方案使用 Amazon API Gateway来接收 API 调用请求，所以如果您希望在 北京区域 提供无需身份验证即可访问的 API 请求，则需要申请并确保您的Amazon Web Services账号已通过Internet Content Provider (ICP) 备案，80/443端口可以正常开启，具体流程参见[ICP备案说明](https://s3.cn-north-1.amazonaws.com.cn/sinnetcloud/ICP+recordal/ICP%E5%A4%87%E6%A1%88%E8%AF%B4%E6%98%8E.pdf)。
+- （选项1）从中国区域启动AWS CloudFormation堆栈
+- （选项2）从全球区域启动AWS CloudFormation堆栈
+-  更新AWS CloudFormation堆栈（添加或删除AI功能）
 
-### 部署 Amazon CloudFormation 模板
+## (选项1) 从中国区域启动堆栈
 
-1. 登录到Amazon Web Services管理控制台，选择链接启动 AWS CloudFormation 模板。
+### 前提条件
 
-| 快速启动链接 | 描述 |
-| ---------- | --- |
-| [由光环新网运营的亚马逊云科技中国（北京）区域链接][template-china1] |  在**北京**区域部署 AI Solution Kit |
-| [由西云数据运营的亚马逊云科技中国（宁夏）区域链接][template-china2] |  在**宁夏**区域部署 AI Solution Kit |
-| [全球区域链接][template-global] |  在**全球**区域部署 AI Solution Kit  |
+- 确保您的AWS账号已通过Internet Content Provider (ICP) 备案。具体流程可参见[ICP备案说明](https://s3.cn-north-1.amazonaws.com.cn/sinnetcloud/ICP+recordal/ICP%E5%A4%87%E6%A1%88%E8%AF%B4%E6%98%8E.pdf)。
+- 确保端口80/443可以正常开启。
+
+
+### 从中国区域部署AWS CloudFormation模板
+
+!!! Important "重要提示"
+    
+    以下部署说明仅适用于中国区域。有关全球区域的部署说明，请参阅（选项2）从全球区域启动堆栈。
+
+1. 登录到AWS管理控制台，选择链接启动AWS CloudFormation模板。
+
+    - [由光环新网运营的亚马逊云科技中国（北京）区域链接][template-china1]
+    - [由西云数据运营的亚马逊云科技中国（宁夏）区域链接][template-china2]
 
 2. 默认情况下，该模板将在您登录控制台后默认的区域启动。若需在指定的Amazon Web Service区域中启动该解决方案，请在控制台导航栏中的区域下拉列表中选择。
 
@@ -31,60 +42,89 @@
 
 4. 在**指定堆栈详细信息**页面，为您的解决方案堆栈分配一个账户内唯一且符合命名要求的名称。
 
-5. 在**参数**部分，包含**通用配置**和 **AI 应用列表**两部分参数内容，您可以并根据需要进行修改通用配置并选择需要部署的 AI 应用，然后选择**下一步**。
+5. 在**参数**部分，根据需要修改通用配置并选择需要部署的AI应用，然后选择**下一步**。其中包含**通用配置**和**AI应用列表**两部分参数内容。
 
-    #### **通用配置参数**
+    **通用配置参数**
 
     |  参数名称   |  默认值 |  描述 |
     |  ----------  | ---------| -----------  |
-    | **APIGatewayAuthorization**  | AWS_IAM  | API网关的认证方式. 默认为 *AWS_IAM* ，将自动使用 [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) 权限控制对 API 的访问。也可选择 *NONE* 即无权限认证方式（不安全的），在部署解决方案后用户需要手动在 API Gateway 控制台配置所需的[资源访问策略](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/apigateway-control-access-to-api.html)。|
-    | **APIGatewayStageName**    | prod    | API网关（URI）中的第一个路径字段。请参考：[阶段变量](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html) |
-    | **APIExplorer**  | yes  | 部署基于 [Swagger UI](https://swagger.io/tools/swagger-ui/) 的**API 资源浏览器**，可视化 API 资源并与之交互。它是根据 OpenAPI（以前称为 Swagger）规范自动生成的，通过可视化文档使查看 API 定义与测试变得容易。详情请见：[API 资源浏览器](api-explorer.md) |
+    | **APIExplorer**  | yes  | 部署基于[Swagger UI](https://swagger.io/tools/swagger-ui/)的**API资源浏览器**，可视化API资源并与之交互。它是根据OpenAPI（从前称为 Swagger）规范自动生成的，通过可视化文档便于查看API定义与测试。详情可参见[API资源浏览器](api-explorer.md)。 |
+    | **APIGatewayAuthorization**  | AWS_IAM  | API网关的认证方式。默认为*AWS_IAM*，将自动使用[IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html)权限控制对API的访问。您也可以选择*NONE*，即无权限认证方式（不安全的）。在部署解决方案后需要手动在API Gateway控制台配置所需的[资源访问策略](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/apigateway-control-access-to-api.html)。|
+    | **APIGatewayStageName**    | prod    | API网关（URI）中的第一个路径字段。详情可参见[阶段变量](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html)。 |
 
-    #### **AI 应用列表参数**
+    **AI应用列表参数**
 
-    |  参数 ID   |  默认值 |  描述 |
+        !!! Note "说明"
+
+            AI应用列表参数默认值均为no，如果您需要部署AI应用，请更改配置为yes。
+
+    |  参数ID   |  默认值 |  描述 |
     |  ----------  | ---------| -----------  |
-    | **GeneralOCR**  | no  | 部署**通用文字识别**，如需部署请选中'yes'，详情请见[通用文字识别技术手册](deploy-general-ocr.md) |
-    | **GeneralOCRTraditional**  | no  | 部署**通用文字识别（繁体中文）**，如需部署请选中'yes'，详情请见[通用文字识别（繁体中文）技术手册](deploy-general-ocr-traditional.md) |
-    | **CustomOCR**  | no  | 部署**自定义模板文字识别**，如需部署请选中'yes'，详情请见[自定义模板文字识别技术手册](deploy-custom-ocr.md) |
-    | **CarLicensePlate**  | no  | 部署**车牌信息识别**，如需部署请选中'yes'，详情请见[车牌信息识别技术手册](deploy-car-license-plate.md) |
-    | **PornographyDetection**  | no  | 部署**色情内容审核**，如需部署请选中'yes'，详情请见[色情内容审核技术手册](deploy-pornography-detection.md) |
-    | **ImageSimilarity**  | no  | 部署**图片相似度**，如需部署请选中'yes'，详情请见[图片相似度技术手册](deploy-image-similarity.md) |
-    | **HumanImageSegmentation**  | no  | 部署**智能人像分割**，如需部署请选中'yes'，详情请见[智能人像分割技术手册](deploy-human-image-segmentation.md) |
-    | **ObjectRecognition**  | no  | 部署**通用物体识别**，如需部署请选中'yes'，详情请见[通用文字识别技术手册](deploy-object-recognition.md) |
-    | **FaceDetection**  | no  | 部署**人脸识别**，如需部署请选中'yes'，详情请见[通用物体识别技术手册](deploy-face-detection.md) |
-    | **FaceComparison**  | no  | 部署**人脸相似度比对**，如需部署请选中'yes'，详情请见[人脸识别技术手册](deploy-face-comparison.md) |
-    | **HumanAttributeRecognition**  | no  | 部署**人体结构化属性**，如需部署请选中'yes'，详情请见[人体结构化属性技术手册](deploy-human-attribute-recognition.md) |
-    | **ImageSuperResolution**  | no  | 部署**图像超分辨率**，如需部署请选中'yes'，详情请见[图像超分辨率技术手册](deploy-image-super-resolution.md) |
-    | **TextSimilarity**  | no  | 部署**文本相似度**，如需部署请选中'yes'，详情请见[文本相似度技术手册](deploy-text_similarity.md) |
+    | **GeneralOCR**  | no  | 部署**通用文字识别**，详情请见[通用文字识别技术手册](deploy-general-ocr.md) |
+    | **GeneralOCRTraditional**  | no  | 部署**通用文字识别（繁体中文）**，详情请见[通用文字识别（繁体中文）技术手册](deploy-general-ocr-traditional.md) |
+    | **CustomOCR**  | no  | 部署**自定义模板文字识别**，详情请见[自定义模板文字识别技术手册](deploy-custom-ocr.md) |
+    | **CarLicensePlate**  | no  | 部署**车牌信息识别**，详情请见[车牌信息识别技术手册](deploy-car-license-plate.md) |
+    | **PornographyDetection**  | no  | 部署**色情内容审核**，详情请见[色情内容审核技术手册](deploy-pornography-detection.md) |
+    | **ImageSimilarity**  | no  | 部署**图片相似度**，详情请见[图片相似度技术手册](deploy-image-similarity.md) |
+    | **HumanImageSegmentation**  | no  | 部署**智能人像分割**，详情请见[智能人像分割技术手册](deploy-human-image-segmentation.md) |
+    | **ObjectRecognition**  | no  | 部署**通用物体识别**，详情请见[通用文字识别技术手册](deploy-object-recognition.md) |
+    | **FaceDetection**  | no  | 部署**人脸识别**，详情请见[通用物体识别技术手册](deploy-face-detection.md) |
+    | **FaceComparison**  | no  | 部署**人脸相似度比对**，详情请见[人脸识别技术手册](deploy-face-comparison.md) |
+    | **HumanAttributeRecognition**  | no  | 部署**人体结构化属性**，详情请见[人体结构化属性技术手册](deploy-human-attribute-recognition.md) |
+    | **ImageSuperResolution**  | no  | 部署**图像超分辨率**，详情请见[图像超分辨率技术手册](deploy-image-super-resolution.md) |
+    | **TextSimilarity**  | no  | 部署**文本相似度**，详情请见[文本相似度技术手册](deploy-text_similarity.md) |
 
 6. 在**配置堆栈选项**页面，选择**下一步**。
 
-7. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。选择**下一步**。
+7. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。如果AWS CloudFormation需要其它功能，选中复选框。选择**下一步**。
 
 8. 选择**创建堆栈**以部署堆栈。
 
 您可以在AWS CloudFormation控制台的**状态**列中查看堆栈的状态。创建完成后即可看到状态为**CREATE_COMPLETE**。
 
-!!! 提示
-    部署成功后，可以打开 AWS CloudFormation 的控制台中 **AI Solution Kit** 主堆栈，并切换至 **Outputs** （输出）标签页，通过对应**参数 ID**即可查询基于 Amazon API Gateway 的调用 URL。
+在堆栈创建成功后，您可在AWS CloudFormation的**输出**标签页中通过对应**参数ID**查询基于Amazon API Gateway的调用URL。
 
-### 更新 Amazon CloudFormation 堆栈
+## (选项2) 从全球区域启动堆栈
 
-借助 Amazon CloudFormation，您可以更改堆栈中现有资源的属性，如果您需要添加或删除已经部署的 AI 功能，可以通过更新堆栈的方式完成。
+1. 登录到AWS管理控制台，选择链接启动AWS CloudFormation模板。
 
-1. 在 Amazon CloudFormation 控制台上，选择堆栈列表中创建完成的 AI Solution Kit 堆栈。
+    [全球区域链接][template-global]
 
-2. 在堆栈详细信息窗格中，选择 Update (更新)。
+2. 默认情况下，该模板将在您登录控制台后默认的区域启动。若需在指定的Amazon Web Service区域中启动该解决方案，请在控制台导航栏中的区域下拉列表中选择。
 
-3. 在模板参数部分，指定需要添加或删除的 AI 功能或参数信息，然后选择 Next (下一步)。
+3. 在**创建堆栈**页面上，确认Amazon S3 URL文本框中显示正确的模板URL，然后选择**下一步**。
 
-4. 在**配置堆栈选项**页面，选择**下一步**。
+4. 在**指定堆栈详细信息**页面，为您的解决方案堆栈分配一个账户内唯一且符合命名要求的名称。
 
-5. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。选择**下一步**。
+5. 在**参数**部分，根据需要修改通用配置并选择需要部署的AI应用，然后选择**下一步**。其中包含**通用配置**和 **AI应用列表**两部分参数内容。详情可参见（选项1）从中国区域启动堆栈。
 
-6. 如果您对所做更改表示满意，请选择 Updata stack (更新堆栈)。
+6. 在**配置堆栈选项**页面，选择**下一步**。
+
+7. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。如果AWS CloudFormation需要其它功能，选中复选框。选择**下一步**。
+
+8. 选择**创建堆栈**以部署堆栈。
+
+您可以在AWS CloudFormation控制台的**状态**列中查看堆栈的状态。创建完成后即可看到状态为**CREATE_COMPLETE**。
+
+## 更新AWS CloudFormation堆栈（添加或删除AI功能）
+
+您可以通过AWS CloudFormation更改堆栈中现有资源的属性，从而添加新的AI功能或删除已经部署的AI功能。
+
+1. 访问[AWS CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)。
+
+2. 从堆栈列表中选择部署完成的方案根堆栈。
+
+3. 在**堆栈详细信息**页面，选择**更新**。
+
+4. 在**指定模板**页面，选择**使用当前模板**，然后选择**下一步**。
+
+5. 在参数部分，更改相应的参数信息，然后选择**下一步**。例如，如果**Custom Template OCR**原来为no，可以更改设置为yes，从而添加**自定义模板文字识别**API功能。
+
+6. 在**配置堆栈选项**页面，选择**下一步**。
+
+7. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。选择**下一步**。
+
+8. 确认更改，并选择**更新堆栈**。
 
 [template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 

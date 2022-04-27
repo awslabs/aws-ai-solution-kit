@@ -2,9 +2,9 @@
 feature_id: ObjectRecognition
 feature_name: 通用物体识别
 feature_endpoint: object_recognition
-deployment_time: TODO
-destroy_time: TODO
-sample_image: TODO
+deployment_time: 15 分钟
+destroy_time: 10 分钟
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别60类物体。
 feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图像场景的目标检测与跟踪。
 ---
@@ -27,9 +27,9 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 
 ## 开始使用
 
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
+{%
+  include "include-call-url.md"
+%}
 
 ### REST API接口参考
 
@@ -46,13 +46,13 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 
 ``` json
 {
-  "url": "{{page.meta.sample_image}}"
+"url": "{{page.meta.sample_image}}"
 }
 ```
 
 ``` json
 {
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+"img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
 }
 ```
 
@@ -67,26 +67,26 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 - 返回示例
 ``` json
 [
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
+  {
+      "words": "香港永久性居民身份證",
+      "location": {
+          "top": 18,
+          "left": 148,
+          "width": 169,
+          "height": 17
+      },
+      "score": 0.9923796653747559
+  },
+  {
+      "words": "HONG KONG PERMANENTIDENTITYCARD",
+      "location": {
+          "top": 36,
+          "left": 71,
+          "width": 321,
+          "height": 17
+      },
+      "score": 0.9825196266174316
+  }
 
 ]
 ```

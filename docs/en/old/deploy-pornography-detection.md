@@ -1,12 +1,12 @@
 ---
-feature_id: FaceDetection
-feature_name: 人脸识别
-feature_endpoint: face_detection
-deployment_time: TODO
-destroy_time: TODO
+feature_id: PornographyDetection
+feature_name: 色情内容审核
+feature_endpoint: pornography-detection
+deployment_time: 5 分钟
+destroy_time: 5 分钟
 sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
-feature_description: 识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到64个矢量坐标上。
-feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营销等多种场景。
+feature_description: 内容审核-色情图片识别方案基于AI 技术，自动对图片进行审核，识别及获取多维度色情量化信息（normal，sexy，porn），实现精准快速的色情倾向判断。
+feature_scenario: 本解决方案具有识别精度（准确率）高、价格低、处理速度快、可私有化部署等优势，能有效保护用户隐私数据。通过智能识别图片内容，并对色情程度进行多维度打分，方便客户对涉黄内容进行快速处理，帮助客户减少审核人力，有效降低涉黄风险，提升信息处理效率。
 ---
 
 {%
@@ -60,35 +60,17 @@ feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|normal    |*Float*   |识别图像的正常维度占比|
+|sexy      |*Float*   |识别图像的性感维度占比|
+|porn      |*Float*   |识别图像的色情维度占比|
 
 - 返回示例
 ``` json
-[
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
-
-]
+{ 
+   “normal”  : 0.15993066132068634,
+   “sexy”    : 0.5451669692993164, 
+   “porn”    : 0.2949024438858032 
+}
 ```
 
 {%

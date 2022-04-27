@@ -2,11 +2,11 @@
 feature_id: FaceComparison
 feature_name: 人脸相似度比对
 feature_endpoint: face_comparison
-deployment_time: TODO
-destroy_time: TODO
-sample_image: TODO
-feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张人脸，从而确定它们是否属于同一个人。
-feature_scenario: 可应用于用户身份验证、照片分类等场景，如：自助酒店入住、人员报到、校园入口通行、相册制作。
+deployment_time: 10 分钟
+destroy_time: 6 分钟
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
+feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较，从而判断是否为同一个人。
+feature_scenario: 可应用于客户身份验证、照片分类等场景，例如：自助酒店入住、人员报到、校园入口通行、相册制作。
 ---
 
 {%
@@ -27,9 +27,9 @@ feature_scenario: 可应用于用户身份验证、照片分类等场景，如�
 
 ## 开始使用
 
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
+{%
+  include "include-call-url.md"
+%}
 
 ### REST API接口参考
 
@@ -61,10 +61,11 @@ feature_scenario: 可应用于用户身份验证、照片分类等场景，如�
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
 |words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|location |*JSON*     |识别文本在图像中的的坐标值，包含top，left，width，height的整数值|
+|score    |*Float*   |识别文本的置信度值，为0到1区间内Float型数值|
 
 - 返回示例
+
 ``` json
 [
     {

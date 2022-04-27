@@ -4,7 +4,7 @@ feature_name: 图像相似度
 feature_endpoint: text_similarity
 deployment_time: TODO
 destroy_time: TODO
-sample_image: TODO
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 比较两幅图片是否相似，通过图片特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张图片的相似性。
 feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场景。
 ---

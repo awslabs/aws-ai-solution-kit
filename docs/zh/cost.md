@@ -1,19 +1,21 @@
-您需要承担运行 AI Solution Kit 解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年4月，影响解决方案的成本因素主要包括：
+## 成本预估
 
-- Amazon Lambda调用
-- Amazon Lambda运行
-- Amazon API Gateway调用
-- Amazon API Gateway数据输出
-- Amazon CloudWatch Logs
-- Amazon Elastic Container Registry存储
-- Amazon SageMaker 终端节点实例
-- Amazon SageMaker 终端节点数据输入
-- Amazon SageMaker 终端节点数据输出
+您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年4月，影响解决方案的成本因素主要包括：
 
-!!! 提示
-    其中**Amazon SageMaker**关联费用仅限于**图像超分辨率**API
+- AWS Lambda调用次数
+- AWS Lambda运行时间
+- Amazon API Gateway调用次数
+- Amazon API Gateway数据输出量
+- Amazon CloudWatch Logs存储量
+- Amazon Elastic Container Registry存储量
+- Amazon SageMaker终端节点实例类型
+- Amazon SageMaker终端节点数据输入量
+- Amazon SageMaker终端节点数据输出量
 
-详情请参阅 API 对应的成本预估章节，了解各 API 应用的部署与实际使用成本。
+!!! Note "说明"
+    Amazon SageMaker相关的费用仅适用于图像超分辨率方案。
+
+您可以查看每个API对应的成本预估章节，了解每个API应用的部署与实际使用成本。
 
 
 |    **名称**   |    **成本预估**   |

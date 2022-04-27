@@ -4,7 +4,7 @@ feature_name: 自定义模板文字识别
 feature_endpoint: custom_ocr
 deployment_time: TODO
 destroy_time: TODO
-sample_image: TODO
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。
 
 feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场景。

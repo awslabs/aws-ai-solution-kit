@@ -4,7 +4,7 @@ feature_name: 自定义模板文字识别
 feature_endpoint: custom_ocr
 deployment_time: TODO
 destroy_time: TODO
-sample_image: TODO
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 用户可自定义OCR模版，提取卡证票据中结构化文字信息，结果将以键值对应关系的形式展现。
 feature_scenario: 可应用于卡证票据类图片的结构化识别场景，如物流单据、发票、营业执照、行程单、火车票等。
 ---

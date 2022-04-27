@@ -2,9 +2,9 @@
 feature_id: Image Similarity
 feature_name: 图像相似度
 feature_endpoint: text_similarity
-deployment_time: TODO
-destroy_time: TODO
-sample_image: TODO
+deployment_time: 15 分钟
+destroy_time: 10 分钟
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 比较两幅图片是否相似，通过图片特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张图片的相似性。
 feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场景。
 ---
@@ -27,9 +27,9 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 
 ## 开始使用
 
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
+{%
+  include "include-call-url.md"
+%}
 
 ### REST API接口参考
 
@@ -46,13 +46,13 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 
 ``` json
 {
-  "url": "{{page.meta.sample_image}}"
+"url": "{{page.meta.sample_image}}"
 }
 ```
 
 ``` json
 {
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+"img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
 }
 ```
 
@@ -65,6 +65,7 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 |score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
 
 - 返回示例
+
 ``` json
 [
     {

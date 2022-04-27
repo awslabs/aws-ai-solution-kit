@@ -4,7 +4,7 @@ feature_name: 通用文字识别
 feature_endpoint: general_ocr
 deployment_time: 15 分钟
 destroy_time: 15 分钟
-sample_image: https://images-cn.ssl-images-amazon.cn/images/G/28/AGS/LIANG/Deals/2020/Dealpage_KV/1500300.jpg
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 适用于通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于用户进行比对或结构化操作。支持识别**简体中文**、英文、数字和常用符号。
 feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
 ---

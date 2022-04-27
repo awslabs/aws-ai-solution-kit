@@ -2,11 +2,11 @@
 feature_id: GeneralOCRTraditional
 feature_name: 通用文字识别（繁体中文）
 feature_endpoint: general_ocr_traditional
-deployment_time: TODO
-destroy_time: TODO
-sample_image: TODO
-feature_description: 适用于通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于用户进行比对或结构化操作。支持识别**繁体中文**、英文、数字和常用符号。
-feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
+deployment_time: 10 分钟
+destroy_time: 10 分钟
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
+feature_description: 通用场景文字提取，通过返回图片中文字内容与坐标位置等信息，便于客户进行比对或结构化操作。支持识别**繁体中文**、英文、数字和常用符号。
+feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提高信息处理效率。
 ---
 
 {%
@@ -27,9 +27,9 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 
 ## 开始使用
 
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
+{%
+  include "include-call-url.md"
+%}
 
 ### REST API接口参考
 
@@ -46,13 +46,13 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 
 ``` json
 {
-  "url": "{{page.meta.sample_image}}"
+"url": "{{page.meta.sample_image}}"
 }
 ```
 
 ``` json
 {
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+"img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
 }
 ```
 
@@ -65,28 +65,29 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 |score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
 
 - 返回示例
+
 ``` json
 [
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
+  {
+      "words": "香港永久性居民身份證",
+      "location": {
+          "top": 18,
+          "left": 148,
+          "width": 169,
+          "height": 17
+      },
+      "score": 0.9923796653747559
+  },
+  {
+      "words": "HONG KONG PERMANENTIDENTITYCARD",
+      "location": {
+          "top": 36,
+          "left": 71,
+          "width": 321,
+          "height": 17
+      },
+      "score": 0.9825196266174316
+  }
 
 ]
 ```

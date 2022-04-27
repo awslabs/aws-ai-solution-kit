@@ -1,13 +1,24 @@
-# 架构概览
+本方案架构中包含两类AI功能的实现方式：基于AWS Lambda的架构和基于Amazon SageMaker的架构。
 
-用户或程序发送 API 请求至 Amazon API Gateway，请求 payload 中需要包含被处理的图片或文字信息，Amazon API Gateway 接收到 HTTP 到请求后，将请求数据发送给对应的 Amazon Lambda 函数或 Amazon SageMaker Endpoint，从而实现推理过程，并将推理结果（通常为JSON格式数据）返回。
+!!! Note "说明"
+    基于Amazon SageMaker的架构在版本1.2.0中仅适用于**图像超分辨率方案**。
 
-本解决方案架构中包含两类 AI 功能的实现方式（版本1.2.0中 *Amazon SageMaker* 架构只适用于**图像超分辨率方案**）
+## 基于AWS Lambda的架构
 
-## 基于 Amazon Lambda 架构
-Amazon API Gateway 将接收到的用户请求直接发送给 Lambda 函数，由 Lambda 函数将结果返回给调用端。
 ![](./images/arch-lambda.png)
 
-## 基于 Amazon SageMaker 架构
-首先 API Gateway 将用户请求发送到 Lambda（invoke endpoint）函数，通过 Lambda 调用 SageMaker Endpoint，在 SageMaker 中执行推理过程并返回推理结果。
+1. 用户或程序发送API请求至Amazon API Gateway。请求payload中需要包含被处理的图片或文字信息。
+
+2. Amazon API Gateway将接收到的用户请求直接发送给AWS Lambda函数。
+
+3. AWS Lambda函数将结果返回给调用端。
+
+## 基于Amazon SageMaker的架构
+
 ![](./images/arch-sagemaker.png)
+
+1. 用户或程序发送API请求至Amazon API Gateway。请求payload中需要包含被处理的图片或文字信息。
+
+2. Amazon API Gateway将请求发送到AWS Lambda（invoke endpoint）函数。
+
+3. AWS Lambda调用Amazon SageMaker Endpoint，在Amazon SageMaker中执行推理过程并返回推理结果（通常为JSON格式数据）。

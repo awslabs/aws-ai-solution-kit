@@ -1,12 +1,12 @@
 ---
-feature_id: TextSimilarity
-feature_name: 文本相似度
-feature_endpoint: text_similarity
+feature_id: GeneralOCR
+feature_name: 通用文字识别
+feature_endpoint: general_ocr
 deployment_time: 15 分钟
-destroy_time: 10 分钟
+destroy_time: 15 分钟
 sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
-feature_description: 比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。
-feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自动应答、命名实体识别、拼写纠错等场景。
+feature_description: 通用文本识别解决方案基于人工智能文本识别技术，自动完成各类场景中文字的识别，并返回文字在图片中的坐标位置等信息以便于客户进行比对或结构化等操作，对客户的工作流程和业务流程进行了极大的改进，可满足医疗、金融、政务、法务、教育等行业文档快速录入的需求，有效降低企业人力成本，提高信息录入效率。目前支持识别简体/繁体中文，英文和数字。可将图片上的文字识别为文本，并返回对应文字的坐标与置信度，并且本解决方案还增强了对中文语言的处理与识别能力，结合精准的语言模型和大词库，如香港增补字符集（HKSCS）等大字符集识别，从而提高输入转化效率。
+feature_scenario: 通用文本识别解决方案具有中文识别精度（准确率）高、价格低、处理速度快、可私有化部署等优势，能有效保护用户隐私数据。可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提升信息处理效率。
 ---
 
 {%
@@ -27,9 +27,9 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 
 ## 开始使用
 
-{%
-  include "include-call-url.md"
-%}
+### 调用 URL
+
+您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
 
 ### REST API接口参考
 

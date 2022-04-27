@@ -4,7 +4,7 @@ feature_name: 通用物体识别
 feature_endpoint: object_recognition
 deployment_time: TODO
 destroy_time: TODO
-sample_image: TODO
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别60类物体。
 feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图像场景的目标检测与跟踪。
 ---

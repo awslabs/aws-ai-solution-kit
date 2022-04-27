@@ -1,8 +1,18 @@
-# 常见问题
+## 在中国区域部署解决方案如何开通ICP备案？
 
-### 部署解决方案都需要哪些AWS Identity and Access Management (IAM)权限？
+本解决方案使用Amazon API Gateway来接收API调用请求，所以如果您希望在中国区域提供无需身份验证即可访问的API请求，需要申请并确保您的AWS账号已通过Internet Content Provider (ICP) 备案，80/443端口可以正常开启。具体流程可参见[ICP备案说明](https://s3.cn-north-1.amazonaws.com.cn/sinnetcloud/ICP+recordal/ICP%E5%A4%87%E6%A1%88%E8%AF%B4%E6%98%8E.pdf)。
 
-部署解决方案并在部署后通过API Gateway调用 API 需要如下权限，其中**sagemaker:**仅限于**图像超分辨率** API：
+## 部署解决方案时遇到*The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances*，如何解决？
+
+方案中的超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例，如果您AWS账户中对应实例限制不足，则会导致该功能部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅：[请求提高配额（目前此内容仅使用英语显示）](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
+
+## 部署解决方案时遇到*Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*，如何解决？
+
+方案中默认的**AWS Lambda**内存约为4GB（4096 MB），如果您AWS账户中AWS Lambda函数限制低于4096 MB，则会导致该部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高 **Lambda**服务的内存限额。具体步骤请参阅：[请求提高配额（目前此内容仅使用英语显示）](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
+
+## 使用解决方案都需要哪些AWS Identity and Access Management (IAM)权限？
+
+您在部署解决方案之后，可以通过Amazon API Gateway调用API，需要的权限如下。其中**sagemaker:**仅限于**图像超分辨率**API。
 
 | Actions |
 | ------------------------------------- |
@@ -68,53 +78,48 @@
 | sagemaker:InvokeEndpoint              |
 | sns:ListTopics                        |
 
-### 部署解决方案时遇到 *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances* 如何解决？
+## 如何统一切换Amazon API Gateway中API的访问认证方式？
 
-1. visit aws console https://console.aws.amazon.com/
-2. click on support on the top right corner
-3. click create a case (orange button)
-4. select Service Limit Increase radio button
-5. For Limit Type, Search and Select SageMaker Notebook Instances
-6. Write a short Use case description
-7. For Limit, Select ml.[x].[x] (in your case, ml.g4dn.xlarge)
+您可以通过AWS CloudFormation更新堆栈，从而统一修改现有资源的属性。
 
-### 部署解决方案时遇到 *Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*如何解决？
+1. 访问[AWS CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)。
 
-//TODO
+2. 从堆栈列表中选择部署完成的方案根堆栈。
 
-### 如何统一切换 Amazon API Gateway 中 API 的访问认证方式？
+3. 在**堆栈详细信息**页面，选择**更新**。
 
-借助 Amazon CloudFormation，您可以更改堆栈中现有资源的属性，如果您需要添加或删除已经部署的 AI 功能，可以通过更新堆栈的方式完成。
+4. 在**指定模板**页面，选择**使用当前模板**，然后选择**下一步**。
 
-1. 在 Amazon CloudFormation 控制台上，选择堆栈列表中创建完成的 AI Solution Kit 堆栈。
+5. 在模板参数部分，修改**API Gateway Authorization**参数，然后选择**下一步**。
 
-2. 在堆栈详细信息窗格中，选择 Update (更新)。
+6. 在**配置堆栈选项**页面，选择**下一步**。
 
-3. 在模板参数部分，修改**API Gateway Authorization**参数，然后选择 Next (下一步)。
+7. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。选择**下一步**。
 
-4. 在**配置堆栈选项**页面，选择**下一步**。
+8. 确认更改，并选择**更新堆栈**。
 
-5. 在**审核**页面，查看并确认设置。确保选中确认模板将创建Amazon Identity and Access Management（IAM）资源的复选框。选择**下一步**。
+## 如何单独切换Amazon API Gateway中API的访问认证方式？
 
-6. 如果您对所做更改表示满意，请选择 Updata stack (更新堆栈)即可完成访问权限更新。
+1. 访问[Amazon API Gateway控制台](https://console.aws.amazon.com/apigateway/)。
+2. 从API列表中选择最新创建的方案API，打开API页面。您也可以按**已创建**的时间排序，便于查找。
+3. 展开资源树，找到需要修改访问权限的资源路径下的**OPTIONS**节点，点击该节点打开**方法执行**配置页面。
+4. 点击下方的**方法请求**链接。
+5. 点击**授权**右侧的编辑按钮，展开下拉列表，选择**Amazon IAM**。
+6. 点击**更新**按钮完成修改。更新完成后，授权项应显示为**Amazon IAM**。
+7. 点击资源树中**OPTIONS**下方**POST**按钮，和修改OPTIONS的方法一样，在方法请求中将授权方式修改为**Amazon IAM**。
+8. 点击方法执行左侧的**操作**下拉列表，选择**API操作**中的**部署 API**选项。
+9. 在**部署API**对话框，选择**prod**或自定义名称的部署阶段，请不要选择[新阶段]，然后点击下方部署按钮完成部署。
 
-### 如何单独切换 Amazon API Gateway 中 API 的访问认证方式？
-1. 打开Amazon Web Service控制台（console）的服务面板，在里面找到 应用程序服务（Application Services），点击API Gateway
-2. 在 API 列表中选择最新创建的AI Solution Kit API，也可按 ‘已创建’ 的时间排序，便于查找，然后点击名称链接打开 API详细页
-3. 展开资源树，找到需要修改访问权限的资源路径下的 ‘OPTIONS’节点，点击该节点显示方法执行配置页面。点击方法执行下方的方法请求链接
-4. 然后点击 授权 右侧的编辑按钮后，展开下拉列表，选择 ‘Amazon IAM’，选好之后点击 更新 按钮完成修改
-5. 更新后，授权项应显示为 ‘Amazon IAM’
-6. 接下来点击资源树中OPTIONS下方 POST按钮，和修改OPTIONS的方法一样，在方法请求中将授权方式修改为 Amazon IAM，然后点击更新按钮
-7. 点击方法执行左侧的 ‘操作’ 下拉按钮，点击 API操作下方 ‘部署 API’ 选项
-8. 在部署 API 对话框选择 ‘prod’或自定义名称的 部署阶段，请不要选择 [新阶段]，然后点击下方部署按钮完成部署
+## 如何创建和使用带API密钥的使用计划？
+本解决方案支持API使用计划（Usage Plans）。部署解决方案并测试API后，您可以实施API Gateway使用计划，将它们作为面向客户的产品/服务提供。您可以配置使用计划和API密钥，以允许客户按照商定的可满足其业务需求和预算限制的请求速率和配额来访问选定API。
 
-### 创建和使用带 API 密钥的使用计划
-本解决方案支持 API 使用计划（Usage Plans）。部署本解决方案并测试 API 后，您可以实施 API Gateway 使用计划，将它们作为面向客户的产品/服务提供。您可以配置使用计划和 API 密钥，以允许客户按照商定的可满足其业务需求和预算限制的请求速率和配额来访问选定 API。如果需要，您可以为 API 设置默认方法级别限制或为单个 API 方法设置限制。 API 调用方必须在 API 请求的 x-api-key 标头中提供一个已分配的 API 密钥。 
+如果需要的话，您可以为API设置默认方法级别限制或为单个API方法设置限制。API调用方必须在API请求的x-api-key标头中提供一个已分配的API密钥。 
 
-如您需要配置 *API 使用计划* 请参考：[配置使用计划](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/api-gateway-create-usage-plans.html)
+如您需要配置*API使用计划*，请参考[配置使用计划](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/api-gateway-create-usage-plans.html)。
 
-### 通用目标检测 API 目前支持哪些目标识别？
-如下为目标检测支持实体列表：
+## 通用目标检测 API 目前支持哪些目标识别？
+
+以下为目标检测支持的实体列表：
 
 | ID                    | 名称                |
 | ---------------------------- | ------------------ |

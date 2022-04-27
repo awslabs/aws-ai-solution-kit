@@ -2,9 +2,9 @@
 feature_id: HumanAttributeRecognition
 feature_name: 自定义模板文字识别
 feature_endpoint: custom_ocr
-deployment_time: TODO
-destroy_time: TODO
-sample_image: TODO
+deployment_time: 15 分钟
+destroy_time: 10 分钟
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。
 
 feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场景。
@@ -49,9 +49,9 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 
 ## 开始使用
 
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
+{%
+  include "include-call-url.md"
+%}
 
 ### REST API接口参考
 
@@ -87,6 +87,7 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 |score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
 
 - 返回示例
+
 ``` json
 [
     {

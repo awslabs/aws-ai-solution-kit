@@ -4,7 +4,7 @@ feature_name: 人脸相似度比对
 feature_endpoint: face_comparison
 deployment_time: TODO
 destroy_time: TODO
-sample_image: TODO
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张人脸，从而确定它们是否属于同一个人。
 feature_scenario: 可应用于用户身份验证、照片分类等场景，如：自助酒店入住、人员报到、校园入口通行、相册制作。
 ---

@@ -4,7 +4,7 @@ feature_name: 智能人像分割
 feature_endpoint: human_image_segmentation
 deployment_time: 10 分钟
 destroy_time: 5 分钟
-sample_image: https://aikits.demo.solutions.aws.a2z.org.cn/img/seg-2.jpg
+sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
 feature_description: 基于 AI 深度学习框架可以识别图像中的人体轮廓，实现高精度分割，使之与背景进行分离。
 feature_scenario: 可应用于照片背景替换、后期处理、证件照制作，人像抠图美化、背景虚化等多种场景。
 ---
