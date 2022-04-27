@@ -39,20 +39,13 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 base64 编码的图像数据|
+| text | *String* |文本数据|
 
 - 请求 Body 示例
 
 ``` json
 {
-  "url": "{{page.meta.sample_image}}"
-}
-```
-
-``` json
-{
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+  "text": "测试文本"
 }
 ```
 
@@ -60,35 +53,18 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|result    |*List*   |一个具有768个元素的List，为768维的文本向量|
 
 - 返回示例
 ``` json
-[
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
-
-]
+{
+    "result": [
+        0.025645000860095024, 
+        0.001914000022225082, 
+        0.007929000072181225, 
+        ...
+    ]
+}
 ```
 
 {%

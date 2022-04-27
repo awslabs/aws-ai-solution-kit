@@ -60,36 +60,19 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|result    |*List*   |一个具有512个元素的List，为512维的图像向量|
 
 - 返回示例
 
 ``` json
-[
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
-
-]
+{
+    "result": [
+        -0.02555299922823906, 
+        0.012955999933183193, 
+        -0.10079500079154968, 
+        ...
+    ]
+}
 ```
 
 {%

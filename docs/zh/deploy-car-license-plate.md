@@ -60,16 +60,16 @@ feature_scenario: 可应用于停车场、小区自动识别车辆号牌信息�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内Float型数值|
+|words    |*String*   |识别车牌内容|
+|location |*JSON*     |识别车牌在图像中的的坐标值，包含top，left，width，height的整数值|
+|score    |*Float*   |识别车牌的置信度值，为0到1区间内Float型数值|
 
 - 返回示例
 
 ``` json
 [
   {
-      "words": "香港永久性居民身份證",
+      "words": "京C45678",
       "location": {
           "top": 18,
           "left": 148,
@@ -77,18 +77,7 @@ feature_scenario: 可应用于停车场、小区自动识别车辆号牌信息�
           "height": 17
       },
       "score": 0.9923796653747559
-  },
-  {
-      "words": "HONG KONG PERMANENTIDENTITYCARD",
-      "location": {
-          "top": 36,
-          "left": 71,
-          "width": 321,
-          "height": 17
-      },
-      "score": 0.9825196266174316
   }
-
 ]
 ```
 

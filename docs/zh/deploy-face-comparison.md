@@ -60,36 +60,42 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内Float型数值|
+|Faces    |*List*   |图像中找到的人脸列表|
+|+face_hash    |*List*   |一个具有768个元素的List，为768维的人脸向量|
+|+BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
+|+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
+|FaceModelVersion    |*String*   |当前模型版本号|
 
 - 返回示例
 
 ``` json
-[
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
-
-]
+{
+    "Faces": [
+        {
+            "BoundingBox": {
+                "Width": 0.057923507690429685, 
+                "Height": 0.10426715253778117, 
+                "Left": 0.5258836364746093, 
+                "Top": 0.40569204600369024
+            }, 
+            "Confidence": 0.8736226558685303, 
+            "face_hash": [64.8125, -86.8125, -9.84375, 12.390625, 161.625, ..., 4.8046875
+            ]
+        }, 
+        {
+            "BoundingBox": {
+                "Width": 0.04332921028137207, 
+                "Height": 0.10577215250117152, 
+                "Left": 0.1566245174407959, 
+                "Top": 0.6526811308355788
+            }, 
+            "Confidence": 0.8055327534675598, 
+            "face_hash": [61.21875, -33.84375, -36.71875, 70.625, 110.125, ..., -28.421875
+            ]
+        }
+    ], 
+    "FaceModelVersion": "1.2.0"
+}
 ```
 
 {%
