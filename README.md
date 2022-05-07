@@ -58,7 +58,7 @@ The Lambda function (invoke endpoint) parses the value and sends it to the Amazo
 
 ## CloudFormation Deployment
 
-[AI Solution Kit Deployment Guide](https://aws-samples.github.io/aws-ai-solution-kit/zh/)
+[AI Solution Kit Deployment Guide](https://aws-samples.github.io/aws-ai-solution-kit/en/)
 
 ## Authorization and Security
 
