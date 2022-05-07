@@ -7,7 +7,6 @@ The AI Kits solution creates RESTful API for the AI features, such as SageMaker 
 
 ## Architecture
 
-
 Amazon API Gateway acts as a traffic router, it creates RESTful APIs for each AI feature. The API user can invoke the RESTful APIs through the HTTPS Invoking URL endpoint, the API Gateway maps the request to the required format by the Lambda function or Amazon SageMaker endpoint, and invokes the endpoint to obtain an inference from the model, finally, it sends the prediction response(JSON format) back to the API user(client).
 
 1. Lambda Integration
