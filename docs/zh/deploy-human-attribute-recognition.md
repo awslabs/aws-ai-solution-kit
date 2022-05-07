@@ -4,7 +4,7 @@ feature_name: 自定义模板文字识别
 feature_endpoint: custom_ocr
 deployment_time: 15 分钟
 destroy_time: 10 分钟
-sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
+sample_image: 图像的URL地址
 feature_description: 识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。
 
 feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场景。
@@ -35,25 +35,7 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 | 电话     | 无、有          |
 | 拿东西    | 无、有          |
 
-{%
-  include "include-deploy-lambda.md"
-%}
-
-{%
-  include "include-deploy-cost.md"
-%}
-
-{%
-  include "include-deploy.md"
-%}
-
-## 开始使用
-
-{%
-  include "include-call-url.md"
-%}
-
-### REST API接口参考
+## API参数说明
 
 - HTTP 方法: `POST`
 
@@ -62,7 +44,7 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
 | url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 base64 编码的图像数据|
+| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
 
 - 请求 Body 示例
 
@@ -74,7 +56,7 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 
 ``` json
 {
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+  "img": "Base64编码的图像数据"
 }
 ```
 
@@ -193,6 +175,10 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 
 {%
   include-markdown "include-deploy-code.md"
+%}
+
+{%
+  include "include-deploy-cost.md"
 %}
 
 {%

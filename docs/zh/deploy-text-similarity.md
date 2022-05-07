@@ -4,7 +4,7 @@ feature_name: 文本相似度
 feature_endpoint: text_similarity
 deployment_time: 15 分钟
 destroy_time: 10 分钟
-sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
+sample_image: 图像的URL地址
 feature_description: 比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。
 feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自动应答、命名实体识别、拼写纠错等场景。
 ---
@@ -12,26 +12,7 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 {%
   include "include-deploy-description.md"
 %}
-
-{%
-  include "include-deploy-lambda.md"
-%}
-
-{%
-  include "include-deploy-cost.md"
-%}
-
-{%
-  include "include-deploy.md"
-%}
-
-## 开始使用
-
-{%
-  include "include-call-url.md"
-%}
-
-### REST API接口参考
+## API参数说明
 
 - HTTP 方法: `POST`
 
@@ -69,6 +50,10 @@ feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自�
 
 {%
   include-markdown "include-deploy-code.md"
+%}
+
+{%
+  include "include-deploy-cost.md"
 %}
 
 {%

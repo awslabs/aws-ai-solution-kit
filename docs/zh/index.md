@@ -1,7 +1,7 @@
 人工智能解决方案合集（AI Solution Kit）提供一系列基于深度学习的云上机器学习功能，例如文字识别、自然语言理解、人脸检测、图像理解等。您可以通过调用API，轻松使用开箱即用的AI功能，同时与亚马逊云科技提供的其它服务无缝集成。
 ## API列表
 
-本方案通过[Amazon API Gateway](https://aws.amazon.com/api-gateway/)自动创建REST API，您在部署解决方案后即可调用所需的AI功能。下表列出了支持的API，您可以点击详情链接查看API接口的测试方法和示例代码。
+本方案通过[Amazon API Gateway](https://aws.amazon.com/api-gateway/)自动创建REST API，您在部署解决方案后即可调用所需的AI功能。下表列出了支持的API，您可以点击详情链接查看API接口的测试方法和示例代码。更多信息可参见[API参考指南](api-explorer.md)。
 ### 文字识别
 |    名称   | 描述    | API  |
 |--------------|------------|-------------|

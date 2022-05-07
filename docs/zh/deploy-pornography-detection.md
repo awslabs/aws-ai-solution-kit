@@ -4,7 +4,7 @@ feature_name: 色情内容审核
 feature_endpoint: pornography-detection
 deployment_time: 15 分钟
 destroy_time: 10 分钟
-sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
+sample_image: 图像的URL地址
 feature_description: 自动对图片进行审核，获取多维度色情量化信息，如：normal，sexy，porn，实现精准快速的色情倾向判断。
 feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮助客户减少审核人力，有效降低涉黄风险，提升信息处理效率。
 ---
@@ -12,26 +12,7 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 {%
   include "include-deploy-description.md"
 %}
-
-{%
-  include "include-deploy-lambda.md"
-%}
-
-{%
-  include "include-deploy-cost.md"
-%}
-
-{%
-  include "include-deploy.md"
-%}
-
-## 开始使用
-
-{%
-  include "include-call-url.md"
-%}
-
-### REST API接口参考
+## API参数说明
 
 - HTTP 方法: `POST`
 
@@ -40,7 +21,7 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
 | url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 base64 编码的图像数据|
+| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
 
 - 请求 Body 示例
 
@@ -52,7 +33,7 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 
 ``` json
 {
-"img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+"img": "Base64编码的图像数据"
 }
 ```
 
@@ -79,5 +60,10 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 %}
 
 {%
+  include "include-deploy-cost.md"
+%}
+
+{%
   include-markdown "include-deploy-uninstall.md"
 %}
+
