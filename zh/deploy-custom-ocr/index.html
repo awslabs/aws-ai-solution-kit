@@ -1139,7 +1139,7 @@
 </ul>
 <pre><code class="language-json">{
     &quot;type&quot;: &quot;add&quot;, 
-    &quot;url&quot;: &quot;https://xiaotih.seal.ac.cn/aikits_test/custom-ocr-0-template.jpg&quot;, 
+    &quot;url&quot;: &quot;图像的URL地址&quot;, 
     &quot;template&quot;: [
         [
             [[421, 465], [909, 471], [911, 503], [419, 495]], &quot;名称&quot;
@@ -1150,9 +1150,6 @@
         [
             [[345, 339], [595, 343], [583, 397], [341, 385]], &quot;发票号&quot;
         ]
-        // [
-        //     [[左上角x, 左上角y], [右上角x, 右上角y], [右下角x, 右下角y], [左下角x, 左下角y]], &quot;字段名&quot;
-        // ]
     ]
 }
 </code></pre>
@@ -1169,9 +1166,6 @@
         [
             [[345, 339], [595, 343], [583, 397], [341, 385]], &quot;发票号&quot;
         ]
-        // [
-        //     [[左上角x, 左上角y], [右上角x, 右上角y], [右下角x, 右下角y], [左下角x, 左下角y]], &quot;字段名&quot;
-        // ]
     ]
 }
 </code></pre>
@@ -1190,7 +1184,7 @@
 <tr>
 <td>template_id</td>
 <td><em>String</em></td>
-<td>模版的唯一id</td>
+<td>模版的ID</td>
 </tr>
 </tbody>
 </table>
@@ -1198,7 +1192,7 @@
 <li>返回示例</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;de370236a28437715be3aa33eef2e84634c805bc&quot;,
+    &quot;template_id&quot;: &quot;模版的ID&quot;,
 }
 </code></pre>
 <h4 id="_3">删除模版</h4>
@@ -1239,7 +1233,7 @@
 </ul>
 <pre><code class="language-json">{
     &quot;type&quot;: &quot;del&quot;, 
-    &quot;template_id&quot;: &quot;de370236a28437715be3aa33eef2e84634c805bc&quot;
+    &quot;template_id&quot;: &quot;已存在模版ID&quot;
 }
 </code></pre>
 <ul>
@@ -1257,7 +1251,7 @@
 <tr>
 <td>template_id</td>
 <td><em>String</em></td>
-<td>已删除模版的唯一id</td>
+<td>已删除模版的ID</td>
 </tr>
 </tbody>
 </table>
@@ -1265,7 +1259,7 @@
 <li>返回示例</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;de370236a28437715be3aa33eef2e84634c805bc&quot;,
+    &quot;template_id&quot;: &quot;已删除模版的ID&quot;,
 }
 </code></pre>
 <h4 id="_4">列出所有模版</h4>
@@ -1325,7 +1319,7 @@
 <li>返回示例</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id_list&quot;: [&quot;de370236a28437715be3aa33eef2e84634c805bc&quot;],
+    &quot;template_id_list&quot;: [&quot;已存在模版的列表&quot;],
 }
 </code></pre>
 <h4 id="_5">内容识别</h4>
@@ -1368,7 +1362,7 @@
 <tr>
 <td>template_id</td>
 <td><em>String</em></td>
-<td>已存在模版的id</td>
+<td>已存在的模版ID</td>
 <td></td>
 </tr>
 </tbody>
@@ -1377,10 +1371,8 @@
 <li>请求 Body 示例</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;body&quot;: {
-        &quot;template_id&quot;: &quot;de370236a28437715be3aa33eef2e84634c805bc&quot;, 
-        &quot;url&quot;: &quot;https://xiaotih.seal.ac.cn/aikits_test/custom-ocr-0-query.jpg&quot;
-    }
+  &quot;template_id&quot;: &quot;已存在的模版ID&quot;, 
+  &quot;url&quot;: &quot;图像的URL地址&quot;
 }
 </code></pre>
 <ul>
