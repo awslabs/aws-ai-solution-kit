@@ -1,4 +1,4 @@
-INHERIT: ./mkdocs.en.yml
+INHERIT: ./mkdocs.zh.yml
 copyright: Copyright (c) 2021 by Amazon.com, Inc. or its affiliates. All Rights Reserved.
 markdown_extensions:
   - admonition
@@ -6,7 +6,7 @@ markdown_extensions:
 plugins:
   - mkpdfs:
       author: !ENV [VERSION, 'v0.0.1']
-      company: Amazon Web Services
+      company: Amazon.com
       toc_title: Index
       # toc_position: center
       design: docs/report.css

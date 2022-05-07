@@ -4,9 +4,43 @@ docs_dir: en
 site_dir: ./site/en
 theme:
   language: en
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.instant
 nav:
-  - Deployment - Chinese OCR: deploy-ocr-en.md
-  - Deployment - Porn Image Detection: deploy-porn-en.md
-  - Deployment - Image Super Resolution: deploy-sr-en.md
-  - Deployment - Human Image Segmentation: deploy-seg-en.md
-  - FAQ: faq-en.md
+  - AI Solution Kit Deployment Guide:
+    - Welcome: index.md
+    - Cost: cost.md
+    - Architecture overview: architecture.md
+    - Security: security.md
+    - Supported regions: regions.md
+    - CloudFormation template: template.md
+    - Automated deployment: deployment.md
+    - API Explorer: api-explorer.md
+    - Additional resources: additional-resources.md
+    - FAQ: faq.md
+    - Source code: source.md
+    - Release Notes: revisions.md
+    - How to Upgrade: upgrade.md
+  - OCR:
+    - General OCR: deploy-general-ocr.md
+    - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
+    - Custom OCR: deploy-custom-ocr.md
+    - Car License Plate: deploy-car-license-plate.md
+  - Facial & Body:
+    - Face Comparison: deploy-face-comparison.md
+    - Face Detection: deploy-face-detection.md
+    - Human Attribute Recognition: deploy-human-attribute-recognition.md
+    - Human Image Segmentation: deploy-human-image-segmentation.md
+  - Image Understanding:
+    - Image Similarity: deploy-image-similarity.md
+    - Object Recognition: deploy-object-recognition.md
+    - Pornography Detection: deploy-pornography-detection.md
+  - Computer Vision Production:
+    - Image Super Resolution: deploy-image-super-resolution.md
+  - Natural Language Understanding: 
+    - Text Similarity: deploy-text-similarity.md
+
+  # - 语音技术:
+  #   - 语音技术: audio.md
