@@ -21,14 +21,40 @@ Starting from the API User(s) side, the API user sends an HTTP request to Amazon
 
 The Lambda function (invoke endpoint) parses the value and sends it to the Amazon SageMaker model endpoint, the SageMaker model performs the prediction and returns the predicted value to the Lambda. The same with the Lambda implementations, the Amazon API Gateway subsequently receives the response from the Lambda function and maps it to a response that is sent back to the client.
 
-## AI Features
+## APIs
 
-| **Category**	| **Feature**  | **Description**  |
-|---------------|--------------|------------------|
-|Image (sync)	|[Chinese OCR](source/infer-ocr/README.md) |Support simplified/traditional Chinese, English and numbers character recognition. Recognizes text on an image as text and returns text coordinates.|
-|Image (sync)	|[Inappropriate Image Detection(multi-confidence)](source/porn-image/README.md) |Dautomatically audits pictures, identifies and obtains multidimensional pornographic quantitative information (normal, sexy, porn).|
-|Image (sync)	|[Image Super Resolution](source/super-resolution/README.md)	|Based on deep learning model to identify the outline of the person and body-part in the image, to separate it from the background with high accuracy segmentation.|
-|Image (sync)	|[Human Image Segmentation](source/human-seg/README.md) | Segmenting human body from photo images.|
+### **Optical Character Recognition(OCR) APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|General OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols|[Get started](deploy-general-ocr.md)|
+|General OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols|[Get started](deploy-general-ocr-traditional.md)|
+|Custom OCR|Recognize and extract estructured text by predefined OCR templates|[Get started](deploy-custom-ocr.md)|
+|Car License Plate|Recognize text on Chinese car license plate|[Get started](deploy-car-license-plate.md)|
+
+### **Facial & Body APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Face Comparison|Compare two faces of same person and return a confidence score of the similarity|[Get started](deploy-face-comparison.md)|
+|Face Detection|Detect the face in a image and return coordinate information of the face|[Get started](deploy-face-detection.md)|
+|Human Attribute Recognition |Recognize the attributes of the human body in the image|[Get started](deploy-human-attribute-recognition.md)|
+|Human Image Segmentation|Segment human bodies from background and return the alpha channel|[Get started](deploy-human-image-segmentation.md)|
+
+### **Image Understanding APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Image Similarity|Compare two images and return similarity score|[Get started](deploy-text-similarity.md)|
+|Object Recognition|Segment human bodies from background and return the alpha channel|[Get started](deploy-object-recognition.md)|
+|Pornography Detection|Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores|[Get started](deploy-nudity-detection.md)|
+
+### **Computer Vision Production APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Image Super Resolution|Upscale the resolution and enhance details in the images|[Get started](deploy-image-super-resolution.md)|
+
+### **Natural Language Understanding(NLU) APIs**
+|    **API Name**   | **Description**    |  |
+|--------------|------------|-------------|
+|Text Similarity|Compare two Chinese words or sentences and return similarity score|[Get started](deploy-text-similarity.md)|
 
 ## CloudFormation Deployment
 
