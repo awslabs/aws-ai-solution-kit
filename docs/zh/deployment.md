@@ -36,21 +36,21 @@
 
     - 您可以更改AI应用的参数为yes，部署需要的AI应用。AI应用的参数默认值均为no。
 
-        |  参数ID   |  默认值 |  描述 |
+        |  参数名称   |  默认值 |  描述 |
         |  ----------  | ---------| -----------  |
-        | **GeneralOCR**  | no  | 部署[通用文字识别（简体中文）](deploy-general-ocr.md) |
-        | **GeneralOCRTraditional**  | no  | 部署[通用文字识别（繁体中文）](deploy-general-ocr-traditional.md) |
-        | **CustomOCR**  | no  | 部署[自定义模板文字识别](deploy-custom-ocr.md) |
-        | **CarLicensePlate**  | no  | 部署[车牌信息识别](deploy-car-license-plate.md) |
-        | **PornographyDetection**  | no  | 部署[色情内容审核](deploy-pornography-detection.md) |
-        | **ImageSimilarity**  | no  | 部署[图片相似度](deploy-image-similarity.md) |
-        | **HumanImageSegmentation**  | no  | 部署[智能人像分割](deploy-human-image-segmentation.md) |
-        | **ObjectRecognition**  | no  | 部署[通用物体识别](deploy-object-recognition.md) |
-        | **FaceDetection**  | no  | 部署[人脸识别](deploy-face-detection.md) |
-        | **FaceComparison**  | no  | 部署[人脸相似度比对](deploy-face-comparison.md) |
-        | **HumanAttributeRecognition**  | no  | 部署[人体结构化属性](deploy-human-attribute-recognition.md) |
-        | **ImageSuperResolution**  | no  | 部署[图像超分辨率](deploy-image-super-resolution.md) |
-        | **TextSimilarity**  | no  | 部署[文本相似度](deploy-text_similarity.md) |
+        | **General OCR - Simplified Chinese**  | no  | 部署[通用文字识别（简体中文）](deploy-general-ocr.md) |
+        | **General OCR - Traditional Chinese**  | no  | 部署[通用文字识别（繁体中文）](deploy-general-ocr-traditional.md) |
+        | **Custom Template OCR**  | no  | 部署[自定义模板文字识别](deploy-custom-ocr.md) |
+        | **Car License Plate**  | no  | 部署[车牌信息识别](deploy-car-license-plate.md) |
+        | **Face Comparison**  | no  | 部署[人脸相似度比对](deploy-face-comparison.md) |
+        | **Face Detection**  | no  | 部署[人脸识别](deploy-face-detection.md) |
+        | **Human Attribute Recognition**  | no  | 部署[人体结构化属性](deploy-human-attribute-recognition.md) |
+        | **Human Image Segmentation**  | no  | 部署[智能人像分割](deploy-human-image-segmentation.md) |
+        | **Image Similarity**  | no  | 部署[图片相似度](deploy-image-similarity.md) |
+        | **Object Recognition**  | no  | 部署[通用物体识别](deploy-object-recognition.md) |
+        | **Pornography Detection**  | no  | 部署[色情内容审核](deploy-pornography-detection.md) |
+        | **Image Super Resolution**  | no  | 部署[图像超分辨率](deploy-image-super-resolution.md) |
+        | **Text Similarity**  | no  | 部署[文本相似度](deploy-text_similarity.md) |
 
 6. 在**配置堆栈选项**页面，选择**下一步**。
 
