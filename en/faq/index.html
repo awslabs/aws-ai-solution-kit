@@ -1,0 +1,2317 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/faq/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
+    
+    
+      
+        <title>FAQ - AI Solution Kit Deployment Guide</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e411adfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cc9b2e1e.min.css">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#frequently-asked-questions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AI Solution Kit Deployment Guide" class="md-header__button md-logo" aria-label="AI Solution Kit Deployment Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Solution Kit Deployment Guide
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              FAQ
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <div class="md-header__option">
+        <div class="md-select">
+          
+          <button class="md-header__button md-icon" aria-label="Select language">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+          </button>
+          <div class="md-select__inner">
+            <ul class="md-select__list">
+              
+                <li class="md-select__item">
+                  <a href="/aws-ai-solution-kit/en/" hreflang="en" class="md-select__link">
+                    English
+                  </a>
+                </li>
+                
+                <li class="md-select__item">
+                  <a href="/aws-ai-solution-kit/zh/" hreflang="zh" class="md-select__link">
+                    中文
+                  </a>
+                </li>
+                
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws-samples/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link md-tabs__link--active">
+        AI Solution Kit Deployment Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy-general-ocr/" class="md-tabs__link">
+        OCR
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy-face-comparison/" class="md-tabs__link">
+        Facial & Body
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy-image-similarity/" class="md-tabs__link">
+        Image Understanding
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy-image-super-resolution/" class="md-tabs__link">
+        Computer Vision Production
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../deploy-text-similarity/" class="md-tabs__link">
+        Natural Language Understanding
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AI Solution Kit Deployment Guide" class="md-nav__button md-logo" aria-label="AI Solution Kit Deployment Guide" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    AI Solution Kit Deployment Guide
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws-samples/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          AI Solution Kit Deployment Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="AI Solution Kit Deployment Guide" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          AI Solution Kit Deployment Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cost/" class="md-nav__link">
+        Cost
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architecture overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regions/" class="md-nav__link">
+        Supported regions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../template/" class="md-nav__link">
+        CloudFormation template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        Automated deployment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-explorer/" class="md-nav__link">
+        API Explorer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-resources/" class="md-nav__link">
+        Additional resources
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          FAQ
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        FAQ
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frequently-asked-questions" class="md-nav__link">
+    Frequently Asked Questions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-aws-identity-and-access-management-iam-permissions-are-required-to-deploy-the-solution" class="md-nav__link">
+    What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-resolve-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-encountered-when-deploying-the-solution" class="md-nav__link">
+    How to resolve The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances encountered when deploying the solution?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-solution-encountered-resource-handler-returned-message-memorysize-value-failed-to-satisfy-constraint-member-must-have-value-less-than-or-equal-to-3008-how-do-i-resolve-this" class="md-nav__link">
+    Deploying solution encountered Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008. How do I resolve this?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-consistently-switch-how-apis-are-authenticated-for-access-in-amazon-api-gateway" class="md-nav__link">
+    How do I consistently switch how APIs are authenticated for access in Amazon API Gateway?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-individually-switch-the-access-authentication-method-for-apis-in-amazon-api-gateway" class="md-nav__link">
+    How do I individually switch the access authentication method for APIs in Amazon API Gateway?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-use-a-usage-plan-with-api-key" class="md-nav__link">
+    Create and use a usage plan with API key
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-target-identification-is-currently-supported-by-the-universal-target-detection-api" class="md-nav__link">
+    What target identification is currently supported by the Universal Target Detection API?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../source/" class="md-nav__link">
+        Source code
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../revisions/" class="md-nav__link">
+        Release Notes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        How to Upgrade
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          OCR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="OCR" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          OCR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-general-ocr/" class="md-nav__link">
+        General OCR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-general-ocr-traditional/" class="md-nav__link">
+        General OCR (Traditional Chinese)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-custom-ocr/" class="md-nav__link">
+        Custom OCR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-car-license-plate/" class="md-nav__link">
+        Car License Plate
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Facial & Body
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Facial & Body" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Facial & Body
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-face-comparison/" class="md-nav__link">
+        Face Comparison
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-face-detection/" class="md-nav__link">
+        Face Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-human-attribute-recognition/" class="md-nav__link">
+        Human Attribute Recognition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-human-image-segmentation/" class="md-nav__link">
+        Human Image Segmentation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Image Understanding
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Image Understanding" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Image Understanding
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-image-similarity/" class="md-nav__link">
+        Image Similarity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-object-recognition/" class="md-nav__link">
+        Object Recognition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-pornography-detection/" class="md-nav__link">
+        Pornography Detection
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Computer Vision Production
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Computer Vision Production" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Computer Vision Production
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-image-super-resolution/" class="md-nav__link">
+        Image Super Resolution
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Natural Language Understanding
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Natural Language Understanding" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Natural Language Understanding
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-text-similarity/" class="md-nav__link">
+        Text Similarity
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#frequently-asked-questions" class="md-nav__link">
+    Frequently Asked Questions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-aws-identity-and-access-management-iam-permissions-are-required-to-deploy-the-solution" class="md-nav__link">
+    What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-resolve-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-encountered-when-deploying-the-solution" class="md-nav__link">
+    How to resolve The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances encountered when deploying the solution?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-solution-encountered-resource-handler-returned-message-memorysize-value-failed-to-satisfy-constraint-member-must-have-value-less-than-or-equal-to-3008-how-do-i-resolve-this" class="md-nav__link">
+    Deploying solution encountered Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008. How do I resolve this?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-consistently-switch-how-apis-are-authenticated-for-access-in-amazon-api-gateway" class="md-nav__link">
+    How do I consistently switch how APIs are authenticated for access in Amazon API Gateway?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-do-i-individually-switch-the-access-authentication-method-for-apis-in-amazon-api-gateway" class="md-nav__link">
+    How do I individually switch the access authentication method for APIs in Amazon API Gateway?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-use-a-usage-plan-with-api-key" class="md-nav__link">
+    Create and use a usage plan with API key
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-target-identification-is-currently-supported-by-the-universal-target-detection-api" class="md-nav__link">
+    What target identification is currently supported by the Universal Target Detection API?
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/aws-samples/aws-ai-solution-kit/edit/master/docs/faq.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+  <h1>FAQ</h1>
+
+<h3 id="frequently-asked-questions">Frequently Asked Questions</h3>
+<h3 id="what-aws-identity-and-access-management-iam-permissions-are-required-to-deploy-the-solution">What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?</h3>
+<p>The following permissions are required to deploy the solution and call the API via API Gateway after deployment, with <strong>sagemaker:</strong> limited to the <strong>Image Super Resolution</strong> API.</p>
+<table>
+<thead>
+<tr>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>apigateway:DELETE</td>
+</tr>
+<tr>
+<td>apigateway:GET</td>
+</tr>
+<tr>
+<td>apigateway:PATCH</td>
+</tr>
+<tr>
+<td>apigateway:POST</td>
+</tr>
+<tr>
+<td>apigateway:PUT</td>
+</tr>
+<tr>
+<td>cloudformation:CancelUpdateStack</td>
+</tr>
+<tr>
+<td>cloudformation:ContinueUpdateRollback</td>
+</tr>
+<tr>
+<td>cloudformation:CreateChangeSet</td>
+</tr>
+<tr>
+<td>cloudformation:CreateStack</td>
+</tr>
+<tr>
+<td>cloudformation:DeleteStack</td>
+</tr>
+<tr>
+<td>cloudformation:DescribeChangeSet</td>
+</tr>
+<tr>
+<td>cloudformation:DescribeStackEvents</td>
+</tr>
+<tr>
+<td>cloudformation:DescribeStackResources</td>
+</tr>
+<tr>
+<td>cloudformation:DescribeStackStacks</td>
+</tr>
+<tr>
+<td>cloudformation:GetStackPolicy</td>
+</tr>
+<tr>
+<td>cloudformation:GetTemplateSummary</td>
+</tr>
+<tr>
+<td>cloudformation:ListChangeSets</td>
+</tr>
+<tr>
+<td>cloudformation:ListStackResources</td>
+</tr>
+<tr>
+<td>cloudformation:ListStacks</td>
+</tr>
+<tr>
+<td>cloudformation:RollbackStack</td>
+</tr>
+<tr>
+<td>cloudformation:UpdateStack</td>
+</tr>
+<tr>
+<td>cloudformation:UpdateStackSet</td>
+</tr>
+<tr>
+<td>cloudformation:UpdateStackSet</td>
+</tr>
+<tr>
+<td>ecr:BatchDeleteImage</td>
+</tr>
+<tr>
+<td>ecr:BatchGetImage</td>
+</tr>
+<tr>
+<td>ecr:CreateRepository</td>
+</tr>
+<tr>
+<td>ecr:DeleteRepository</td>
+</tr>
+<tr>
+<td>ecr:DescribeRepositories</td>
+</tr>
+<tr>
+<td>ecr:GetDownloadUrlForLayer</td>
+</tr>
+<tr>
+<td>ecr:GetRepositoryPolicy</td>
+</tr>
+<tr>
+<td>ecr:InitiateLayerUpload</td>
+</tr>
+<tr>
+<td>ecr:PutImage</td>
+</tr>
+<tr>
+<td>ecr:SetRepositoryPolicy</td>
+</tr>
+<tr>
+<td>iam:AttachRolePolicy</td>
+</tr>
+<tr>
+<td>iam:CreateRole</td>
+</tr>
+<tr>
+<td>iam:DeleteRole</td>
+</tr>
+<tr>
+<td>iam:DeleteRolePolicy</td>
+</tr>
+<tr>
+<td>iam:DetachRolePolicy</td>
+</tr>
+<tr>
+<td>iam:GetRole</td>
+</tr>
+<tr>
+<td>iam:ListRoles</td>
+</tr>
+<tr>
+<td>iam:PassRole</td>
+</tr>
+<tr>
+<td>iam:PutRolePolicy</td>
+</tr>
+<tr>
+<td>lambda:AddPermission</td>
+</tr>
+<tr>
+<td>lambda:CreateFunction</td>
+</tr>
+<tr>
+<td>lambda:DeleteFunction</td>
+</tr>
+<tr>
+<td>lambda:GetFunction</td>
+</tr>
+<tr>
+<td>lambda:InvokeFunction</td>
+</tr>
+<tr>
+<td>lambda:RemovePermission</td>
+</tr>
+<tr>
+<td>lambda:UpdateFunctionConfiguration</td>
+</tr>
+<tr>
+<td>s3:GetObject</td>
+</tr>
+<tr>
+<td>sagemaker:CreateEndpoint</td>
+</tr>
+<tr>
+<td>sagemaker:CreateEndpointConfig</td>
+</tr>
+<tr>
+<td>sagemaker:CreateModel</td>
+</tr>
+<tr>
+<td>sagemaker:DeleteEndpoint</td>
+</tr>
+<tr>
+<td>sagemaker:DeleteEndpointConfig</td>
+</tr>
+<tr>
+<td>sagemaker:DeleteModel</td>
+</tr>
+<tr>
+<td>sagemaker:DescribeEndpoint</td>
+</tr>
+<tr>
+<td>sagemaker:DescribeEndpointConfig</td>
+</tr>
+<tr>
+<td>sagemaker:DescribeModel</td>
+</tr>
+<tr>
+<td>sagemaker:InvokeEndpoint</td>
+</tr>
+<tr>
+<td>sns:ListTopics</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-to-resolve-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-encountered-when-deploying-the-solution">How to resolve <em>The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances</em> encountered when deploying the solution?</h3>
+<ol>
+<li>visit aws console https://console.aws.amazon.com/</li>
+<li>click on support on the top right corner</li>
+<li>click create a case (orange button)</li>
+<li>select Service Limit Increase radio button</li>
+<li>For Limit Type, Search and Select SageMaker Notebook Instances</li>
+<li>Write a short Use case description</li>
+<li>For Limit, Select ml.[x]. [x] (in your case, ml.g4dn.xlarge)</li>
+</ol>
+<h3 id="deploying-solution-encountered-resource-handler-returned-message-memorysize-value-failed-to-satisfy-constraint-member-must-have-value-less-than-or-equal-to-3008-how-do-i-resolve-this">Deploying solution encountered <em>Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008</em>. How do I resolve this?</h3>
+<p>//TODO</p>
+<h3 id="how-do-i-consistently-switch-how-apis-are-authenticated-for-access-in-amazon-api-gateway">How do I consistently switch how APIs are authenticated for access in Amazon API Gateway?</h3>
+<p>With Amazon CloudFormation, you can change the properties of existing resources in your stack, and if you need to add or remove deployed AI features, you can do so by updating your stack.</p>
+<ol>
+<li>On the Amazon CloudFormation console, select the completed AI Solution Kit stack in the Stack list. 2.</li>
+</ol>
+<p>In the stack details pane, select Update. 3.</p>
+<p>In the Template Parameters section, modify the <strong>API Gateway Authorization</strong> parameter, and select Next. 4.</p>
+<ol>
+<li>
+<p>On the <strong>Configure Stack Options</strong> page, select <strong>Next</strong>. 5.</p>
+</li>
+<li>
+<p>On the <strong>Audit</strong> page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select <strong>Next</strong>. 6.</p>
+</li>
+<li>
+<p>If you are satisfied with the changes you have made, select Updata stack to complete the access rights update.</p>
+</li>
+</ol>
+<h3 id="how-do-i-individually-switch-the-access-authentication-method-for-apis-in-amazon-api-gateway">How do I individually switch the access authentication method for APIs in Amazon API Gateway?</h3>
+<ol>
+<li>Open the Services panel in the Amazon Web Service console, find Application Services, and click API Gateway. 2.</li>
+<li>Select the most recently created AI Solution Kit API in the API list, or sort by 'Created' to make it easier to find, then click the name link to open the API details page</li>
+<li>Expand the resource tree, find the 'OPTIONS' node under the path of the resource you need to modify the access rights, and click it to display the method execution configuration page. Click the Method Request link under Method Execution</li>
+<li>Then click the Edit button on the right side of the authorization, expand the drop-down list, select 'Amazon IAM', select it and click the Update button to complete the modification.</li>
+<li>After updating, the authorization item should be displayed as 'Amazon IAM'. 6.</li>
+<li>Next, click the POST button under OPTIONS in the resource tree, and modify the method of OPTIONS, change the authorization method to Amazon IAM in the method request, and then click the Update button.</li>
+<li>Click on the 'Actions' drop-down button on the left side of the method execution, and click on the 'Deploy API' option under API Actions</li>
+<li>In the Deploy API dialog box, select 'prod' or a custom name for the deployment phase, do not select [New Phase], and then click the Deploy button below to complete the deployment</li>
+</ol>
+<h3 id="create-and-use-a-usage-plan-with-api-key">Create and use a usage plan with API key</h3>
+<p>This solution supports API Usage Plans. After deploying the solution and testing the APIs, you can implement API Gateway Usage Plans and offer them as a customer-facing product/service. You can configure usage plans and API keys to allow customers to access selected APIs at agreed request rates and quotas that meet their business needs and budget constraints, and you can set default method level limits for APIs or set limits for individual API methods if desired. The API caller must provide an assigned API key in the x-api-key header of the API request. </p>
+<p>If you need to configure an <em>API usage plan</em> please refer to: <a href="https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/api-gateway-create-usage-plans.html">Configure Usage Plan</a></p>
+<h3 id="what-target-identification-is-currently-supported-by-the-universal-target-detection-api">What target identification is currently supported by the Universal Target Detection API?</h3>
+<p>The following is a list of supported entities for target detection.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accordion</td>
+</tr>
+<tr>
+<td>airplane</td>
+</tr>
+<tr>
+<td>alligator</td>
+</tr>
+<tr>
+<td>apple</td>
+</tr>
+<tr>
+<td>army_tank</td>
+</tr>
+<tr>
+<td>awning</td>
+</tr>
+<tr>
+<td>backpack</td>
+</tr>
+<tr>
+<td>ball</td>
+</tr>
+<tr>
+<td>balloon</td>
+</tr>
+<tr>
+<td>banana</td>
+</tr>
+<tr>
+<td>barrel</td>
+</tr>
+<tr>
+<td>baseball</td>
+</tr>
+<tr>
+<td>baseball_bat</td>
+</tr>
+<tr>
+<td>baseball_glove</td>
+</tr>
+<tr>
+<td>basket</td>
+</tr>
+<tr>
+<td>bathtub</td>
+</tr>
+<tr>
+<td>bear</td>
+</tr>
+<tr>
+<td>bed</td>
+</tr>
+<tr>
+<td>bee</td>
+</tr>
+<tr>
+<td>beer_bottle</td>
+</tr>
+<tr>
+<td>bell_pepper</td>
+</tr>
+<tr>
+<td>belt</td>
+</tr>
+<tr>
+<td>bench</td>
+</tr>
+<tr>
+<td>bicycle</td>
+</tr>
+<tr>
+<td>billboard</td>
+</tr>
+<tr>
+<td>bird</td>
+</tr>
+<tr>
+<td>blackboard</td>
+</tr>
+<tr>
+<td>boat</td>
+</tr>
+<tr>
+<td>book</td>
+</tr>
+<tr>
+<td>bookcase</td>
+</tr>
+<tr>
+<td>boot</td>
+</tr>
+<tr>
+<td>bottle</td>
+</tr>
+<tr>
+<td>bowl</td>
+</tr>
+<tr>
+<td>bowling_ball</td>
+</tr>
+<tr>
+<td>box</td>
+</tr>
+<tr>
+<td>bracelet</td>
+</tr>
+<tr>
+<td>brassiere</td>
+</tr>
+<tr>
+<td>bread</td>
+</tr>
+<tr>
+<td>broccoli</td>
+</tr>
+<tr>
+<td>building</td>
+</tr>
+<tr>
+<td>bus_(vehicle)</td>
+</tr>
+<tr>
+<td>butterfly</td>
+</tr>
+<tr>
+<td>cabinet</td>
+</tr>
+<tr>
+<td>cake</td>
+</tr>
+<tr>
+<td>camel</td>
+</tr>
+<tr>
+<td>camera</td>
+</tr>
+<tr>
+<td>can</td>
+</tr>
+<tr>
+<td>candle</td>
+</tr>
+<tr>
+<td>candy_bar</td>
+</tr>
+<tr>
+<td>cannon</td>
+</tr>
+<tr>
+<td>canoe</td>
+</tr>
+<tr>
+<td>car_(automobile)</td>
+</tr>
+<tr>
+<td>carrot</td>
+</tr>
+<tr>
+<td>cart</td>
+</tr>
+<tr>
+<td>castle</td>
+</tr>
+<tr>
+<td>cat</td>
+</tr>
+<tr>
+<td>caterpillar</td>
+</tr>
+<tr>
+<td>cello</td>
+</tr>
+<tr>
+<td>cellular_telephone</td>
+</tr>
+<tr>
+<td>chair</td>
+</tr>
+<tr>
+<td>chicken_(animal)</td>
+</tr>
+<tr>
+<td>chopping_board</td>
+</tr>
+<tr>
+<td>chopstick</td>
+</tr>
+<tr>
+<td>christmas_tree</td>
+</tr>
+<tr>
+<td>clock</td>
+</tr>
+<tr>
+<td>coat</td>
+</tr>
+<tr>
+<td>cocktail</td>
+</tr>
+<tr>
+<td>coffee_table</td>
+</tr>
+<tr>
+<td>coin</td>
+</tr>
+<tr>
+<td>computer_keyboard</td>
+</tr>
+<tr>
+<td>computer_monitor</td>
+</tr>
+<tr>
+<td>cone</td>
+</tr>
+<tr>
+<td>cookie</td>
+</tr>
+<tr>
+<td>cow</td>
+</tr>
+<tr>
+<td>cowboy_hat</td>
+</tr>
+<tr>
+<td>crab_(animal)</td>
+</tr>
+<tr>
+<td>crown</td>
+</tr>
+<tr>
+<td>cucumber</td>
+</tr>
+<tr>
+<td>cup</td>
+</tr>
+<tr>
+<td>cupboard</td>
+</tr>
+<tr>
+<td>curtain</td>
+</tr>
+<tr>
+<td>deer</td>
+</tr>
+<tr>
+<td>desk</td>
+</tr>
+<tr>
+<td>dessert</td>
+</tr>
+<tr>
+<td>dinosaur</td>
+</tr>
+<tr>
+<td>dog</td>
+</tr>
+<tr>
+<td>doll</td>
+</tr>
+<tr>
+<td>dolphin</td>
+</tr>
+<tr>
+<td>door</td>
+</tr>
+<tr>
+<td>doorknob</td>
+</tr>
+<tr>
+<td>doughnut</td>
+</tr>
+<tr>
+<td>dragonfly</td>
+</tr>
+<tr>
+<td>drawer</td>
+</tr>
+<tr>
+<td>dress</td>
+</tr>
+<tr>
+<td>drum_(musical_instrument)</td>
+</tr>
+<tr>
+<td>duck</td>
+</tr>
+<tr>
+<td>duffel_bag</td>
+</tr>
+<tr>
+<td>eagle</td>
+</tr>
+<tr>
+<td>earring</td>
+</tr>
+<tr>
+<td>egg</td>
+</tr>
+<tr>
+<td>elephant</td>
+</tr>
+<tr>
+<td>fan</td>
+</tr>
+<tr>
+<td>faucet</td>
+</tr>
+<tr>
+<td>fireplace</td>
+</tr>
+<tr>
+<td>fireplug</td>
+</tr>
+<tr>
+<td>fish</td>
+</tr>
+<tr>
+<td>flag</td>
+</tr>
+<tr>
+<td>flower_arrangement</td>
+</tr>
+<tr>
+<td>flowerpot</td>
+</tr>
+<tr>
+<td>football_helmet</td>
+</tr>
+<tr>
+<td>fork</td>
+</tr>
+<tr>
+<td>fountain</td>
+</tr>
+<tr>
+<td>french_fries</td>
+</tr>
+<tr>
+<td>frisbee</td>
+</tr>
+<tr>
+<td>frog</td>
+</tr>
+<tr>
+<td>fruit</td>
+</tr>
+<tr>
+<td>fruit_juice</td>
+</tr>
+<tr>
+<td>frying_pan</td>
+</tr>
+<tr>
+<td>gazelle</td>
+</tr>
+<tr>
+<td>giraffe</td>
+</tr>
+<tr>
+<td>glass_(drink_container)</td>
+</tr>
+<tr>
+<td>glove</td>
+</tr>
+<tr>
+<td>goat</td>
+</tr>
+<tr>
+<td>goggles</td>
+</tr>
+<tr>
+<td>goose</td>
+</tr>
+<tr>
+<td>grape</td>
+</tr>
+<tr>
+<td>guitar</td>
+</tr>
+<tr>
+<td>gun</td>
+</tr>
+<tr>
+<td>hamburger</td>
+</tr>
+<tr>
+<td>hamster</td>
+</tr>
+<tr>
+<td>handbag</td>
+</tr>
+<tr>
+<td>handle</td>
+</tr>
+<tr>
+<td>harbor_seal</td>
+</tr>
+<tr>
+<td>hat</td>
+</tr>
+<tr>
+<td>headset</td>
+</tr>
+<tr>
+<td>helicopter</td>
+</tr>
+<tr>
+<td>helmet</td>
+</tr>
+<tr>
+<td>high_heels</td>
+</tr>
+<tr>
+<td>hog</td>
+</tr>
+<tr>
+<td>horse</td>
+</tr>
+<tr>
+<td>house</td>
+</tr>
+<tr>
+<td>icecream</td>
+</tr>
+<tr>
+<td>insect</td>
+</tr>
+<tr>
+<td>jacket</td>
+</tr>
+<tr>
+<td>jaguar</td>
+</tr>
+<tr>
+<td>jean</td>
+</tr>
+<tr>
+<td>jellyfish</td>
+</tr>
+<tr>
+<td>kitchen_table</td>
+</tr>
+<tr>
+<td>kite</td>
+</tr>
+<tr>
+<td>knife</td>
+</tr>
+<tr>
+<td>ladder</td>
+</tr>
+<tr>
+<td>lamp</td>
+</tr>
+<tr>
+<td>lantern</td>
+</tr>
+<tr>
+<td>laptop_computer</td>
+</tr>
+<tr>
+<td>lavender</td>
+</tr>
+<tr>
+<td>lemon</td>
+</tr>
+<tr>
+<td>lettuce</td>
+</tr>
+<tr>
+<td>license_plate</td>
+</tr>
+<tr>
+<td>life_jacket</td>
+</tr>
+<tr>
+<td>lightbulb</td>
+</tr>
+<tr>
+<td>lighthouse</td>
+</tr>
+<tr>
+<td>lily</td>
+</tr>
+<tr>
+<td>lion</td>
+</tr>
+<tr>
+<td>lizard</td>
+</tr>
+<tr>
+<td>maple</td>
+</tr>
+<tr>
+<td>mask</td>
+</tr>
+<tr>
+<td>microphone</td>
+</tr>
+<tr>
+<td>microwave_oven</td>
+</tr>
+<tr>
+<td>minivan</td>
+</tr>
+<tr>
+<td>mirror</td>
+</tr>
+<tr>
+<td>monkey</td>
+</tr>
+<tr>
+<td>motorcycle</td>
+</tr>
+<tr>
+<td>mouse_(computer_equipment)</td>
+</tr>
+<tr>
+<td>muffin</td>
+</tr>
+<tr>
+<td>mug</td>
+</tr>
+<tr>
+<td>mushroom</td>
+</tr>
+<tr>
+<td>musical_instrument</td>
+</tr>
+<tr>
+<td>napkin</td>
+</tr>
+<tr>
+<td>necklace</td>
+</tr>
+<tr>
+<td>necktie</td>
+</tr>
+<tr>
+<td>nightstand</td>
+</tr>
+<tr>
+<td>onion</td>
+</tr>
+<tr>
+<td>orange_(fruit)</td>
+</tr>
+<tr>
+<td>oven</td>
+</tr>
+<tr>
+<td>owl</td>
+</tr>
+<tr>
+<td>paddle</td>
+</tr>
+<tr>
+<td>painting</td>
+</tr>
+<tr>
+<td>palm_tree</td>
+</tr>
+<tr>
+<td>parachute</td>
+</tr>
+<tr>
+<td>parking_meter</td>
+</tr>
+<tr>
+<td>parrot</td>
+</tr>
+<tr>
+<td>pasta</td>
+</tr>
+<tr>
+<td>pastry</td>
+</tr>
+<tr>
+<td>pen</td>
+</tr>
+<tr>
+<td>penguin</td>
+</tr>
+<tr>
+<td>person</td>
+</tr>
+<tr>
+<td>piano</td>
+</tr>
+<tr>
+<td>pillow</td>
+</tr>
+<tr>
+<td>pizza</td>
+</tr>
+<tr>
+<td>plastic_bag</td>
+</tr>
+<tr>
+<td>plate</td>
+</tr>
+<tr>
+<td>polar_bear</td>
+</tr>
+<tr>
+<td>pool_table</td>
+</tr>
+<tr>
+<td>porch</td>
+</tr>
+<tr>
+<td>poster</td>
+</tr>
+<tr>
+<td>potted_plant</td>
+</tr>
+<tr>
+<td>pumpkin</td>
+</tr>
+<tr>
+<td>rabbit</td>
+</tr>
+<tr>
+<td>refrigerator</td>
+</tr>
+<tr>
+<td>remote_control</td>
+</tr>
+<tr>
+<td>ring</td>
+</tr>
+<tr>
+<td>roller_skate</td>
+</tr>
+<tr>
+<td>rose</td>
+</tr>
+<tr>
+<td>salad</td>
+</tr>
+<tr>
+<td>sandal_(type_of_shoe)</td>
+</tr>
+<tr>
+<td>sandwich</td>
+</tr>
+<tr>
+<td>saucer</td>
+</tr>
+<tr>
+<td>saxophone</td>
+</tr>
+<tr>
+<td>scarf</td>
+</tr>
+<tr>
+<td>scissors</td>
+</tr>
+<tr>
+<td>sculpture</td>
+</tr>
+<tr>
+<td>sheep</td>
+</tr>
+<tr>
+<td>shirt</td>
+</tr>
+<tr>
+<td>shoe</td>
+</tr>
+<tr>
+<td>short_pants</td>
+</tr>
+<tr>
+<td>shrimp</td>
+</tr>
+<tr>
+<td>sink</td>
+</tr>
+<tr>
+<td>skateboard</td>
+</tr>
+<tr>
+<td>ski</td>
+</tr>
+<tr>
+<td>skirt</td>
+</tr>
+<tr>
+<td>skullcap</td>
+</tr>
+<tr>
+<td>snake</td>
+</tr>
+<tr>
+<td>snowboard</td>
+</tr>
+<tr>
+<td>soccer_ball</td>
+</tr>
+<tr>
+<td>sock</td>
+</tr>
+<tr>
+<td>sofa</td>
+</tr>
+<tr>
+<td>sofa_bed</td>
+</tr>
+<tr>
+<td>sparrow</td>
+</tr>
+<tr>
+<td>speaker_(stero_equipment)</td>
+</tr>
+<tr>
+<td>spectacles</td>
+</tr>
+<tr>
+<td>spider</td>
+</tr>
+<tr>
+<td>spoon</td>
+</tr>
+<tr>
+<td>sportswear</td>
+</tr>
+<tr>
+<td>squirrel</td>
+</tr>
+<tr>
+<td>stool</td>
+</tr>
+<tr>
+<td>stop_sign</td>
+</tr>
+<tr>
+<td>stove</td>
+</tr>
+<tr>
+<td>straw_(for_drinking)</td>
+</tr>
+<tr>
+<td>strawberry</td>
+</tr>
+<tr>
+<td>street_sign</td>
+</tr>
+<tr>
+<td>streetlight</td>
+</tr>
+<tr>
+<td>suit_(clothing)</td>
+</tr>
+<tr>
+<td>suitcase</td>
+</tr>
+<tr>
+<td>sunflower</td>
+</tr>
+<tr>
+<td>sunglasses</td>
+</tr>
+<tr>
+<td>sunhat</td>
+</tr>
+<tr>
+<td>surfboard</td>
+</tr>
+<tr>
+<td>sushi</td>
+</tr>
+<tr>
+<td>swimming_pool</td>
+</tr>
+<tr>
+<td>swimsuit</td>
+</tr>
+<tr>
+<td>table</td>
+</tr>
+<tr>
+<td>tablet_computer</td>
+</tr>
+<tr>
+<td>taxi</td>
+</tr>
+<tr>
+<td>teddy_bear</td>
+</tr>
+<tr>
+<td>telephone</td>
+</tr>
+<tr>
+<td>television_set</td>
+</tr>
+<tr>
+<td>tennis_ball</td>
+</tr>
+<tr>
+<td>tennis_racket</td>
+</tr>
+<tr>
+<td>tent</td>
+</tr>
+<tr>
+<td>tiger</td>
+</tr>
+<tr>
+<td>toilet</td>
+</tr>
+<tr>
+<td>toilet_tissue</td>
+</tr>
+<tr>
+<td>tomato</td>
+</tr>
+<tr>
+<td>toothbrush</td>
+</tr>
+<tr>
+<td>towel</td>
+</tr>
+<tr>
+<td>tower</td>
+</tr>
+<tr>
+<td>toy</td>
+</tr>
+<tr>
+<td>traffic_light</td>
+</tr>
+<tr>
+<td>train_(railroad_vehicle)</td>
+</tr>
+<tr>
+<td>trash_can</td>
+</tr>
+<tr>
+<td>tray</td>
+</tr>
+<tr>
+<td>tree</td>
+</tr>
+<tr>
+<td>tripod</td>
+</tr>
+<tr>
+<td>trousers</td>
+</tr>
+<tr>
+<td>truck</td>
+</tr>
+<tr>
+<td>trumpet</td>
+</tr>
+<tr>
+<td>turtle</td>
+</tr>
+<tr>
+<td>umbrella</td>
+</tr>
+<tr>
+<td>vase</td>
+</tr>
+<tr>
+<td>vegetables</td>
+</tr>
+<tr>
+<td>violin</td>
+</tr>
+<tr>
+<td>wall_socket</td>
+</tr>
+<tr>
+<td>watch</td>
+</tr>
+<tr>
+<td>water_jug</td>
+</tr>
+<tr>
+<td>whale</td>
+</tr>
+<tr>
+<td>wheel</td>
+</tr>
+<tr>
+<td>wheelchair</td>
+</tr>
+<tr>
+<td>window</td>
+</tr>
+<tr>
+<td>wineglass</td>
+</tr>
+<tr>
+<td>zebra</td>
+</tr>
+</tbody>
+</table>
+
+              
+            </article>
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" data-md-state="hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../additional-resources/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Additional resources" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Additional resources
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../source/" class="md-footer__link md-footer__link--next" aria-label="Next: Source code" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Source code
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.top", "navigation.instant"], "search": "../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ed9748b7.min.js"></script>
+      
+    
+  </body>
+</html>
