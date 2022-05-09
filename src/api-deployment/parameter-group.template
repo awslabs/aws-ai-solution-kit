@@ -1,0 +1,278 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: API Deployment Configuration
+        Parameters:
+          - APIExplorer
+          - APIGatewayAuthorization
+          - APIGatewayStageName
+
+      - Label:
+          default: Optical Character Recognition(OCR) APIs
+        Parameters:
+          - GeneralOCR
+          - GeneralOCRTraditionalChinese
+          - CustomOCR
+          - CarLicensePlate
+
+      - Label:
+          default: Facial & Body Recognition APIs
+        Parameters:
+          - FaceComparison
+          - FaceDetection
+          - HumanAttributeRecognition
+          - HumanImageSegmentation
+
+      - Label:
+          default: Image Understanding APIs
+        Parameters:
+          - ImageSimilarity
+          - ObjectRecognition
+          - PornographyDetection
+
+      - Label:
+          default: Computer Vision Production APIs
+        Parameters:
+          - ImageSuperResolution
+
+      - Label:
+          default: Natural Language Understanding(NLU) APIs
+        Parameters:
+          - TextSimilarity
+
+    ParameterLabels:
+      APIGatewayStageName:
+        default: API Gateway Stage Name
+
+      APIGatewayAuthorization:
+        default: API Gateway Authorization
+
+      APIExplorer:
+        default: API Explorer
+
+      GeneralOCR:
+        default: General OCR - Simplified Chinese
+      
+      GeneralOCRTraditionalChinese:
+        default: General OCR - Traditional Chinese
+      
+      CustomOCR:
+        default: Custom Template OCR
+      
+      ImageSuperResolution:
+        default: Image Super Resolution
+      
+      ImageSimilarity:
+        default: Image Similarity
+      
+      ObjectRecognition:
+        default: Object Recognition
+      
+      FaceComparison:
+        default:  Face Comparison
+      
+      FaceDetection:
+        default: Face Detection
+      
+      HumanAttributeRecognition:
+        default: Human Attribute Recognition
+      
+      HumanImageSegmentation: 
+        default: Human Image Segmentation
+      
+      PornographyDetection:
+        default: Pornography Detection
+      
+      CarLicensePlate:
+        default: Car License Plate
+      
+      TextSimilarity:
+        default: Text Similarity
+
+Parameters:
+  APIGatewayStageName:
+    Description: Enter a name for API deployment Stage name. Default value is 'prod'. See https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html.
+    Default: "prod"
+    Type: String
+
+  APIGatewayAuthorization:
+    Description: Control access to the REST APIs. See https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html.
+    Default: "NONE"
+    Type: String
+    AllowedValues:
+      - "AWS_IAM"
+      - "NONE"
+
+  APIExplorer:
+    Description: API Explorer allows you to visualize and interact with the AI APIs. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/api-explorer.
+    Default: "yes"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  GeneralOCR:
+    Description: Recognize and extract alphabetical characters, numbers, symbols, and Simplified Chinese, return the coordinate position and confidence scores of the text. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  GeneralOCRTraditionalChinese:
+    Description: Recognize and extract alphabetical characters, numbers, symbols, and Traditional Chinese, return the coordinate position and confidence scores of the text. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  CustomOCR:
+    Description: Recognize and extract estructured text by predefined OCR templates. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  ImageSuperResolution:
+    Description: Upscale the resolution and enhance details in the images. Choose SageMaker instance type to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-image-super-resolution.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "no"
+      - "yes-ml.g4dn.xlarge"
+      - "yes-ml.g4dn.2xlarge"
+      - "yes-ml.g4dn.8xlarge"
+
+  ImageSimilarity:
+    Description: Compare two images and return similarity score. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-image-similarity.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  ObjectRecognition:
+    Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  FaceComparison:
+    Description: Compare two faces of same person and return a confidence score of the similarity. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-facec-omparison.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  FaceDetection:
+    Description: Detect the face in a image and return coordinate information of the face. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-face-detection/.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  HumanAttributeRecognition:
+    Description: Recognize the attributes of the human body in the image. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-human-attribute-recognition/.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  HumanImageSegmentation:
+    Description: Segment human bodies from background and return the alpha channel. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-human-image-segmentation/.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  PornographyDetection:
+    Description: Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-pornography-detection.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  CarLicensePlate:
+    Description: Recognize text on Chinese car license plate. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  TextSimilarity:
+    Description: Compare two Chinese words or sentences and return similarity score. Choose yes to activate the API. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-text-similarity.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+Conditions:
+  ConditionAPIExplorer: !Equals 
+      - !Ref APIExplorer
+      - "yes"
+
+  ConditionGeneralOCR: !Equals 
+      - !Ref GeneralOCR
+      - "yes"
+      
+  ConditionGeneralOCRTraditionalChinese: !Equals 
+      - !Ref GeneralOCRTraditionalChinese
+      - "yes"
+      
+  ConditionCustomOCR: !Equals 
+      - !Ref CustomOCR
+      - "yes"
+      
+  ConditionObjectRecognition: !Equals 
+      - !Ref ObjectRecognition
+      - "yes"
+      
+  ConditionFaceComparison: !Equals 
+      - !Ref FaceComparison
+      - "yes"
+      
+  ConditionFaceDetection: !Equals 
+      - !Ref FaceDetection
+      - "yes"
+      
+  ConditionImageSimilarity: !Equals 
+      - !Ref ImageSimilarity
+      - "yes"
+      
+  ConditionTextSimilarity: !Equals 
+      - !Ref TextSimilarity
+      - "yes"
+      
+  ConditionHumanAttributeRecognition: !Equals 
+      - !Ref HumanAttributeRecognition
+      - "yes"
+      
+  ConditionHumanImageSegmentation: !Equals 
+      - !Ref HumanImageSegmentation
+      - "yes"
+      
+  ConditionPornographyDetection: !Equals 
+      - !Ref PornographyDetection
+      - "yes"
+      
+  ConditionCarLicensePlate: !Equals 
+      - !Ref CarLicensePlate
+      - "yes"
+      
+  ConditionImageSuperResolution: !Not 
+    - !Equals
+      - !Ref ImageSuperResolution
+      - "no"
