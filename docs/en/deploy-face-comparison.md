@@ -2,36 +2,18 @@
 feature_id: FaceComparison
 feature_name: 人脸相似度比对
 feature_endpoint: face_comparison
-deployment_time: TODO
-destroy_time: TODO
-sample_image: https://demo.solutions.aws.a2z.org.cn/image/sample.png
-feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张人脸，从而确定它们是否属于同一个人。
-feature_scenario: 可应用于用户身份验证、照片分类等场景，如：自助酒店入住、人员报到、校园入口通行、相册制作。
+deployment_time: 10 分钟
+destroy_time: 6 分钟
+sample_image: 图像的URL地址
+feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较，从而判断是否为同一个人。
+feature_scenario: 可应用于客户身份验证、照片分类等场景，例如：自助酒店入住、人员报到、校园入口通行、相册制作。
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-{%
-  include "include-deploy-lambda.md"
-%}
-
-{%
-  include "include-deploy-cost.md"
-%}
-
-{%
-  include "include-deploy.md"
-%}
-
-## 开始使用
-
-### 调用 URL
-
-您可以在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的记录的 URL。
-
-### REST API接口参考
+## API参数说明
 
 - HTTP 方法: `POST`
 
@@ -40,7 +22,7 @@ feature_scenario: 可应用于用户身份验证、照片分类等场景，如�
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
 | url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 base64 编码的图像数据|
+| img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
 
 - 请求 Body 示例
 
@@ -52,7 +34,7 @@ feature_scenario: 可应用于用户身份验证、照片分类等场景，如�
 
 ``` json
 {
-  "img": "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/……"
+  "img": "Base64编码的图像数据"
 }
 ```
 
@@ -60,39 +42,50 @@ feature_scenario: 可应用于用户身份验证、照片分类等场景，如�
 
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|Faces    |*List*   |图像中找到的人脸列表|
+|+face_hash    |*List*   |一个具有768个元素的List，为768维的人脸向量|
+|+BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
+|+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
+|FaceModelVersion    |*String*   |当前模型版本号|
 
 - 返回示例
-``` json
-[
-    {
-        "words": "香港永久性居民身份證",
-        "location": {
-            "top": 18,
-            "left": 148,
-            "width": 169,
-            "height": 17
-        },
-        "score": 0.9923796653747559
-    },
-    {
-        "words": "HONG KONG PERMANENTIDENTITYCARD",
-        "location": {
-            "top": 36,
-            "left": 71,
-            "width": 321,
-            "height": 17
-        },
-        "score": 0.9825196266174316
-    }
 
-]
+``` json
+{
+    "Faces": [
+        {
+            "BoundingBox": {
+                "Width": 0.057923507690429685, 
+                "Height": 0.10426715253778117, 
+                "Left": 0.5258836364746093, 
+                "Top": 0.40569204600369024
+            }, 
+            "Confidence": 0.8736226558685303, 
+            "face_hash": [64.8125, -86.8125, -9.84375, 12.390625, 161.625, ..., 4.8046875
+            ]
+        }, 
+        {
+            "BoundingBox": {
+                "Width": 0.04332921028137207, 
+                "Height": 0.10577215250117152, 
+                "Left": 0.1566245174407959, 
+                "Top": 0.6526811308355788
+            }, 
+            "Confidence": 0.8055327534675598, 
+            "face_hash": [61.21875, -33.84375, -36.71875, 70.625, 110.125, ..., -28.421875
+            ]
+        }
+    ], 
+    "FaceModelVersion": "1.2.0"
+}
 ```
 
 {%
   include-markdown "include-deploy-code.md"
+%}
+
+{%
+  include "include-deploy-cost.md"
 %}
 
 {%

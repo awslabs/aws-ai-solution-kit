@@ -1,13 +1,24 @@
-# Architecture overview
+Two types of AI functionality implementations are included in this solution architecture: AWS Lambda-based architecture and Amazon SageMaker-based architecture.
 
-A user or program sends an API request to Amazon API Gateway, and the request payload needs to contain the processed image or text information. After receiving the HTTP request, Amazon API Gateway sends the request data to the corresponding Amazon Lambda function or Amazon SageMaker Endpoint, thereby Implement the inference process and return the inference result (JSON format data).
+!!! Note "Description"
+    The Amazon SageMaker-based architecture is only available in version 1.2.0 for **Image Super Resolution Solution**.
 
-This solution architecture includes two types of AI function implementations (the *Amazon SageMaker* architecture in version 1.2.0 is only applicable to **[Image Super Resolution](deploy-image-super-resolution.md)** API)
+## Architecture based on AWS Lambda
 
-## Based on Amazon Lambda architecture
-Amazon API Gateway directly sends the received user request to the Lambda function, and the Lambda function returns the result to the calling end.
-![](./images/arch-lambda.png)
+! [](./images/arch-lambda.png)
 
-## Based on Amazon SageMaker architecture
-First, API Gateway sends the user request to the Lambda (invoke endpoint) function, invokes the SageMaker Endpoint through Lambda, executes the inference process in SageMaker and returns the inference result.
-![](./images/arch-sagemaker.png)
+1. the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain information about the image or text being processed.
+
+2. Amazon API Gateway sends the incoming user request directly to the AWS Lambda function. 3.
+
+3. the AWS Lambda function returns the result to the caller.
+
+## Architecture based on Amazon SageMaker
+
+! [](./images/arch-sagemaker.png)
+
+1. the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain the image or text information to be processed.
+
+2. Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function. 3.
+
+3. AWS Lambda calls Amazon SageMaker Endpoint, which performs the inference process in Amazon SageMaker and returns the inference result (usually JSON format data).

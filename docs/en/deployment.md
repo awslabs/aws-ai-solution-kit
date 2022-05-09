@@ -57,7 +57,7 @@ This solution uses Amazon API Gateway to receive API call requests, so if you wa
     | **FaceComparison** | no | Deploy **Face Comparison**, please check 'yes' if you want to deploy, see [Face Comparison](deploy-face-comparison.md) |
     | **HumanAttributeRecognition** | no | Deploy **Human Attribute Recognition**, please check 'yes' if you want to deploy, see [Human Attribute Recognition](deploy-human-attribute-recognition.md) |
     | **ImageSuperResolution** | no | Deploy **Image Super Resolution**, check 'yes' if you want to deploy, see [Image Super Resolution](deploy-image-super-resolution.md) |
-    | **TextSimilarity** | no | Deploy **Text Similarity**, check 'yes' if you want to deploy, see the [Text Similarity](deploy-text_similarity.md) |
+    | **TextSimilarity** | no | Deploy **Text Similarity**, check 'yes' if you want to deploy, see the [Text Similarity](deploy-text-similarity.md) |
 
 6. On the **Configure Stack Options** page, select **Next**.
 

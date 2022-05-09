@@ -1,5 +1,6 @@
 INHERIT: ./mkdocs.base.yml
 site_name: AI Solution Kit Deployment Guide
+site_description: AI Solution Kit Deployment Guide
 docs_dir: en
 site_dir: ./site/en
 theme:
@@ -16,31 +17,27 @@ nav:
     - Security: security.md
     - Supported regions: regions.md
     - CloudFormation template: template.md
-    - Automated deployment: deployment.md
-    - API Explorer: api-explorer.md
+    - Automated deployment:
+        - 启动CloudFormation堆栈: deployment.md
+        - 更新CloudFormation堆栈: deploy-add-delete-api.md 
+    - API Reference:
+      - Overview: api-explorer.md
+      - General OCR (Simplified Chinese): deploy-general-ocr.md
+      - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
+      - Custom Template OCR: deploy-custom-ocr.md
+      - Car License Plate: deploy-car-license-plate.md
+      - Face Detection: deploy-face-detection.md
+      - Face Comparison: deploy-face-comparison.md
+      - Human Attribute Recognition: deploy-human-attribute-recognition.md
+      - Human Image Segmentation: deploy-human-image-segmentation.md
+      - Image Similarity: deploy-image-similarity.md
+      - Object Recognition: deploy-object-recognition.md
+      - Pornography Detection: deploy-pornography-detection.md
+      - Image Super Resolution: deploy-image-super-resolution.md
+      - Text Similarity: deploy-text-similarity.md
+    - How to Upgrade: upgrade.md
+    - Uninstall: uninstall.md
     - Additional resources: additional-resources.md
     - FAQ: faq.md
     - Source code: source.md
     - Release Notes: revisions.md
-    - How to Upgrade: upgrade.md
-  - OCR:
-    - General OCR: deploy-general-ocr.md
-    - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
-    - Custom OCR: deploy-custom-ocr.md
-    - Car License Plate: deploy-car-license-plate.md
-  - Facial & Body:
-    - Face Comparison: deploy-face-comparison.md
-    - Face Detection: deploy-face-detection.md
-    - Human Attribute Recognition: deploy-human-attribute-recognition.md
-    - Human Image Segmentation: deploy-human-image-segmentation.md
-  - Image Understanding:
-    - Image Similarity: deploy-image-similarity.md
-    - Object Recognition: deploy-object-recognition.md
-    - Pornography Detection: deploy-pornography-detection.md
-  - Computer Vision Production:
-    - Image Super Resolution: deploy-image-super-resolution.md
-  - Natural Language Understanding: 
-    - Text Similarity: deploy-text-similarity.md
-
-  # - 语音技术:
-  #   - 语音技术: audio.md

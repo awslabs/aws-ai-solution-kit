@@ -38,7 +38,7 @@ All the solutions are open sourced. You can use the solutions and applications f
 |--------------|------------|-------------|
 |Image Similarity|Compare two images and return similarity score|[Get started](deploy-text-similarity.md)|
 |Object Recognition|Segment human bodies from background and return the alpha channel|[Get started](deploy-object-recognition.md)|
-|Pornography Detection|Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores|[Get started](deploy-nudity-detection.md)|
+|Pornography Detection|Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores|[Get started](deploy-pornography-detection.md)|
 
 ### **Computer Vision Production APIs**
 |    **API Name**   | **Description**    |  |

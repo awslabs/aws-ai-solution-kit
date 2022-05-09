@@ -1,6 +1,6 @@
 INHERIT: ./mkdocs.base.yml
 site_name: 人工智能解决方案合集实施指南
-site_description: AI Solution Kit Implementation Guide
+site_description: AI Solution Kit Deployment Guide
 docs_dir: zh
 site_dir: ./site/zh
 theme:
