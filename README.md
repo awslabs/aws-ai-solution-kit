@@ -10,11 +10,12 @@
 <p align="center">
   <a href="https://aws-samples.github.io/aws-ai-solution-kit/en/"><strong>Documentation</strong></a> ·
   <a href="https://github.com/projen/projen/releases"><strong>Changelog</strong></a> ·
-  <a href="#feature-list"><strong>Feature List</strong></a> ·
+  <a href="#feature-list"><strong>Feature List</strong></a>
 </p>
 
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="Apache 2.0 License"></a>
+  <a href="https://github.com/aws-samples/aws-ai-solution-kit/actions/workflows/build.yml"><img src="https://github.com/aws-samples/aws-ai-solution-kit/workflows/build/badge.svg" alt="Build badge"></a>
 </p>
 
 <br/>
@@ -157,7 +158,7 @@ This project contains two types of implementation: Building on AWS Lambda and bu
 
 ## API Reference
 
-[API Reference](https://aws-samples.github.io/aws-ai-solution-kit/en/)
+See [API Reference](https://aws-samples.github.io/aws-ai-solution-kit/en/)
 
 ## Authorization and Security
 
