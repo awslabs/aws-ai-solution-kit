@@ -26,6 +26,11 @@ This repository contains several pre-trained deep learning models based on AWS L
 
 <div align="center">
     <img src="./docs/imgs/ocr_1.png" width="500">
+    <img src="./docs/imgs/object_1.png" width="500">
+    <img src="./docs/imgs/similarity_1.png" width="500">
+    <img src="./docs/imgs/resolution_1.png" width="500">
+    <img src="./docs/imgs/segmentation_1.png" width="500">
+    <img src="./docs/imgs/face_1.png" width="500">
 </div>
 
 ## Feature List
