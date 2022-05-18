@@ -25,7 +25,7 @@
 This repository contains several pre-trained deep learning models based on AWS Lambda and Amazon SageMaker, for example: general OCR, text similarity, face detection, human image segmentation, image similarity, object recognition, image super resolution (see full list below). By this project, you can download these dockerized modules from Amazon Elastic Container Registry(ECR) and create REST APIs on Amazon API Getaway. Once the project deployed, you can call the REST API to use these features easily.
 
 <div align="center">
-    <img src="./docs/imgs/ocr_1.png" width="800">
+    <img src="./docs/imgs/ocr_1.png" width="500">
 </div>
 
 ## Feature List
