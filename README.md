@@ -9,7 +9,6 @@
 
 <p align="center">
   <a href="https://aws-samples.github.io/aws-ai-solution-kit/en/"><strong>Documentation</strong></a> ·
-  <a href="https://github.com/projen/projen/releases"><strong>Changelog</strong></a> ·
   <a href="#feature-list"><strong>Feature List</strong></a> ·
 </p>
 
