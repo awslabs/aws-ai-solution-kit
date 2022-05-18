@@ -152,7 +152,7 @@ This project contains two types of implementation: Building on AWS Lambda and bu
 
 ## API Reference
 
-[API Reference](https://aws-samples.github.io/aws-ai-solution-kit/en/)
+See [API Reference](https://aws-samples.github.io/aws-ai-solution-kit/en/)
 
 ## Authorization and Security
 
