@@ -1,6 +1,0 @@
-node_modules
-cdk.out
-.idea
-.pytest_cache
-__pycache__
-venv
