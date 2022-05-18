@@ -1,30 +1,30 @@
 ---
 feature_id: HumanImageSegmentation
-feature_name: 智能人像分割
+feature_name: Human Image Segmentation
 feature_endpoint: human_image_segmentation
-deployment_time: 15 分钟
-destroy_time: 9 分钟
-sample_image: 图像的URL地址
-feature_description: 基于AI深度学习框架识别图像中的人体轮廓，实现高精度分割，使之与背景进行分离。
-feature_scenario: 可应用于照片背景替换、后期处理、证件照制作，人像抠图美化、背景虚化等多种场景。
+deployment_time: 15 Minutes
+destroy_time: 9 Minutes
+sample_image: Image URL address
+feature_description: Segment human bodies from background and return the alpha channel
+feature_scenario: It can be applied to photo background replacement, post-processing, ID photo production, portrait keying beautification, background defocusing and many other scenarios.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -34,21 +34,21 @@ feature_scenario: 可应用于照片背景替换、后期处理、证件照制�
 
 ``` json
 {
-"img": "Base64编码的图像数据"
+"img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|result    |*String*   |去除背景后的 Base64 编码的 Alpha 通道图像数据|
+|result    |*String*   |Background-removed Base64-encoded alpha channel image data|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {
-  "result": "去除背景后的Base64编码的图像数据"
+  "result": "Background-removed Base64-encoded alpha channel image data"
 }
 ```
 

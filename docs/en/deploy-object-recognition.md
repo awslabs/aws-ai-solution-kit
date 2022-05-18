@@ -1,30 +1,30 @@
 ---
 feature_id: ObjectRecognition
-feature_name: 通用物体识别
+feature_name: Object Recognition
 feature_endpoint: object_recognition
-deployment_time: 15 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别60类物体。
-feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图像场景的目标检测与跟踪。
+deployment_time: 15 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Recognize objects in the image and return confidence score for each object.
+feature_scenario: It can be applied to IPC image detection, traffic, security and other industries in the image scene of target detection and tracking.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -34,23 +34,23 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 
 ``` json
 {
-"img": "Base64编码的图像数据"
+"img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|Labels    |*List*   |图像中找到的目标列表|
-|+Name    |*String*   |目标类别名|
-|+Instances    |*List*   |类别实例列表|
-|++BoundingBox |*JSON*     |实例在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|++Confidence    |*Float*   |实例的置信度，0-100|
-|+Confidence    |*Int*   |当前类别实例置信度的最大值|
-|LabelModelVersion    |*String*   |当前模型版本号|
+|Labels |*List* |List of objects found in the image|
+|+Name |*String* |Target Category Name|
+|+Instances |*List* |Class instance list|
+|++BoundingBox |*JSON* |The coordinate value of the instance in the image, including the percentage of top, left, width, height relative to the full screen|
+|++Confidence |*Float* |Instance Confidence, 0-100|
+|+Confidence |*Int* |Maximum value of current class instance confidence|
+|LabelModelVersion |*String* |Current model version number|
 
-- 返回示例
+- Example JSON response
 ``` json
 {
     "Labels": [

@@ -1,29 +1,29 @@
 ---
 feature_id: PornographyDetection
-feature_name: 色情内容审核
+feature_name: Pornography Detection
 feature_endpoint: pornography-detection
-deployment_time: 15 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 自动对图片进行审核，获取多维度色情量化信息，如：normal，sexy，porn，实现精准快速的色情倾向判断。
-feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮助客户减少审核人力，有效降低涉黄风险，提升信息处理效率。
+deployment_time: 15 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores.
+feature_scenario: It can be applied to the scene of fast processing of pornographic content. Help customers reduce auditing manpower, effectively reduce the risk of pornography, and improve the efficiency of information processing.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -33,19 +33,19 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 
 ``` json
 {
-"img": "Base64编码的图像数据"
+"img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|normal    |*Float*   |识别图像的正常维度占比|
-|sexy      |*Float*   |识别图像的性感维度占比|
-|porn      |*Float*   |识别图像的色情维度占比|
+|normal |*Float* |Recognize the normal dimension ratio of the image|
+|sexy |*Float* |Identifies the proportion of sexy dimensions of an image|
+|porn |*Float* |Identifies the proportion of pornographic dimensions of images|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 { 

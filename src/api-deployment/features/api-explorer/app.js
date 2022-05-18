@@ -102,7 +102,7 @@ app.use(
 app.use(express.static('.'))
 module.exports.handler = serverless(app)
 
-// test with --node app.js
-app.listen(3000, () => {
-  console.log(`Open http://localhost:3000/api-explorer`)
-})
+// // test with --node app.js
+// app.listen(3000, () => {
+//   console.log(`Open http://localhost:3000/api-explorer`)
+// })

@@ -1,52 +1,52 @@
 ---
 feature_id: HumanAttributeRecognition
-feature_name: 自定义模板文字识别
+feature_name: Human Attribute Recognition
 feature_endpoint: custom_ocr
-deployment_time: 15 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。
+deployment_time: 15 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Recognize the attributes of the human body in the image.
 
-feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场景。
+feature_scenario: It can be applied to scenarios such as smart security, smart retail, and pedestrian search.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-## 属性说明
+## Attributes Description
 
-| 名称     | 语义值          |
+| Name     | Semantic          |
 | ------ | ------------ |
-| 上身服饰   | 短袖、长袖        |
-| 下身服饰   | 短裤/裙、长裤/裙    |
-| 上身服饰纹理 | 图案、纯色、格子/条纹  |
-| 背包     | 无包、有包        |
-| 是否戴眼镜  | 无、有          |
-| 是否戴帽子  | 无、有          |
-| 人体朝向   | 正面、背面、左面、右面  |
-| 上方截断   | 无、有          |
-| 下方截断   | 无、有          |
-| 遮挡情况   | 无、轻、重        |
-| 是否戴口罩  | 无、有          |
-| 性别     | 男、女          |
-| 年龄     | 幼儿、青少年、中年、老年 |
-| 吸烟     | 无、有          |
-| 电话     | 无、有          |
-| 拿东西    | 无、有          |
+| Upper Body | Short Sleeve, Long Sleeve |
+| Bottoms | Shorts/skirts, trousers/skirts |
+| Upper Body Apparel Textures | Patterns, Solid Colors, Plaid/Stripes |
+| Backpack | Without bag, with bag |
+| Do you wear glasses | No, yes |
+| Whether to wear a hat | No, yes |
+| Body Orientation | Front, Back, Left, Right |
+| Truncate Above | None, Yes |
+| Truncate below | No, Yes |
+| Occlusion | None, Light, Heavy |
+| Whether to wear a mask | No, Yes |
+| Gender | Male, Female |
+| Age | Young children, teenagers, middle-aged, elderly |
+| Smoking | None, Yes |
+| Telephone | No, Yes |
+| take things | no, yes |
 
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -56,35 +56,35 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 
 ``` json
 {
-  "img": "Base64编码的图像数据"
+  "img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|Labels    |*List*   |图像中找到的人体列表|
-|+upper_wear    |*Dict*   |短袖、长袖|
-|+upper_wear_texture    |*Dict*   |图案、纯色、条纹/格子|
-|+lower_wear    |*Dict*   |短裤/裙、长裤/裙|
-|+glasses    |*Dict*   |有眼镜、无眼镜|
-|+bag    |*Dict*   |有背包、无背包|
-|+headwear    |*Dict*   |有帽、无帽|
-|+orientation    |*Dict*   |左侧面、背面、正面、右侧面|
-|+upper_cut    |*Dict*   |有截断、无截断|
-|+lower_cut    |*Dict*   |有截断、无截断|
-|+occlusion    |*Dict*   |无遮挡、轻度遮挡、重度遮挡|
-|+face_mask    |*Dict*   |戴口罩、无口罩|
-|+gender    |*Dict*   |男性、女性|
-|+age    |*Dict*   |幼儿、青少年、中年、老年|
-|+smoke    |*Dict*   |吸烟、未吸烟|
-|+cellphone    |*Dict*   |使用手机、未使用手机|
-|+carrying_item    |*Dict*   |有手提物、无手提物|
-|+BoundingBox |*Dict*     |人体在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|LabelModelVersion    |*String*   |当前模型版本号|
+|Labels |*List* |List of human bodies found in the image|
+|+upper_wear |*Dict* |Short Sleeve, Long Sleeve|
+|+upper_wear_texture |*Dict* |Pattern, Solid, Stripe/Check|
+|+lower_wear |*Dict* |Shorts/Skirts, Pants/Skirts|
+|+glasses |*Dict* |With glasses, without glasses|
+|+bag |*Dict* |With or without backpack|
+|+headwear |*Dict* |With or without hat|
+|+orientation |*Dict* |left side, back side, front side, right side|
+|+upper_cut |*Dict* |with truncation, without truncation|
+|+lower_cut |*Dict* |with truncation, without truncation|
+|+occlusion |*Dict* |No Occlusion, Light Occlusion, Heavy Occlusion|
+|+face_mask |*Dict* |With mask, without mask|
+|+gender |*Dict* |Male, Female|
+|+age |*Dict* |Children, Teens, Middle-aged, Seniors|
+|+smoke |*Dict* |Smoking, non-smoking|
+|+cellphone |*Dict* |with cellphone, without cellphone|
+|+carrying_item |*Dict* |With or without carry|
+|+BoundingBox |*Dict* |The coordinate value of the human body in the image, including the percentage of top, left, width, height relative to the full screen|
+|LabelModelVersion |*String* |Current model version number|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {

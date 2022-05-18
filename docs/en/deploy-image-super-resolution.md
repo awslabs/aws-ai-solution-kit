@@ -1,57 +1,57 @@
 ---
 feature_id: ImageSuperResolution
-feature_name: 图像超分辨率
+feature_name: Image Super Resolution
 feature_endpoint: image_super_resolution
-deployment_time: 25 分钟
-destroy_time: 20 分钟
-sample_image: 图像的URL地址
-feature_description: 可将图片智能放大2或4倍，从而获取清晰度更高、细节丰富的图像。
-feature_scenario: 可应用于等多种场景，解决原始图片分辨率不足的问题。
+deployment_time: 25 Minutes
+destroy_time: 20 Minutes
+sample_image: Image URL address
+feature_description: Upscale the resolution and enhance details in the images.
+feature_scenario: It can be applied to many scenarios such as solving the problem of insufficient resolution of the original picture.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-|url&nbsp;&nbsp;&nbsp;&nbsp;       |*String*     |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，图像大小建议不超过1920 * 1080，在开启人像增强的情况下，图像大小建议不超过1280 * 720。AWS Lambda版本方案由于性能限制，图像大小建议不超过400 * 400|
-|img       |*String*     |与 url 参数二选一|进行 Base64 编码的图像数据|
-|scale     |*Integer*    |否|图像放大倍数，支持放大倍数为2或4，默认值为2|
-|face      |*Bool*       |否|当设置为True时，额外开启人脸增强，默认值为False。（仅支持**GPU**版本部署方式）|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
+|scale     |*Integer*    |no|Image zoom, support zoom 2 or 4, the default value is 2|
+|face      |*Bool*       |no|When set to True, face enhancement is additionally turned on, default value is False.|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
-"url": "图像的URL地址",
+"url": "Image URL address",
 "scale" : 2
 }
 ```
 
 ``` json
 {
-"img": "Base64编码的图像数据",
+"img": "Base64-encoded image data",
 "scale" : 4
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|result    |*String*   |按比例放大后 Base64 编码的图像数据|
+|result    |*String*   |Base64-encoded image data after scaling|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {
-  "result": "按比例放大后的Base64编码的图像数据"
+  "result": "Base64-encoded image data after scaling"
 }
 ```
 
@@ -59,9 +59,9 @@ feature_scenario: 可应用于等多种场景，解决原始图片分辨率不�
   include-markdown "include-deploy-code.md"
 %}
 
-## 成本预估 
+## Cost Estimation 
 
-您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年5月，影响解决方案的成本因素主要包括：
+You are responsible for the cost of using each Amazon Web Services service when running the solution. As of May 2022, the main cost factors affecting the solution include.
 
 - AWS Lambda调用次数
 - AWS Lambda运行时间

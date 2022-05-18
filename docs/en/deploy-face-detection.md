@@ -1,29 +1,29 @@
 ---
 feature_id: FaceDetection
-feature_name: 人脸识别
+feature_name: Face Detection
 feature_endpoint: face_detection
-deployment_time: 9 分钟
-destroy_time: 6 分钟
-sample_image: 图像的URL地址
-feature_description: 识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到64个矢量坐标上。
-feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营销等多种场景。
+deployment_time: 9 Minutes
+destroy_time: 6 Minutes
+sample_image: Image URL address
+feature_description: Detect the face in a image and return coordinate information of the face.
+feature_scenario: It can be applied to a variety of scenarios such as camera monitoring, face feature analysis, and interactive marketing.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -33,13 +33,13 @@ feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营�
 
 ``` json
 {
-  "img": "Base64编码的图像数据"
+  "img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Faces    |*List*   |图像中找到的人脸列表|
 |+landmark_106    |*List*   |106个关键点坐标|
@@ -51,7 +51,7 @@ feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营�
 |+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
 |FaceModelVersion    |*String*   |当前模型版本号|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {

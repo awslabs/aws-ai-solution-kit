@@ -1,3 +1,3 @@
-## 卸载部署
+## Uninstall Deployment
 
-您可以通过Amazon CloudFormation卸载对应的堆栈，整个删除过程大约需要10分钟。
+You can uninstall the corresponding stack through Amazon CloudFormation and the whole removal process takes about 10 minutes.

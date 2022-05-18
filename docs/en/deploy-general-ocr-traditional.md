@@ -1,29 +1,29 @@
 ---
 feature_id: GeneralOCRTraditional
-feature_name: 通用文字识别（繁体中文）
+feature_name: General OCR (Traditional Chinese)
 feature_endpoint: general_ocr_traditional
-deployment_time: 10 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 通用场景文字提取，通过返回图片中文字内容与坐标位置等信息，便于客户进行比对或结构化操作。支持识别**繁体中文**、英文、数字和常用符号。
-feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提高信息处理效率。
+deployment_time: 10 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols.
+feature_scenario: It can be applied to a variety of scenarios such as paper documents electronically, document identification, content review, etc. to improve information processing efficiency.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-### API参数说明
+### REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -33,19 +33,19 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 
 ``` json
 {
-"img": "Base64编码的图像数据"
+"img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|words    |*String*   |识别文本字符串内容|
-|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值|
-|score    |*Float*   |识别文本的置信度值，为0到1区间内 Float 型数值|
+|words    |*String*   |Recognize text content|
+|location |*JSON*     |Recognize the coordinates of the text in the image, including top, left, width, height as integer values|
+|score    |*Float*   |Confidence value of the recognized text, Float type value in the interval 0 to 1|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 [

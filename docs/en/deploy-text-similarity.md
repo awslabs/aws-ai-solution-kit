@@ -1,42 +1,42 @@
 ---
 feature_id: TextSimilarity
-feature_name: 文本相似度
+feature_name: Text Similarity
 feature_endpoint: text_similarity
-deployment_time: 15 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。
-feature_scenario: 可应用于搜索引擎、推荐系统、机器翻译、自动应答、命名实体识别、拼写纠错等场景。
+deployment_time: 15 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Compare two Chinese words or sentences and return similarity score.
+feature_scenario: It can be used in search engines, recommendation systems, machine translation, automatic response, named entity recognition, spelling error correction and other scenarios.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| text | *String* |文本数据|
+| text | *String* |Texts data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
-  "text": "测试文本"
+  "text": "Testing of text"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|result    |*List*   |一个具有768个元素的List，为768维的文本向量|
+|result    |*List*   |A List with 768 elements, a 768-dimensional text vector|
 
-- 返回示例
+- Example JSON response
 ``` json
 {
     "result": [

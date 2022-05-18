@@ -1,11 +1,11 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   description: |
     You can find out more about AI Solution Kit at
     [https://github.com/aws-samples/aws-ai-solution-kit](https://github.com/aws-samples/aws-ai-solution-kit/) or on
     [https://www.amazonaws.cn/solutions/ai-solution-kit](https://www.amazonaws.cn/solutions/ai-solution-kit/?nc1=h_ls).
   version: "1.2.0"
-  title: AI Solution Kit OpenAPI
+  title: AI Solution Kit
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -26,8 +26,19 @@ paths:
     post:
       tags:
         - Optical Character Recognition(OCR)
-      summary: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols
+      summary: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols (standard mode)
       operationId: general-ocr-standard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -36,17 +47,32 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
+                  $ref: '#/components/schemas/ocrResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
           description: Internal Server Error
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+        '504':
+          description: Endpoint request timed out
   /general-ocr-advanced:
     post:
       tags:
         - Optical Character Recognition(OCR)
-      summary: High accuracy recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols
+      summary: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols (advanced mode)
       operationId: general-ocr-advanced
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -55,19 +81,32 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                  $ref: '#/components/schemas/ocrResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /general-ocr-traditional-chinese:
     post:
       tags:
         - Optical Character Recognition(OCR)
       summary: Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols
       operationId: general-ocr-traditional-chinese
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -76,19 +115,32 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                  $ref: '#/components/schemas/ocrResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /custom-ocr:
     post:
       tags:
         - Optical Character Recognition(OCR)
       summary: Recognize and extract estructured text by predefined OCR templates.
       operationId: custom-ocr
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -97,19 +149,32 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                  $ref: '#/components/schemas/ocrResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /car-license-plate:
     post:
       tags:
         - Optical Character Recognition(OCR)
       summary: Recognize text on Chinese car license plate
       operationId: car-license-plate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -118,40 +183,32 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                  $ref: '#/components/schemas/ocrResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
-  /face-comparison:
-    post:
-      tags:
-        - Facial & Body
-      summary: Compare two faces of same person and return a confidence score of the similarity
-      operationId: face-comparison
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
           description: Internal Server Error
-        '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+        '504':
+          description: Endpoint request timed out
   /face-detection:
     post:
       tags:
         - Facial & Body
       summary: Detect the face in a image and return coordinate information of the face
       operationId: face-detection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
@@ -160,169 +217,323 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                  $ref: '#/components/schemas/faceDetectionResponse'
         '403':
-          description: Forbidden
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
+  /face-comparison:
+    post:
+      tags:
+        - Facial & Body
+      summary: Compare two faces of same person and return a confidence score of the similarity
+      operationId: face-comparison
       requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/faceComparisonResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /human-attribute:
     post:
       tags:
         - Facial & Body
       summary: Recognize the attributes of the human body in the image
       operationId: human-attribute
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                $ref: '#/components/schemas/humanAttributeResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /human-segmentation:
     post:
       tags:
         - Facial & Body
       summary: Segment human bodies from background and return the alpha channel
       operationId: human-segmentation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                $ref: '#/components/schemas/base64Response'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /image-similarity:
     post:
       tags:
         - Image Understanding
       summary: Compare two images and return similarity score
       operationId: image-similarity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                $ref: '#/components/schemas/similarityResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /object-recognition:
     post:
       tags:
         - Image Understanding
       summary: Segment human bodies from background and return the alpha channel
       operationId: object-recognition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                $ref: '#/components/schemas/objectRecognitionResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /pornography-detection:
     post:
       tags:
         - Image Understanding
       summary: Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores
       operationId: pornography-detection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/GeneralOCRResponse'
-        '400':
-          description: Internal Server Error
+                $ref: '#/components/schemas/pornographyDetectionResponse'
         '403':
-          description: Forbidden
-      requestBody:
-        $ref: '#/components/requestBodies/GeneralOCRRequest'
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /super-resolution:
     post:
       tags:
         - Computer Vision
       summary: Upscale the resolution and enhance details in the images
-      operationId: segPostImage
+      operationId: super-resolution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/HumanImageSegmentationResponse'
-        '400':
+                $ref: '#/components/schemas/base64Response'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
           description: Internal Server Error
-      requestBody:
-        $ref: '#/components/requestBodies/HumanImageSegmentationRequest'
+        '504':
+          description: Endpoint request timed out
   /text-similarity:
     post:
       tags:
         - Natural Language
       summary: Compare two Chinese words or sentences and return similarity score
-      operationId: resolutionPostImage
+      operationId: text-similarity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/textRequest'
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuperResolutionResponse'
-        '400':
+                $ref: '#/components/schemas/similarityResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
           description: Internal Server Error
-      requestBody:
-        $ref: '#/components/requestBodies/SuperResolutionRequest'
+        '504':
+          description: Endpoint request timed out
 components:
   schemas:
-    GeneralOCRRequest:
+    imageRequest:
+      title: Image Request
+      type: object
+      required:
+        - url
+        - img
+      properties:
+        url:
+          type: string
+          description: Image URL
+        img:
+          type: string
+          description: Base64-encoded image data
+    textRequest:
+      title: Text Request
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: Test text
+    base64Response:
+      title: Image Base64 Request
       type: object
       required:
         - img
-        - url
       properties:
         img:
           type: string
-          description: Base64-encoded image data.
-          example: base64
-        url:
-          type: string
-          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
-          example: url
-    GeneralOCRResponse:
+          description: Base64-encoded image data
+          example: "Base64-encoded image data"
+    boundingBox:
+      type: object
+      required:
+        - Width
+        - Height
+        - Left
+        - Top
+      properties:
+        Width:
+          type: integer
+          format: int32
+        Height:
+          type: integer
+          format: int32
+        Left:
+          type: integer
+          format: int32
+        Top:
+          type: integer
+          format: int32
+    ocrResponse:
       type: object
       required:
         - words
@@ -331,10 +542,11 @@ components:
       properties:
         words:
           type: string
-          description: Base64-encoded image data.
-          example: 'example'
+          description: Text in the image
+          example: 'example word'
         location:
           type: object
+          description: Text box location, including top, left, width, height
           required:
             - top
             - left
@@ -343,17 +555,16 @@ components:
           properties:
             top:
               type: integer
-              format: int64
+              format: int32
             left:
               type: integer
-              format: int64
+              format: int32
             width:
               type: integer
-              format: int64
+              format: int32
             height:
               type: integer
-              format: int64
-          description: Recognized text in the image coordinate values, including top, left, width, height integer value
+              format: int32
           example: '{
             "top": 36,
             "left": 71,
@@ -361,77 +572,234 @@ components:
             "height": 17
           }'
         score:
-          type: integer
-          format: int64
-          description: The confidence of the recognized text
+          type: number
+          format: double
+          description: Confidence of the text
           example: 0.9825196266174316
-    HumanImageSegmentationRequest:
+    faceDetectionResponse:
       type: object
       required:
-        - img
-        - url
+        - Faces
+        - FaceModelVersion
       properties:
-        img:
+        Faces:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+              Confidence:
+                type: number
+                format: double
+                example: 0.8736226558685303
+              landmark_106:
+                type: object
+                required:
+                  - x
+                  - y
+                properties:
+                  x:
+                    type: integer
+                    format: int32
+                  y:
+                    type: integer
+                    format: int32
+                example: '[{"x": 306, "y": 802}, 
+                  {"x": 254, "y": 734}]'
+              gender:
+                type: string
+                example: 'female'
+              age:
+                type: integer
+                format: int32
+                example: 37
+        FaceModelVersion:
           type: string
-          description: Base64-encoded image data.
-          example: base64
-        url:
+          example: '1.2.0'
+    faceComparisonResponse:
+      type: object
+      required:
+        - Faces
+        - FaceModelVersion
+      properties:
+        Faces:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+              Confidence:
+                type: number
+                format: double
+                example: 0.8736226558685303
+              face_hash:
+                type: array
+                items:
+                  type: number
+                  format: float
+                example: '[61.21875, -33.84375, -36.71875, 70.625, 110.125, ..., -28.421875]'
+        FaceModelVersion:
           type: string
-          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
-          example: url
-    HumanImageSegmentationResponse:
+          example: '1.2.0'
+    humanAttributeResponse:
+      type: object
+      required:
+        - Labels
+      properties:
+        Labels:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                type: object
+                required:
+                  - Width
+                  - Height
+                  - Left
+                  - Top
+                properties:
+                  Width:
+                    type: integer
+                    format: int32
+                  Height:
+                    type: integer
+                    format: int32
+                  Left:
+                    type: integer
+                    format: int32
+                  Top:
+                    type: integer
+                    format: int32
+            example: '{
+              "upper_wear": {
+                  "短袖": 0.01, 
+                  "长袖": 99.99
+              }, 
+              "upper_wear_texture": {
+                  "图案": 0, 
+                  "纯色": 99.55, 
+                  "条纹/格子": 0.45
+              }, 
+              "lower_wear": {
+                  "短裤/裙": 0.15, 
+                  "长裤/裙": 99.85
+              }, 
+              "glasses": {
+                  "有眼镜": 57.74, 
+                  "无眼镜": 42.26
+              }, 
+              "bag": {
+                  "有背包": 0.69, 
+                  "无背包": 99.31
+              }, 
+              "headwear": {
+                  "有帽": 97.02, 
+                  "无帽": 2.98
+              }, 
+              "orientation": {
+                  "左侧面": 99.99, 
+                  "背面": 0, 
+                  "正面": 0, 
+                  "右侧面": 0.01
+              }, 
+              "upper_cut": {
+                  "有截断": 0, 
+                  "无截断": 100
+              }, 
+              "lower_cut": {
+                  "无截断": 0.18, 
+                  "有截断": 99.82
+              }, 
+              "occlusion": {
+                  "无遮挡": 100, 
+                  "重度遮挡": 0, 
+                  "轻度遮挡": 0
+              }, 
+              "face_mask": {
+                  "无口罩": 100, 
+                  "戴口罩": 0
+              }, 
+              "gender": {
+                  "男性": 100, 
+                  "女性": 0
+              }, 
+              "age": {
+                  "幼儿": 0, 
+                  "青少年": 100, 
+                  "中年": 0, 
+                  "老年": 0
+              }, 
+              "smoke": {
+                  "吸烟": 0, 
+                  "未吸烟": 100
+              }, 
+              "cellphone": {
+                  "使用手机": 0, 
+                  "未使用手机": 100
+              }, 
+              "carrying_item": {
+                  "有手提物": 0.03, 
+                  "无手提物": 99.97
+              }, 
+              "BoundingBox": {
+                  "Width": 0.11781848725818456, 
+                  "Height": 0.43450208474661556, 
+                  "Left": 0.5310931977771577, 
+                  "Top": 0.45263674786982644
+              }
+            }'
+        LabelModelVersion:
+          type: string
+          example: '1.2.0'
+    similarityResponse:
       type: object
       required:
         - result
       properties:
         result:
-          type: string
-          description: Base64 encoded Alpha channel image data after removing the background.
-          example: 'Base64-encoded image data'
-    SuperResolutionRequest:
+          type: array
+          items:
+            type: number
+            format: double
+          example: '[
+            -0.02555299922823906, 
+            0.012955999933183193, 
+            -0.10079500079154968
+          ]'
+    objectRecognitionResponse:
       type: object
       required:
-        - img
-        - url
-        - scale
+        - Labels
       properties:
-        img:
+        Labels:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+            example: '{
+              "Name": "car_(automobile)", 
+              "Confidence": 67.87780523300171, 
+              "Instances": [
+                  {
+                      "BoundingBox": {
+                          "Width": 1.0013043403596384, 
+                          "Height": 0.9958885181613408, 
+                          "Left": -0.00021715163893532008, 
+                          "Top": 0.00033918747441136817
+                      }, 
+                      "Confidence": 67.87780523300171
+                  }
+              ]
+              }'
+        LabelModelVersion:
           type: string
-          description: Base64-encoded image data.
-          example: base64
-        url:
-          type: string
-          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
-          example: url
-        scale:
-          type: integer
-          format: int64
-          description: The support magnification is 2 or 4, the default value is 2
-          example: 2
-    SuperResolutionResponse:
-      type: object
-      required:
-        - result
-      properties:
-        result:
-          type: string
-          description: The base64 encoded image data after scaling.
-          example: 'Base64-encoded image data'
-    PornographyDetectionRequest:
-      type: object
-      required:
-        - img
-        - url
-      properties:
-        img:
-          type: string
-          description: Base64-encoded image data.
-          example: base64
-        url:
-          type: string
-          description: URL address of the image, supports HTTP/HTTPS and S3 protocols, image format jpg / jpeg / png / bmp.
-          example: url
-    PornographyDetectionResponse:
+          example: '1.2.0'
+    pornographyDetectionResponse:
       type: object
       required:
         - normal
@@ -453,37 +821,12 @@ components:
           format: float
           description: Identify the pornographic dimensions of recognized images
           example: 0.2949024438858032
-  requestBodies:
-    GeneralOCRRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GeneralOCRRequest'
-      description: List of user object
-      required: true
-    HumanImageSegmentationRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/HumanImageSegmentationRequest'
-      description: List of user object
-      required: true
-    SuperResolutionRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SuperResolutionRequest'
-      description: List of user object
-      required: true
-    PornographyDetectionRequest:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PornographyDetectionRequest'
-      description: Request of pornographic image detection request
-      required: true
-  securitySchemes:
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+    
+  examples:
+    imageURL:
+      value: 
+        url: "https://Image URL"
+    imageBase64:
+      value:
+        img: "Base64-encoded image data"
+        

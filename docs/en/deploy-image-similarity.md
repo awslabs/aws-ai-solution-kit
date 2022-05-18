@@ -1,30 +1,30 @@
 ---
 feature_id: Image Similarity
-feature_name: 图像相似度
+feature_name: Image Similarity
 feature_endpoint: text_similarity
-deployment_time: 15 分钟
-destroy_time: 10 分钟
-sample_image: 图像的URL地址
-feature_description: 比较两幅图片是否相似，通过图片特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较两张图片的相似性。
-feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场景。
+deployment_time: 15 Minutes
+destroy_time: 10 Minutes
+sample_image: Image URL address
+feature_description: Compare two images and return similarity score.
+feature_scenario: It can be applied to scenarios such as product recognition, flip recognition, and intelligent photo albums.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -34,17 +34,17 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 
 ``` json
 {
-"img": "Base64编码的图像数据"
+"img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|result    |*List*   |一个具有512个元素的List，为512维的图像向量|
+|result    |*List*   |A List with 512 parameters for a 512-dimensional image vector|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {

@@ -1,4 +1,4 @@
-###  代码示例
+###  Example Codes
 
 **cURL**
 ``` bash
@@ -9,7 +9,7 @@ curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazon
 }'
 ```
 
-**Python** （*AWS_IAM* 认证）
+**Python** （*AWS_IAM* Authentication）
 ``` python
 import requests
 import json
@@ -27,7 +27,7 @@ response = requests.request("POST", url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 ```
 
-**Python** （*NONE* 认证）
+**Python** （*NONE* Authentication）
 ``` python
 import requests
 import json
@@ -60,17 +60,17 @@ Request request = new Request.Builder()
 Response response = client.newCall(request).execute();
 ```
 
-### 在 Postman 中以 AWS_IAM 方式请求 URL
+### Request URL as AWS_IAM in Postman
 
-在部署解决方案时，如果**APIGatewayAuthorization**参数设置为*AWS_IAM*，将自动使用 [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) 权限控制对 API 的访问。在方案部署结束后，在 Amazon CloudFormation 的 Outputs 标签页中看到以 **{{ page.meta.feature_id }}** 为前缀的URL。在Postman中新建标签页，并把 URL 粘贴到地址栏，选择*POST*作为HTTP调用方法。
+When deploying the solution, if the **APIGatewayAuthorization** parameter is set to *AWS_IAM*, [IAM] will be used automatically (https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/permissions.html) Permissions control access to the API. After the scenario deployment is complete, you will see a URL prefixed with **{{ page.meta.feature_id }}** in the Outputs tab of Amazon CloudFormation. Create a new tab in Postman, paste the URL into the address bar, and select *POST* as the HTTP call method.
 
 ![](./images/ocr-postman-1-en.png)
 
-打开Authorization配置，在下拉列表里选择 Amazon Web Service Signature ，并填写对应账户的AccessKey、SecretKey和 Amazon Web Service Region（如 cn-north-1 或 cn-northwest-1 ）。
+Open the Authorization configuration, select Amazon Web Service Signature in the drop-down list, and fill in the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).
 
 ![](./images/ocr-postman-2-en.png)
 
-打开 Body 配置项，选中raw和JSON数据类型。在Body中输入测试数据，单击Send按钮即可看到相应返回结果。
+Open the Body configuration item and select the raw and JSON data types. Enter the test data in the Body, and click the Send button to see the corresponding return results.
 
 ``` json
 {

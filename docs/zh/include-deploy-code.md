@@ -14,8 +14,11 @@
 **操作步骤**
 
 1. 访问[AWS CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)。
-2. 从堆栈列表中选择方案的根堆栈。
-3. 打开**输出**标签页，找到**APIExplorer**对应的URL。
+2. 从堆栈列表中选择方案的**根堆栈**，而不是嵌套堆栈。列表中嵌套堆栈的名称旁边会显示嵌套（NESTED）。
+
+    ![](./images/root-stack.png)
+
+3. 打开**输出（Outputs）**标签页，找到**APIExplorer**对应的URL。
 4. 点击URL访问API资源浏览器。页面将显示在部署解决方案时选中的API。
     
     ![](./images/api-explorer.png)
@@ -51,7 +54,17 @@
 ```
 
 ![](./images/ocr-postman-3-zh.png)
+
 ### cURL
+
+* Windows
+``` bash
+curl --location --request POST "https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/{{page.meta.feature_endpoint}}" ^
+--header "Content-Type: application/json" ^
+--data-raw "{\"url\": \"{{page.meta.sample_image}}\"}"
+```
+
+* Linux/MacOS
 ``` bash
 curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/{{page.meta.feature_endpoint}}' \
 --header 'Content-Type: application/json' \

@@ -1,11 +1,11 @@
 ---
 feature_id: FaceComparison
-feature_name: 人脸相似度比对
+feature_name: Face Comparison
 feature_endpoint: face_comparison
-deployment_time: 10 分钟
-destroy_time: 6 分钟
-sample_image: 图像的URL地址
-feature_description: 通过两张人脸图片中的特征向量计算欧氏距离(Euclidean Distance)，并转化为置信度，根据置信度比较，从而判断是否为同一个人。
+deployment_time: 10 Minutes
+destroy_time: 6 Minutes
+sample_image: Image URL address
+feature_description: Compare two faces of same person and return a confidence score of the similarity
 feature_scenario: 可应用于客户身份验证、照片分类等场景，例如：自助酒店入住、人员报到、校园入口通行、相册制作。
 ---
 
@@ -13,18 +13,18 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
   include "include-deploy-description.md"
 %}
 
-## API参数说明
+## REST API Reference
 
-- HTTP 方法: `POST`
+- HTTP request method: `POST`
 
-- Body 请求参数
+- Request body parameters
 
-| **名称**  | **类型**  | **是否必选** |  **说明**  |
+| **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
-| img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
+| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
+| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
 
-- 请求 Body 示例
+- Example JSON request
 
 ``` json
 {
@@ -34,13 +34,13 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 
 ``` json
 {
-  "img": "Base64编码的图像数据"
+  "img": "Base64-encoded image data"
 }
 ```
 
-- 返回参数
+- Response parameters
 
-| **名称**  | **类型**  |  **说明**  |
+| **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Faces    |*List*   |图像中找到的人脸列表|
 |+face_hash    |*List*   |一个具有768个元素的List，为768维的人脸向量|
@@ -48,7 +48,7 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 |+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
 |FaceModelVersion    |*String*   |当前模型版本号|
 
-- 返回示例
+- Example JSON response
 
 ``` json
 {

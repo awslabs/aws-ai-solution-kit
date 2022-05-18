@@ -1,6 +1,6 @@
 ## 卸载部署
 
-您可以通过 Amazon CloudFormation 卸载 **{{ page.meta.feature_name }}** 功能，具体步骤请见 [**部署解决方案: 更新 Amazon CloudFormation 堆栈**](deployment.md##amazon-cloudformation_1)，并在**参数**部分确认 **{{ page.meta.feature_id }}** 参数设置为 *no* 。
+You can uninstall the **{{ page.meta.feature_name }}** feature via Amazon CloudFormation as described in [**Deployment Solution: Updating the Amazon CloudFormation Stack**](deployment.md##amazon- cloudformation_1) and make sure the **{{ page.meta.feature_id }}** parameter is set to *no* in the **parameters** section.
 
-!!! 信息
-    卸载时间大约需要：**{{ page.meta.destroy_time }}**
+!!! Info
+    Uninstallation time takes approximately: **{{ page.meta.destroy_time }}**
