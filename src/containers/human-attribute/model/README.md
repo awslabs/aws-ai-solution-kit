@@ -1,0 +1,1 @@
+# OCR Lite Model for AI Solution Kit
