@@ -96,7 +96,12 @@ You can also build this project from source.
 - Configure [credential of aws cli][configure-aws-cli]
 - Install node.js LTS version, such as 12.x
 - Install Docker Engine
-- Install the dependencies of solution via executing command `yarn install && npx projen`
+- Install the dependencies of solution via executing command 
+
+```shell
+yarn install && npx projen
+```
+
 - Initialize the CDK toolkit stack into AWS environment(only for deploying via [AWS CDK][aws-cdk] first time), run `yarn cdk-init`
 
 #### Deploy project
