@@ -16,6 +16,7 @@
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="Apache 2.0 License"></a>
   <a href="https://github.com/aws-samples/aws-ai-solution-kit/actions/workflows/build.yml"><img src="https://github.com/aws-samples/aws-ai-solution-kit/workflows/build/badge.svg" alt="Build badge"></a>
+  <a href="https://github.com/aws-samples/aws-ai-solution-kit/releases"><img src="https://img.shields.io/github/v/release/aws-samples/aws-ai-solution-kit"></a>
 </p>
 
 <br/>
