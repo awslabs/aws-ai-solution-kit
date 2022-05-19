@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="Apache 2.0 License"></a>
   <a href="https://github.com/aws-samples/aws-ai-solution-kit/actions/workflows/build.yml"><img src="https://github.com/aws-samples/aws-ai-solution-kit/workflows/build/badge.svg" alt="Build badge"></a>
-  <a href="https://github.com/aws-samples/aws-ai-solution-kit/releases"><img src="https://img.shields.io/github/v/release/aws-samples/aws-ai-solution-kit"></a>
+  <a href="https://github.com/aws-samples/aws-ai-solution-kit/releases"><img src="https://img.shields.io/github/v/release/aws-samples/aws-ai-solution-kit?include_prereleases"></a>
 </p>
 
 <br/>
@@ -96,7 +96,12 @@ You can also build this project from source.
 - Configure [credential of aws cli][configure-aws-cli]
 - Install node.js LTS version, such as 12.x
 - Install Docker Engine
-- Install the dependencies of solution via executing command `yarn install && npx projen`
+- Install the dependencies of solution via executing command 
+
+```shell
+yarn install && npx projen
+```
+
 - Initialize the CDK toolkit stack into AWS environment(only for deploying via [AWS CDK][aws-cdk] first time), run `yarn cdk-init`
 
 #### Deploy project
