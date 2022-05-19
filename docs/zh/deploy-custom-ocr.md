@@ -23,7 +23,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
+| url | *String* |与 img 参数二选一|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
 | img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
 | type | *String* |固定为add|
 | template | *List* |每个元素为一个待提取区域坐标及其名称|
@@ -110,7 +110,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 ``` json
 {
-    "template_id": "已删除模版的ID",
+    "template_id": "已删除模版的ID"
 }
 ```
 
@@ -128,7 +128,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 ``` json
 {
-    "type": "list", 
+    "type": "list"
 }
 ```
 
@@ -142,7 +142,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 ``` json
 {
-    "template_id_list": ["已存在模版的列表"],
+    "template_id_list": ["已存在模版的列表"]
 }
 ```
 
@@ -154,7 +154,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
-| url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
+| url | *String* |与 img 参数二选一|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
 | img | *String* |与 url 参数二选一|进行Base64编码的图像数据|
 | type | *String* |固定为query|
 | template_id | *String* |已存在的模版ID|
@@ -163,7 +163,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 ``` json
 {
-  "template_id": "已存在的模版ID", 
+  "template_id": "已存在的模版ID",
   "url": "图像的URL地址"
 }
 ```
@@ -187,7 +187,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
     }, 
     {
         "key": "识别号", 
-        "value": "91110116592334142D", 
+        "value": "911101165900000000", 
         "score": 99.62
     }, 
     {
