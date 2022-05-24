@@ -842,18 +842,24 @@ components:
         type: "add"
         img: "Base64-encoded image data"
         template: [
+            [
               [
-                  [[top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]], "Key Name"
-              ]
+                [top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]
+              ],
+              "name",
+            ]
           ]
     createUrlTemplate:
       value:
         type: "add"
         url: "https://Image URL"
         template: [
+            [
               [
-                  [[top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]], "Key Name"
-              ]
+                [top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]
+              ],
+              "name",
+            ]
           ]
     deleteTemplate:
       value:
