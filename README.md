@@ -41,7 +41,7 @@ This repository contains several pre-trained deep learning models based on AWS L
 |--------------|-------------|
 |General OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols|
 |General OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols|
-|Custom OCR|Recognize and extract estructured text by predefined OCR templates|
+|Custom OCR|Recognize and extract structured text by predefined OCR templates|
 |Car License Plate|Recognize text on Chinese car license plate|
 
 ### **Facial & Body**
@@ -74,7 +74,7 @@ This repository contains several pre-trained deep learning models based on AWS L
 
 ### Quick deployment
 
-This project is an AWS Cloud Development Kit project written in Typescript, if you want to use the above deep laraning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+This project is an AWS Cloud Development Kit project written in Typescript, if you want to use the above deep learning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
 Below is the quick links to launch the AWS CloudFormation template into your AWS account
 
@@ -84,7 +84,7 @@ Global regions(switch to above region you want to deploy) | us-east-1(default) |
 AWS China(Beijing) Region | cn-north-1 | [Launch](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)
 AWS China(Ningxia) Region | cn-northwest-1 | [Launch](https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)
 
-Once the AWS CloudFormation template is opened in your AWS account, you can choose the deep learning features in the **Parameters** section, the step-by-step instructions is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deployment/
+Once the AWS CloudFormation template is opened in your AWS account, you can choose the deep learning features in the **Parameters** section, the step-by-step instruction is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deployment/
 
 ### Build from source
 
@@ -138,7 +138,7 @@ Once the project built, you can deploy to your AWS account.
 yarn deploy
 ```
 
-Once the project deployed, please login to your AWS console, choose to active deep learning features by updating the Amazon CloudFormation stack. The step-by-step instructions is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deploy-add-delete-api/
+Once the project deployed, please log in to your AWS console, choose to active deep learning features by updating the Amazon CloudFormation stack. The step-by-step instructions is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deploy-add-delete-api/
 
 ## Architecture
 
