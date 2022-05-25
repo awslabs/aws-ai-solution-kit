@@ -8,15 +8,15 @@
 </p>
 
 <p align="center">
-  <a href="https://aws-samples.github.io/aws-ai-solution-kit/en/"><strong>Documentation</strong></a> ·
-  <a href="https://github.com/aws-samples/aws-ai-solution-kit/releases"><strong>Changelog</strong></a> ·
+  <a href="https://awslabs.github.io/aws-ai-solution-kit/en/"><strong>Documentation</strong></a> ·
+  <a href="https://github.com/awslabs/aws-ai-solution-kit/releases"><strong>Changelog</strong></a> ·
   <a href="#feature-list"><strong>Feature List</strong></a>
 </p>
 
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="Apache 2.0 License"></a>
-  <a href="https://github.com/aws-samples/aws-ai-solution-kit/actions/workflows/build.yml"><img src="https://github.com/aws-samples/aws-ai-solution-kit/workflows/build/badge.svg" alt="Build badge"></a>
-  <a href="https://github.com/aws-samples/aws-ai-solution-kit/releases"><img src="https://img.shields.io/github/v/release/aws-samples/aws-ai-solution-kit?include_prereleases"></a>
+  <a href="https://github.com/awslabs/aws-ai-solution-kit/actions/workflows/build.yml"><img src="https://github.com/awslabs/aws-ai-solution-kit/workflows/build/badge.svg" alt="Build badge"></a>
+  <a href="https://github.com/awslabs/aws-ai-solution-kit/releases"><img src="https://img.shields.io/github/v/release/awslabs/aws-ai-solution-kit?include_prereleases"></a>
 </p>
 
 <br/>
@@ -84,7 +84,7 @@ Global regions(switch to above region you want to deploy) | us-east-1(default) |
 AWS China(Beijing) Region | cn-north-1 | [Launch](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)
 AWS China(Ningxia) Region | cn-northwest-1 | [Launch](https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)
 
-Once the AWS CloudFormation template is opened in your AWS account, you can choose the deep learning features in the **Parameters** section, the step-by-step instructions is available at: https://aws-samples.github.io/aws-ai-solution-kit/en/deployment/
+Once the AWS CloudFormation template is opened in your AWS account, you can choose the deep learning features in the **Parameters** section, the step-by-step instructions is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deployment/
 
 ### Build from source
 
@@ -138,7 +138,7 @@ Once the project built, you can deploy to your AWS account.
 yarn deploy
 ```
 
-Once the project deployed, please login to your AWS console, choose to active deep learning features by updating the Amazon CloudFormation stack. The step-by-step instructions is available at: https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-add-delete-api/
+Once the project deployed, please login to your AWS console, choose to active deep learning features by updating the Amazon CloudFormation stack. The step-by-step instructions is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deploy-add-delete-api/
 
 ## Architecture
 
@@ -169,7 +169,7 @@ This project contains two types of implementation: Building on AWS Lambda and bu
 
 ## API Reference
 
-See [API Reference](https://aws-samples.github.io/aws-ai-solution-kit/en/)
+See [API Reference](https://awslabs.github.io/aws-ai-solution-kit/en/)
 
 ## Authorization and Security
 
