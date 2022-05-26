@@ -8,7 +8,7 @@ export class ObjectRecognitionFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'object-recognition';
-    this.templateOptions.description = '(SO8023-object-recognition) - AI Solution Kit - Object Recognition. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
+    this.templateOptions.description = '(SO8023-object-recognition) - AI Solution Kit - Object Recognition. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

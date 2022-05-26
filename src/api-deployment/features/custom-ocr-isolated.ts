@@ -18,7 +18,7 @@ export class CustomOCRIsolatedFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'custom-ocr';
-    this.templateOptions.description = '(SO8023-custom-ocr) - AI Solution Kit - Custom OCR. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.';
+    this.templateOptions.description = '(SO8023-custom-ocr) - AI Solution Kit - Custom OCR. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.';
 
     const featureVPC = new Vpc(this, featureName.toLowerCase(), {
       cidr: '10.0.0.0/16',

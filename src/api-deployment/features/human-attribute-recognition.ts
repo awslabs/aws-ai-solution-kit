@@ -8,7 +8,7 @@ export class HumanAttributeRecognitionFeatureNestedStack extends FeatureNestedSt
 
     super(scope, id, props);
     const featureName = 'human-attribute';
-    this.templateOptions.description = '(SO8023-human-attribute) - AI Solution Kit - Human Attribute Recognition. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-human-attribute.';
+    this.templateOptions.description = '(SO8023-human-attribute) - AI Solution Kit - Human Attribute Recognition. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-attribute.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

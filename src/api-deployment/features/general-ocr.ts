@@ -8,7 +8,7 @@ export class GeneralOCRFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'general-ocr';
-    this.templateOptions.description = '(SO8023-ocr) - AI Solution Kit - General OCR Simplified Chinese. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-general-ocr.';
+    this.templateOptions.description = '(SO8023-ocr) - AI Solution Kit - General OCR Simplified Chinese. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.';
 
     new LambdaFeatureConstruct(this, `${featureName}-advanced`, {
       rootRestApi: props.restApi,

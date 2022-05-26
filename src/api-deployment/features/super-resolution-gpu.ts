@@ -8,7 +8,7 @@ export class SuperResolutionGpuFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'super-resolution';
-    this.templateOptions.description = '(SO8023-sr) - AI Solution Kit - Super Resolution. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-super-resolution.';
+    this.templateOptions.description = '(SO8023-sr) - AI Solution Kit - Super Resolution. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-super-resolution.';
     // The default GPU instance type is ml.g4dn.xlarge
     var instanceType: string = props.instanceType == null ? 'ml.g4dn.xlarge' : props.instanceType;
     const map = new CfnMapping(this, 'instanceTypeMapping', {

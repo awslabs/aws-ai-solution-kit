@@ -8,7 +8,7 @@ export class FaceComparisonFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'face-comparison';
-    this.templateOptions.description = '(SO8023-face-comparison) - AI Solution Kit - Face Comparison. Template version v1.2.0. See https://aws-samples.github.io/aws-ai-solution-kit/en/deploy-face-comparison.';
+    this.templateOptions.description = '(SO8023-face-comparison) - AI Solution Kit - Face Comparison. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-comparison.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,
