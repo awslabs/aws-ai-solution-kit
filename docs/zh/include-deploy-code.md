@@ -4,7 +4,7 @@
 
 **前提条件**
 
-通过AWS CloudFormation[部署解决方案](deployment.md#amazon-cloudformation)时，您需要：
+通过AWS CloudFormation[部署解决方案](deployment.md)时，您需要：
 
 - 设置参数**API Explorer**为*yes*。
 - 设置参数**API Gateway Authorization**为*NONE*。

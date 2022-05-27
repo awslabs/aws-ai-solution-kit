@@ -50,7 +50,7 @@
         | **Object Recognition**  | no  | 部署[通用物体识别](deploy-object-recognition.md) |
         | **Pornography Detection**  | no  | 部署[色情内容审核](deploy-pornography-detection.md) |
         | **Image Super Resolution**  | no  | 部署[图像超分辨率](deploy-image-super-resolution.md) |
-        | **Text Similarity**  | no  | 部署[文本相似度](deploy-text_similarity.md) |
+        | **Text Similarity**  | no  | 部署[文本相似度](deploy-text-similarity.md) |
 
 6. 在**配置堆栈选项**页面，选择**下一步**。
 
