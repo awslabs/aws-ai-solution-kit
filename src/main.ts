@@ -2,6 +2,7 @@
 import { App } from 'aws-cdk-lib';
 import { BootstraplessStackSynthesizer } from 'cdk-bootstrapless-synthesizer';
 import 'source-map-support/register';
+import { AISolutionKitIsolatedStack } from './api-deployment/ai-solution-kit-isolated-stack';
 import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 import { LambdaContainersStack } from './containers/lambda-containers-stack';
 
@@ -22,6 +23,11 @@ if (buildContainers === 'true' || deployContainers === 'true') {
   console.log('Use ECR Resistry: ' + ecrRegistry);
 
   new AISolutionKitStack(app, 'AI-Solution-Kit', {
+    synthesizer: synthesizer(),
+    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  });
+
+  new AISolutionKitIsolatedStack(app, 'AI-Solution-Kit-Isolated', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
   });
