@@ -28,6 +28,3 @@ extra:
     - name: 中文
       link: /aws-ai-solution-kit/zh/
       lang: zh
-    - name: English
-      link: /aws-ai-solution-kit/en/
-      lang: en
