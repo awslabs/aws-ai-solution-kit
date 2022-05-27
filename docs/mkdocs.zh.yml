@@ -1,16 +1,11 @@
 INHERIT: ./mkdocs.base.yml
 site_name: AI Solution Kit 实施指南
-site_description: AI Solution Kit Deployment Guide
+site_description: AI Solution Kit 实施指南
 docs_dir: zh
 site_dir: ./site/zh
+edit_uri: ''
 theme:
   language: zh
-  features:
-    - navigation.tabs
-    - navigation.top
-    - navigation.instant
-plugins:
-  - search
 nav:
   - 概述: index.md
   - 成本预估: cost.md
@@ -42,3 +37,7 @@ nav:
   - 常见问题解答: faq.md
   - 源代码: source.md
   - 版本发布说明: revisions.md
+
+    
+  # - 语音技术:
+  #   - 语音技术: audio.md

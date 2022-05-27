@@ -1,12 +1,22 @@
-site_name: AI Solution Kit Docs
+site_name: AI Solution Kit Deployment Guide
 site_url: https://www.amazonaws.cn/solutions/ai-solution-kit/
 repo_url: https://github.com/awslabs/aws-ai-solution-kit
+repo_name: awslabs/aws-ai-solution-kit
 theme:
+  favicon: https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico
+  logo: https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico
   name: material
-  features:
-    - tabs
-    - search.suggest
-    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)" 
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)" 
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 plugins:
   - search
   - include-markdown
@@ -15,9 +25,9 @@ markdown_extensions:
   - admonition
 extra:
   alternate:
-    - name: English
-      link: /aws-ai-solution-kit/en/
-      lang: en
     - name: 中文
       link: /aws-ai-solution-kit/zh/
       lang: zh
+    - name: English
+      link: /aws-ai-solution-kit/en/
+      lang: en
