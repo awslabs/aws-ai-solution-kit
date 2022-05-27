@@ -1,0 +1,14 @@
+INHERIT: ./mkdocs.en.yml
+copyright: Copyright (c) 2022 by Amazon.com, Inc. or its affiliates. All Rights Reserved.
+markdown_extensions:
+  - admonition
+  - codehilite
+plugins:
+  - include-markdown
+  - macros
+  - mkpdfs:
+      author: !ENV [VERSION, 'v0.0.1']
+      company: Amazon Web Services
+      toc_title: Table of Contents
+      # toc_position: center
+      design: gcr-solutions-pdf-theme/report.css
