@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { App } from 'aws-cdk-lib';
-import { BootstraplessStackSynthesizer } from 'cdk-bootstrapless-synthesizer';
+import { App, Aspects } from 'aws-cdk-lib';
+import { BootstraplessStackSynthesizer, CompositeECRRepositoryAspect } from 'cdk-bootstrapless-synthesizer';
 import 'source-map-support/register';
 import { AISolutionKitIsolatedStack } from './api-deployment/ai-solution-kit-isolated-stack';
 import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
@@ -16,6 +16,9 @@ if (buildContainers === 'true' || deployContainers === 'true') {
   // Docker images building stack
   new LambdaContainersStack(app, 'Lambda-Containers-Stack', {
     synthesizer: synthesizer(),
+    tags: {
+      app: 'ai-solution-kit',
+    },
   });
 } else {
   // CloudFormation deployment stack - Default
@@ -25,12 +28,22 @@ if (buildContainers === 'true' || deployContainers === 'true') {
   new AISolutionKitStack(app, 'AI-Solution-Kit', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+    tags: {
+      app: 'ai-solution-kit',
+    },
   });
 
   new AISolutionKitIsolatedStack(app, 'AI-Solution-Kit-Isolated', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+    tags: {
+      app: 'ai-solution-kit',
+    },
   });
+}
+
+if (process.env.USE_BSS) {
+  Aspects.of(app).add(new CompositeECRRepositoryAspect());
 }
 
 app.synth();
