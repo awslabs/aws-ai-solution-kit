@@ -1,3 +1,5 @@
+English | [简体中文](README_zh-Hans.md)
+
 <p align="center">
     <h3 align="center">AI Solution Kit</h3>
   </a>
@@ -70,11 +72,10 @@ This repository contains several pre-trained deep learning models based on AWS L
 |Text Similarity|Compare two Chinese words or sentences and return similarity score|
 
 
-## Getting Started
 
-### Quick deployment
+## Quick deployment
 
-This project is an AWS Cloud Development Kit project written in Typescript, if you want to use the above deep learning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+This project is an AWS [Cloud Development Kit(CDK)](https://aws.amazon.com/cdk/) project written in Typescript, if you want to use the above deep learning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
 Below is the quick links to launch the AWS CloudFormation template into your AWS account
 
@@ -86,15 +87,15 @@ AWS China(Ningxia) Region | cn-northwest-1 | [Launch](https://cn-northwest-1.con
 
 Once the AWS CloudFormation template is opened in your AWS account, you can choose the deep learning features in the **Parameters** section, the step-by-step instruction is available at: https://awslabs.github.io/aws-ai-solution-kit/en/deployment/
 
-### Build from source
+## Build from source
 
 You can also build this project from source.
 
-#### Prerequisites
+### Prerequisites
 
 - An AWS account
-- Configure [credential of aws cli][configure-aws-cli]
-- Install node.js LTS version, such as 12.x
+- Configure [credential of aws cli](https://docs.aws.amazon.com/zh_cn/cli/latest/userguide/cli-chap-configure.html)
+- Install node.js LTS version, such as v14.x
 - Install Docker Engine
 - Install the dependencies of solution via executing command 
 
@@ -102,9 +103,13 @@ You can also build this project from source.
 yarn install && npx projen
 ```
 
-- Initialize the CDK toolkit stack into AWS environment(only for deploying via [AWS CDK][aws-cdk] first time), run `yarn cdk-init`
+- Initialize the CDK toolkit stack into AWS environment(only for deploying via **AWS CDK** first time)
 
-#### Deploy project
+```shell
+yarn cdk-init
+```
+
+### Deploy project
 You can clone this repository to create a local copy on your computer and build this project in root directory by yarn.
 
 - [Optional] Build docker images by yarn and push to an Amazon ECR repository
@@ -174,8 +179,6 @@ See [API Reference](https://awslabs.github.io/aws-ai-solution-kit/en/)
 ## Authorization and Security
 
 By default, the AI Gateway will enable the IAM authorization and Enable the CloudWatch Logs for accessing and debugging.
-
-## 
 
 ## License
 This project is licensed under the Apache-2.0 License.
