@@ -1,6 +1,5 @@
 INHERIT: ./mkdocs.base.yml
 site_name: AI Solution Kit Deployment Guide
-site_description: AI Solution Kit Deployment Guide
 docs_dir: en
 site_dir: ./site/en
 edit_uri: ''
