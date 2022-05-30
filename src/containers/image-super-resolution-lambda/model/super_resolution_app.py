@@ -32,22 +32,28 @@ def handler(event, context):
                 'Access-Control-Allow-Methods': '*'
             }
         }
-    if isinstance(event['body'], str):
-        body = json.loads(event['body'])
-    else:
-        body = event['body']
-    if 'url' in body:
-        uri = body['url']
-        base64_image = Base64Image.from_uri(uri)
-    else:
-        base64_image = Base64Image.from_base64_image_string(body['img'])
-    scale = int(body.get('scale', 2))
-    if scale == 4:
-        ort_session = ort_session_x4
-    else:
-        ort_session = ort_session_x2
-    pil_image = base64_image.get_pil_image()
-    src = np.asarray(pil_image)[:, :, :3]
+    try:
+        if isinstance(event['body'], str):
+            body = json.loads(event['body'])
+        else:
+            body = event['body']
+        if 'url' in body:
+            uri = body['url']
+            base64_image = Base64Image.from_uri(uri)
+        else:
+            base64_image = Base64Image.from_base64_image_string(body['img'])
+        scale = int(body.get('scale', 2))
+        if scale == 4:
+            ort_session = ort_session_x4
+        else:
+            ort_session = ort_session_x2
+        pil_image = base64_image.get_pil_image()
+        src = np.asarray(pil_image)[:, :, :3]
+    except:
+        return {
+            'statusCode': 400,
+            'body': 'invalid param'
+        }
     in_frame = (np.ascontiguousarray(np.transpose(src, (2, 0, 1))) / 255).astype('float32')
     ort_inputs = {ort_session.get_inputs()[0].name: np.expand_dims(in_frame, 0)}
     ort_outs = ort_session.run(None, ort_inputs)

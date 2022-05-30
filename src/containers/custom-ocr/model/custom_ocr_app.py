@@ -1,30 +1,41 @@
 import hashlib
-import base64
 import json
 import os
-from io import BytesIO
 import time
 from os import environ
 
 import cv2
-try:
-    import urllib.request as urllib2
-except ImportError:
-    import urllib2
 
 from main import *
 import hashlib
 import pickle
+from aikits_utils import readimg, lambda_return
 
 model_path = os.environ['MODEL_PATH']
 os.makedirs('/mnt/custom-ocr/', exist_ok=True)
 ort_session_backbone = onnxruntime.InferenceSession(model_path + 'matcher_backbone.onnx', providers=['CPUExecutionProvider'])
+_ = ort_session_backbone.run(['feat_c', 'feat_f'], {'img': np.zeros([1, 1, 64, 64], dtype='float32')})
+
 ort_session_pos_encoding = onnxruntime.InferenceSession(model_path + 'matcher_pos_encoding.onnx', providers=['CPUExecutionProvider'])
+_ = ort_session_pos_encoding.run(['feat_c_out'], {'feat_c_in': np.zeros([1, 256, 64, 64], dtype='float32')})
+
 ort_session_loftr_coarse = onnxruntime.InferenceSession(model_path + 'matcher_loftr_coarse.onnx', providers=['CPUExecutionProvider'])
+_ = ort_session_loftr_coarse.run(['feat_c0_out', 'feat_c1_out'], {'feat_c0_in': np.zeros([1, 64, 256], dtype='float32'), 'feat_c1_in': np.zeros([1, 64, 256], dtype='float32')})
+
 ort_session_coarse_matching = onnxruntime.InferenceSession(model_path + 'matcher_coarse_matching.onnx', providers=['CPUExecutionProvider'])
+
 ort_session_fine_preprocess = onnxruntime.InferenceSession(model_path + 'matcher_fine_preprocess.onnx', providers=['CPUExecutionProvider'])
+_ = ort_session_fine_preprocess.run(['feat_f0_unfold', 'feat_f1_unfold'],
+                                    {'feat_f0': np.zeros([1, 128, 64, 64], dtype='float32'), 'feat_f1': np.zeros([1, 128, 64, 64], dtype='float32'), 'feat_c0': np.zeros([1, 64, 256], dtype='float32'), 'feat_c1':np.zeros([1, 64, 256], dtype='float32'),
+                                     'b_ids': np.zeros([1], dtype='int64'), 'i_ids': np.zeros([1], dtype='int64'), 'j_ids': np.zeros([1], dtype='int64')})
+
 ort_session_loftr_fine = onnxruntime.InferenceSession(model_path + 'matcher_loftr_fine.onnx', providers=['CPUExecutionProvider'])
+_ = ort_session_loftr_fine.run(['feat_f0_unfold_out', 'feat_f1_unfold_out'],
+                               {'feat_f0_unfold_in': np.zeros([1, 64, 128], dtype='float32'), 'feat_f1_unfold_in': np.zeros([1, 64, 128], dtype='float32')})
+
 ort_session_fine_matching = onnxruntime.InferenceSession(model_path + 'matcher_fine_matching.onnx', providers=['CPUExecutionProvider'])
+
+
 lmdb_root = "/mnt/custom-ocr"
 
 def sorted_boxes(dt_boxes):
@@ -100,10 +111,14 @@ class TextSystem:
             dst_img = np.rot90(dst_img)
         return dst_img
 
-    def __call__(self, img, dt_boxes):
+    def __call__(self, img):
         ori_im = img.copy()
+        dt_boxes = self.text_detector(img)
+        if dt_boxes is None:
+            return None, None
         img_crop_list = []
 
+        dt_boxes = sorted_boxes(dt_boxes)
         for bno in range(len(dt_boxes)):
             tmp_box = copy.deepcopy(dt_boxes[bno])
             img_crop = self.get_rotate_crop_image(ori_im, tmp_box)
@@ -126,7 +141,7 @@ def get_feature(img):
     return feat_c, feat_f, (h,w), (feat_f.shape[2], feat_f.shape[3])
 def generate_template(img):
     h, w, _ = img.shape
-    scale = 640/max(h, w)
+    scale = 480/max(h, w)
     img = cv2.resize(img, None, fx=scale, fy=scale)
     img = (cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)/255).astype('float32')
     feat_c, feat_f, hw_c, hw_f = get_feature(img)
@@ -144,36 +159,37 @@ text_sys = TextSystem()
 
 def read_img(body):
     if 'url' in body:
-        uri = body['url']
-        image_string = urllib2.urlopen(uri).read()
+        inputs = readimg(body, ['url'])
+        img = inputs['url']
     else:
-        image_string = base64.b64decode(body['img'])
-    pil_image = Image.open(BytesIO(image_string)).convert('RGB')
-    img = np.array(pil_image)[:, :, :3]
+        inputs = readimg(body, ['img'])
+        img = inputs['img']
+    for k, v in inputs.items():
+        if v is None:
+            return str(k)
     return img
+    
 def handler(event, context):
     start_time = time.time()
     if "body" not in event:
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "*",
-            },
-        }
+        return lambda_return(400, 'invalid param')
     if isinstance(event['body'], str):
         body = json.loads(event['body'])
     else:
         body = event['body']
 
     if body.get("type", '') == 'add':
-        img = read_img(body)
-        if isinstance(body["template"], str):
-            template_dict = json.loads(body["template"])
-        else:
-            template_dict = body["template"]
-        img_hash = hashlib.sha1(img).hexdigest()
+        try:
+            img = read_img(body)
+            if isinstance(img, str):
+                return lambda_return(400, f'`parameter `{img}` illegal')
+            if isinstance(body["template"], str):
+                template_dict = json.loads(body["template"])
+            else:
+                template_dict = body["template"]
+        except:
+            return lambda_return(400, f'`invalid param')
+        img_hash = hashlib.sha1(img).hexdigest()[:20] + hashlib.sha1(str(time.time()).encode()).hexdigest()[20:]
         template = generate_template(img)
         template.update(template=template_dict)
         pickle.dump(template, open(os.path.join(lmdb_root, f'{img_hash}.pkl'), 'wb'))
@@ -181,28 +197,46 @@ def handler(event, context):
             'template_id': img_hash
         }
     elif body.get("type", '') == 'del':
-        img_hash = body["template_id"]
+        try:
+            img_hash = body["template_id"]
+        except:
+            return lambda_return(400, 'invalid param')
+
         os.remove(os.path.join(lmdb_root, f'{img_hash}.pkl'))
         result = {
             'template_id': body["template_id"]
         }
     elif body.get("type", '') == 'list':
         keys = [row[:-4] for row in os.listdir(lmdb_root) if row[-3:] == 'pkl']
+        results = []
+        for key in keys:
+            template = pickle.load(open(os.path.join(lmdb_root, f'{key}.pkl'), 'rb'))
+            results.append({
+                key: template['template']
+            })
         result = {
-            'template_id_list': keys
+            'template_id_list': keys,
+            'template': results
         }
         
     else:
-        img_hash = body["template_id"]
-        template = pickle.load(open(os.path.join(lmdb_root, f'{img_hash}.pkl'), 'rb'))
-        hw_c = np.array(template['hw_c'], dtype='long')
-        hw0_i = np.array(template['hw_i'], dtype='long')
-        img = read_img(body)
+        try:
+            img_hash = body["template_id"]
+            template = pickle.load(open(os.path.join(lmdb_root, f'{img_hash}.pkl'), 'rb'))
+            hw_c = np.array(template['hw_c'], dtype='long')
+            hw0_i = np.array(template['hw_i'], dtype='long')
+            img = read_img(body)
+            if isinstance(img, str):
+                return lambda_return(400, f'`parameter `{img}` illegal')
+        except:
+            return lambda_return(400, 'invalid param')
+
         h,w,_ = img.shape
         h_scale, w_scale = h/template['hw_i'][0], w/template['hw_i'][1]
-        im = cv2.resize(img, (template['hw_i'][1], template['hw_i'][0]))  
+        im = cv2.resize(img, (template['hw_i'][1], template['hw_i'][0]))
         im = (cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)/255).astype('float32')
         feat_c1, feat_f1, hw1_c, hw1_f = get_feature(im)
+        
         hw1_c = np.array(hw1_c, dtype='long')
         feat_c0, feat_c1 = ort_session_loftr_coarse.run(['feat_c0_out', 'feat_c1_out'], {'feat_c0_in': template['feat_c'], 'feat_c1_in': feat_c1})
         b_ids, i_ids, j_ids, gt_mask, m_bids, mkpts0_c, mkpts1_c, mconf = \
@@ -220,32 +254,26 @@ def handler(event, context):
                                                         'mkpts0_c':mkpts0_c, 'mkpts1_c':mkpts1_c})
         H, inliers = cv2.findHomography(mkpts0_f, mkpts1_f, cv2.USAC_MAGSAC, 0.5, 0.999, 100000)
         inliers = inliers > 0
-        dt_boxes = []
-        for row in [row[0] for row in template['template']]:
-            pt = np.expand_dims(np.float32(row), 1)*template['scale']
+        result = []
+        for row in template['template']:
+            points = row[0]
+            key = row[1]
+            pt = np.expand_dims(np.float32(points), 1)*template['scale']
             rec_new = cv2.perspectiveTransform(pt, H).astype('float32')
             rec_new[:,:,0]*=w_scale
             rec_new[:,:,1]*=h_scale
-            dt_boxes.append(rec_new[:,0,:])
-        dt_boxes = np.array(dt_boxes)
-        dt_boxes, rec_res = text_sys(img, dt_boxes)
-        result = []
-        for i, row in enumerate(template['template']):
+            tmp_box = copy.deepcopy(rec_new[:,0,:])
+            img_crop = text_sys.get_rotate_crop_image(img, tmp_box)
+            img_crop = cv2.copyMakeBorder(img_crop, 15, 15, 15, 15, cv2.BORDER_CONSTANT, value=(255,255,255))
+            _, rec_res = text_sys(img_crop)
+            text = ''.join([rec[0] for rec in rec_res])
+            score = float(np.mean([rec[1] for rec in rec_res]))
             res = {
-                'key': row[1], 'value': rec_res[i][0], 'score': round(rec_res[i][1]*100, 2)
+                'key': key, 'value': text, 'score': round(score*100, 2)
             }
             result.append(res)
     
     if 'duration' in body and body['duration']:
         result.append({"duration": time.time() - start_time})
-
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST",
-        },
-        "body": json.dumps(result),
-    }
+        
+    return lambda_return(200, json.dumps(result))

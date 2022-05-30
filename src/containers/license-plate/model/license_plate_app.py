@@ -1,16 +1,9 @@
-import hashlib
-import base64
 import json
-import os
-from io import BytesIO
 import time
 from os import environ
 
 import cv2
-try:
-    import urllib.request as urllib2
-except ImportError:
-    import urllib2
+from aikits_utils import readimg, lambda_return
 
 from main import *
 
@@ -118,33 +111,35 @@ class TextSystem:
 
 text_sys = TextSystem()
 
-
+def read_img(body):
+    if 'url' in body:
+        inputs = readimg(body, ['url'])
+        img = inputs['url']
+    else:
+        inputs = readimg(body, ['img'])
+        img = inputs['img']
+    for k, v in inputs.items():
+        if v is None:
+            return str(k)
+    return img
 def handler(event, context):
     start_time = time.time()
     if "body" not in event:
-        return {
-            "statusCode": 200,
-            "headers": {
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "*",
-            },
-        }
-    if isinstance(event['body'], str):
-        body = json.loads(event['body'])
-    else:
-        body = event['body']
-    if 'url' in body:
-        uri = body['url']
-        image_string = urllib2.urlopen(uri).read()
-    else:
-        image_string = base64.b64decode(body['img'])
-
-    pil_image = Image.open(BytesIO(image_string)).convert('RGB')
-    img = np.array(pil_image)[:, :, :3][:, :, ::-1]
+        return lambda_return(400, 'invalid param')
+    try:
+        if isinstance(event["body"], str):
+            body = json.loads(event["body"])
+        else:
+            body = event["body"]
+        if 'url' in body and 'img' in body:
+            return lambda_return(400, '`url` and `img` cannot be used at the same time')
+        img = read_img(body)
+        if isinstance(img, str):
+            return lambda_return(400, f'`parameter `{img}` illegal')
+        img = img[:,:,::-1]
+    except:
+        return lambda_return(400, 'invalid param')
     dt_boxes, rec_res = text_sys(img)
-
-    boxes = dt_boxes
     dt_results = list(zip(dt_boxes, rec_res))
     dt_results.sort(key=lambda x: (x[0].min(0)[1]))
 
@@ -165,13 +160,4 @@ def handler(event, context):
     if 'duration' in body and body['duration']:
         result.append({"duration": time.time() - start_time})
 
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST",
-        },
-        "body": json.dumps(result),
-    }
+    return lambda_return(200, json.dumps(result))

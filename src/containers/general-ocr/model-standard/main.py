@@ -152,7 +152,7 @@ class TextDetector():
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
         self.ort_session = onnxruntime.InferenceSession(self.weights_path)
-
+        _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 64, 64], dtype='float32')})
 
     # load_pytorch_weights
 
@@ -253,7 +253,7 @@ class TextRecognizer():
         self.postprocess_op = build_post_process(postprocess_params)
 
         self.ort_session = onnxruntime.InferenceSession(self.weights_path)
-
+        _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 32, 64], dtype='float32')})
 
     def resize_norm_img(self, img, max_wh_ratio):
         imgC, imgH, imgW = self.rec_image_shape

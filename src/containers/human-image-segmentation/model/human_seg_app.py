@@ -6,34 +6,40 @@ from io import BytesIO
 import numpy as np
 import onnxruntime
 from PIL import Image
-from base64image import Base64Image
+from aikits_utils import readimg, lambda_return
 
 model_path = os.environ['MODEL_PATH']
 ort_session = onnxruntime.InferenceSession(model_path + '/humanseg_720.onnx')
-
-
-def handler(event, context):
-    if 'body' not in event:
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*'
-            }
-        }
-    if isinstance(event['body'], str):
-        body = json.loads(event['body'])
-    else:
-        body = event['body']
+_ = ort_session.run(None, {"input": np.zeros([1, 3, 64, 64], dtype='float32')})
+def read_img(body):
     if 'url' in body:
-        uri = body['url']
-        base64_image = Base64Image.from_uri(uri)
+        inputs = readimg(body, ['url'])
+        img = inputs['url']
     else:
-        base64_image = Base64Image.from_base64_image_string(body['img'])
+        inputs = readimg(body, ['img'])
+        img = inputs['img']
+    for k, v in inputs.items():
+        if v is None:
+            return str(k)
+    return img
+def handler(event, context):
+    if "body" not in event:
+        return lambda_return(400, 'invalid param')
+    try:
+        if isinstance(event["body"], str):
+            body = json.loads(event["body"])
+        else:
+            body = event["body"]
+        if 'url' in body and 'img' in body:
+            return lambda_return(400, '`url` and `img` cannot be used at the same time')
+        img = read_img(body)
+        if isinstance(img, str):
+            return lambda_return(400, f'`parameter `{img}` illegal')
+        pil_image = img
+        src = np.array(img)[:, :, :3]
+    except:
+        return lambda_return(400, 'invalid param')
 
-    pil_image = base64_image.get_pil_image()
-    src = np.asarray(pil_image)[:, :, :3]
     output_size = 720
     h, w = src.shape[:2]
     new_h, new_w = output_size, output_size * w / h
@@ -53,10 +59,17 @@ def handler(event, context):
     dn = (ort_outs[0][:, 0, :, :] - mi) / (ma - mi)
     im = Image.fromarray((dn[0] * 255).astype('uint8'))
     imo = im.resize((src.shape[1], src.shape[0]), resample=Image.BILINEAR)
-    buffered = BytesIO()
-    imo.save(buffered, format="png")
-    img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
+    buffered = BytesIO()
+    if 'type' in body and body['type'] == 'foreground':
+        im_rgba = pil_image.copy()
+        im_rgba.putalpha(imo)
+        im_rgba.save(buffered, format="png")
+    else:
+        imo.save(buffered, format="png")
+        
+    img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    
     result = {'result': img_str}
     return {
         'statusCode': 200,

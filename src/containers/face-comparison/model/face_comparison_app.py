@@ -1,42 +1,40 @@
-import base64
 import json
 import os
-from io import BytesIO
-import numpy as np
-from PIL import Image
-try:
-    import urllib.request as urllib2
-except ImportError:
-    import urllib2
 import main
+from aikits_utils import readimg, lambda_return
 
 model_path = os.environ['MODEL_PATH']
 model = main.RetinaFace(model_file = model_path + 'det.onnx')
 arcface_model = main.ArcFaceONNX(model_file= model_path + 'w600k_r50.onnx')
 
+def read_img(body):
+    if 'url' in body:
+        inputs = readimg(body, ['url'])
+        img = inputs['url']
+    else:
+        inputs = readimg(body, ['img'])
+        img = inputs['img']
+    for k, v in inputs.items():
+        if v is None:
+            return str(k)
+    return img
+
 def handler(event, context):
     if 'body' not in event:
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*'
-            }
-        }
-    if isinstance(event['body'], str):
-        body = json.loads(event['body'])
-    else:
-        body = event['body']
-    if 'url' in body:
-        uri = body['url']
-        image_string = urllib2.urlopen(uri).read()
-    else:
-        image_string = base64.b64decode(body['img'])
+        return lambda_return(400, 'invalid param')
+    try:
+        if isinstance(event['body'], str):
+            body = json.loads(event['body'])
+        else:
+            body = event['body']
+        if 'url' in body and 'img' in body:
+            return lambda_return(400, '`url` and `img` cannot be used at the same time')
+        img = read_img(body)
+        if isinstance(img, str):
+            return lambda_return(400, f'`parameter `{img}` illegal')
+    except:
+        return lambda_return(400, 'invalid param')
 
-    pil_image = Image.open(BytesIO(image_string)).convert('RGB')
-
-    img = np.asarray(pil_image)[:, :, :3]
     bboxes, kpss = model.detect(img)
     face_list = []
     for i in range(len(bboxes)):
@@ -58,14 +56,4 @@ def handler(event, context):
         "FaceModelVersion": "1.2.0"
     }
 
-    return {
-        'statusCode': 200,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST,GET'
-        },
-
-        'body': json.dumps(output)
-    }
+    return lambda_return(200, json.dumps(output))

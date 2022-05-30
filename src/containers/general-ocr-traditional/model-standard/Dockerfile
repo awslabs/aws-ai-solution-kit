@@ -7,7 +7,7 @@ ARG MODEL_VERSION="1.2.0"
 
 ADD / ${FUNCTION_DIR}/
 
-RUN python3 -m pip install -r ${FUNCTION_DIR}/requirements.txt
+RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
 RUN pip3 install --target ${FUNCTION_DIR} awslambdaric
 
 RUN mkdir -p ${FUNCTION_DIR}/model

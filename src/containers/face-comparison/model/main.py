@@ -70,7 +70,8 @@ class RetinaFace:
         self.nms_thresh = 0.4
         self.det_thresh = 0.5
         self._init_vars()
-
+        _ = self.session.run(self.output_names, {self.input_name : np.zeros([1, 3, 64, 64], dtype='float32')})
+        
     def _init_vars(self):
         input_cfg = self.session.get_inputs()[0]
         input_shape = input_cfg.shape
