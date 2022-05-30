@@ -71,15 +71,6 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const CNBusinessLicense = new DockerImageFunction(
-      this,
-      'cn-business-license',
-      {
-        functionName: 'cn-business-license',
-        code: DockerImageCode.fromImageAsset('src/containers/ocr-cn-business-license/model'),
-      },
-    );
-
     const ObjectRecognition = new DockerImageFunction(
       this,
       'object-recognition',
