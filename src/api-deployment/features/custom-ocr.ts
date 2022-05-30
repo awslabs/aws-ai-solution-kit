@@ -87,7 +87,7 @@ export class CustomOCRFeatureNestedStack extends FeatureNestedStack {
             },
           ),
           timeout: Duration.seconds(29),
-          memorySize: 8192,
+          memorySize: 10240,
           vpc: featureVPC,
           allowPublicSubnet: true,
           vpcSubnets: {

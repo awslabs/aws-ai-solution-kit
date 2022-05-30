@@ -19,7 +19,7 @@ export class HumanAttributeRecognitionFeatureNestedStack extends FeatureNestedSt
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 4096,
+      lambdaMemorySize: 8192,
       lambdaTimeout: Duration.seconds(19),
     });
   }

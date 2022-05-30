@@ -19,7 +19,7 @@ export class GeneralOCRFeatureNestedStack extends FeatureNestedStack {
       featureName: `${featureName}-advanced`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 4096,
+      lambdaMemorySize: 8192,
       lambdaTimeout: Duration.seconds(30),
     });
 
@@ -32,7 +32,7 @@ export class GeneralOCRFeatureNestedStack extends FeatureNestedStack {
       featureName: `${featureName}-standard`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 4096,
+      lambdaMemorySize: 8192,
       lambdaTimeout: Duration.seconds(19),
     });
   }

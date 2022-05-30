@@ -19,7 +19,7 @@ export class HumanImageSegmentationFeatureNestedStack extends FeatureNestedStack
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 8192,
+      lambdaMemorySize: 10240,
       lambdaTimeout: Duration.seconds(19),
     });
   }

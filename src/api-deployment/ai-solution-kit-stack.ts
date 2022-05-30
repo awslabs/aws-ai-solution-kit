@@ -347,6 +347,14 @@ export class AISolutionKitStack extends Stack {
       (superResolutionGpu.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolution');
       this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution', 'ConditionImageSuperResolution');
     }
+
+    // Stage Invoke URL
+    {
+      new CfnOutput(this, 'Stage Invoke URL', {
+        value: invokeUrl.toString(),
+        description: `${cfnTemplate.getParameter('APIGatewayStageName').valueAsString} Stage Invoke URL`,
+      });
+    }
   }
 
   private addOutput(cfnTemplate: CfnInclude, restApiId: string, apiPath: string, outputName: string, conditionName: string) {
