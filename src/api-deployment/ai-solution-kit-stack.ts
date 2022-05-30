@@ -352,7 +352,7 @@ export class AISolutionKitStack extends Stack {
     {
       new CfnOutput(this, 'Stage Invoke URL', {
         value: invokeUrl.toString(),
-        description: `${cfnTemplate.getParameter('APIGatewayStageName').valueAsString} Stage Invoke URL`,
+        description: 'Stage Invoke URL',
       });
     }
   }
