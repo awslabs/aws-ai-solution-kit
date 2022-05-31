@@ -19,7 +19,11 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   minNodeVersion: '14.17.0',
   buildWorkflow: true,
   buildWorkflowTriggers: { pullRequest: {}, push: {} },
-  mutableBuild: false,
+  mutableBuild: true,
+  githubOptions: {
+    mergify: false
+  },
+  autoApproveUpgrades: false,
   eslint: true,
   defaultReleaseBranch: 'main',
   deps: [
