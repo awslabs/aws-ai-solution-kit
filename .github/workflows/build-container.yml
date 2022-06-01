@@ -30,7 +30,7 @@ jobs:
           for f in cdk.out/*; do
               if [ -d "$f" ] && [ -f "$f/Dockerfile" ]; then
                   echo $f/Dockerfile
-                  docker build . --file $f/Dockerfile --tag build-image:$(date +%s)
+                  docker build $f --file $f/Dockerfile --tag build-image:$(date +%s)
               fi
           done
   self-mutation:
