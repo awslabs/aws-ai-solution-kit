@@ -25,7 +25,6 @@ jobs:
         run: yarn install && npx projen
       - name: build
         run: yarn build-containers
-      - uses: actions/checkout@v3
       - name: Build the Docker image
         run: |-
             docker build . --file Dockerfile --tag build-image:$(date +%s)
