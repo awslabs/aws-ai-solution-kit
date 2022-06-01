@@ -27,7 +27,12 @@ jobs:
         run: yarn build-containers
       - name: Build the Docker image
         run: |-
-            docker build . --file Dockerfile --tag build-image:$(date +%s)
+          for f in cdk.out/*; do
+              if [ -d "$f" ] && [ -f "$f/Dockerfile" ]; then
+                  echo $f/Dockerfile
+                  docker build . --file $f/Dockerfile --tag build-image:$(date +%s)
+              fi
+          done
   self-mutation:
     needs: build
     runs-on: ubuntu-latest
