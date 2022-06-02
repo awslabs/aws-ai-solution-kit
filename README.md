@@ -116,7 +116,7 @@ You can clone this repository to create a local copy on your computer and build 
 - [Optional] Build docker images by yarn and push to an Amazon ECR repository
 
 ```shell
-yarn build-container
+yarn build-containers
 ```
 
 You can push images to an Amazon ECR repository, the step-by-step instructions is available at: https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html

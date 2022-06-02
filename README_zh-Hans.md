@@ -118,7 +118,7 @@ yarn cdk-init
 - [可选] 通过 yarn 构建docker镜像并推送到Amazon ECR仓库
 
 ```shell
-yarn build-container
+yarn build-containers
 ```
 
 您可以将docker镜像推送到Amazon ECR仓库，详细步骤请参与：https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
