@@ -23,18 +23,21 @@ feature_scenario: It can be applied to photo background replacement, post-proces
 |----------|-----------|------------|------------|
 | url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
 | img | *String* |Choose one of two parameters with url|Base64 encoded image data|
+| type | *String* |否|When type is "foreground", it will return the Base64 encoding of the transparent background image in PNG format, and type is empty by default, it will return the Base64 encoding of the Alpha channel of the image after removing the background|
 
 - Example JSON request
 
 ``` json
 {
-"url": "{{page.meta.sample_image}}"
+"url": "{{page.meta.sample_image}}",
+"type": "foreground"
 }
 ```
 
 ``` json
 {
-"img": "Base64-encoded image data"
+"img": "Base64-encoded image data",
+"type": "foreground"
 }
 ```
 
@@ -42,13 +45,13 @@ feature_scenario: It can be applied to photo background replacement, post-proces
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|result    |*String*   |Background-removed Base64-encoded alpha channel image data|
+|result    |*String*   |Base64 encoded image data|
 
 - Example JSON response
 
 ``` json
 {
-  "result": "Background-removed Base64-encoded alpha channel image data"
+  "result": "Base64 encoded image data"
 }
 ```
 
