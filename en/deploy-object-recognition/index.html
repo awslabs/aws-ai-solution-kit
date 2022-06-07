@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#applicable-scenarios" class="md-skip">
           Skip to content
         </a>
       
@@ -372,7 +372,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -386,7 +386,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -605,8 +605,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    适用场景
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
   </a>
   
 </li>
@@ -616,12 +616,19 @@
     REST API Reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-codes" class="md-nav__link">
-    Example Codes
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
   </a>
   
 </li>
@@ -639,21 +646,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     支持的目标识别实体列表
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     成本预估
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     卸载部署
   </a>
   
@@ -725,7 +732,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        How to Upgrade
+        Upgrade the solution
       </a>
     </li>
   
@@ -740,7 +747,7 @@
   
     <li class="md-nav__item">
       <a href="../uninstall/" class="md-nav__link">
-        Uninstall
+        Uninstall the solution
       </a>
     </li>
   
@@ -831,8 +838,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    适用场景
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
   </a>
   
 </li>
@@ -842,12 +849,19 @@
     REST API Reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-codes" class="md-nav__link">
-    Example Codes
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
   </a>
   
 </li>
@@ -865,21 +879,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     支持的目标识别实体列表
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     成本预估
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     卸载部署
   </a>
   
@@ -902,7 +916,7 @@
   <h1>Object Recognition</h1>
 
 <p>Recognize objects in the image and return confidence score for each object.</p>
-<h2 id="_1">适用场景</h2>
+<h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>It can be applied to IPC image detection, traffic, security and other industries in the image scene of target detection and tracking.</p>
 <h2 id="rest-api-reference">REST API Reference</h2>
 <ul>
@@ -1052,7 +1066,16 @@
 }
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
-<h3 id="example-codes">Example Codes</h3>
+<h2 id="api-test">API test</h2>
+<h3 id="api-explorer">API Explorer</h3>
+<p><strong>Prerequisites</strong></p>
+<p>When deploying the solution, you need to：</p>
+<ul>
+<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
+<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
+</ul>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test API invoking online. </p>
+<p><strong>Steps</strong></p>
 <p><strong>cURL</strong></p>
 <pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition' \
 --header 'Content-Type: application/json' \
@@ -1118,7 +1141,7 @@ Response response = client.newCall(request).execute();
 <p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
 <!-- END INCLUDE -->
 
-<h2 id="_2">支持的目标识别实体列表</h2>
+<h2 id="_1">支持的目标识别实体列表</h2>
 <table>
 <thead>
 <tr>
@@ -2329,10 +2352,10 @@ Response response = client.newCall(request).execute();
 </tr>
 </tbody>
 </table>
-<h2 id="_3">成本预估</h2>
+<h2 id="_2">成本预估</h2>
 <p>//TODO</p>
 <!-- BEGIN INCLUDE include-deploy-uninstall.md -->
-<h2 id="_4">卸载部署</h2>
+<h2 id="_3">卸载部署</h2>
 <p>You can uninstall the <strong>Object Recognition</strong> feature via Amazon CloudFormation as described in <a href="../deployment/"><strong>Deployment Solution: Updating the Amazon CloudFormation Stack</strong></a> and make sure the <strong>ObjectRecognition</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>

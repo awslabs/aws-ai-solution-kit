@@ -416,7 +416,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -430,7 +430,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -682,7 +682,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        How to Upgrade
+        Upgrade the solution
       </a>
     </li>
   
@@ -697,7 +697,7 @@
   
     <li class="md-nav__item">
       <a href="../uninstall/" class="md-nav__link">
-        Uninstall
+        Uninstall the solution
       </a>
     </li>
   
@@ -817,32 +817,32 @@
 
   <h1>Architecture overview</h1>
 
-<p>Two types of AI functionality implementations are included in this solution architecture: AWS Lambda-based architecture and Amazon SageMaker-based architecture.</p>
+<p>This solution architecture has two types of AI feature implementations: architecture based on AWS Lambda and architecture based on Amazon SageMaker.</p>
 <div class="admonition note">
 <p class="admonition-title">Description</p>
-<p>The Amazon SageMaker-based architecture is only available in version 1.2.0 for <strong>Image Super Resolution Solution</strong>.</p>
+<p>The architecture based on Amazon SageMaker is only available in release 1.2.0 for <strong>Image Super Resolution Solution</strong>.</p>
 </div>
 <h2 id="architecture-based-on-aws-lambda">Architecture based on AWS Lambda</h2>
 <p>! <a href="../images/arch-lambda.png"></a></p>
 <ol>
 <li>
-<p>the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain information about the image or text being processed.</p>
+<p>The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain information about the image or text to be processed.</p>
 </li>
 <li>
-<p>Amazon API Gateway sends the incoming user request directly to the AWS Lambda function. 3.</p>
+<p>Amazon API Gateway sends the incoming user request directly to the AWS Lambda function. </p>
 </li>
 <li>
-<p>the AWS Lambda function returns the result to the caller.</p>
+<p>The AWS Lambda function returns the result to the invoker.</p>
 </li>
 </ol>
 <h2 id="architecture-based-on-amazon-sagemaker">Architecture based on Amazon SageMaker</h2>
 <p>! <a href="../images/arch-sagemaker.png"></a></p>
 <ol>
 <li>
-<p>the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain the image or text information to be processed.</p>
+<p>The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain the image or text information to be processed.</p>
 </li>
 <li>
-<p>Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function. 3.</p>
+<p>Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function.</p>
 </li>
 <li>
 <p>AWS Lambda calls Amazon SageMaker Endpoint, which performs the inference process in Amazon SageMaker and returns the inference result (usually JSON format data).</p>

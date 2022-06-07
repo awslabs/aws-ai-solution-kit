@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#example-codes" class="md-skip">
+        <a href="#api-test" class="md-skip">
           Skip to content
         </a>
       
@@ -372,7 +372,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -386,7 +386,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -638,7 +638,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        How to Upgrade
+        Upgrade the solution
       </a>
     </li>
   
@@ -653,7 +653,7 @@
   
     <li class="md-nav__item">
       <a href="../uninstall/" class="md-nav__link">
-        Uninstall
+        Uninstall the solution
       </a>
     </li>
   
@@ -744,16 +744,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#example-codes" class="md-nav__link">
-    Example Codes
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#request-url-as-aws_iam-in-postman" class="md-nav__link">
     Request URL as AWS_IAM in Postman
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -773,7 +786,16 @@
 
   <h1>Include deploy code</h1>
 
-<h3 id="example-codes">Example Codes</h3>
+<h2 id="api-test">API test</h2>
+<h3 id="api-explorer">API Explorer</h3>
+<p><strong>Prerequisites</strong></p>
+<p>When deploying the solution, you need to：</p>
+<ul>
+<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
+<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
+</ul>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test API invoking online. </p>
+<p><strong>Steps</strong></p>
 <p><strong>cURL</strong></p>
 <pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/{{ no such element: dict object['feature_endpoint'] }}' \
 --header 'Content-Type: application/json' \

@@ -15,7 +15,7 @@
     
     
       
-        <title>Uninstall - AI Solution Kit Deployment Guide</title>
+        <title>Uninstall the solution - AI Solution Kit Deployment Guide</title>
       
     
     
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#using-the-aws-management-console" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Uninstall
+              Uninstall the solution
             
           </span>
         </div>
@@ -372,7 +372,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -386,7 +386,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -638,7 +638,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        How to Upgrade
+        Upgrade the solution
       </a>
     </li>
   
@@ -660,12 +660,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Uninstall
+          Uninstall the solution
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Uninstall
+        Uninstall the solution
       </a>
       
         
@@ -682,15 +682,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    使用亚马逊云科技管理控制台删除堆栈
+  <a href="#using-the-aws-management-console" class="md-nav__link">
+    Using the AWS Management Console
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    使用CLI删除堆栈
+  <a href="#using-aws-command-line-interface" class="md-nav__link">
+    Using AWS Command Line Interface
   </a>
   
 </li>
@@ -788,15 +788,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    使用亚马逊云科技管理控制台删除堆栈
+  <a href="#using-the-aws-management-console" class="md-nav__link">
+    Using the AWS Management Console
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    使用CLI删除堆栈
+  <a href="#using-aws-command-line-interface" class="md-nav__link">
+    Using AWS Command Line Interface
   </a>
   
 </li>
@@ -815,25 +815,20 @@
                 
 
 
-  <h1>Uninstall</h1>
+  <h1>Uninstall the solution</h1>
 
-<p>要卸载人工智能解决方案合集方案，请删除CloudFormation堆栈。</p>
-<p>您可以使用亚马逊云科技管理控制台或CLI删除CloudFormation堆栈。</p>
-<h2 id="_1">使用亚马逊云科技管理控制台删除堆栈</h2>
+<p>To uninstall AI Solution Kit, you must delete the AWS CloudFormation stack. </p>
+<p>You can use either the AWS Management Console or the AWS Command Line Interface (CLI) to delete the CloudFormation stack.</p>
+<h2 id="using-the-aws-management-console">Using the AWS Management Console</h2>
 <ol>
-<li>登录<a href="https://console.aws.amazon.com/cloudformation/home">AWS CloudFormation</a>控制台。</li>
-<li>在<strong>堆栈</strong>页面上，选择此方案的安装堆栈。</li>
-<li>选择<strong>删除</strong>。</li>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/home">AWS CloudFormation</a> console.</li>
+<li>Select this solution’s installation stack.</li>
+<li>Choose <strong>Delete</strong>.</li>
 </ol>
-<h2 id="cli">使用CLI删除堆栈</h2>
-<ol>
-<li>确定命令行在您的环境中是否可用。有关安装说明，请参阅CLI用户指南中的<a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">CLI是什么</a>。</li>
-<li>
-<p>确认CLI可用后，请运行以下命令:</p>
-<p><code>bash
-aws cloudformation delete-stack --stack-name &lt;installation-stack-name&gt;</code></p>
-</li>
-</ol>
+<h2 id="using-aws-command-line-interface">Using AWS Command Line Interface</h2>
+<p>Determine whether the AWS CLI is available in your environment. For installation instructions, see <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html">What Is the AWS Command Line Interface</a> in the <em>AWS CLI User Guide</em>. After confirming that the AWS CLI is available, run the following command.</p>
+<pre><code class="language-bash">$ aws cloudformation delete-stack --stack-name &lt;installation-stack-name&gt;
+</code></pre>
 
               
             </article>
@@ -849,7 +844,7 @@ aws cloudformation delete-stack --stack-name &lt;installation-stack-name&gt;</co
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../upgrade/" class="md-footer__link md-footer__link--prev" aria-label="Previous: How to Upgrade" rel="prev">
+        <a href="../upgrade/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Upgrade the solution" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -858,7 +853,7 @@ aws cloudformation delete-stack --stack-name &lt;installation-stack-name&gt;</co
               <span class="md-footer__direction">
                 Previous
               </span>
-              How to Upgrade
+              Upgrade the solution
             </div>
           </div>
         </a>

@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
+        <a href="#applicable-scenarios" class="md-skip">
           Skip to content
         </a>
       
@@ -372,7 +372,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -386,7 +386,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -479,8 +479,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    适用场景
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
   </a>
   
 </li>
@@ -490,12 +490,19 @@
     REST API Reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-codes" class="md-nav__link">
-    Example Codes
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
   </a>
   
 </li>
@@ -527,7 +534,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     卸载部署
   </a>
   
@@ -725,7 +732,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        How to Upgrade
+        Upgrade the solution
       </a>
     </li>
   
@@ -740,7 +747,7 @@
   
     <li class="md-nav__item">
       <a href="../uninstall/" class="md-nav__link">
-        Uninstall
+        Uninstall the solution
       </a>
     </li>
   
@@ -831,8 +838,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    适用场景
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
   </a>
   
 </li>
@@ -842,12 +849,19 @@
     REST API Reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-codes" class="md-nav__link">
-    Example Codes
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
   </a>
   
 </li>
@@ -879,7 +893,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     卸载部署
   </a>
   
@@ -902,8 +916,8 @@
   <h1>General OCR (Simplified Chinese)</h1>
 
 <p>Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols.</p>
-<h2 id="_1">适用场景</h2>
-<p>It can be applied to a variety of scenarios such as paper documents electronically, document identification, content review, etc. to improve information processing efficiency.</p>
+<h2 id="applicable-scenarios">Applicable scenarios</h2>
+<p>Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.</p>
 <h2 id="rest-api-reference">REST API Reference</h2>
 <ul>
 <li>
@@ -926,19 +940,19 @@
 <tr>
 <td>url</td>
 <td><em>String</em></td>
-<td>Choose one of the two parameters with img, the priority is higher than the URL</td>
-<td>Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.</td>
+<td>Choose url or img. url has higher priority than img.</td>
+<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
 </tr>
 <tr>
 <td>img</td>
 <td><em>String</em></td>
-<td>Choose one of two parameters with url</td>
-<td>Base64 encoded image data</td>
+<td>Choose url or img.</td>
+<td>Base64 encoded image data.</td>
 </tr>
 </tbody>
 </table>
 <ul>
-<li>请求示例</li>
+<li>Example Request</li>
 </ul>
 <pre><code class="language-json">{
   &quot;url&quot;: &quot;Image URL address&quot;
@@ -963,17 +977,17 @@
 <tr>
 <td>words</td>
 <td><em>String</em></td>
-<td>Recognize text content</td>
+<td>Recognize text.</td>
 </tr>
 <tr>
 <td>location</td>
 <td><em>JSON</em></td>
-<td>Recognize the coordinates of the text in the image, including top, left, width, height as integer values</td>
+<td>Recognize the coordinates of the text in the image, including top, left, width, height as integer values.</td>
 </tr>
 <tr>
 <td>score</td>
 <td><em>Float</em></td>
-<td>Confidence value of the recognized text, Float type value in the interval 0 to 1</td>
+<td>Confidence value of the recognized text, which is a float type value between 0 to 1.</td>
 </tr>
 </tbody>
 </table>
@@ -1005,7 +1019,16 @@
 ]
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
-<h3 id="example-codes">Example Codes</h3>
+<h2 id="api-test">API test</h2>
+<h3 id="api-explorer">API Explorer</h3>
+<p><strong>Prerequisites</strong></p>
+<p>When deploying the solution, you need to：</p>
+<ul>
+<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
+<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
+</ul>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test API invoking online. </p>
+<p><strong>Steps</strong></p>
 <p><strong>cURL</strong></p>
 <pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/general_ocr' \
 --header 'Content-Type: application/json' \
@@ -1170,7 +1193,7 @@ Response response = client.newCall(request).execute();
 </tbody>
 </table>
 <!-- BEGIN INCLUDE include-deploy-uninstall.md -->
-<h2 id="_2">卸载部署</h2>
+<h2 id="_1">卸载部署</h2>
 <p>You can uninstall the <strong>General OCR (Simplified Chinese)</strong> feature via Amazon CloudFormation as described in <a href="../deployment/"><strong>Deployment Solution: Updating the Amazon CloudFormation Stack</strong></a> and make sure the <strong>GeneralOCR</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
