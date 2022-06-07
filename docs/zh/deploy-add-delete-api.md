@@ -4,7 +4,7 @@
 
 1. 访问[AWS CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)。
 
-2. 从堆栈列表中选择部署完成的解决方案根堆栈。
+2. 从堆栈列表中选择部署完成的解决方案根堆栈，注意不要选择嵌套堆栈（NESTED）。
 
 3. 在**堆栈详细信息**页面，选择**更新**。
 

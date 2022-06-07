@@ -2,7 +2,7 @@
 
 ### What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?
 
-The following permissions are required to deploy the solution and call the API via API Gateway after deployment, with **sagemaker:** limited to the **Image Super Resolution** API.
+The following permissions are required to deploy the solution and invoke the API via API Gateway after deployment, with **sagemaker:** only applicable to the **Image Super Resolution** API.
 
 | Actions |
 | ------------------------------------- |
@@ -70,7 +70,7 @@ The following permissions are required to deploy the solution and call the API v
 
 ### How to resolve *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances* encountered when deploying the solution?
 
-1. visit aws console https://console.aws.amazon.com/
+1. Sign into the [AWS console][https://console.aws.amazon.com/].
 2. click on support on the top right corner
 3. click create a case (orange button)
 4. select Service Limit Increase radio button

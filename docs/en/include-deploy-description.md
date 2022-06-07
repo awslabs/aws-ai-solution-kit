@@ -1,4 +1,4 @@
 {{ page.meta.feature_description }}
 
-## 适用场景
+## Applicable scenarios
 {{ page.meta.feature_scenario }}

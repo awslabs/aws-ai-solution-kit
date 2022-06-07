@@ -3,4 +3,4 @@ When you build solutions on Amazon Web Services, security responsibilities are s
 
 ##IAM roles
 
-Amazon Web Services Identity and Access Management (IAM) roles allow customers to assign fine-grained access policies and permissions to services and users on Amazon Web Services. This solution creates IAM roles that grant access between components of the solution.
+AWS Identity and Access Management (IAM) roles allow customers to assign fine-grained access policies and permissions to services and users on AWS. This solution creates IAM roles that grant access between components of the solution.
