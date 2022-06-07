@@ -21,7 +21,7 @@ feature_scenario: 可应用于停车场、小区自动识别车辆号牌信息�
 
   | **名称**  | **类型**  | **是否必选** |  **说明**  |
   |----------|-----------|------------|------------|
-  | url | *String* |与 img 参数二选一，优先级高于 img|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
+  | url | *String* |与 img 参数二选一|图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。|
   | img | *String* |与 url 参数二选一|进行 Base64 编码的图像数据|
 
 - 请求 Body 示例

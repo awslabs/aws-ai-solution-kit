@@ -175,7 +175,7 @@ This project contains two types of implementation: Building on AWS Lambda and bu
 
 ## API Reference
 
-See [API Reference](https://awslabs.github.io/aws-ai-solution-kit/en/)
+See [API Reference](https://awslabs.github.io/aws-ai-solution-kit/en/api-explorer/)
 
 ## Authorization and Security
 
