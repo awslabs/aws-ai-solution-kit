@@ -10,6 +10,7 @@ from PIL import Image, ImageDraw
 from imaug import create_operators, transform
 from postprocess import build_post_process
 
+onnxruntime.set_default_logger_severity(4)
 
 def draw_ocr_box_txt(image,
                      boxes,
@@ -124,7 +125,7 @@ class TextDetector():
 
         pre_process_list = [{
             'DetResizeForTest': {
-                'limit_side_len': 960,
+                'limit_side_len': 2048,
                 'limit_type': 'max'
             }
         }, {

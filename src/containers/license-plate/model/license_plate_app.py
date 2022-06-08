@@ -37,7 +37,7 @@ class TextSystem:
     def __init__(self):
         self.text_detector = TextDetector()
         self.text_recognizer = TextRecognizer()
-        self.drop_score = 0.3
+        self.drop_score = 0.7
         self.text_classifier = TextClassifier()
 
     def get_rotate_crop_image(self, img, points):
@@ -95,8 +95,58 @@ class TextSystem:
 
         for bno in range(len(dt_boxes)):
             tmp_box = copy.deepcopy(dt_boxes[bno])
+            buffer = math.ceil((tmp_box[1][0] -tmp_box[0][0]) / 8)
             img_crop = self.get_rotate_crop_image(ori_im, tmp_box)
             img_crop_list.append(img_crop)
+
+            img_crop_list, angle_list = self.text_classifier(img_crop_list)
+            rec_res = self.text_recognizer(img_crop_list)
+            found = False
+            for box, rec_reuslt in zip(dt_boxes, rec_res):
+                text, score = rec_reuslt
+                if score >= self.drop_score and len(text) == 7:
+                    found = True
+
+            if not found:
+                img_crop_list = []
+                # Vans license plate
+                tmp_box_up = copy.deepcopy(tmp_box)
+                tmp_box_up[0][0] = tmp_box[0][0] - buffer
+                tmp_box_up[0][1] = tmp_box[0][1] - buffer
+
+                tmp_box_up[1][0] = tmp_box[1][0] + buffer
+                tmp_box_up[1][1] = tmp_box[1][1] - buffer
+
+                tmp_box_up[2][0] = max(tmp_box[0][0], tmp_box[2][0]) + buffer
+                tmp_box_up[2][1] = math.ceil(tmp_box[1][1] + (tmp_box[2][1] - tmp_box[1][1]) / 2) - 10
+
+                tmp_box_up[3][0] = min(tmp_box[3][0], tmp_box[0][0]) -buffer
+                tmp_box_up[3][1] = math.ceil(tmp_box[0][1] + (tmp_box[3][1] - tmp_box[0][1]) / 2) - 10
+
+                img_crop_up = self.get_rotate_crop_image(ori_im, tmp_box_up)
+
+                tmp_box_down = copy.deepcopy(tmp_box)
+                tmp_box_down[0][0] = min(tmp_box[3][0], tmp_box[0][0]) - buffer
+                tmp_box_down[0][1] = math.ceil(tmp_box[0][1] + (tmp_box[3][1] - tmp_box[0][1]) / 2) - buffer
+
+                tmp_box_down[1][0] = max(tmp_box[0][0], tmp_box[2][0]) + buffer
+                tmp_box_down[1][1] = math.ceil(tmp_box[1][1] + (tmp_box[2][1] - tmp_box[1][1]) / 2) - buffer
+
+                tmp_box_down[2][0] = tmp_box[2][0] + buffer
+                tmp_box_down[2][1] = tmp_box[2][1] + buffer
+
+                tmp_box_down[3][0] = tmp_box[3][0] - buffer
+                tmp_box_down[3][1] = tmp_box[3][1] + buffer
+
+                img_crop_down = self.get_rotate_crop_image(ori_im, tmp_box_down)
+
+                height, width = img_crop_down.shape[:2]
+                img_crop_up = cv2.resize(img_crop_up, (width, height), interpolation= cv2.INTER_LINEAR)
+
+                img_crop = cv2.hconcat([img_crop_up, img_crop_down])
+                img_crop = cv2.resize(img_crop, None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+                img_crop_list.append(img_crop)
+
         img_crop_list, angle_list = self.text_classifier(img_crop_list)
 
         rec_res = self.text_recognizer(img_crop_list)

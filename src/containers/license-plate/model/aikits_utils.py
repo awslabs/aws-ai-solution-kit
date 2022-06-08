@@ -33,7 +33,10 @@ def readimg(body, keys=None):
                 image_string = base64.b64decode(body[key])
             else:
                 raise
-            inputs[key] = np.array(Image.open(BytesIO(image_string)).convert('RGB'))[:, :, :3]
+            img = Image.open(BytesIO(image_string))
+            width, height = img.size
+            img = img.resize((width * 2, height * 2))
+            inputs[key] = np.array(img)[:, :, :3]
         except:
             inputs[key] = None
     return inputs
