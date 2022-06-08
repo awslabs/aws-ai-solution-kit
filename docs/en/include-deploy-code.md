@@ -1,4 +1,24 @@
-###  Example Codes
+## API test
+
+### API Explorer
+
+**Prerequisites**
+
+When deploying the solution, you need to：
+
+- set the parameter **API Explorer** to `yes`.
+- set the parameter **API Gateway Authorization** to `NONE`.
+
+Otherwise, you can only view the API definitions in the API explorer, but cannot test API invoking online. 
+
+**Steps**
+
+
+
+
+
+
+
 
 **cURL**
 ``` bash

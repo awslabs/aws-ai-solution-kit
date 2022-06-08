@@ -1,4 +1,4 @@
-`Update time: 2022-05-05`
+This solution uses services which may not be currently available in all AWS Regions. Launch this solution in an AWS Region where required services are available. For the most current availability by Region, refer to the AWS Regional Services List.
 
 This solution v1.2.0 supports deployment in the following Amazon Web Services regions.
 
@@ -23,9 +23,9 @@ This solution v1.2.0 supports deployment in the following Amazon Web Services re
 | South America (Sao Paulo) Region | sa-east-1
 
 
-## Supported China regions
+## Supported China Regions
 
 | Region Name | Region ID |
 |----------|-------|
-| Amazon Web Services China (Ningxia) Region operated by NWCD | cn-northwest-1
-| Amazon Web Services China (Beijing) Region operated by Sinnet | cn-north-1
+| AWS China (Ningxia) Region operated by NWCD | cn-northwest-1
+| AWS China (Beijing) Region operated by Sinnet | cn-north-1

@@ -178,7 +178,7 @@ yarn deploy
 
 ## API 参考手册
 
-请参考 [API 参考手册](https://awslabs.github.io/aws-ai-solution-kit/en/)
+请参考 [API 参考手册](https://awslabs.github.io/aws-ai-solution-kit/zh/api-explorer/)
 
 ## 安全与权限
 

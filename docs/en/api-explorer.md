@@ -1,4 +1,4 @@
-您可以通过调用API使用所需的AI应用。
+You can invoke the following APIs to use the corresponding AI features.
 
 - [General OCR (Simplified Chinese)](deploy-general-ocr.md)
 - [General OCR (Traditional Chinese)](deploy-general-ocr-traditional.md)
@@ -18,7 +18,7 @@
   include "include-call-url.md"
 %}
 
-## Tools
+## Invoking tools
 - API Explorer
 - Postman
 - cURL

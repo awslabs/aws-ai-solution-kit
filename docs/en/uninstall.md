@@ -1,21 +1,20 @@
-要卸载人工智能解决方案合集方案，请删除CloudFormation堆栈。
+To uninstall AI Solution Kit, you must delete the AWS CloudFormation stack. 
 
-您可以使用亚马逊云科技管理控制台或CLI删除CloudFormation堆栈。
+You can use either the AWS Management Console or the AWS Command Line Interface (CLI) to delete the CloudFormation stack.
 
-## 使用亚马逊云科技管理控制台删除堆栈
+## Using the AWS Management Console
 
-1. 登录[AWS CloudFormation][cloudformation-console]控制台。
-2. 在**堆栈**页面上，选择此方案的安装堆栈。
-3. 选择**删除**。
+1. Sign in to the [AWS CloudFormation][cloudformation-console] console.
+2. Select this solution’s installation stack.
+3. Choose **Delete**.
 
-## 使用CLI删除堆栈
+## Using AWS Command Line Interface
 
-1. 确定命令行在您的环境中是否可用。有关安装说明，请参阅CLI用户指南中的[CLI是什么][aws-cli]。
-2. 确认CLI可用后，请运行以下命令:
+Determine whether the AWS CLI is available in your environment. For installation instructions, see [What Is the AWS Command Line Interface][aws-cli] in the *AWS CLI User Guide*. After confirming that the AWS CLI is available, run the following command.
 
-    ```bash
-    aws cloudformation delete-stack --stack-name <installation-stack-name>
-    ```
+```bash
+$ aws cloudformation delete-stack --stack-name <installation-stack-name>
+```
 
 
 [cloudformation-console]: https://console.aws.amazon.com/cloudformation/home

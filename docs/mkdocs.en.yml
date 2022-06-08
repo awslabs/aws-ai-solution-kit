@@ -13,8 +13,8 @@ nav:
   - Supported regions: regions.md
   - CloudFormation template: template.md
   - Automated deployment:
-      - 启动CloudFormation堆栈: deployment.md
-      - 更新CloudFormation堆栈: deploy-add-delete-api.md 
+      - Launch CloudFormation stack: deployment.md
+      - Update CloudFormation stack: deploy-add-delete-api.md 
   - API Reference:
     - Overview: api-explorer.md
     - General OCR (Simplified Chinese): deploy-general-ocr.md
@@ -30,8 +30,8 @@ nav:
     - Pornography Detection: deploy-pornography-detection.md
     - Image Super Resolution: deploy-image-super-resolution.md
     - Text Similarity: deploy-text-similarity.md
-  - How to Upgrade: upgrade.md
-  - Uninstall: uninstall.md
+  - Upgrade the solution: upgrade.md
+  - Uninstall the solution: uninstall.md
   - Additional resources: additional-resources.md
   - FAQ: faq.md
   - Source code: source.md

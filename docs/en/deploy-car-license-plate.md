@@ -6,7 +6,7 @@ deployment_time: 9 Minutes
 destroy_time: 6 Minutes
 sample_image: Image URL address
 feature_description: Recognize text on Chinese car license plate
-feature_scenario: It could be used in car park, district automatic identification car license plate information, or vehicle violation information detection and other scenarios.
+feature_scenario: It could be used in car parking lot, district automatic identification car license plate information, or vehicle violation information detection and other scenarios.
 ---
 
 {%
@@ -42,8 +42,8 @@ feature_scenario: It could be used in car park, district automatic identificatio
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|words    |*String*   |识别车牌内容|
-|location |*JSON*     |识别车牌在图像中的的坐标值，包含top，left，width，height的整数值|
+|words    |*String*   | Indicates the license plat number.|
+|location |*JSON*     | Indicates the 识别车牌在图像中的的坐标值，包含top，left，width，height的整数值|
 |score    |*Float*   |识别车牌的置信度值，为0到1区间内Float型数值|
 
 - Example JSON response

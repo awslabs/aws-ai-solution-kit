@@ -1,24 +1,24 @@
 ## Cost Estimation
 
-You will be responsible for the cost of using each of the Amazon Cloud Technologies services when running the solution. As of May 2022, the main cost factors affecting the solution include
+You will be responsible for the cost of using each of the Amazon Web Services cloud services when running the solution. As of May 2022, the main cost factors affecting the solution include:
 
 - Number of AWS Lambda calls
 - AWS Lambda runtime
 - Number of Amazon API Gateway calls
-- Amazon API Gateway data output volume
-- Amazon CloudWatch Logs storage volume
-- Amazon Elastic Container Registry Storage Volume
+- Amazon API Gateway data output
+- Amazon CloudWatch Logs storage
+- Amazon Elastic Container Registry Storage
 - Amazon SageMaker Endpoint Node Instance Type
-- Amazon SageMaker Endpoint Node Data Inputs
+- Amazon SageMaker Endpoint Node Data Input
 - Amazon SageMaker Endpoint Node Data Output
 
-!!! Note "Description"
-    The costs associated with Amazon SageMaker apply only to image super-resolution scenarios.
+!!! Note "Note"
+    The costs associated with Amazon SageMaker apply only to **Image Super Resolution**.
 
-You can check the Cost Estimates section corresponding to each API to see the deployment and actual usage costs for each API application.
+You can refer to the Cost Estimation section corresponding to each API to check the deployment and actual usage costs for each API feature.
 
 
-| **Name** | **Cost Estimate** |
+| **Name** | **Cost Estimation** |
 |--------------|--------------|
 |General Text Recognition (Simplified Chinese)|[view](deploy-general-ocr.md#_3)|
 |General Text Recognition (Traditional Chinese)|[view](deploy-general-ocr-traditional.md#_3)|

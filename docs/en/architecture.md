@@ -1,24 +1,24 @@
-Two types of AI functionality implementations are included in this solution architecture: AWS Lambda-based architecture and Amazon SageMaker-based architecture.
+This solution architecture has two types of AI feature implementations: architecture based on AWS Lambda and architecture based on Amazon SageMaker.
 
 !!! Note "Description"
-    The Amazon SageMaker-based architecture is only available in version 1.2.0 for **Image Super Resolution Solution**.
+    The architecture based on Amazon SageMaker is only available in release 1.2.0 for **Image Super Resolution Solution**.
 
 ## Architecture based on AWS Lambda
 
 ! [](./images/arch-lambda.png)
 
-1. the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain information about the image or text being processed.
+1. The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain information about the image or text to be processed.
 
-2. Amazon API Gateway sends the incoming user request directly to the AWS Lambda function. 3.
+2. Amazon API Gateway sends the incoming user request directly to the AWS Lambda function. 
 
-3. the AWS Lambda function returns the result to the caller.
+3. The AWS Lambda function returns the result to the invoker.
 
 ## Architecture based on Amazon SageMaker
 
 ! [](./images/arch-sagemaker.png)
 
-1. the user or application sends an API request to the Amazon API Gateway. the request payload needs to contain the image or text information to be processed.
+1. The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain the image or text information to be processed.
 
-2. Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function. 3.
+2. Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function.
 
 3. AWS Lambda calls Amazon SageMaker Endpoint, which performs the inference process in Amazon SageMaker and returns the inference result (usually JSON format data).
