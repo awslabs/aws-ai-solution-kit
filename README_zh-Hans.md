@@ -83,8 +83,7 @@ AI Solution Kit 提供一系列基于深度学习的云上机器学习功能，�
 
 您可以通过如下链接启动AWS CloudFormation模板
 
-- [由光环新网运营的亚马逊云科技中国（北京）区域链接][template-china1]
-- [由西云数据运营的亚马逊云科技中国（宁夏）区域链接][template-china2]
+- [中国区域链接][template-china1]
 - [全球区域链接][template-global]
 
 在堆栈创建成功后，您可以在AWS CloudFormation的**输出**标签页中通过对应**参数ID**查询基于Amazon API Gateway的调用URL。详细部署方式请参阅: https://awslabs.github.io/aws-ai-solution-kit/zh/deployment/
@@ -188,7 +187,5 @@ yarn deploy
 本 AI Solution Kit 工程遵循Apache-2.0许可证发布。
 
 [template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
-
-[template-china2]:https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
 [template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
