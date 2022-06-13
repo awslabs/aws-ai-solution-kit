@@ -267,7 +267,7 @@ def handler(event, context):
             img_crop = cv2.copyMakeBorder(img_crop, 15, 15, 15, 15, cv2.BORDER_CONSTANT, value=(255,255,255))
             _, rec_res = text_sys(img_crop)
             text = [rec[0] for rec in rec_res]
-            score = [rec[1] for rec in rec_res]
+            score = float(np.mean([rec[1] for rec in rec_res]))
             res = {
                 'key': key, 'value': text, 'score': round(score*100, 2), 'position': tmp_box.astype('uint32').tolist()
             }
