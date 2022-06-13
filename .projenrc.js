@@ -4,24 +4,24 @@ const apiDocDeps = [
   'serverless-http@^2.6.1',
   'swagger-ui-express@^4.3.0',
   'yamljs@^0.3.0',
-  'deasync@0.1.26',
+  'deasync@^0.1.26',
   'aws-sdk@^2.1001.0',
 ];
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.20.0',
+  cdkVersion: '2.27.0',
+  minNodeVersion: '10.8.1',
   name: 'ai-solution-kit',
   license: 'Apache-2.0',
   licensed: true,
   // appEntrypoint: 'containers.ts',
   appEntrypoint: 'main.ts',
   defaultReleaseBranch: 'v1.2.0',
-  minNodeVersion: '14.17.0',
   buildWorkflow: true,
   buildWorkflowTriggers: { pullRequest: {}, push: {} },
   mutableBuild: true,
   githubOptions: {
-    mergify: false
+    mergify: false,
   },
   autoApproveUpgrades: false,
   eslint: true,
@@ -65,7 +65,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '- [ ] Bug fix (non-breaking change which fixes an issue)',
     '- [ ] New feature (non-breaking change which adds functionality)',
     '- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)',
-    '- [ ] This change requires a documentation update'
+    '- [ ] This change requires a documentation update',
   ],
   watchExcludes: [
     'README.md',
