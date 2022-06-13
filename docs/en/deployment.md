@@ -1,91 +1,84 @@
-This section describes how to deploy the **AI Solution Kit** solution via **Amazon CloudFormation**. Detailed deployment and usage instructions for the AI applications included in the solution are described in detail in the corresponding. Before deploying the solution, it is recommended that you review the information in this guide regarding architecture diagrams and regional support, and then follow the instructions below to configure the solution and deploy it to your account.
+Before you launch the solution, review the architecture, supported regions, and other considerations discussed in this guide. Follow the step-by-step instructions in this section to configure and deploy the solution into your account.
 
 **Deployment time**
 
-- Deploying an AI application based on the Amazon Lambda architecture: approximately **10** minutes
+- Approximately **10** minutes for deploying an AI feature based on the Amazon Lambda architecture 
 
-- Deploying an AI application based on the Amazon SageMaker architecture: approximately **20** minutes
+- Approximately **20** minutes for deploying an AI feature based on the Amazon SageMaker architecture 
 
-!!! Note
-    When users activate multiple APIs in Amazon CloudFormation at the same time, the deployment time is the stacked time for each individual API.
+## Prerequisite
 
-## Deployment Overview
+If you choose to launch the stack from AWS China Regions, make sure a domain registered by ICP is available. For more information, see [ICP Recordal](https://www.amazonaws.cn/en/support/icp/?nc1=h_ls).
 
-**Prerequisites (China region)**
+## Launch the stack
 
-This solution uses Amazon API Gateway to receive API call requests, so if you want to provide API requests without authentication in the Beijing region, you need to apply and ensure that your Amazon Web Services account has been filed with the Internet Content Provider (ICP) and that port 80 For details, please refer to the [ICP filing instructions](https://s3.cn-north-1.amazonaws.com.cn/sinnetcloud/ICP+recordal/ICP%E5%A4%87%E6%A1%88%E8%AF%B4%E6%98%8E.pdf). 8E.pdf).
+1. Log in to the AWS Management Console and select the button to launch the AWS CloudFormation stack.
 
-### Deploy the Amazon CloudFormation template
+    | Region | Deploy |
+    | ---------- | --- |
+    | [link for Amazon CloudTech China (Beijing) region operated by Halo New Network][template-china1] | Deploy AI Solution Kit in **Beijing** region |
+    | [Amazon Cloud Technologies China (Ningxia) Regional Link][template-china2] operated by West Cloud Data | Deploying AI Solution Kit in **Ningxia** region
+    | [global-region link][template-global] | Deploy AI Solution Kit in **Global** region | 
 
-1. Log in to the Amazon Web Services Management Console and select the link to launch the AWS CloudFormation template.
+2. The template is launched in the default region after you log in to the console. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar.
 
-| Quick Launch Link | Description |
-| ---------- | --- |
-| [link for Amazon CloudTech China (Beijing) region operated by Halo New Network][template-china1] | Deploy AI Solution Kit in **Beijing** region |
-| [Amazon Cloud Technologies China (Ningxia) Regional Link][template-china2] operated by West Cloud Data | Deploying AI Solution Kit in **Ningxia** region
-| [global-region link][template-global] | Deploy AI Solution Kit in **Global** region | 2.
+3. On the **Create Stack** page, verify that the correct template URL is displayed in the Amazon S3 URL text box, and choose **Next**.
 
-2. By default, the template will be launched in the default region after you log in to the console. If you need to launch the solution in the specified Amazon Web Service region, select it from the region drop-down list in the console navigation bar.
+4. On the **Specify stack details** page, assign a name to your solution stack. For information about naming character limitations, refer to [IAM and STS Limits](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html) in the *AWS Identity and Access Management User Guide*.
 
-3. On the **Create Stack** page, verify that the correct template URL is displayed in the Amazon S3 URL text box, and then select **Next**.
+5. Under **Parameters**, modify the General Configuration and select the AI features to be deployed, and choose **Next**.
 
-4. On the **Assign Stack Details** page, assign a name to your solution stack that is unique within the account and meets the naming requirements.
+    - You can choose whether to deploy API explorer, and the authentication method of the API gateway.
 
-5. In the **Parameters** section, there are two sections of parameters, **General Configuration** and **AI Application List**, where you can modify the General Configuration and select the AI applications to be deployed as needed, and then select **Next**.
+        | Parameter Name | Default Value | Description |
+        | ---------- | ---------| ----------- |
+        | **APIExplorer** | yes | Deploys the **API Explorer** to visualize and interact with API resources. See [API Reference Guide](api-explorer.md) for details. If you choose **no**, you can only view the API definitions in API explorer, but cannot perform online test.  |
+        | **APIGatewayAuthorization** | NONE | The authentication method of the API gateway. The default is *NONE*, which means no privilege authentication method. You can also choose to use the [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) permission to control access to the API. |
+        | **APIGatewayStageName** | prod | The first path field in the API gateway (URI). For more information, see [stageVariable](https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/stage-variables.html). | 
 
-    #### **Common Configuration Parameters**
+    - You can change the parameter for each AI feature to **yes** to deploy it. By default, it is **no** for each AI feature.
 
-    | Parameter Name | Default Value | Description |
-    | ---------- | ---------| ----------- |
-    | **APIGatewayAuthorization** | AWS_IAM | The authentication method of the API gateway. The default is *AWS_IAM*, which will automatically use the [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) permission to control access to the API. You can also choose *NONE* which is the no privilege authentication method (insecure) and the user will need to manually configure the required [Resource Access Policy](https://docs.aws.amazon.com/zh_cn/apigateway/latest/) in the API Gateway console after deploying the solution. developerguide/apigateway-control-access-to-api.html). |
-    | **APIGatewayStageName** | prod | The first path field in the API gateway (URI). See also: [stageVariable](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html) |
-    | **APIExplorer** | yes | Deploys the **API Resource Explorer** based on [Swagger UI](https://swagger.io/tools/swagger-ui/) to visualize and interact with API resources. It is automatically generated based on the OpenAPI (formerly known as Swagger) specification and makes it easy to view API definitions and tests through visual documentation. For more information, see: [API Resource Explorer](api-explorer.md) |
+        | Parameter ID | Default | Description |
+        | ---------- | ---------| ----------- |
+        | **GeneralOCR** | no | Deploy [General OCR (Simplified Chinese)](deploy-general-ocr.md) |
+        | **GeneralOCRTraditional** | no | Deploy [General OCR (Traditional Chinese)](deploy-general-ocr-traditional.md) |
+        | **CustomOCR** | no | Deploy [Custom OCR](deploy-custom-ocr.md) |
+        | **CarLicensePlate** | no | Deploy [Car License Plate](deploy-car-license-plate.md) |
+        | **FaceComparison** | no | Deploy [Face Comparison](deploy-face-comparison.md) |
+        | **FaceDetection** | no | Deploy [Face Detection](deploy-face-detection.md) |
+        | **HumanAttributeRecognition** | no | Deploy [Human Attribute Recognition](deploy-human-attribute-recognition.md) |
+        | **HumanImageSegmentation** | no | Deploy [Human Image Segmentation](deploy-human-image-segmentation.md)|
+        | **ImageSimilarity** | no | Deploy [Image Similarity](deploy-image-similarity.md) |
+        | **ObjectRecognition** | no | Deploy [Object Recognition](deploy-object-recognition.md) |
+        | **PornographyDetection** | no | Deploy [Pornography Detection](deploy-pornography-detection.md) |   
+        | **ImageSuperResolution** | no | Deploy [Image Super Resolution](deploy-image-super-resolution.md) |
+        | **TextSimilarity** | no | Deploy [Text Similarity](deploy-text-similarity.md) |
 
-    #### **AI Application List Parameters**
+6. On the **Configure Stack Options** page, choose **Next**.
 
-    | Parameter ID | Default | Description |
-    | ---------- | ---------| ----------- |
-    | **GeneralOCR** | no | Deploy **General OCR**, check 'yes' if you want to deploy, see [General OCR](deploy-general-ocr.md) |
-    | **GeneralOCRTraditional** | no | Deploy **GeneralOCR(Traditional Chinese)**, please check 'yes' if you want to deploy, please refer to [GeneralOCR(Traditional Chinese)](deploy-general-ocr-traditional.md) |
-    | **CustomOCR** | no | Deploy **Custom Template OCR**, please check 'yes' if you want to deploy, please refer to [Custom Template OCR](deploy-custom-ocr.md) |
-    | **CarLicensePlate** | no | Deploy **Car License Plate Recognition**, please check 'yes' if you want to deploy, please see [Car License Plate Recognition](deploy-car-license-plate.md) |
-    | **PornographyDetection** | no | deploy**PornographyDetection**, please check 'yes' if you want to deploy, please see [Pornography Detection](deploy-pornography-detection.md) |
-    | **ImageSimilarity** | no | Deploy **ImageSimilarity**, check 'yes' if you want to deploy, see [Image Similarity](deploy-image-similarity.md) |
-    | **HumanImageSegmentation** | no | Deploy **HumanImageSegmentation**, please check 'yes' if you want to deploy, please see the [Human Image Segmentation](deploy-human-image-segmentation.md) |
-    | **ObjectRecognition** | no | Deploy **Object Recognition**, please check 'yes' if you want to deploy, please see [Object Recognition](deploy-object-recognition.md) |
-    | **FaceDetection** | no | Deploy **Face Detection**, check 'yes' if you want to deploy, see [Face Detection](deploy-face-detection.md) |
-    | **FaceComparison** | no | Deploy **Face Comparison**, please check 'yes' if you want to deploy, see [Face Comparison](deploy-face-comparison.md) |
-    | **HumanAttributeRecognition** | no | Deploy **Human Attribute Recognition**, please check 'yes' if you want to deploy, see [Human Attribute Recognition](deploy-human-attribute-recognition.md) |
-    | **ImageSuperResolution** | no | Deploy **Image Super Resolution**, check 'yes' if you want to deploy, see [Image Super Resolution](deploy-image-super-resolution.md) |
-    | **TextSimilarity** | no | Deploy **Text Similarity**, check 'yes' if you want to deploy, see the [Text Similarity](deploy-text-similarity.md) |
+7. On the **Review** page, review and confirm the settings. Check the box acknowledging that the template creates AWS Identity and Access Management (IAM) resources. Choose **Next**.
 
-6. On the **Configure Stack Options** page, select **Next**.
+8. Choose **Create Stack** to deploy the stack.
 
-7. On the **Review** page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select **Next**.
+You can view the status of the stack in the **Status** column of the AWS CloudFormation console. You should receive a **CREATE_COMPLETE** status when the creation is complete.
 
-8. Select **Create Stack** to deploy the stack.
 
-You can view the status of the stack in the **Status** column of the AWS CloudFormation console. You can see the status as **CREATE_COMPLETE** when the creation is complete.
+## Follow-up actions
 
-!!! Tip
-    After successful deployment, you can open the **AI Solution Kit** main stack in AWS CloudFormation's console and switch to the **Outputs** (Outputs) tab to query the Amazon API Gateway-based call URL by the corresponding **Parameter ID**.
+After successful deployment, go to the **Outputs** tab in AWS CloudFormation's console to find the invoke URL based on Amazon API Gateway according to **Parameter ID**.
 
-### Updating the Amazon CloudFormation Stack
+![](./images/output.png)
 
-With Amazon CloudFormation, you can change the properties of existing resources in your stack, and if you need to add or remove deployed AI features, you can do so by updating your stack.
+Next, you can perform the following operations:
 
-In the Amazon CloudFormation console, select the completed AI Solution Kit stack that you created in the Stack list. 2.
+- Check API and test calling API. For more information, see [API Reference Guide](api-explorer.md).
+- Add or remove AI features. For more information, see [Update CloudFormation stack](deploy-add-delete-api.md).
 
-In the Stack Details pane, select Update. 3.
-
-In the Template Parameters section, specify the AI feature or parameter information that needs to be added or removed, and then select Next. 4.
-
-4. On the **Configure Stack Options** page, select **Next**. 5.
-
-5. On the **Review** page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select **Next**. 6.
-
-6. If you are satisfied with the changes made, select Updata stack.
 
 [template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
+[template-china2]:https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+
 [template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+
+

@@ -6,12 +6,15 @@ deployment_time: 25 Minutes
 destroy_time: 20 Minutes
 sample_image: Image URL address
 feature_description: Upscale the resolution and enhance details in the images.
-feature_scenario: It can be applied to many scenarios such as solving the problem of insufficient resolution of the original picture.
+feature_scenario: Applicable to converting original image assets into high resolution images.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
+
+This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click Support Center on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see [AWS service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html).
+
 ## REST API Reference
 
 - HTTP request method: `POST`
@@ -20,10 +23,10 @@ feature_scenario: It can be applied to many scenarios such as solving the proble
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
-|scale     |*Integer*    |no|Image zoom, support zoom 2 or 4, the default value is 2|
-|face      |*Bool*       |no|When set to True, face enhancement is additionally turned on, default value is False.|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp. Image size should not exceed 1920 * 1080. With portrait enhancement enabled, it is recommended that the image size should not exceed 1280 * 720. Due to performance limitations, the recommended image size does not exceed 400 * 400 for architecture based on AWS Lambda.|
+| img | *String* |Choose url or img.|Base64-encoded image data|
+|scale     |*Integer*    |no|Upscale size. 2 (default) or 4 is supported|
+|face      |*Bool*       |no|By default, it is False. When set to True, face enhancement is enabled. Only GPU deployment is supported.|
 
 - Example JSON request
 
@@ -61,36 +64,36 @@ feature_scenario: It can be applied to many scenarios such as solving the proble
 
 ## Cost Estimation 
 
-You are responsible for the cost of using each Amazon Web Services service when running the solution. As of May 2022, the main cost factors affecting the solution include.
+You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
 
-- AWS Lambda调用次数
-- AWS Lambda运行时间
-- Amazon API Gateway调用次数
-- Amazon API Gateway数据输出量
-- Amazon CloudWatch Logs存储量
-- Amazon Elastic Container Registry存储量
-- Amazon SageMaker终端节点实例类型
-- Amazon SageMaker终端节点数据输入量
-- Amazon SageMaker终端节点数据输出量
+- AWS Lambda invocations
+- AWS Lambda running time
+- Amazon API Gateway calls
+- Amazon API Gateway data output
+- Amazon CloudWatch Logs storage
+- Amazon Elastic Container Registry storage
+- Amazon SageMaker endpoint instance type
+- Amazon SageMaker endpoint data input
+- Amazon SageMaker endpoint data output
 
-### 示例
+### Example
 
-以美国东部（俄亥俄州）区域（us-east-2）为例，处理一张图按1秒计算，处理1百万图片。其中Amazon SageMaker终端节点实例开启时会一直计费。
+In US East (Ohio) Region (us-east-2), process one million images, with an average processing time of 1 second for one image. Amazon SageMaker endpoint instance will be charged as long as it is started.
 
-使用本方案的成本费用如下表所示：
+The cost of using this solution is shown below:
 
-| 服务                                  | 用量                                 | 费用      |
+| Service                                 | Dimensions                                 | Cost      |
 |-------------------------------------|------------------------------------|---------|
-| Amazon Lambda                     | 调用百万次                                | $0.20   |
-| Amazon Lambda                     | 内存4096MB，每次运行1秒                    | $66.7   |
-| Amazon API Gateway                | 调用百万次                                | $3.5    |
-| Amazon API Gateway              | 数据输出以每次4MB计算，$0.09/GB                  | $360    |
-| Amazon CloudWatch Logs              | 每次10KB，$0.50/GB                    | $0.05   |
-| Amazon Elastic Container Registry | 0.5GB存储，每月每GB$0.1                    | $0.05   |
-| Amazon SageMaker           | 终端节点实例需要运行278小时，ml.inf1.xlarge $0.297/小时 | $82.57  |
-| Amazon SageMaker          | 终端节点数据输入以每次1MB计算，$0.016/GB                 | $16     |
-| Amazon SageMaker         | 终端节点数据输出以每次4MB计算，$0.016/GB                 | $64     |
-| 合计                                  |   | $593.07 |
+| AWS Lambda                     | 1 million invocations                                | $0.20   |
+| AWS Lambda                     | 4096MB memory, 1 second run each time                   | $66.7   |
+| Amazon API Gateway                | 1 million invocations                                | $3.5    |
+| Amazon API Gateway              | 4MB data output each time, $0.09/GB                 | $360    |
+| Amazon CloudWatch Logs              | 10KB each time, $0.50/GB                    | $0.05   |
+| Amazon Elastic Container Registry | 0.5GB storage, $0.1/GB per month                    | $0.05   |
+| Amazon SageMaker           | Endpoint instance runs for 278 hours, ml.inf1.xlarge $0.297/hour | $82.57  |
+| Amazon SageMaker          | Endpoint instance data input is 1MB each time, $0.016/GB                 | $16     |
+| Amazon SageMaker         | Endpoint instance data output is 4MB each time, $0.016/GB                 | $64     |
+| Total                                  |   | $593.07 |
 
 
 {%

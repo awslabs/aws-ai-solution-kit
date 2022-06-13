@@ -5,8 +5,8 @@ feature_endpoint: general_ocr_traditional
 deployment_time: 10 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols.
-feature_scenario: It can be applied to a variety of scenarios such as paper documents electronically, document identification, content review, etc. to improve information processing efficiency.
+feature_description: Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.
+feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
 ---
 
 {%
@@ -20,8 +20,8 @@ feature_scenario: It can be applied to a variety of scenarios such as paper docu
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -41,9 +41,9 @@ feature_scenario: It can be applied to a variety of scenarios such as paper docu
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|words    |*String*   |Recognize text content|
-|location |*JSON*     |Recognize the coordinates of the text in the image, including top, left, width, height as integer values|
-|score    |*Float*   |Confidence value of the recognized text, Float type value in the interval 0 to 1|
+|words    |*String*   |Recognized text.|
+|location |*JSON*     |Coordinates of the recognized text, including top, left, width, height as integer values.|
+|score    |*Float*   |Confidence score of the recognized text, which is a float type value between 0 and 1.|
 
 - Example JSON response
 

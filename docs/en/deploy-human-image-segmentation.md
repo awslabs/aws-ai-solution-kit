@@ -5,8 +5,8 @@ feature_endpoint: human_image_segmentation
 deployment_time: 15 Minutes
 destroy_time: 9 Minutes
 sample_image: Image URL address
-feature_description: Segment human bodies from background and return the alpha channel
-feature_scenario: It can be applied to photo background replacement, post-processing, ID photo production, portrait keying beautification, background defocusing and many other scenarios.
+feature_description: Segment human bodies from background and return the alpha channel which is a color component representing the degree of transparency of a color.
+feature_scenario: Applicable to photo background replacement, post-processing, ID photo production, portrait cutout beautification, background blur and many other scenarios.
 ---
 
 {%
@@ -21,9 +21,9 @@ feature_scenario: It can be applied to photo background replacement, post-proces
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
-| type | *String* |否|When type is "foreground", it will return the Base64 encoding of the transparent background image in PNG format, and type is empty by default, it will return the Base64 encoding of the Alpha channel of the image after removing the background|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
+| type | *String* |No|By default, type is empty, and it will return the Base64 encoding of the Alpha channel of the image after removing the background. When type is `foreground`, it will return the Base64 encoding of the transparent background image in PNG format. |
 
 - Example JSON request
 

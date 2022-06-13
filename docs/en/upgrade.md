@@ -1,3 +1,15 @@
-`Updated: 2022-05-05`
+## Upgrade scenario 1
 
-When you have deployed and are using some of the API features from version 1.0.0, you can continue to use the original APIs that have been deployed inside your AWS account while deploying the features provided in the new APIs available in 1.2.0. If you want to switch the original API invoke URL to the new version, you can find the invoke URL from the corresponding AWS CloudFormation stack Outputs tab after the new version is deployed, and replace the original URL with the one from the four APIs included in the current 1.0.0 release (Universal Text Recognition, Image Super Resolution, Intelligent Portrait Segmentation, and Pornography Review). The interface definition parameters of the four APIs (Universal Text Recognition, Image Super Resolution, Smart Portrait Segmentation, Pornography Review) in the 1.0.0 release are identical to the same four functions in the 1.2.0 release, and you only need to replace the original URLs to use them. After the switch is complete, you can completely remove the original stack in the AWS CloudFormation console, which takes about 10 minutes.
+When you have deployed and are using some of the API features from release 1.0.0, you can continue to use the original APIs that have been deployed in your AWS account while deploying the features provided in the new APIs available in release 1.2.0. 
+
+The interface definition parameters of the four APIs (General OCR, Image Super Resolution, Human Image Segmentation, Pornography Detection) in the release 1.0.0 are identical to the same four features in release 1.2.0, and you only need to replace the original URLs to use them. 
+
+## Upgrade scenario 2
+
+If you want to switch the original API invoke URL to the new version, you can perform the following operations after deploying the new version:
+
+1. Sign in to the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/).
+2. On the **Stacks** page, select the solution’s root stack.
+3. Choose the **Output** tab, and find the invoke URL.
+4. Replace the old invoke URL in the code.
+5. After the replacement, you can completely remove the original stack in the AWS CloudFormation console to avoid incurring extra cost, which takes about 10 minutes.

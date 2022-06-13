@@ -5,35 +5,35 @@ feature_endpoint: custom_ocr
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize the attributes of the human body in the image.
+feature_description: Recognize the attributes of the human body in the image, and return the human body position coordinates and attribute analysis in each area, such as the semantic information of 16 attributes such as gender, age, and clothing.
 
-feature_scenario: It can be applied to scenarios such as smart security, smart retail, and pedestrian search.
+feature_scenario: Applicable to scenarios such as smart security, smart retail, and pedestrian search.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
 
-## Attributes Description
+## List of attributes
 
 | Name     | Semantic          |
 | ------ | ------------ |
-| Upper Body | Short Sleeve, Long Sleeve |
-| Bottoms | Shorts/skirts, trousers/skirts |
-| Upper Body Apparel Textures | Patterns, Solid Colors, Plaid/Stripes |
-| Backpack | Without bag, with bag |
-| Do you wear glasses | No, yes |
-| Whether to wear a hat | No, yes |
-| Body Orientation | Front, Back, Left, Right |
-| Truncate Above | None, Yes |
+| Upper wear | Short sleeve, Long sleeve |
+| Lower wear | Shorts/Skirts, Pants/Skirts |
+| Upper wear texture | Pattern, Solid, Stripe/Check |
+| Backpack | Without bag, With bag |
+| Whether to wear glasses | No, Yes |
+| Whether to wear a hat | No, Yes |
+| Body orientation | Front, Back, Left, Right |
+| Truncate above | No, Yes |
 | Truncate below | No, Yes |
 | Occlusion | None, Light, Heavy |
 | Whether to wear a mask | No, Yes |
 | Gender | Male, Female |
-| Age | Young children, teenagers, middle-aged, elderly |
-| Smoking | None, Yes |
+| Age | Children, teenager, middle-aged, elderly |
+| Smoking | No, Yes |
 | Telephone | No, Yes |
-| take things | no, yes |
+| Whether to carry things | No, Yes |
 
 ## REST API Reference
 
@@ -43,8 +43,8 @@ feature_scenario: It can be applied to scenarios such as smart security, smart r
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -64,13 +64,13 @@ feature_scenario: It can be applied to scenarios such as smart security, smart r
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|Labels |*List* |List of human bodies found in the image|
+|Labels |*List* |List of human bodies recognized in the image.|
 |+upper_wear |*Dict* |Short Sleeve, Long Sleeve|
 |+upper_wear_texture |*Dict* |Pattern, Solid, Stripe/Check|
 |+lower_wear |*Dict* |Shorts/Skirts, Pants/Skirts|
 |+glasses |*Dict* |With glasses, without glasses|
-|+bag |*Dict* |With or without backpack|
-|+headwear |*Dict* |With or without hat|
+|+bag |*Dict* |With backpack, without backpack|
+|+headwear |*Dict* |With hat, without hat|
 |+orientation |*Dict* |left side, back side, front side, right side|
 |+upper_cut |*Dict* |with truncation, without truncation|
 |+lower_cut |*Dict* |with truncation, without truncation|
@@ -79,9 +79,9 @@ feature_scenario: It can be applied to scenarios such as smart security, smart r
 |+gender |*Dict* |Male, Female|
 |+age |*Dict* |Children, Teens, Middle-aged, Seniors|
 |+smoke |*Dict* |Smoking, non-smoking|
-|+cellphone |*Dict* |with cellphone, without cellphone|
+|+cellphone |*Dict* |with telephone, without telephone|
 |+carrying_item |*Dict* |With or without carry|
-|+BoundingBox |*Dict* |The coordinate value of the human body in the image, including the percentage of top, left, width, height relative to the full screen|
+|+BoundingBox |*Dict* |Coordinate values of the human body in the image, including the percentage of top, left, width, height relative to the full screen|
 |LabelModelVersion |*String* |Current model version number|
 
 - Example JSON response

@@ -5,8 +5,8 @@ feature_endpoint: face_detection
 deployment_time: 9 Minutes
 destroy_time: 6 Minutes
 sample_image: Image URL address
-feature_description: Detect the face in a image and return coordinate information of the face.
-feature_scenario: It can be applied to a variety of scenarios such as camera monitoring, face feature analysis, and interactive marketing.
+feature_description: Detect the face in an image, and map the detected facial features and contour key point information to 64 vector coordinates. 
+feature_scenario: Applicable to a variety of scenarios such as camera monitoring, facial feature analysis, and interactive marketing.
 ---
 
 {%
@@ -20,8 +20,8 @@ feature_scenario: It can be applied to a variety of scenarios such as camera mon
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -41,15 +41,15 @@ feature_scenario: It can be applied to a variety of scenarios such as camera mon
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|Faces    |*List*   |图像中找到的人脸列表|
-|+landmark_106    |*List*   |106个关键点坐标|
-|++x    |*Int*   |关键点距左边缘的像素数|
-|++y    |*Int*   |关键点距上边缘的像素数|
-|+gender    |*String*   |性别|
-|+age    |*String*   |年龄|
-|+BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
-|FaceModelVersion    |*String*   |当前模型版本号|
+|Faces    |*List*   |List of detected faces in the image.|
+|+landmark_106    |*List*   |106 contour key points.|
+|++x    |*Int*   |Number of pixels the key point from the left edge.|
+|++y    |*Int*   |Number of pixels the key point from the upper edge.|
+|+gender    |*String*   |Gender information.|
+|+age    |*String*   |Age information.|
+|+BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
+|+Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
+|FaceModelVersion    |*String*   |Current model version.|
 
 - Example JSON response
 

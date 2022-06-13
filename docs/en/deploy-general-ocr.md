@@ -5,14 +5,14 @@ feature_endpoint: general_ocr
 deployment_time: 16 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols.
+feature_description: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.
 feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
 ---
 
 {%
   include "include-deploy-description.md"
 %}
-## REST API Reference
+## API parameters
 
 - HTTP request method: `POST`
 
@@ -20,7 +20,7 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose url or img. url has higher priority than img.| Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| url | *String* |Choose url or img.| Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
 | img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example Request
@@ -41,9 +41,9 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|words    |*String*   |Recognize text.|
-|location |*JSON*     |Recognize the coordinates of the text in the image, including top, left, width, height as integer values.|
-|score    |*Float*   |Confidence value of the recognized text, which is a float type value between 0 to 1.|
+|words    |*String*   |Recognized text.|
+|location |*JSON*     |Coordinates of the recognized text, including top, left, width, height as integer values.|
+|score    |*Float*   |Confidence score of the recognized text, which is a float type value between 0 and 1.|
 
 - Example JSON response
 
@@ -76,37 +76,37 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
   include-markdown "include-deploy-code.md"
 %}
 
-## Cost example 1 
+## Cost estimation: example 1 
 
-以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间1秒
+In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in one second
 
-使用本方案处理此图像所需的成本费用如下表所示：
+The cost of using this solution to process the image is shown below:
 
-| 服务                                  | 用量                  | 费用      |
+| Service                                 | Dimensions                  | Cost      |
 |-------------------------------------|---------------------|---------|
-| AWS Lambda                     | 调用百万次                 | ¥1.36   |
-| AWS Lambda                     | 内存4096MB，每次运行1秒     | ¥453.9  |
-| Amazon API Gateway                | 调用百万次                 | ¥28.94  |
-| Amazon API Gateway             | 数据输出以每次10KB计算，¥0.933/GB | ¥9.33   |
-| Amazon CloudWatch Logs              | 每次10KB，¥6.228/GB    | ¥62.28  |
-| Amazon Elastic Container Registry | 0.5GB存储，每月每GB¥0.69    | ¥0.35   |
-| 合计                                  |   | ¥556.16 |
+| AWS Lambda                     | 1 million invocations                 | ¥1.36   |
+| AWS Lambda                     | 4096MB memory, 1 second run each time     | ¥453.9  |
+| Amazon API Gateway                | 1 million invocations                  | ¥28.94  |
+| Amazon API Gateway             | 10KB data output each time, ¥0.933/GB | ¥9.33   |
+| Amazon CloudWatch Logs              | 10KB each time, ¥6.228/GB    | ¥62.28  |
+| Amazon Elastic Container Registry | 0.5GB storage, ¥0.69/GB each month    | ¥0.35   |
+| Total                                  |   | ¥556.16 |
 
-## Cost example 2
+## Cost estimation: example 2
 
-以美国东部（俄亥俄州）区域（us-east-2）为例，处理1MB图像，处理时间1秒
+In US East (Ohio) Region (us-east-2), process an image of 1MB in one second
 
-使用本方案处理此图像所需的成本费用如下表所示：
+The cost of using this solution to process this image is shown below:
 
-| 服务                                  | 用量                 | 费用     |
+| Service                                  | Dimensions                | Cost     |
 |-------------------------------------|--------------------|--------|
-| Amazon Lambda                     | 调用百万次                | $0.20  |
-| Amazon Lambda                     | 内存4096MB，每次运行1秒    | $66.7  |
-| Amazon API Gateway                | 调用百万次                | $3.5   |
-| Amazon API Gateway             | 数据输出以每次10KB计算，$0.09/GB | $0.9   |
-| Amazon CloudWatch Logs              | 每次10KB，$0.50/GB    | $5     |
-| Amazon Elastic Container Registry | 0.5GB存储，每月每GB$0.1    | $0.05  |
-| 合计                                  |   | $76.35 |
+| Amazon Lambda                     | 1 million invokes                | $0.20  |
+| Amazon Lambda                     | 4096MB memory, 1 second run each time    | $66.7  |
+| Amazon API Gateway                | 1 million invokes                | $3.5   |
+| Amazon API Gateway             | 10KB data output each time, $0.09/GB | $0.9   |
+| Amazon CloudWatch Logs              | 10KB data output each time, $0.50/GB    | $5     |
+| Amazon Elastic Container Registry | 0.5GB storage, GB$0.1/GB each month    | $0.05  |
+| Total                                 |   | $76.35 |
 
 
 {%

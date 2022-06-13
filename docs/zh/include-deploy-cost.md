@@ -44,5 +44,5 @@
 | Amazon API Gateway                | 调用百万次                 | $3.5    |
 | Amazon API Gateway              | 数据输出以每次100KB计算,$0.09/GB | $9      |
 | Amazon CloudWatch Logs              | 每次10KB，$0.50/GB     | $5      |
-| Amazon Elastic Container Registry | 待定GB存储，每月每GB$0.1      | $0.05   |
+| Amazon Elastic Container Registry | 0.5GB存储，每月每GB$0.1      | $0.05   |
 | 合计                                  |   | $284.55 |

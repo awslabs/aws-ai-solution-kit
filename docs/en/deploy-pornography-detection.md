@@ -6,7 +6,7 @@ deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
 feature_description: Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores.
-feature_scenario: It can be applied to the scene of fast processing of pornographic content. Help customers reduce auditing manpower, effectively reduce the risk of pornography, and improve the efficiency of information processing.
+feature_scenario: Applicable to fast processing of pornographic content, thus helping to reduce auditing manpower, effectively reduce the risk of pornography, and improve the efficiency of information processing.
 ---
 
 {%
@@ -20,8 +20,8 @@ feature_scenario: It can be applied to the scene of fast processing of pornograp
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose one of two parameters with url|Base64 encoded image data|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -41,9 +41,9 @@ feature_scenario: It can be applied to the scene of fast processing of pornograp
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|normal |*Float* |Recognize the normal dimension ratio of the image|
-|sexy |*Float* |Identifies the proportion of sexy dimensions of an image|
-|porn |*Float* |Identifies the proportion of pornographic dimensions of images|
+|normal |*Float* |Proportion of normal dimensions of the recognized image|
+|sexy |*Float* |Proportion of sexy dimensions of the recognized image|
+|porn |*Float* |Proportion of pornographic dimensions of the recognized image|
 
 - Example JSON response
 

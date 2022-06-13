@@ -1,12 +1,12 @@
 ---
 feature_id: CustomOCR
-feature_name: 自定义模板文字识别
+feature_name: Custom OCR
 feature_endpoint: custom_ocr
 deployment_time: 18 Minutes
 destroy_time: 20 Minutes
 sample_image: Image URL address
-feature_description: 客户可自定义OCR模版，提取卡证票据中结构化文字信息，并以键值对应关系的形式展现结果。
-feature_scenario: 可应用于卡证票据类图片的结构化识别场景，如物流单据、发票、营业执照、行程单、火车票等。
+feature_description: You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.
+feature_scenario: Applicable to structured recognition of cards and tickets, such as logistics documents, invoices, business licenses, itineraries, and train tickets.
 ---
 
 {%
@@ -15,7 +15,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 ## REST API Reference
 
-#### 增加模版
+### Add templates
 
 - HTTP request method: `POST`
 
@@ -23,10 +23,10 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
-| type | *String* |固定为add|
-| template | *List* |每个元素为一个待提取区域坐标及其名称|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64-encoded image data.|
+| type | *String* | Fixed value is `add`.|
+| template | *List* |Each element corresponds to the coordinates of an area to be extracted and its name.|
 
 - Example JSON request
 
@@ -70,7 +70,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|template_id    |*String*   |模版的ID|
+|template_id    |*String*   |Template ID|
 
 - Example JSON response
 
@@ -80,7 +80,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 }
 ```
 
-#### 删除模版
+#### Remove templates
 
 - HTTP request method: `POST`
 
@@ -88,8 +88,8 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| template_id | *List* |已存在模版的id|
-| type | *String* |固定为del|
+| template_id | *List* |Existing template ID.|
+| type | *String* |Fixed value is `del`.|
 
 - Example JSON request
 
@@ -104,7 +104,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|template_id    |*String*   |已删除模版的ID|
+|template_id    |*String*   |Removed template ID.|
 
 - Example JSON response
 
@@ -114,15 +114,15 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 }
 ```
 
-#### 列出所有模版
+### List all templates
 
 - HTTP request method: `POST`
 
 - Request body parameters
 
-| **Name**  | **Type**  | **Required** |  **Description**  |
-|----------|-----------|------------|------------|
-| type | *String* |固定为list|
+| **Name**  | **Type**  | **Description** |
+|----------|-----------|------------|
+| type | *String* |Fixed value is `list`.|
 
 - Example JSON request
 
@@ -136,7 +136,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|template_id_list    |*List*   |已存在模版的列表|
+|template_id_list    |*List*   |List of existing templates.|
 
 - Example JSON response
 
@@ -146,7 +146,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 }
 ```
 
-#### 内容识别
+### Content recog
 
 - HTTP request method: `POST`
 
@@ -154,10 +154,10 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
-| type | *String* |固定为query|
-| template_id | *String* |已存在的模版ID|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
+| type | *String* |Fixed value is `query`.|
+| template_id | *String* |Existing template ID.|
 
 - Example JSON request
 
@@ -172,9 +172,9 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|key    |*String*   |字段名|
-|value    |*String*   |提取到的值|
-|score    |*Float*   |置信度|
+|key    |*String*   |Field name.|
+|value    |*String*   |Extracted value.|
+|score    |*Float*   |Confidence score.|
 
 - Example JSON response
 

@@ -5,8 +5,8 @@ feature_endpoint: face_comparison
 deployment_time: 10 Minutes
 destroy_time: 6 Minutes
 sample_image: Image URL address
-feature_description: Compare two faces of same person and return a confidence score of the similarity
-feature_scenario: 可应用于客户身份验证、照片分类等场景，例如：自助酒店入住、人员报到、校园入口通行、相册制作。
+feature_description: Compare two faces of the same person and return a confidence score of the similarity.
+feature_scenario: Applicable to customer authentication, photo classification and other scenarios, such as self-service hotel check-in, personnel check-in, campus entrance passage, and photo album production.
 ---
 
 {%
@@ -21,8 +21,8 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 
 | **Name**  | **Type**  | **Required** |  **Description**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-| img | *String* |Choose between the url parameter|进行Base64-encoded image data|
+| url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+| img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -42,11 +42,11 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|Faces    |*List*   |图像中找到的人脸列表|
-|+face_hash    |*List*   |一个具有768个元素的List，为768维的人脸向量|
-|+BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
-|FaceModelVersion    |*String*   |当前模型版本号|
+|Faces    |*List*   |List of detected faces in the image.|
+|+face_hash    |*List*   |List with 768 parameters for a 768-dimensional face vector.|
+|+BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
+|+Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
+|FaceModelVersion    |*String*   |Current model version.|
 
 - Example JSON response
 

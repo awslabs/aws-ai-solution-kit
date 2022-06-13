@@ -5,8 +5,8 @@ feature_endpoint: car_license_plate
 deployment_time: 9 Minutes
 destroy_time: 6 Minutes
 sample_image: Image URL address
-feature_description: Recognize text on Chinese car license plate
-feature_scenario: It could be used in car parking lot, district automatic identification car license plate information, or vehicle violation information detection and other scenarios.
+feature_description: Recognize text on Chinese car license plate.
+feature_scenario: Applicable to identifying car license plates in car parking lots and communities, or detecting vehicles for traffic violations.
 ---
 
 {%
@@ -21,8 +21,8 @@ feature_scenario: It could be used in car parking lot, district automatic identi
 
   | **Name**  | **Type**  | **Required** |  **Description**  |
   |----------|-----------|------------|------------|
-  | url | *String* |Choose one of the two parameters with img, the priority is higher than the URL|Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.|
-  | img | *String* |Choose one of two parameters with url|Base64 encoded image data|
+  | url | *String* |Choose url or img.|Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
+  | img | *String* |Choose url or img.|Base64 encoded image data.|
 
 - Example JSON request
 
@@ -42,9 +42,9 @@ feature_scenario: It could be used in car parking lot, district automatic identi
 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
-|words    |*String*   | Indicates the license plat number.|
-|location |*JSON*     | Indicates the 识别车牌在图像中的的坐标值，包含top，left，width，height的整数值|
-|score    |*Float*   |识别车牌的置信度值，为0到1区间内Float型数值|
+|words    |*String*   | Recognized license plate number.|
+|location |*JSON*     | Coordinates of the recognized car license plate, including top, left, width, height as integer values.|
+|score    |*Float*   |Confidence score of the car license plate, which is a float type value between 0 and 1.|
 
 - Example JSON response
 
