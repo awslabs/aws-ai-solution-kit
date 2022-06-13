@@ -1,7 +1,7 @@
 本方案架构中包含两类AI功能的实现方式：基于AWS Lambda的架构和基于Amazon SageMaker的架构。
 
 !!! Note "说明"
-    基于Amazon SageMaker的架构在版本1.2.0中仅适用于**图像超分辨率方案**。
+    基于Amazon SageMaker的架构仅适用于**图像超分辨率方案**。
 
 ## 基于AWS Lambda的架构
 

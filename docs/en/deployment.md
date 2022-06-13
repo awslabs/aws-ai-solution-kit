@@ -12,14 +12,11 @@ If you choose to launch the stack from AWS China Regions, make sure a domain reg
 
 ## Launch the stack
 
-1. Log in to the AWS Management Console and select the button to launch the AWS CloudFormation stack.
+1. Log in to the AWS Management Console and select the link to launch the AWS CloudFormation stack.
 
-    | Region | Deploy |
-    | ---------- | --- |
-    | [link for Amazon CloudTech China (Beijing) region operated by Halo New Network][template-china1] | Deploy AI Solution Kit in **Beijing** region |
-    | [Amazon Cloud Technologies China (Ningxia) Regional Link][template-china2] operated by West Cloud Data | Deploying AI Solution Kit in **Ningxia** region
-    | [global-region link][template-global] | Deploy AI Solution Kit in **Global** region | 
-
+    - [Launch the stack in Global Regions][template-china1]
+    - [Launch the stack in China Regions][template-global]
+ 
 2. The template is launched in the default region after you log in to the console. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar.
 
 3. On the **Create Stack** page, verify that the correct template URL is displayed in the Amazon S3 URL text box, and choose **Next**.

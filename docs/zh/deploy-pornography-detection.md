@@ -1,6 +1,6 @@
 ---
 feature_id: PornographyDetection
-feature_name: 色情内容审核
+feature_name: 色情内容检测
 feature_endpoint: pornography-detection
 deployment_time: 15 分钟
 destroy_time: 10 分钟

@@ -1,4 +1,4 @@
-要卸载人工智能解决方案合集方案，请删除CloudFormation堆栈。
+要卸载AI Solution Kit，请删除CloudFormation堆栈。
 
 您可以使用亚马逊云科技管理控制台或CLI删除CloudFormation堆栈。
 

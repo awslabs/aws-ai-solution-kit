@@ -1,4 +1,4 @@
-您可以通过调用API使用所需的AI应用。
+您可以通过调用API使用所需的AI功能。
 
 - [通用文字识别（简体中文）](deploy-general-ocr.md)
 - [通用文字识别（繁体中文）](deploy-general-ocr-traditional.md)

@@ -1,7 +1,7 @@
 This solution architecture has two types of AI feature implementations: architecture based on AWS Lambda and architecture based on Amazon SageMaker.
 
 !!! Note "Note"
-    In release 1.2.0, the architecture based on Amazon SageMaker is only applicable to **Image Super Resolution Solution**.
+    The architecture based on Amazon SageMaker is only applicable to **Image Super Resolution Solution**.
 
 ## Architecture based on AWS Lambda
 

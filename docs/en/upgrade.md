@@ -10,6 +10,6 @@ If you want to switch the original API invoke URL to the new version, you can pe
 
 1. Sign in to the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/).
 2. On the **Stacks** page, select the solution’s root stack.
-3. Choose the **Output** tab, and find the invoke URL.
+3. Choose the **Outputs** tab, and find the invoke URL.
 4. Replace the old invoke URL in the code.
 5. After the replacement, you can completely remove the original stack in the AWS CloudFormation console to avoid incurring extra cost, which takes about 10 minutes.

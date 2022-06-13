@@ -2,9 +2,9 @@
 
 **部署时间**
 
-- 部署基于AWS Lambda架构的AI应用：约**10**分钟
+- 部署基于AWS Lambda架构的AI功能：约**10**分钟
 
-- 部署基于Amazon SageMaker架构的AI应用：约**20**分钟
+- 部署基于Amazon SageMaker架构的AI功能：约**20**分钟
 
 ## 前提条件
 
@@ -23,7 +23,7 @@
 
 4. 在**指定堆栈详细信息**页面，为您的解决方案堆栈分配一个账户内唯一且符合命名要求的名称。
 
-5. 在**参数**部分，根据需要修改通用配置并选择需要部署的AI应用，然后选择**下一步**。
+5. 在**参数**部分，根据需要修改通用配置并选择需要部署的AI功能，然后选择**下一步**。
     
     - 您可以选择是否部署API资源浏览器，并选择API网关的认证方式。
 
@@ -33,7 +33,7 @@
         | **APIGatewayAuthorization**  | NONE  | API网关的认证方式。默认为*NONE*，即无权限认证方式。您还可以选择使用[IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html)权限控制对API的访问。|
         | **APIGatewayStageName**    | prod    | API网关（URI）中的第一个路径字段。详情可参见[阶段变量](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html)。 |
 
-    - 您可以更改AI应用的参数为yes，部署需要的AI应用。AI应用的参数默认值均为no。
+    - 您可以更改AI功能的参数为yes，部署需要的AI功能。AI功能的参数默认值均为no。
 
         |  参数名称   |  默认值 |  描述 |
         |  ----------  | ---------| -----------  |
@@ -61,16 +61,14 @@
 
 ## 后续操作
 
-堆栈创建成功后，您可以在AWS CloudFormation的**输出**标签页中通过对应**参数ID**查询基于Amazon API Gateway的调用URL。
+堆栈创建成功后，您可以在AWS CloudFormation的**输出（Outputs）**标签页中通过对应**参数ID**查询基于Amazon API Gateway的调用URL。
 
 ![](./images/output.png)
 
 然后，您可以进行以下操作：
 
 - 查看API并测试API调用。详情可参见[API参考指南](api-explorer.md)。
-- 添加或删除AI应用。详情可参见[更新CloudFormation堆栈](deploy-add-delete-api.md)。
-
-
+- 添加或删除AI功能。详情可参见[更新CloudFormation堆栈](deploy-add-delete-api.md)。
 
 
 

@@ -30,6 +30,6 @@
 |智能人像分割|[查看](deploy-human-image-segmentation.md#_3)|
 |图像相似度|[查看](deploy-image-similarity.md#_3)|
 |通用物体识别|[查看](deploy-object-recognition.md#_3)|
-|色情内容审核|[查看](deploy-pornography-detection.md#_3)|
+|色情内容检测|[查看](deploy-pornography-detection.md#_3)|
 |图像超分辨率|[查看](deploy-image-super-resolution.md#_3)|
 |文本相似度|[查看](deploy-text-similarity.md#_3)|

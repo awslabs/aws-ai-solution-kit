@@ -13,7 +13,11 @@ feature_scenario: Applicable to converting original image assets into high resol
   include "include-deploy-description.md"
 %}
 
-This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click Support Center on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see [AWS service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html).
+## Requirements for AWS service quotas
+
+- This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click **Support Center** on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see [AWS service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html).
+- The default **AWS Lambda** memory is about 4GB (4096 MB). If the AWS Lambda function limit in your AWS account is lower than 4096 MB, the API feature will be deployed abnormally. You can click **Support Center** on the toolbar at the top of the AWS Management Console to create a support ticket and request to increase the memory limit of the AWS Lambda service. For more information, see [AWS service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html).
+
 
 ## REST API Reference
 

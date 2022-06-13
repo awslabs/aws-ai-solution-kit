@@ -10,7 +10,7 @@ nav:
   - Cost: cost.md
   - Architecture overview: architecture.md
   - Security: security.md
-  - Supported regions: regions.md
+  - Design considerations: regions.md
   - CloudFormation template: template.md
   - Automated deployment:
       - Launch CloudFormation stack: deployment.md
@@ -19,7 +19,7 @@ nav:
     - Overview: api-explorer.md
     - General OCR (Simplified Chinese): deploy-general-ocr.md
     - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
-    - Custom Template OCR: deploy-custom-ocr.md
+    - Custom OCR: deploy-custom-ocr.md
     - Car License Plate: deploy-car-license-plate.md
     - Face Detection: deploy-face-detection.md
     - Face Comparison: deploy-face-comparison.md

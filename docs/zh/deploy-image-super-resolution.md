@@ -13,7 +13,10 @@ feature_scenario: 可应用于等多种场景，解决原始图片分辨率不�
   include "include-deploy-description.md"
 %}
 
-图像超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例。如果您AWS账户中对应实例限制不足，则会导致该功能部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
+## 配额说明
+
+- 图像超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例。如果您AWS账户中对应实例限制不足，则会导致该功能部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)。
+- 方案中默认的**AWS Lambda**内存约为4GB（4096 MB），如果您AWS账户中AWS Lambda函数限制低于4096 MB，则会导致该部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Lambda**服务的内存限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
 
 ## API参数说明
 

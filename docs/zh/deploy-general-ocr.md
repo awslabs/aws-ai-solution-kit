@@ -20,7 +20,7 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 
 | **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
-| url | *String* |与`img`参数二选一，优先级高于`img`。|图像URL地址。支持HTTP/HTTPS和S3协议。要求图像格式为 jpg/jpeg/png/bmp，最长边不超过 4096px。|
+| url | *String* |与`img`参数二选一。|图像URL地址。支持HTTP/HTTPS和S3协议。要求图像格式为 jpg/jpeg/png/bmp，最长边不超过 4096px。|
 | img | *String* |与`url`参数二选一。|进行Base64编码的图像数据。|
 
 - 请求示例
