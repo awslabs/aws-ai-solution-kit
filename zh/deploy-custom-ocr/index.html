@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-custom-ocr/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -523,28 +523,28 @@
         
           <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
-    增加模版
+    增加模板
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
-    删除模版
+    内容识别
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
-    列出所有模版
+    删除模板
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
-    内容识别
+    列出所有模板
   </a>
   
 </li>
@@ -923,28 +923,28 @@
         
           <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
-    增加模版
+    增加模板
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
-    删除模版
+    内容识别
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
-    列出所有模版
+    删除模板
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#_5" class="md-nav__link">
-    内容识别
+    列出所有模板
   </a>
   
 </li>
@@ -1053,24 +1053,36 @@
 
   <h1>自定义模版文字识别</h1>
 
-<p>客户可自定义OCR模版，提取卡证票据中结构化文字信息，并以键值对应关系的形式展现结果。</p>
+<p>客户可自定义OCR模板，提取卡证票据中结构化文字信息，并以键值对应关系的形式展现结果。</p>
 <h2 id="_1">适用场景</h2>
 <p>可应用于卡证票据类图片的结构化识别场景，如物流单据、发票、营业执照、行程单、火车票等。</p>
 <h2 id="api">API参数说明</h2>
-<h4 id="_2">增加模版</h4>
-<p>进行文字识别之前，您需要通过<strong>增加模版API</strong>创建模板。为了提高文字识别准确性，请选择文字内容清晰并与被识别图像细节近似的图片创建模版。创建模版时每个待识别区域都需要指定矩形框的四个坐标点和该区域的名称，同一个模版可以包含多个识别区域。您可以使用常见的图像处理软件如 <a href="https://www.gimp.org/downloads/">GIMP</a> 来辅助获取坐标点，请在图像处理软件中将图片大小缩放至100%，再把鼠标移动到图片上，获取指定位置坐标点的X，Y值，请按照左上，右上，右下，左下顺时针顺序创建矩形框四个坐标点序列。</p>
+<h3 id="_2">增加模板</h3>
+<p>进行文字识别之前，您需要通过<strong>增加模板API</strong>创建模板。为了提高文字识别准确性，请选择与被识别图像细节近似并且文字内容清晰的图片创建模板。同一个模板可以包含多个识别区域。</p>
+<p>要创建模板，每个待识别区域都需要指定矩形框的四个坐标点和该区域的名称，您可以使用常见的图像处理软件如 <a href="https://www.gimp.org/downloads/">GIMP</a> 来辅助获取坐标点。以下为示例说明：</p>
+<ol>
+<li>在图像处理软件中将图片大小缩放至100%。</li>
+<li>把鼠标移动到图片上，获取指定位置坐标点的X，Y值。</li>
+<li>
+<p>按照左上，右上，右下，左下顺时针顺序创建矩形框四个坐标点序列。</p>
 <div class="admonition note">
-<p class="admonition-title">提示</p>
+<p class="admonition-title">说明</p>
+<p>矩形框区域必须完全覆盖要识别的文字内容，请在不遮盖其他识别矩形区域的前提下，在识别区域四边留出足够的容错空间，从而获得准确的识别能力。</p>
 </div>
-<p>矩形框区域必须完全覆盖要识别的文字内容，请在不遮盖其他识别矩形区域的前提下，在识别区域四边留出足够的容错空间，从而获得准确的识别能力。在创建好模版后，首先请用模版原图片和模版ID进行文字识别测试，以确保模版能够识别到所需信息。如果发现提取信息不完整的情况，请确认坐标点是否标注正确，并适当扩大识别区域重新创建模版。</p>
-<ul>
+</li>
+<li>
+<p>在创建好模板后，首先用模板原图片和模板ID进行文字识别测试，以确保模板能够识别到所需信息。</p>
+</li>
+<li>
+<p>（可选）如果发现提取信息不完整的情况，请确认坐标点是否标注正确，并适当扩大识别区域重新创建模板。</p>
+</li>
 <li>
 <p>HTTP 方法: <code>POST</code></p>
 </li>
 <li>
 <p>Body 请求参数</p>
 </li>
-</ul>
+</ol>
 <table>
 <thead>
 <tr>
@@ -1097,7 +1109,7 @@
 <td>type</td>
 <td><em>String</em></td>
 <td>是</td>
-<td>增加模版需要将<em>type</em>指定为<em>add</em></td>
+<td>增加模板需要将<em>type</em>指定为<em>add</em></td>
 </tr>
 <tr>
 <td>template</td>
@@ -1157,7 +1169,7 @@
 <tr>
 <td>template_id</td>
 <td><em>String</em></td>
-<td>模版的ID</td>
+<td>模板的ID</td>
 </tr>
 </tbody>
 </table>
@@ -1165,140 +1177,11 @@
 <li>返回示例</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;模版的ID&quot;,
+    &quot;template_id&quot;: &quot;模板的ID&quot;,
 }
 </code></pre>
-<h4 id="_3">删除模版</h4>
-<p>如果需要删除模版，可通过指定需要删除的模版 ID 进行删除。请注意，模版被删除后不能恢复。</p>
-<ul>
-<li>
-<p>HTTP 方法: <code>POST</code></p>
-</li>
-<li>
-<p>Body 请求参数</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>是否必选</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>template_id</td>
-<td><em>List</em></td>
-<td>已存在模版的id</td>
-<td></td>
-</tr>
-<tr>
-<td>type</td>
-<td><em>String</em></td>
-<td>固定为del</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>请求 Body 示例</li>
-</ul>
-<pre><code class="language-json">{
-    &quot;type&quot;: &quot;del&quot;, 
-    &quot;template_id&quot;: &quot;已存在模版ID&quot;
-}
-</code></pre>
-<ul>
-<li>返回参数</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>template_id</td>
-<td><em>String</em></td>
-<td>已删除模版的ID</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>返回示例</li>
-</ul>
-<pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;已删除模版的ID&quot;
-}
-</code></pre>
-<h4 id="_4">列出所有模版</h4>
-<p>可以把已经创建的模版通过 ID 列表的方式列出。</p>
-<ul>
-<li>
-<p>HTTP 方法: <code>POST</code></p>
-</li>
-<li>
-<p>Body 请求参数</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>是否必选</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>type</td>
-<td><em>String</em></td>
-<td>固定为list</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>请求 Body 示例</li>
-</ul>
-<pre><code class="language-json">{
-    &quot;type&quot;: &quot;list&quot;
-}
-</code></pre>
-<ul>
-<li>返回参数</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>template_id_list</td>
-<td><em>List</em></td>
-<td>已存在模版的列表</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>返回示例</li>
-</ul>
-<pre><code class="language-json">{
-    &quot;template_id_list&quot;: [&quot;已存在模版的列表&quot;]
-}
-</code></pre>
-<h4 id="_5">内容识别</h4>
-<p>在创建好模版后，可以通过对应的模版 ID 对图片进行文字识别，返回值为模版中识别区域名称与文本内容。</p>
+<h3 id="_3">内容识别</h3>
+<p>在创建好模板后，可以通过对应的模板 ID 对图片进行文字识别，返回值为模板中识别区域名称与文本内容。</p>
 <ul>
 <li>
 <p>HTTP 方法: <code>POST</code></p>
@@ -1338,7 +1221,7 @@
 <tr>
 <td>template_id</td>
 <td><em>String</em></td>
-<td>已存在的模版ID</td>
+<td>已存在的模板ID</td>
 <td></td>
 </tr>
 </tbody>
@@ -1347,7 +1230,7 @@
 <li>请求 Body 示例</li>
 </ul>
 <pre><code class="language-json">{
-  &quot;template_id&quot;: &quot;已存在的模版ID&quot;,
+  &quot;template_id&quot;: &quot;已存在的模板ID&quot;,
   &quot;url&quot;: &quot;图像的URL地址&quot;
 }
 </code></pre>
@@ -1400,6 +1283,135 @@
         &quot;score&quot;: 96.58
     }
 ]
+</code></pre>
+<h3 id="_4">删除模板</h3>
+<p>如果需要删除模板，可通过指定需要删除的模板 ID 进行删除。请注意，模板被删除后不能恢复。</p>
+<ul>
+<li>
+<p>HTTP 方法: <code>POST</code></p>
+</li>
+<li>
+<p>Body 请求参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>是否必选</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template_id</td>
+<td><em>List</em></td>
+<td>已存在模板的id</td>
+<td></td>
+</tr>
+<tr>
+<td>type</td>
+<td><em>String</em></td>
+<td>固定为del</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求 Body 示例</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;type&quot;: &quot;del&quot;, 
+    &quot;template_id&quot;: &quot;已存在模板ID&quot;
+}
+</code></pre>
+<ul>
+<li>返回参数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template_id</td>
+<td><em>String</em></td>
+<td>已删除模板的ID</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>返回示例</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;template_id&quot;: &quot;已删除模板的ID&quot;
+}
+</code></pre>
+<h3 id="_5">列出所有模板</h3>
+<p>可以把已经创建的模板通过 ID 列表的方式列出。</p>
+<ul>
+<li>
+<p>HTTP 方法: <code>POST</code></p>
+</li>
+<li>
+<p>Body 请求参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>是否必选</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td><em>String</em></td>
+<td>固定为list</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求 Body 示例</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;type&quot;: &quot;list&quot;
+}
+</code></pre>
+<ul>
+<li>返回参数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>template_id_list</td>
+<td><em>List</em></td>
+<td>已存在模板的列表</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>返回示例</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;template_id_list&quot;: [&quot;已存在模板的列表&quot;]
+}
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
 <h2 id="_6">开始使用</h2>
@@ -1628,7 +1640,7 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon Elastic Container Registry</td>
-<td>待定GB存储，每月每GB$0.1</td>
+<td>0.5GB存储，每月每GB$0.1</td>
 <td>$0.05</td>
 </tr>
 <tr>
@@ -1710,7 +1722,7 @@ Response response = client.newCall(request).execute();
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>

@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/architecture/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -819,11 +819,11 @@
 
 <p>This solution architecture has two types of AI feature implementations: architecture based on AWS Lambda and architecture based on Amazon SageMaker.</p>
 <div class="admonition note">
-<p class="admonition-title">Description</p>
-<p>The architecture based on Amazon SageMaker is only available in release 1.2.0 for <strong>Image Super Resolution Solution</strong>.</p>
+<p class="admonition-title">Note</p>
+<p>In release 1.2.0, the architecture based on Amazon SageMaker is only applicable to <strong>Image Super Resolution Solution</strong>.</p>
 </div>
 <h2 id="architecture-based-on-aws-lambda">Architecture based on AWS Lambda</h2>
-<p>! <a href="../images/arch-lambda.png"></a></p>
+<p><img alt="" src="../images/arch-lambda.png" /></p>
 <ol>
 <li>
 <p>The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain information about the image or text to be processed.</p>
@@ -836,7 +836,7 @@
 </li>
 </ol>
 <h2 id="architecture-based-on-amazon-sagemaker">Architecture based on Amazon SageMaker</h2>
-<p>! <a href="../images/arch-sagemaker.png"></a></p>
+<p><img alt="" src="../images/arch-sagemaker.png" /></p>
 <ol>
 <li>
 <p>The user or application sends an API request to the Amazon API Gateway. The request payload needs to contain the image or text information to be processed.</p>
@@ -845,7 +845,7 @@
 <p>Amazon API Gateway sends the request to AWS Lambda (invoke endpoint) function.</p>
 </li>
 <li>
-<p>AWS Lambda calls Amazon SageMaker Endpoint, which performs the inference process in Amazon SageMaker and returns the inference result (usually JSON format data).</p>
+<p>AWS Lambda invokes Amazon SageMaker Endpoint, which performs the inference process in Amazon SageMaker and returns the inference result (usually in JSON format data).</p>
 </li>
 </ol>
 
@@ -915,7 +915,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>

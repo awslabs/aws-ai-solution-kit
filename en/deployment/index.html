@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deployment/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -66,7 +66,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deployment-overview" class="md-skip">
+        <a href="#prerequisite" class="md-skip">
           Skip to content
         </a>
       
@@ -403,49 +403,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deployment-overview" class="md-nav__link">
-    Deployment Overview
-  </a>
-  
-    <nav class="md-nav" aria-label="Deployment Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-the-amazon-cloudformation-template" class="md-nav__link">
-    Deploy the Amazon CloudFormation template
-  </a>
-  
-    <nav class="md-nav" aria-label="Deploy the Amazon CloudFormation template">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-configuration-parameters" class="md-nav__link">
-    Common Configuration Parameters
+  <a href="#prerequisite" class="md-nav__link">
+    Prerequisite
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#ai-application-list-parameters" class="md-nav__link">
-    AI Application List Parameters
+      
+        <li class="md-nav__item">
+  <a href="#launch-the-stack" class="md-nav__link">
+    Launch the stack
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#updating-the-amazon-cloudformation-stack" class="md-nav__link">
-    Updating the Amazon CloudFormation Stack
+      
+        <li class="md-nav__item">
+  <a href="#follow-up-actions" class="md-nav__link">
+    Follow-up actions
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -823,49 +797,23 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deployment-overview" class="md-nav__link">
-    Deployment Overview
-  </a>
-  
-    <nav class="md-nav" aria-label="Deployment Overview">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deploy-the-amazon-cloudformation-template" class="md-nav__link">
-    Deploy the Amazon CloudFormation template
-  </a>
-  
-    <nav class="md-nav" aria-label="Deploy the Amazon CloudFormation template">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#common-configuration-parameters" class="md-nav__link">
-    Common Configuration Parameters
+  <a href="#prerequisite" class="md-nav__link">
+    Prerequisite
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#ai-application-list-parameters" class="md-nav__link">
-    AI Application List Parameters
+      
+        <li class="md-nav__item">
+  <a href="#launch-the-stack" class="md-nav__link">
+    Launch the stack
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#updating-the-amazon-cloudformation-stack" class="md-nav__link">
-    Updating the Amazon CloudFormation Stack
+      
+        <li class="md-nav__item">
+  <a href="#follow-up-actions" class="md-nav__link">
+    Follow-up actions
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -885,32 +833,27 @@
 
   <h1>Launch CloudFormation stack</h1>
 
-<p>This section describes how to deploy the <strong>AI Solution Kit</strong> solution via <strong>Amazon CloudFormation</strong>. Detailed deployment and usage instructions for the AI applications included in the solution are described in detail in the corresponding. Before deploying the solution, it is recommended that you review the information in this guide regarding architecture diagrams and regional support, and then follow the instructions below to configure the solution and deploy it to your account.</p>
+<p>Before you launch the solution, review the architecture, supported regions, and other considerations discussed in this guide. Follow the step-by-step instructions in this section to configure and deploy the solution into your account.</p>
 <p><strong>Deployment time</strong></p>
 <ul>
 <li>
-<p>Deploying an AI application based on the Amazon Lambda architecture: approximately <strong>10</strong> minutes</p>
+<p>Approximately <strong>10</strong> minutes for deploying an AI feature based on the Amazon Lambda architecture </p>
 </li>
 <li>
-<p>Deploying an AI application based on the Amazon SageMaker architecture: approximately <strong>20</strong> minutes</p>
+<p>Approximately <strong>20</strong> minutes for deploying an AI feature based on the Amazon SageMaker architecture </p>
 </li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>When users activate multiple APIs in Amazon CloudFormation at the same time, the deployment time is the stacked time for each individual API.</p>
-</div>
-<h2 id="deployment-overview">Deployment Overview</h2>
-<p><strong>Prerequisites (China region)</strong></p>
-<p>This solution uses Amazon API Gateway to receive API call requests, so if you want to provide API requests without authentication in the Beijing region, you need to apply and ensure that your Amazon Web Services account has been filed with the Internet Content Provider (ICP) and that port 80 For details, please refer to the <a href="https://s3.cn-north-1.amazonaws.com.cn/sinnetcloud/ICP+recordal/ICP%E5%A4%87%E6%A1%88%E8%AF%B4%E6%98%8E.pdf">ICP filing instructions</a>. 8E.pdf).</p>
-<h3 id="deploy-the-amazon-cloudformation-template">Deploy the Amazon CloudFormation template</h3>
+<h2 id="prerequisite">Prerequisite</h2>
+<p>If you choose to launch the stack from AWS China Regions, make sure a domain registered by ICP is available. For more information, see <a href="https://www.amazonaws.cn/en/support/icp/?nc1=h_ls">ICP Recordal</a>.</p>
+<h2 id="launch-the-stack">Launch the stack</h2>
 <ol>
-<li>Log in to the Amazon Web Services Management Console and select the link to launch the AWS CloudFormation template.</li>
-</ol>
+<li>
+<p>Log in to the AWS Management Console and select the button to launch the AWS CloudFormation stack.</p>
 <table>
 <thead>
 <tr>
-<th>Quick Launch Link</th>
-<th>Description</th>
+<th>Region</th>
+<th>Deploy</th>
 </tr>
 </thead>
 <tbody>
@@ -919,7 +862,7 @@
 <td>Deploy AI Solution Kit in <strong>Beijing</strong> region</td>
 </tr>
 <tr>
-<td>[Amazon Cloud Technologies China (Ningxia) Regional Link][template-china2] operated by West Cloud Data</td>
+<td><a href="https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AIKitsInferOCRStack&amp;templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template">Amazon Cloud Technologies China (Ningxia) Regional Link</a> operated by West Cloud Data</td>
 <td>Deploying AI Solution Kit in <strong>Ningxia</strong> region</td>
 </tr>
 <tr>
@@ -928,19 +871,21 @@
 </tr>
 </tbody>
 </table>
-<ol>
-<li>
-<p>By default, the template will be launched in the default region after you log in to the console. If you need to launch the solution in the specified Amazon Web Service region, select it from the region drop-down list in the console navigation bar.</p>
 </li>
 <li>
-<p>On the <strong>Create Stack</strong> page, verify that the correct template URL is displayed in the Amazon S3 URL text box, and then select <strong>Next</strong>.</p>
+<p>The template is launched in the default region after you log in to the console. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar.</p>
 </li>
 <li>
-<p>On the <strong>Assign Stack Details</strong> page, assign a name to your solution stack that is unique within the account and meets the naming requirements.</p>
+<p>On the <strong>Create Stack</strong> page, verify that the correct template URL is displayed in the Amazon S3 URL text box, and choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>In the <strong>Parameters</strong> section, there are two sections of parameters, <strong>General Configuration</strong> and <strong>AI Application List</strong>, where you can modify the General Configuration and select the AI applications to be deployed as needed, and then select <strong>Next</strong>.</p>
-<h4 id="common-configuration-parameters"><strong>Common Configuration Parameters</strong></h4>
+<p>On the <strong>Specify stack details</strong> page, assign a name to your solution stack. For information about naming character limitations, refer to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html">IAM and STS Limits</a> in the <em>AWS Identity and Access Management User Guide</em>.</p>
+</li>
+<li>
+<p>Under <strong>Parameters</strong>, modify the General Configuration and select the AI features to be deployed, and choose <strong>Next</strong>.</p>
+<ul>
+<li>
+<p>You can choose whether to deploy API explorer, and the authentication method of the API gateway.</p>
 <table>
 <thead>
 <tr>
@@ -951,23 +896,25 @@
 </thead>
 <tbody>
 <tr>
+<td><strong>APIExplorer</strong></td>
+<td>yes</td>
+<td>Deploys the <strong>API Explorer</strong> to visualize and interact with API resources. See <a href="../api-explorer/">API Reference Guide</a> for details. If you choose <strong>no</strong>, you can only view the API definitions in API explorer, but cannot perform online test.</td>
+</tr>
+<tr>
 <td><strong>APIGatewayAuthorization</strong></td>
-<td>AWS_IAM</td>
-<td>The authentication method of the API gateway. The default is <em>AWS_IAM</em>, which will automatically use the <a href="https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html">IAM</a> permission to control access to the API. You can also choose <em>NONE</em> which is the no privilege authentication method (insecure) and the user will need to manually configure the required <a href="https://docs.aws.amazon.com/zh_cn/apigateway/latest/">Resource Access Policy</a> in the API Gateway console after deploying the solution. developerguide/apigateway-control-access-to-api.html).</td>
+<td>NONE</td>
+<td>The authentication method of the API gateway. The default is <em>NONE</em>, which means no privilege authentication method. You can also choose to use the <a href="https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html">IAM</a> permission to control access to the API.</td>
 </tr>
 <tr>
 <td><strong>APIGatewayStageName</strong></td>
 <td>prod</td>
-<td>The first path field in the API gateway (URI). See also: <a href="https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html">stageVariable</a></td>
-</tr>
-<tr>
-<td><strong>APIExplorer</strong></td>
-<td>yes</td>
-<td>Deploys the <strong>API Resource Explorer</strong> based on <a href="https://swagger.io/tools/swagger-ui/">Swagger UI</a> to visualize and interact with API resources. It is automatically generated based on the OpenAPI (formerly known as Swagger) specification and makes it easy to view API definitions and tests through visual documentation. For more information, see: <a href="../api-explorer/">API Resource Explorer</a></td>
+<td>The first path field in the API gateway (URI). For more information, see <a href="https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/stage-variables.html">stageVariable</a>.</td>
 </tr>
 </tbody>
 </table>
-<h4 id="ai-application-list-parameters"><strong>AI Application List Parameters</strong></h4>
+</li>
+<li>
+<p>You can change the parameter for each AI feature to <strong>yes</strong> to deploy it. By default, it is <strong>no</strong> for each AI feature.</p>
 <table>
 <thead>
 <tr>
@@ -980,102 +927,92 @@
 <tr>
 <td><strong>GeneralOCR</strong></td>
 <td>no</td>
-<td>Deploy <strong>General OCR</strong>, check 'yes' if you want to deploy, see <a href="../deploy-general-ocr/">General OCR</a></td>
+<td>Deploy <a href="../deploy-general-ocr/">General OCR (Simplified Chinese)</a></td>
 </tr>
 <tr>
 <td><strong>GeneralOCRTraditional</strong></td>
 <td>no</td>
-<td>Deploy <strong>GeneralOCR(Traditional Chinese)</strong>, please check 'yes' if you want to deploy, please refer to <a href="../deploy-general-ocr-traditional/">GeneralOCR(Traditional Chinese)</a></td>
+<td>Deploy <a href="../deploy-general-ocr-traditional/">General OCR (Traditional Chinese)</a></td>
 </tr>
 <tr>
 <td><strong>CustomOCR</strong></td>
 <td>no</td>
-<td>Deploy <strong>Custom Template OCR</strong>, please check 'yes' if you want to deploy, please refer to <a href="../deploy-custom-ocr/">Custom Template OCR</a></td>
+<td>Deploy <a href="../deploy-custom-ocr/">Custom OCR</a></td>
 </tr>
 <tr>
 <td><strong>CarLicensePlate</strong></td>
 <td>no</td>
-<td>Deploy <strong>Car License Plate Recognition</strong>, please check 'yes' if you want to deploy, please see <a href="../deploy-car-license-plate/">Car License Plate Recognition</a></td>
-</tr>
-<tr>
-<td><strong>PornographyDetection</strong></td>
-<td>no</td>
-<td>deploy<strong>PornographyDetection</strong>, please check 'yes' if you want to deploy, please see <a href="../deploy-pornography-detection/">Pornography Detection</a></td>
-</tr>
-<tr>
-<td><strong>ImageSimilarity</strong></td>
-<td>no</td>
-<td>Deploy <strong>ImageSimilarity</strong>, check 'yes' if you want to deploy, see <a href="../deploy-image-similarity/">Image Similarity</a></td>
-</tr>
-<tr>
-<td><strong>HumanImageSegmentation</strong></td>
-<td>no</td>
-<td>Deploy <strong>HumanImageSegmentation</strong>, please check 'yes' if you want to deploy, please see the <a href="../deploy-human-image-segmentation/">Human Image Segmentation</a></td>
-</tr>
-<tr>
-<td><strong>ObjectRecognition</strong></td>
-<td>no</td>
-<td>Deploy <strong>Object Recognition</strong>, please check 'yes' if you want to deploy, please see <a href="../deploy-object-recognition/">Object Recognition</a></td>
-</tr>
-<tr>
-<td><strong>FaceDetection</strong></td>
-<td>no</td>
-<td>Deploy <strong>Face Detection</strong>, check 'yes' if you want to deploy, see <a href="../deploy-face-detection/">Face Detection</a></td>
+<td>Deploy <a href="../deploy-car-license-plate/">Car License Plate</a></td>
 </tr>
 <tr>
 <td><strong>FaceComparison</strong></td>
 <td>no</td>
-<td>Deploy <strong>Face Comparison</strong>, please check 'yes' if you want to deploy, see <a href="../deploy-face-comparison/">Face Comparison</a></td>
+<td>Deploy <a href="../deploy-face-comparison/">Face Comparison</a></td>
+</tr>
+<tr>
+<td><strong>FaceDetection</strong></td>
+<td>no</td>
+<td>Deploy <a href="../deploy-face-detection/">Face Detection</a></td>
 </tr>
 <tr>
 <td><strong>HumanAttributeRecognition</strong></td>
 <td>no</td>
-<td>Deploy <strong>Human Attribute Recognition</strong>, please check 'yes' if you want to deploy, see <a href="../deploy-human-attribute-recognition/">Human Attribute Recognition</a></td>
+<td>Deploy <a href="../deploy-human-attribute-recognition/">Human Attribute Recognition</a></td>
+</tr>
+<tr>
+<td><strong>HumanImageSegmentation</strong></td>
+<td>no</td>
+<td>Deploy <a href="../deploy-human-image-segmentation/">Human Image Segmentation</a></td>
+</tr>
+<tr>
+<td><strong>ImageSimilarity</strong></td>
+<td>no</td>
+<td>Deploy <a href="../deploy-image-similarity/">Image Similarity</a></td>
+</tr>
+<tr>
+<td><strong>ObjectRecognition</strong></td>
+<td>no</td>
+<td>Deploy <a href="../deploy-object-recognition/">Object Recognition</a></td>
+</tr>
+<tr>
+<td><strong>PornographyDetection</strong></td>
+<td>no</td>
+<td>Deploy <a href="../deploy-pornography-detection/">Pornography Detection</a></td>
 </tr>
 <tr>
 <td><strong>ImageSuperResolution</strong></td>
 <td>no</td>
-<td>Deploy <strong>Image Super Resolution</strong>, check 'yes' if you want to deploy, see <a href="../deploy-image-super-resolution/">Image Super Resolution</a></td>
+<td>Deploy <a href="../deploy-image-super-resolution/">Image Super Resolution</a></td>
 </tr>
 <tr>
 <td><strong>TextSimilarity</strong></td>
 <td>no</td>
-<td>Deploy <strong>Text Similarity</strong>, check 'yes' if you want to deploy, see the <a href="../deploy-text-similarity/">Text Similarity</a></td>
+<td>Deploy <a href="../deploy-text-similarity/">Text Similarity</a></td>
 </tr>
 </tbody>
 </table>
 </li>
-<li>
-<p>On the <strong>Configure Stack Options</strong> page, select <strong>Next</strong>.</p>
+</ul>
 </li>
 <li>
-<p>On the <strong>Review</strong> page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select <strong>Next</strong>.</p>
+<p>On the <strong>Configure Stack Options</strong> page, choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>Select <strong>Create Stack</strong> to deploy the stack.</p>
-</li>
-</ol>
-<p>You can view the status of the stack in the <strong>Status</strong> column of the AWS CloudFormation console. You can see the status as <strong>CREATE_COMPLETE</strong> when the creation is complete.</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>After successful deployment, you can open the <strong>AI Solution Kit</strong> main stack in AWS CloudFormation's console and switch to the <strong>Outputs</strong> (Outputs) tab to query the Amazon API Gateway-based call URL by the corresponding <strong>Parameter ID</strong>.</p>
-</div>
-<h3 id="updating-the-amazon-cloudformation-stack">Updating the Amazon CloudFormation Stack</h3>
-<p>With Amazon CloudFormation, you can change the properties of existing resources in your stack, and if you need to add or remove deployed AI features, you can do so by updating your stack.</p>
-<p>In the Amazon CloudFormation console, select the completed AI Solution Kit stack that you created in the Stack list. 2.</p>
-<p>In the Stack Details pane, select Update. 3.</p>
-<p>In the Template Parameters section, specify the AI feature or parameter information that needs to be added or removed, and then select Next. 4.</p>
-<ol>
-<li>
-<p>On the <strong>Configure Stack Options</strong> page, select <strong>Next</strong>. 5.</p>
+<p>On the <strong>Review</strong> page, review and confirm the settings. Check the box acknowledging that the template creates AWS Identity and Access Management (IAM) resources. Choose <strong>Next</strong>.</p>
 </li>
 <li>
-<p>On the <strong>Review</strong> page, review and confirm the settings. Ensure that the checkbox to confirm that the template will create an Amazon Identity and Access Management (IAM) resource is checked. Select <strong>Next</strong>. 6.</p>
-</li>
-<li>
-<p>If you are satisfied with the changes made, select Updata stack.</p>
+<p>Choose <strong>Create Stack</strong> to deploy the stack.</p>
 </li>
 </ol>
+<p>You can view the status of the stack in the <strong>Status</strong> column of the AWS CloudFormation console. You should receive a <strong>CREATE_COMPLETE</strong> status when the creation is complete.</p>
+<h2 id="follow-up-actions">Follow-up actions</h2>
+<p>After successful deployment, go to the <strong>Outputs</strong> tab in AWS CloudFormation's console to find the invoke URL based on Amazon API Gateway according to <strong>Parameter ID</strong>.</p>
+<p><img alt="" src="../images/output.png" /></p>
+<p>Next, you can perform the following operations:</p>
+<ul>
+<li>Check API and test calling API. For more information, see <a href="../api-explorer/">API Reference Guide</a>.</li>
+<li>Add or remove AI features. For more information, see <a href="../deploy-add-delete-api/">Update CloudFormation stack</a>.</li>
+</ul>
 
               
             </article>
@@ -1143,7 +1080,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>

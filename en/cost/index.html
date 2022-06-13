@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/cost/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -64,11 +64,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#cost-estimation" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -277,38 +272,9 @@
       
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Cost
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="./" class="md-nav__link md-nav__link--active">
         Cost
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -774,21 +740,6 @@
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -803,83 +754,82 @@
 
   <h1>Cost</h1>
 
-<h2 id="cost-estimation">Cost Estimation</h2>
-<p>You will be responsible for the cost of using each of the Amazon Web Services cloud services when running the solution. As of May 2022, the main cost factors affecting the solution include:</p>
+<p>You will be responsible for the cost of using each of the AWS services when running the solution. As of June 2022, the main factors affecting the solution cost include:</p>
 <ul>
-<li>Number of AWS Lambda calls</li>
-<li>AWS Lambda runtime</li>
-<li>Number of Amazon API Gateway calls</li>
+<li>AWS Lambda invocations</li>
+<li>AWS Lambda running time</li>
+<li>Amazon API Gateway calls</li>
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
-<li>Amazon Elastic Container Registry Storage</li>
-<li>Amazon SageMaker Endpoint Node Instance Type</li>
-<li>Amazon SageMaker Endpoint Node Data Input</li>
-<li>Amazon SageMaker Endpoint Node Data Output</li>
+<li>Amazon Elastic Container Registry storage</li>
+<li>Amazon SageMaker endpoint node instance type</li>
+<li>Amazon SageMaker endpoint node data input</li>
+<li>Amazon SageMaker endpoint node data output</li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The costs associated with Amazon SageMaker apply only to <strong>Image Super Resolution</strong>.</p>
+<p>The cost incurred by Amazon SageMaker is only applicable to <strong>Image Super Resolution</strong>.</p>
 </div>
-<p>You can refer to the Cost Estimation section corresponding to each API to check the deployment and actual usage costs for each API feature.</p>
+<p>You can refer to the Cost Estimation section corresponding to each API to check the deployment and actual usage cost estimation for each API feature.</p>
 <table>
 <thead>
 <tr>
-<th><strong>Name</strong></th>
+<th><strong>API</strong></th>
 <th><strong>Cost Estimation</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>General Text Recognition (Simplified Chinese)</td>
-<td><a href="../deploy-general-ocr/#_3">view</a></td>
+<td>General OCR (Simplified Chinese)</td>
+<td><a href="../deploy-general-ocr/#_3">View</a></td>
 </tr>
 <tr>
-<td>General Text Recognition (Traditional Chinese)</td>
-<td><a href="../deploy-general-ocr-traditional/#_3">view</a></td>
+<td>General OCR (Traditional Chinese)</td>
+<td><a href="../deploy-general-ocr-traditional/#_3">View</a></td>
 </tr>
 <tr>
-<td>Custom Template Text Recognition</td>
-<td><a href="../deploy-custom-ocr/#_3">view</a></td>
+<td>Custom OCR</td>
+<td><a href="../deploy-custom-ocr/#_3">View</a></td>
 </tr>
 <tr>
-<td>Car license plate information recognition</td>
-<td><a href="../deploy-car-license-plate/#_3">view</a></td>
+<td>Car License Plate</td>
+<td><a href="../deploy-car-license-plate/#_3">View</a></td>
 </tr>
 <tr>
-<td>Face Recognition</td>
-<td><a href="../deploy-face-detection/#_3">view</a></td>
+<td>Face Detection</td>
+<td><a href="../deploy-face-detection/#_3">View</a></td>
 </tr>
 <tr>
-<td>Face Similarity Comparison</td>
-<td><a href="../deploy-face-comparison/#_3">view</a></td>
+<td>Face Comparison</td>
+<td><a href="../deploy-face-comparison/#_3">View</a></td>
 </tr>
 <tr>
-<td>Human Structured Attributes</td>
-<td><a href="../deploy-human-attribute-recognition/#_3">view</a></td>
+<td>Human Attribute Recognition</td>
+<td><a href="../deploy-human-attribute-recognition/#_3">View</a></td>
 </tr>
 <tr>
-<td>Intelligent Human Image Segmentation</td>
-<td><a href="../deploy-human-image-segmentation/#_3">view</a></td>
+<td>Human Image Segmentation</td>
+<td><a href="../deploy-human-image-segmentation/#_3">View</a></td>
 </tr>
 <tr>
 <td>Image Similarity</td>
-<td><a href="../deploy-image-similarity/#_3">view</a></td>
+<td><a href="../deploy-image-similarity/#_3">View</a></td>
 </tr>
 <tr>
-<td>Universal Object Recognition</td>
-<td><a href="../deploy-object-recognition/#_3">view</a></td>
+<td>Object Recognition</td>
+<td><a href="../deploy-object-recognition/#_3">View</a></td>
 </tr>
 <tr>
-<td>pornography review</td>
-<td><a href="../deploy-pornography-detection/#_3">view</a></td>
+<td>Pornography Detection</td>
+<td><a href="../deploy-pornography-detection/#_3">View</a></td>
 </tr>
 <tr>
-<td>image super-resolution</td>
-<td><a href="../deploy-image-super-resolution/#_3">view</a></td>
+<td>Image Super Resolution</td>
+<td><a href="../deploy-image-super-resolution/#_3">View</a></td>
 </tr>
 <tr>
-<td>text-similarity</td>
-<td><a href="../deploy-text-similarity/#_3">view</a></td>
+<td>Text Similarity</td>
+<td><a href="../deploy-text-similarity/#_3">View</a></td>
 </tr>
 </tbody>
 </table>
@@ -950,7 +900,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>

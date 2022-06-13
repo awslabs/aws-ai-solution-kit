@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-object-recognition/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.3">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
@@ -612,6 +612,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#list-of-supported-object-recognition" class="md-nav__link">
+    List of supported object recognition
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rest-api-reference" class="md-nav__link">
     REST API Reference
   </a>
@@ -634,8 +641,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-url-as-aws_iam-in-postman" class="md-nav__link">
-    Request URL as AWS_IAM in Postman
+  <a href="#postman-aws_iam-authentication" class="md-nav__link">
+    Postman (AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    cURL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-aws_iam-authentication" class="md-nav__link">
+    Python （AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-none-authentication" class="md-nav__link">
+    Python （NONE Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    Java
   </a>
   
 </li>
@@ -646,22 +681,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    支持的目标识别实体列表
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost Estimation
   </a>
+  
+    <nav class="md-nav" aria-label="Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    Cost estimation example 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    Cost estimation example 2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    成本预估
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    卸载部署
+  <a href="#uninstall-the-deployment" class="md-nav__link">
+    Uninstall the deployment
   </a>
   
 </li>
@@ -845,6 +893,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#list-of-supported-object-recognition" class="md-nav__link">
+    List of supported object recognition
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rest-api-reference" class="md-nav__link">
     REST API Reference
   </a>
@@ -867,8 +922,36 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-url-as-aws_iam-in-postman" class="md-nav__link">
-    Request URL as AWS_IAM in Postman
+  <a href="#postman-aws_iam-authentication" class="md-nav__link">
+    Postman (AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    cURL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-aws_iam-authentication" class="md-nav__link">
+    Python （AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-none-authentication" class="md-nav__link">
+    Python （NONE Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    Java
   </a>
   
 </li>
@@ -879,22 +962,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    支持的目标识别实体列表
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost Estimation
   </a>
+  
+    <nav class="md-nav" aria-label="Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    Cost estimation example 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    Cost estimation example 2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    成本预估
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    卸载部署
+  <a href="#uninstall-the-deployment" class="md-nav__link">
+    Uninstall the deployment
   </a>
   
 </li>
@@ -915,9 +1011,920 @@
 
   <h1>Object Recognition</h1>
 
-<p>Recognize objects in the image and return confidence score for each object.</p>
+<p>Recognize objects in the image and return the region information and confidence score for each object. 300 types of objects are supported.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
-<p>It can be applied to IPC image detection, traffic, security and other industries in the image scene of target detection and tracking.</p>
+<p>Applicable to IPC image detection, target detection and tracking in image scenes for traffic, security and other industries.</p>
+<h2 id="list-of-supported-object-recognition">List of supported object recognition</h2>
+<p>The following is a list of supported entities for target detection.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accordion</td>
+</tr>
+<tr>
+<td>airplane</td>
+</tr>
+<tr>
+<td>alligator</td>
+</tr>
+<tr>
+<td>apple</td>
+</tr>
+<tr>
+<td>army_tank</td>
+</tr>
+<tr>
+<td>awning</td>
+</tr>
+<tr>
+<td>backpack</td>
+</tr>
+<tr>
+<td>ball</td>
+</tr>
+<tr>
+<td>balloon</td>
+</tr>
+<tr>
+<td>banana</td>
+</tr>
+<tr>
+<td>barrel</td>
+</tr>
+<tr>
+<td>baseball</td>
+</tr>
+<tr>
+<td>baseball_bat</td>
+</tr>
+<tr>
+<td>baseball_glove</td>
+</tr>
+<tr>
+<td>basket</td>
+</tr>
+<tr>
+<td>bathtub</td>
+</tr>
+<tr>
+<td>bear</td>
+</tr>
+<tr>
+<td>bed</td>
+</tr>
+<tr>
+<td>bee</td>
+</tr>
+<tr>
+<td>beer_bottle</td>
+</tr>
+<tr>
+<td>bell_pepper</td>
+</tr>
+<tr>
+<td>belt</td>
+</tr>
+<tr>
+<td>bench</td>
+</tr>
+<tr>
+<td>bicycle</td>
+</tr>
+<tr>
+<td>billboard</td>
+</tr>
+<tr>
+<td>bird</td>
+</tr>
+<tr>
+<td>blackboard</td>
+</tr>
+<tr>
+<td>boat</td>
+</tr>
+<tr>
+<td>book</td>
+</tr>
+<tr>
+<td>bookcase</td>
+</tr>
+<tr>
+<td>boot</td>
+</tr>
+<tr>
+<td>bottle</td>
+</tr>
+<tr>
+<td>bowl</td>
+</tr>
+<tr>
+<td>bowling_ball</td>
+</tr>
+<tr>
+<td>box</td>
+</tr>
+<tr>
+<td>bracelet</td>
+</tr>
+<tr>
+<td>brassiere</td>
+</tr>
+<tr>
+<td>bread</td>
+</tr>
+<tr>
+<td>broccoli</td>
+</tr>
+<tr>
+<td>building</td>
+</tr>
+<tr>
+<td>bus_(vehicle)</td>
+</tr>
+<tr>
+<td>butterfly</td>
+</tr>
+<tr>
+<td>cabinet</td>
+</tr>
+<tr>
+<td>cake</td>
+</tr>
+<tr>
+<td>camel</td>
+</tr>
+<tr>
+<td>camera</td>
+</tr>
+<tr>
+<td>can</td>
+</tr>
+<tr>
+<td>candle</td>
+</tr>
+<tr>
+<td>candy_bar</td>
+</tr>
+<tr>
+<td>cannon</td>
+</tr>
+<tr>
+<td>canoe</td>
+</tr>
+<tr>
+<td>car_(automobile)</td>
+</tr>
+<tr>
+<td>carrot</td>
+</tr>
+<tr>
+<td>cart</td>
+</tr>
+<tr>
+<td>castle</td>
+</tr>
+<tr>
+<td>cat</td>
+</tr>
+<tr>
+<td>caterpillar</td>
+</tr>
+<tr>
+<td>cello</td>
+</tr>
+<tr>
+<td>cellular_telephone</td>
+</tr>
+<tr>
+<td>chair</td>
+</tr>
+<tr>
+<td>chicken_(animal)</td>
+</tr>
+<tr>
+<td>chopping_board</td>
+</tr>
+<tr>
+<td>chopstick</td>
+</tr>
+<tr>
+<td>christmas_tree</td>
+</tr>
+<tr>
+<td>clock</td>
+</tr>
+<tr>
+<td>coat</td>
+</tr>
+<tr>
+<td>cocktail</td>
+</tr>
+<tr>
+<td>coffee_table</td>
+</tr>
+<tr>
+<td>coin</td>
+</tr>
+<tr>
+<td>computer_keyboard</td>
+</tr>
+<tr>
+<td>computer_monitor</td>
+</tr>
+<tr>
+<td>cone</td>
+</tr>
+<tr>
+<td>cookie</td>
+</tr>
+<tr>
+<td>cow</td>
+</tr>
+<tr>
+<td>cowboy_hat</td>
+</tr>
+<tr>
+<td>crab_(animal)</td>
+</tr>
+<tr>
+<td>crown</td>
+</tr>
+<tr>
+<td>cucumber</td>
+</tr>
+<tr>
+<td>cup</td>
+</tr>
+<tr>
+<td>cupboard</td>
+</tr>
+<tr>
+<td>curtain</td>
+</tr>
+<tr>
+<td>deer</td>
+</tr>
+<tr>
+<td>desk</td>
+</tr>
+<tr>
+<td>dessert</td>
+</tr>
+<tr>
+<td>dinosaur</td>
+</tr>
+<tr>
+<td>dog</td>
+</tr>
+<tr>
+<td>doll</td>
+</tr>
+<tr>
+<td>dolphin</td>
+</tr>
+<tr>
+<td>door</td>
+</tr>
+<tr>
+<td>doorknob</td>
+</tr>
+<tr>
+<td>doughnut</td>
+</tr>
+<tr>
+<td>dragonfly</td>
+</tr>
+<tr>
+<td>drawer</td>
+</tr>
+<tr>
+<td>dress</td>
+</tr>
+<tr>
+<td>drum_(musical_instrument)</td>
+</tr>
+<tr>
+<td>duck</td>
+</tr>
+<tr>
+<td>duffel_bag</td>
+</tr>
+<tr>
+<td>eagle</td>
+</tr>
+<tr>
+<td>earring</td>
+</tr>
+<tr>
+<td>egg</td>
+</tr>
+<tr>
+<td>elephant</td>
+</tr>
+<tr>
+<td>fan</td>
+</tr>
+<tr>
+<td>faucet</td>
+</tr>
+<tr>
+<td>fireplace</td>
+</tr>
+<tr>
+<td>fireplug</td>
+</tr>
+<tr>
+<td>fish</td>
+</tr>
+<tr>
+<td>flag</td>
+</tr>
+<tr>
+<td>flower_arrangement</td>
+</tr>
+<tr>
+<td>flowerpot</td>
+</tr>
+<tr>
+<td>football_helmet</td>
+</tr>
+<tr>
+<td>fork</td>
+</tr>
+<tr>
+<td>fountain</td>
+</tr>
+<tr>
+<td>french_fries</td>
+</tr>
+<tr>
+<td>frisbee</td>
+</tr>
+<tr>
+<td>frog</td>
+</tr>
+<tr>
+<td>fruit</td>
+</tr>
+<tr>
+<td>fruit_juice</td>
+</tr>
+<tr>
+<td>frying_pan</td>
+</tr>
+<tr>
+<td>gazelle</td>
+</tr>
+<tr>
+<td>giraffe</td>
+</tr>
+<tr>
+<td>glass_(drink_container)</td>
+</tr>
+<tr>
+<td>glove</td>
+</tr>
+<tr>
+<td>goat</td>
+</tr>
+<tr>
+<td>goggles</td>
+</tr>
+<tr>
+<td>goose</td>
+</tr>
+<tr>
+<td>grape</td>
+</tr>
+<tr>
+<td>guitar</td>
+</tr>
+<tr>
+<td>gun</td>
+</tr>
+<tr>
+<td>hamburger</td>
+</tr>
+<tr>
+<td>hamster</td>
+</tr>
+<tr>
+<td>handbag</td>
+</tr>
+<tr>
+<td>handle</td>
+</tr>
+<tr>
+<td>harbor_seal</td>
+</tr>
+<tr>
+<td>hat</td>
+</tr>
+<tr>
+<td>headset</td>
+</tr>
+<tr>
+<td>helicopter</td>
+</tr>
+<tr>
+<td>helmet</td>
+</tr>
+<tr>
+<td>high_heels</td>
+</tr>
+<tr>
+<td>hog</td>
+</tr>
+<tr>
+<td>horse</td>
+</tr>
+<tr>
+<td>house</td>
+</tr>
+<tr>
+<td>icecream</td>
+</tr>
+<tr>
+<td>insect</td>
+</tr>
+<tr>
+<td>jacket</td>
+</tr>
+<tr>
+<td>jaguar</td>
+</tr>
+<tr>
+<td>jean</td>
+</tr>
+<tr>
+<td>jellyfish</td>
+</tr>
+<tr>
+<td>kitchen_table</td>
+</tr>
+<tr>
+<td>kite</td>
+</tr>
+<tr>
+<td>knife</td>
+</tr>
+<tr>
+<td>ladder</td>
+</tr>
+<tr>
+<td>lamp</td>
+</tr>
+<tr>
+<td>lantern</td>
+</tr>
+<tr>
+<td>laptop_computer</td>
+</tr>
+<tr>
+<td>lavender</td>
+</tr>
+<tr>
+<td>lemon</td>
+</tr>
+<tr>
+<td>lettuce</td>
+</tr>
+<tr>
+<td>license_plate</td>
+</tr>
+<tr>
+<td>life_jacket</td>
+</tr>
+<tr>
+<td>lightbulb</td>
+</tr>
+<tr>
+<td>lighthouse</td>
+</tr>
+<tr>
+<td>lily</td>
+</tr>
+<tr>
+<td>lion</td>
+</tr>
+<tr>
+<td>lizard</td>
+</tr>
+<tr>
+<td>maple</td>
+</tr>
+<tr>
+<td>mask</td>
+</tr>
+<tr>
+<td>microphone</td>
+</tr>
+<tr>
+<td>microwave_oven</td>
+</tr>
+<tr>
+<td>minivan</td>
+</tr>
+<tr>
+<td>mirror</td>
+</tr>
+<tr>
+<td>monkey</td>
+</tr>
+<tr>
+<td>motorcycle</td>
+</tr>
+<tr>
+<td>mouse_(computer_equipment)</td>
+</tr>
+<tr>
+<td>muffin</td>
+</tr>
+<tr>
+<td>mug</td>
+</tr>
+<tr>
+<td>mushroom</td>
+</tr>
+<tr>
+<td>musical_instrument</td>
+</tr>
+<tr>
+<td>napkin</td>
+</tr>
+<tr>
+<td>necklace</td>
+</tr>
+<tr>
+<td>necktie</td>
+</tr>
+<tr>
+<td>nightstand</td>
+</tr>
+<tr>
+<td>onion</td>
+</tr>
+<tr>
+<td>orange_(fruit)</td>
+</tr>
+<tr>
+<td>oven</td>
+</tr>
+<tr>
+<td>owl</td>
+</tr>
+<tr>
+<td>paddle</td>
+</tr>
+<tr>
+<td>painting</td>
+</tr>
+<tr>
+<td>palm_tree</td>
+</tr>
+<tr>
+<td>parachute</td>
+</tr>
+<tr>
+<td>parking_meter</td>
+</tr>
+<tr>
+<td>parrot</td>
+</tr>
+<tr>
+<td>pasta</td>
+</tr>
+<tr>
+<td>pastry</td>
+</tr>
+<tr>
+<td>pen</td>
+</tr>
+<tr>
+<td>penguin</td>
+</tr>
+<tr>
+<td>person</td>
+</tr>
+<tr>
+<td>piano</td>
+</tr>
+<tr>
+<td>pillow</td>
+</tr>
+<tr>
+<td>pizza</td>
+</tr>
+<tr>
+<td>plastic_bag</td>
+</tr>
+<tr>
+<td>plate</td>
+</tr>
+<tr>
+<td>polar_bear</td>
+</tr>
+<tr>
+<td>pool_table</td>
+</tr>
+<tr>
+<td>porch</td>
+</tr>
+<tr>
+<td>poster</td>
+</tr>
+<tr>
+<td>potted_plant</td>
+</tr>
+<tr>
+<td>pumpkin</td>
+</tr>
+<tr>
+<td>rabbit</td>
+</tr>
+<tr>
+<td>refrigerator</td>
+</tr>
+<tr>
+<td>remote_control</td>
+</tr>
+<tr>
+<td>ring</td>
+</tr>
+<tr>
+<td>roller_skate</td>
+</tr>
+<tr>
+<td>rose</td>
+</tr>
+<tr>
+<td>salad</td>
+</tr>
+<tr>
+<td>sandal_(type_of_shoe)</td>
+</tr>
+<tr>
+<td>sandwich</td>
+</tr>
+<tr>
+<td>saucer</td>
+</tr>
+<tr>
+<td>saxophone</td>
+</tr>
+<tr>
+<td>scarf</td>
+</tr>
+<tr>
+<td>scissors</td>
+</tr>
+<tr>
+<td>sculpture</td>
+</tr>
+<tr>
+<td>sheep</td>
+</tr>
+<tr>
+<td>shirt</td>
+</tr>
+<tr>
+<td>shoe</td>
+</tr>
+<tr>
+<td>short_pants</td>
+</tr>
+<tr>
+<td>shrimp</td>
+</tr>
+<tr>
+<td>sink</td>
+</tr>
+<tr>
+<td>skateboard</td>
+</tr>
+<tr>
+<td>ski</td>
+</tr>
+<tr>
+<td>skirt</td>
+</tr>
+<tr>
+<td>skullcap</td>
+</tr>
+<tr>
+<td>snake</td>
+</tr>
+<tr>
+<td>snowboard</td>
+</tr>
+<tr>
+<td>soccer_ball</td>
+</tr>
+<tr>
+<td>sock</td>
+</tr>
+<tr>
+<td>sofa</td>
+</tr>
+<tr>
+<td>sofa_bed</td>
+</tr>
+<tr>
+<td>sparrow</td>
+</tr>
+<tr>
+<td>speaker_(stero_equipment)</td>
+</tr>
+<tr>
+<td>spectacles</td>
+</tr>
+<tr>
+<td>spider</td>
+</tr>
+<tr>
+<td>spoon</td>
+</tr>
+<tr>
+<td>sportswear</td>
+</tr>
+<tr>
+<td>squirrel</td>
+</tr>
+<tr>
+<td>stool</td>
+</tr>
+<tr>
+<td>stop_sign</td>
+</tr>
+<tr>
+<td>stove</td>
+</tr>
+<tr>
+<td>straw_(for_drinking)</td>
+</tr>
+<tr>
+<td>strawberry</td>
+</tr>
+<tr>
+<td>street_sign</td>
+</tr>
+<tr>
+<td>streetlight</td>
+</tr>
+<tr>
+<td>suit_(clothing)</td>
+</tr>
+<tr>
+<td>suitcase</td>
+</tr>
+<tr>
+<td>sunflower</td>
+</tr>
+<tr>
+<td>sunglasses</td>
+</tr>
+<tr>
+<td>sunhat</td>
+</tr>
+<tr>
+<td>surfboard</td>
+</tr>
+<tr>
+<td>sushi</td>
+</tr>
+<tr>
+<td>swimming_pool</td>
+</tr>
+<tr>
+<td>swimsuit</td>
+</tr>
+<tr>
+<td>table</td>
+</tr>
+<tr>
+<td>tablet_computer</td>
+</tr>
+<tr>
+<td>taxi</td>
+</tr>
+<tr>
+<td>teddy_bear</td>
+</tr>
+<tr>
+<td>telephone</td>
+</tr>
+<tr>
+<td>television_set</td>
+</tr>
+<tr>
+<td>tennis_ball</td>
+</tr>
+<tr>
+<td>tennis_racket</td>
+</tr>
+<tr>
+<td>tent</td>
+</tr>
+<tr>
+<td>tiger</td>
+</tr>
+<tr>
+<td>toilet</td>
+</tr>
+<tr>
+<td>toilet_tissue</td>
+</tr>
+<tr>
+<td>tomato</td>
+</tr>
+<tr>
+<td>toothbrush</td>
+</tr>
+<tr>
+<td>towel</td>
+</tr>
+<tr>
+<td>tower</td>
+</tr>
+<tr>
+<td>toy</td>
+</tr>
+<tr>
+<td>traffic_light</td>
+</tr>
+<tr>
+<td>train_(railroad_vehicle)</td>
+</tr>
+<tr>
+<td>trash_can</td>
+</tr>
+<tr>
+<td>tray</td>
+</tr>
+<tr>
+<td>tree</td>
+</tr>
+<tr>
+<td>tripod</td>
+</tr>
+<tr>
+<td>trousers</td>
+</tr>
+<tr>
+<td>truck</td>
+</tr>
+<tr>
+<td>trumpet</td>
+</tr>
+<tr>
+<td>turtle</td>
+</tr>
+<tr>
+<td>umbrella</td>
+</tr>
+<tr>
+<td>vase</td>
+</tr>
+<tr>
+<td>vegetables</td>
+</tr>
+<tr>
+<td>violin</td>
+</tr>
+<tr>
+<td>wall_socket</td>
+</tr>
+<tr>
+<td>watch</td>
+</tr>
+<tr>
+<td>water_jug</td>
+</tr>
+<tr>
+<td>whale</td>
+</tr>
+<tr>
+<td>wheel</td>
+</tr>
+<tr>
+<td>wheelchair</td>
+</tr>
+<tr>
+<td>window</td>
+</tr>
+<tr>
+<td>wineglass</td>
+</tr>
+<tr>
+<td>zebra</td>
+</tr>
+</tbody>
+</table>
 <h2 id="rest-api-reference">REST API Reference</h2>
 <ul>
 <li>
@@ -940,14 +1947,14 @@
 <tr>
 <td>url</td>
 <td><em>String</em></td>
-<td>Choose one of the two parameters with img, the priority is higher than the URL</td>
-<td>Supports HTTP/HTTPS and S3 protocols. Requires the image format to be jpg/jpeg/png/bmp with the longest side not exceeding 4096px.</td>
+<td>Choose url or img.</td>
+<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
 </tr>
 <tr>
 <td>img</td>
 <td><em>String</em></td>
-<td>Choose one of two parameters with url</td>
-<td>Base64 encoded image data</td>
+<td>Choose url or img.</td>
+<td>Base64 encoded image data.</td>
 </tr>
 </tbody>
 </table>
@@ -977,27 +1984,27 @@
 <tr>
 <td>Labels</td>
 <td><em>List</em></td>
-<td>List of objects found in the image</td>
+<td>List of recognized objects in the image</td>
 </tr>
 <tr>
 <td>+Name</td>
 <td><em>String</em></td>
-<td>Target Category Name</td>
+<td>Target category</td>
 </tr>
 <tr>
 <td>+Instances</td>
 <td><em>List</em></td>
-<td>Class instance list</td>
+<td>List of category instances</td>
 </tr>
 <tr>
 <td>++BoundingBox</td>
 <td><em>JSON</em></td>
-<td>The coordinate value of the instance in the image, including the percentage of top, left, width, height relative to the full screen</td>
+<td>Coordinate value of the instance in the image, including the percentage of top, left, width, height relative to the full screen</td>
 </tr>
 <tr>
 <td>++Confidence</td>
 <td><em>Float</em></td>
-<td>Instance Confidence, 0-100</td>
+<td>Instance confidence, which is from 0 to 100</td>
 </tr>
 <tr>
 <td>+Confidence</td>
@@ -1067,23 +2074,79 @@
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
 <h2 id="api-test">API test</h2>
+<p>You can use the following tools (API explorer, Postman, cURL, Python, Java) to test calling APIs.</p>
 <h3 id="api-explorer">API Explorer</h3>
 <p><strong>Prerequisites</strong></p>
-<p>When deploying the solution, you need to：</p>
+<p>When <a href="../deployment/">deploying the solution</a>, you need to：</p>
 <ul>
 <li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
 <li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
 </ul>
-<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test API invoking online. </p>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test calling API online. </p>
 <p><strong>Steps</strong></p>
-<p><strong>cURL</strong></p>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>
+<p>On the <strong>Stacks</strong> page, select the solution’s root stack. Do not select the NESTED stack.</p>
+<p><img alt="" src="../images/root-stack-en.png" /></p>
+</li>
+<li>
+<p>Choose the <strong>Outputs</strong> tab, and find the URL for APIExplorer.</p>
+</li>
+<li>
+<p>Click the URL to access the API explorer. The APIs that you have selected during deployment will be displayed. </p>
+<p><img alt="" src="../images/api-explorer.png" /></p>
+</li>
+<li>
+<p>For the API you want to test, click the down arrow to display the request method.</p>
+</li>
+<li>Choose the <strong>Try it out</strong> button, and enter the correct Body data to test API and check the test result.</li>
+<li>Make sure the format is correct, and choose <strong>Execute</strong>.</li>
+<li>Check the returned result in JSON format in the <strong>Responses body</strong>. If needed, copy or download the result.</li>
+<li>Check the <strong>Response headers</strong>.</li>
+<li>(Optional) Choose <strong>Clear</strong> next to the <strong>Execute</strong> button to clear the request body and responses. </li>
+</ol>
+<h3 id="postman-aws_iam-authentication">Postman (<em>AWS_IAM</em> Authentication）</h3>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>On the <strong>Stacks</strong> page, select the solution’s root stack.</li>
+<li>Choose the <strong>Outputs</strong> tab, and find the URL with the prefix <code>GeneralOCR</code>.</li>
+<li>
+<p>Create a new tab in Postman. Paste the URL into the address bar, and select <em>POST</em> as the HTTP call method.</p>
+<p><img alt="" src="../images/ocr-postman-1-en.png" /></p>
+</li>
+<li>
+<p>Open the Authorization configuration, select Amazon Web Service Signature from the drop-down list, and enter the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).</p>
+<p><img alt="" src="../images/ocr-postman-2-en.png" /></p>
+</li>
+<li>
+<p>Open the Body configuration item and select the raw and JSON data types. </p>
+</li>
+<li>Enter the test data in the Body, and click the <strong>Send</strong> button to see the corresponding return results.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
+<h3 id="curl">cURL</h3>
+<ul>
+<li>Windows</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition&quot; ^
+--header &quot;Content-Type: application/json&quot; ^
+--data-raw &quot;{\&quot;url\&quot;: \&quot;Image URL address\&quot;}&quot;
+</code></pre>
+<ul>
+<li>Linux/MacOS</li>
+</ul>
 <pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition' \
 --header 'Content-Type: application/json' \
 --data-raw '{
   &quot;url&quot;:&quot;Image URL address&quot;
 }'
 </code></pre>
-<p><strong>Python</strong> （<em>AWS_IAM</em> Authentication）</p>
+<h3 id="python-aws_iam-authentication">Python （<em>AWS_IAM</em> Authentication）</h3>
 <pre><code class="language-python">import requests
 import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
@@ -1099,7 +2162,7 @@ payload = {
 response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 </code></pre>
-<p><strong>Python</strong> （<em>NONE</em> Authentication）</p>
+<h3 id="python-none-authentication">Python （<em>NONE</em> Authentication）</h3>
 <pre><code class="language-python">import requests
 import json
 
@@ -1116,7 +2179,7 @@ response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload
 
 print(response.text)
 </code></pre>
-<p><strong>Java</strong></p>
+<h3 id="java">Java</h3>
 <pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
   .build();
 MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
@@ -1128,1238 +2191,129 @@ Request request = new Request.Builder()
   .build();
 Response response = client.newCall(request).execute();
 </code></pre>
-<h3 id="request-url-as-aws_iam-in-postman">Request URL as AWS_IAM in Postman</h3>
-<p>When deploying the solution, if the <strong>APIGatewayAuthorization</strong> parameter is set to <em>AWS_IAM</em>, [IAM] will be used automatically (https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/permissions.html) Permissions control access to the API. After the scenario deployment is complete, you will see a URL prefixed with <strong>ObjectRecognition</strong> in the Outputs tab of Amazon CloudFormation. Create a new tab in Postman, paste the URL into the address bar, and select <em>POST</em> as the HTTP call method.</p>
-<p><img alt="" src="../images/ocr-postman-1-en.png" /></p>
-<p>Open the Authorization configuration, select Amazon Web Service Signature in the drop-down list, and fill in the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).</p>
-<p><img alt="" src="../images/ocr-postman-2-en.png" /></p>
-<p>Open the Body configuration item and select the raw and JSON data types. Enter the test data in the Body, and click the Send button to see the corresponding return results.</p>
-<pre><code class="language-json">{
-  &quot;url&quot;: &quot;Image URL address&quot;
-}
-</code></pre>
-<p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
 <!-- END INCLUDE -->
 
-<h2 id="_1">支持的目标识别实体列表</h2>
+<h2 id="cost-estimation">Cost Estimation</h2>
+<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
+<ul>
+<li>AWS Lambda invocations</li>
+<li>AWS Lambda running time</li>
+<li>Amazon API Gateway calls</li>
+<li>Amazon API Gateway data output</li>
+<li>Amazon CloudWatch Logs storage</li>
+<li>Amazon Elastic Container Registry storage</li>
+<li>Amazon SageMaker endpoint instance type</li>
+<li>Amazon SageMaker endpoint data input</li>
+<li>Amazon SageMaker endpoint data output</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The cost incurred by Amazon SageMaker is only applicable to Image Super Resolution.</p>
+</div>
+<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 4 seconds</p>
+<p>The cost of using this solution to process the image is shown below:</p>
 <table>
 <thead>
 <tr>
-<th>ID</th>
-<th>名称</th>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>accordion</td>
-<td>手风琴</td>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>¥1.36</td>
 </tr>
 <tr>
-<td>airplane</td>
-<td>飞机</td>
+<td>AWS Lambda</td>
+<td>4096MB memory, 4 seconds run each time</td>
+<td>¥1815.6</td>
 </tr>
 <tr>
-<td>alligator</td>
-<td>鳄鱼</td>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>¥28.94</td>
 </tr>
 <tr>
-<td>apple</td>
-<td>苹果</td>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, ¥0.933/GB</td>
+<td>¥93.3</td>
 </tr>
 <tr>
-<td>army_tank</td>
-<td>军队坦克</td>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, ¥6.228/GB</td>
+<td>¥62.28</td>
 </tr>
 <tr>
-<td>awning</td>
-<td>棚</td>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB storage, ¥0.69/GB each month</td>
+<td>¥0.35</td>
 </tr>
 <tr>
-<td>backpack</td>
-<td>背包</td>
-</tr>
-<tr>
-<td>ball</td>
-<td>球</td>
-</tr>
-<tr>
-<td>balloon</td>
-<td>气球</td>
-</tr>
-<tr>
-<td>banana</td>
-<td>香蕉</td>
-</tr>
-<tr>
-<td>barrel</td>
-<td>桶</td>
-</tr>
-<tr>
-<td>baseball</td>
-<td>棒球</td>
-</tr>
-<tr>
-<td>baseball_bat</td>
-<td>棒球棒</td>
-</tr>
-<tr>
-<td>baseball_glove</td>
-<td>棒球手套</td>
-</tr>
-<tr>
-<td>basket</td>
-<td>篮子</td>
-</tr>
-<tr>
-<td>bathtub</td>
-<td>浴缸</td>
-</tr>
-<tr>
-<td>bear</td>
-<td>熊</td>
-</tr>
-<tr>
-<td>bed</td>
-<td>床</td>
-</tr>
-<tr>
-<td>bee</td>
-<td>蜜蜂</td>
-</tr>
-<tr>
-<td>beer_bottle</td>
-<td>啤酒瓶</td>
-</tr>
-<tr>
-<td>bell_pepper</td>
-<td>灯笼椒</td>
-</tr>
-<tr>
-<td>belt</td>
-<td>腰带</td>
-</tr>
-<tr>
-<td>bench</td>
-<td>长椅</td>
-</tr>
-<tr>
-<td>bicycle</td>
-<td>自行车</td>
-</tr>
-<tr>
-<td>billboard</td>
-<td>广告牌</td>
-</tr>
-<tr>
-<td>bird</td>
-<td>鸟</td>
-</tr>
-<tr>
-<td>blackboard</td>
-<td>黑板</td>
-</tr>
-<tr>
-<td>boat</td>
-<td>船</td>
-</tr>
-<tr>
-<td>book</td>
-<td>书</td>
-</tr>
-<tr>
-<td>bookcase</td>
-<td>书柜</td>
-</tr>
-<tr>
-<td>boot</td>
-<td>开机</td>
-</tr>
-<tr>
-<td>bottle</td>
-<td>瓶子</td>
-</tr>
-<tr>
-<td>bowl</td>
-<td>碗</td>
-</tr>
-<tr>
-<td>bowling_ball</td>
-<td>保龄球</td>
-</tr>
-<tr>
-<td>box</td>
-<td>盒子</td>
-</tr>
-<tr>
-<td>bracelet</td>
-<td>手镯</td>
-</tr>
-<tr>
-<td>brassiere</td>
-<td>乳罩</td>
-</tr>
-<tr>
-<td>bread</td>
-<td>面包</td>
-</tr>
-<tr>
-<td>broccoli</td>
-<td>西兰花</td>
-</tr>
-<tr>
-<td>building</td>
-<td>建造</td>
-</tr>
-<tr>
-<td>bus_(vehicle)</td>
-<td>公共汽车_（车辆）</td>
-</tr>
-<tr>
-<td>butterfly</td>
-<td>蝴蝶</td>
-</tr>
-<tr>
-<td>cabinet</td>
-<td>内阁</td>
-</tr>
-<tr>
-<td>cake</td>
-<td>蛋糕</td>
-</tr>
-<tr>
-<td>camel</td>
-<td>骆驼</td>
-</tr>
-<tr>
-<td>camera</td>
-<td>相机</td>
-</tr>
-<tr>
-<td>can</td>
-<td>能够</td>
-</tr>
-<tr>
-<td>candle</td>
-<td>蜡烛</td>
-</tr>
-<tr>
-<td>candy_bar</td>
-<td>糖果条</td>
-</tr>
-<tr>
-<td>cannon</td>
-<td>大炮</td>
-</tr>
-<tr>
-<td>canoe</td>
-<td>独木舟</td>
-</tr>
-<tr>
-<td>car_(automobile)</td>
-<td>car_(汽车)</td>
-</tr>
-<tr>
-<td>carrot</td>
-<td>胡萝卜</td>
-</tr>
-<tr>
-<td>cart</td>
-<td>大车</td>
-</tr>
-<tr>
-<td>castle</td>
-<td>城堡</td>
-</tr>
-<tr>
-<td>cat</td>
-<td>猫</td>
-</tr>
-<tr>
-<td>caterpillar</td>
-<td>毛虫</td>
-</tr>
-<tr>
-<td>cello</td>
-<td>大提琴</td>
-</tr>
-<tr>
-<td>cellular_telephone</td>
-<td>蜂窝电话</td>
-</tr>
-<tr>
-<td>chair</td>
-<td>椅子</td>
-</tr>
-<tr>
-<td>chicken_(animal)</td>
-<td>鸡_（动物）</td>
-</tr>
-<tr>
-<td>chopping_board</td>
-<td>切菜板</td>
-</tr>
-<tr>
-<td>chopstick</td>
-<td>筷子</td>
-</tr>
-<tr>
-<td>christmas_tree</td>
-<td>圣诞树</td>
-</tr>
-<tr>
-<td>clock</td>
-<td>钟</td>
-</tr>
-<tr>
-<td>coat</td>
-<td>外套</td>
-</tr>
-<tr>
-<td>cocktail</td>
-<td>鸡尾酒</td>
-</tr>
-<tr>
-<td>coffee_table</td>
-<td>咖啡桌</td>
-</tr>
-<tr>
-<td>coin</td>
-<td>硬币</td>
-</tr>
-<tr>
-<td>computer_keyboard</td>
-<td>计算机键盘</td>
-</tr>
-<tr>
-<td>computer_monitor</td>
-<td>电脑显示器</td>
-</tr>
-<tr>
-<td>cone</td>
-<td>锥体</td>
-</tr>
-<tr>
-<td>cookie</td>
-<td>曲奇饼</td>
-</tr>
-<tr>
-<td>cow</td>
-<td>牛</td>
-</tr>
-<tr>
-<td>cowboy_hat</td>
-<td>牛仔帽</td>
-</tr>
-<tr>
-<td>crab_(animal)</td>
-<td>螃蟹_（动物）</td>
-</tr>
-<tr>
-<td>crown</td>
-<td>王冠</td>
-</tr>
-<tr>
-<td>cucumber</td>
-<td>黄瓜</td>
-</tr>
-<tr>
-<td>cup</td>
-<td>杯子</td>
-</tr>
-<tr>
-<td>cupboard</td>
-<td>橱柜</td>
-</tr>
-<tr>
-<td>curtain</td>
-<td>窗帘</td>
-</tr>
-<tr>
-<td>deer</td>
-<td>鹿</td>
-</tr>
-<tr>
-<td>desk</td>
-<td>桌子</td>
-</tr>
-<tr>
-<td>dessert</td>
-<td>甜点</td>
-</tr>
-<tr>
-<td>dinosaur</td>
-<td>恐龙</td>
-</tr>
-<tr>
-<td>dog</td>
-<td>狗</td>
-</tr>
-<tr>
-<td>doll</td>
-<td>玩具娃娃</td>
-</tr>
-<tr>
-<td>dolphin</td>
-<td>海豚</td>
-</tr>
-<tr>
-<td>door</td>
-<td>门</td>
-</tr>
-<tr>
-<td>doorknob</td>
-<td>门把手</td>
-</tr>
-<tr>
-<td>doughnut</td>
-<td>甜甜圈</td>
-</tr>
-<tr>
-<td>dragonfly</td>
-<td>蜻蜓</td>
-</tr>
-<tr>
-<td>drawer</td>
-<td>抽屉</td>
-</tr>
-<tr>
-<td>dress</td>
-<td>裙子</td>
-</tr>
-<tr>
-<td>drum_(musical_instrument)</td>
-<td>鼓_（音乐乐器）</td>
-</tr>
-<tr>
-<td>duck</td>
-<td>鸭</td>
-</tr>
-<tr>
-<td>duffel_bag</td>
-<td>行李袋</td>
-</tr>
-<tr>
-<td>eagle</td>
-<td>鹰</td>
-</tr>
-<tr>
-<td>earring</td>
-<td>耳环</td>
-</tr>
-<tr>
-<td>egg</td>
-<td>蛋</td>
-</tr>
-<tr>
-<td>elephant</td>
-<td>大象</td>
-</tr>
-<tr>
-<td>fan</td>
-<td>扇子</td>
-</tr>
-<tr>
-<td>faucet</td>
-<td>龙头</td>
-</tr>
-<tr>
-<td>fireplace</td>
-<td>壁炉</td>
-</tr>
-<tr>
-<td>fireplug</td>
-<td>火塞</td>
-</tr>
-<tr>
-<td>fish</td>
-<td>鱼</td>
-</tr>
-<tr>
-<td>flag</td>
-<td>旗帜</td>
-</tr>
-<tr>
-<td>flower_arrangement</td>
-<td>插花</td>
-</tr>
-<tr>
-<td>flowerpot</td>
-<td>花盆</td>
-</tr>
-<tr>
-<td>football_helmet</td>
-<td>足球头盔</td>
-</tr>
-<tr>
-<td>fork</td>
-<td>叉</td>
-</tr>
-<tr>
-<td>fountain</td>
-<td>喷泉</td>
-</tr>
-<tr>
-<td>french_fries</td>
-<td>炸薯条</td>
-</tr>
-<tr>
-<td>frisbee</td>
-<td>飞盘</td>
-</tr>
-<tr>
-<td>frog</td>
-<td>青蛙</td>
-</tr>
-<tr>
-<td>fruit</td>
-<td>水果</td>
-</tr>
-<tr>
-<td>fruit_juice</td>
-<td>果汁</td>
-</tr>
-<tr>
-<td>frying_pan</td>
-<td>平底锅</td>
-</tr>
-<tr>
-<td>gazelle</td>
-<td>羚羊</td>
-</tr>
-<tr>
-<td>giraffe</td>
-<td>长颈鹿</td>
-</tr>
-<tr>
-<td>glass_(drink_container)</td>
-<td>玻璃_（饮料容器）</td>
-</tr>
-<tr>
-<td>glove</td>
-<td>手套</td>
-</tr>
-<tr>
-<td>goat</td>
-<td>山羊</td>
-</tr>
-<tr>
-<td>goggles</td>
-<td>风镜</td>
-</tr>
-<tr>
-<td>goose</td>
-<td>鹅</td>
-</tr>
-<tr>
-<td>grape</td>
-<td>葡萄</td>
-</tr>
-<tr>
-<td>guitar</td>
-<td>吉他</td>
-</tr>
-<tr>
-<td>gun</td>
-<td>枪</td>
-</tr>
-<tr>
-<td>hamburger</td>
-<td>汉堡包</td>
-</tr>
-<tr>
-<td>hamster</td>
-<td>仓鼠</td>
-</tr>
-<tr>
-<td>handbag</td>
-<td>手提包</td>
-</tr>
-<tr>
-<td>handle</td>
-<td>处理</td>
-</tr>
-<tr>
-<td>harbor_seal</td>
-<td>港口密封</td>
-</tr>
-<tr>
-<td>hat</td>
-<td>帽子</td>
-</tr>
-<tr>
-<td>headset</td>
-<td>耳机</td>
-</tr>
-<tr>
-<td>helicopter</td>
-<td>直升机</td>
-</tr>
-<tr>
-<td>helmet</td>
-<td>头盔</td>
-</tr>
-<tr>
-<td>high_heels</td>
-<td>高跟鞋</td>
-</tr>
-<tr>
-<td>hog</td>
-<td>猪</td>
-</tr>
-<tr>
-<td>horse</td>
-<td>马</td>
-</tr>
-<tr>
-<td>house</td>
-<td>屋</td>
-</tr>
-<tr>
-<td>icecream</td>
-<td>冰淇淋</td>
-</tr>
-<tr>
-<td>insect</td>
-<td>昆虫</td>
-</tr>
-<tr>
-<td>jacket</td>
-<td>夹克</td>
-</tr>
-<tr>
-<td>jaguar</td>
-<td>捷豹</td>
-</tr>
-<tr>
-<td>jean</td>
-<td>牛仔布</td>
-</tr>
-<tr>
-<td>jellyfish</td>
-<td>海蜇</td>
-</tr>
-<tr>
-<td>kitchen_table</td>
-<td>厨房的桌子</td>
-</tr>
-<tr>
-<td>kite</td>
-<td>风筝</td>
-</tr>
-<tr>
-<td>knife</td>
-<td>刀</td>
-</tr>
-<tr>
-<td>ladder</td>
-<td>梯子</td>
-</tr>
-<tr>
-<td>lamp</td>
-<td>灯</td>
-</tr>
-<tr>
-<td>lantern</td>
-<td>灯笼</td>
-</tr>
-<tr>
-<td>laptop_computer</td>
-<td>笔记本电脑</td>
-</tr>
-<tr>
-<td>lavender</td>
-<td>薰衣草</td>
-</tr>
-<tr>
-<td>lemon</td>
-<td>柠檬</td>
-</tr>
-<tr>
-<td>lettuce</td>
-<td>莴苣</td>
-</tr>
-<tr>
-<td>license_plate</td>
-<td>车牌</td>
-</tr>
-<tr>
-<td>life_jacket</td>
-<td>救生衣</td>
-</tr>
-<tr>
-<td>lightbulb</td>
-<td>灯泡</td>
-</tr>
-<tr>
-<td>lighthouse</td>
-<td>灯塔</td>
-</tr>
-<tr>
-<td>lily</td>
-<td>百合</td>
-</tr>
-<tr>
-<td>lion</td>
-<td>狮子</td>
-</tr>
-<tr>
-<td>lizard</td>
-<td>蜥蜴</td>
-</tr>
-<tr>
-<td>maple</td>
-<td>枫</td>
-</tr>
-<tr>
-<td>mask</td>
-<td>面具</td>
-</tr>
-<tr>
-<td>microphone</td>
-<td>麦克风</td>
-</tr>
-<tr>
-<td>microwave_oven</td>
-<td>微波炉</td>
-</tr>
-<tr>
-<td>minivan</td>
-<td>小型货车</td>
-</tr>
-<tr>
-<td>mirror</td>
-<td>镜子</td>
-</tr>
-<tr>
-<td>monkey</td>
-<td>猴</td>
-</tr>
-<tr>
-<td>motorcycle</td>
-<td>摩托车</td>
-</tr>
-<tr>
-<td>mouse_(computer_equipment)</td>
-<td>鼠标_（计算机_设备）</td>
-</tr>
-<tr>
-<td>muffin</td>
-<td>松饼</td>
-</tr>
-<tr>
-<td>mug</td>
-<td>马克杯</td>
-</tr>
-<tr>
-<td>mushroom</td>
-<td>蘑菇</td>
-</tr>
-<tr>
-<td>musical_instrument</td>
-<td>乐器</td>
-</tr>
-<tr>
-<td>napkin</td>
-<td>餐巾</td>
-</tr>
-<tr>
-<td>necklace</td>
-<td>项链</td>
-</tr>
-<tr>
-<td>necktie</td>
-<td>领带</td>
-</tr>
-<tr>
-<td>nightstand</td>
-<td>床头柜</td>
-</tr>
-<tr>
-<td>onion</td>
-<td>洋葱</td>
-</tr>
-<tr>
-<td>orange_(fruit)</td>
-<td>橙子_（水果）</td>
-</tr>
-<tr>
-<td>oven</td>
-<td>烤箱</td>
-</tr>
-<tr>
-<td>owl</td>
-<td>猫头鹰</td>
-</tr>
-<tr>
-<td>paddle</td>
-<td>桨</td>
-</tr>
-<tr>
-<td>painting</td>
-<td>绘画</td>
-</tr>
-<tr>
-<td>palm_tree</td>
-<td>棕榈树</td>
-</tr>
-<tr>
-<td>parachute</td>
-<td>降落伞</td>
-</tr>
-<tr>
-<td>parking_meter</td>
-<td>停车收费表</td>
-</tr>
-<tr>
-<td>parrot</td>
-<td>鹦鹉</td>
-</tr>
-<tr>
-<td>pasta</td>
-<td>意大利面</td>
-</tr>
-<tr>
-<td>pastry</td>
-<td>糕点</td>
-</tr>
-<tr>
-<td>pen</td>
-<td>笔</td>
-</tr>
-<tr>
-<td>penguin</td>
-<td>企鹅</td>
-</tr>
-<tr>
-<td>person</td>
-<td>人</td>
-</tr>
-<tr>
-<td>piano</td>
-<td>钢琴</td>
-</tr>
-<tr>
-<td>pillow</td>
-<td>枕头</td>
-</tr>
-<tr>
-<td>pizza</td>
-<td>比萨</td>
-</tr>
-<tr>
-<td>plastic_bag</td>
-<td>塑料袋</td>
-</tr>
-<tr>
-<td>plate</td>
-<td>盘子</td>
-</tr>
-<tr>
-<td>polar_bear</td>
-<td>北极熊</td>
-</tr>
-<tr>
-<td>pool_table</td>
-<td>池表</td>
-</tr>
-<tr>
-<td>porch</td>
-<td>门廊</td>
-</tr>
-<tr>
-<td>poster</td>
-<td>海报</td>
-</tr>
-<tr>
-<td>potted_plant</td>
-<td>盆栽植物</td>
-</tr>
-<tr>
-<td>pumpkin</td>
-<td>南瓜</td>
-</tr>
-<tr>
-<td>rabbit</td>
-<td>兔子</td>
-</tr>
-<tr>
-<td>refrigerator</td>
-<td>冰箱</td>
-</tr>
-<tr>
-<td>remote_control</td>
-<td>遥控</td>
-</tr>
-<tr>
-<td>ring</td>
-<td>戒指</td>
-</tr>
-<tr>
-<td>roller_skate</td>
-<td>溜冰鞋</td>
-</tr>
-<tr>
-<td>rose</td>
-<td>玫瑰</td>
-</tr>
-<tr>
-<td>salad</td>
-<td>沙拉</td>
-</tr>
-<tr>
-<td>sandal_(type_of_shoe)</td>
-<td>凉鞋_（类型_of_shoe）</td>
-</tr>
-<tr>
-<td>sandwich</td>
-<td>三明治</td>
-</tr>
-<tr>
-<td>saucer</td>
-<td>碟子</td>
-</tr>
-<tr>
-<td>saxophone</td>
-<td>萨克斯管</td>
-</tr>
-<tr>
-<td>scarf</td>
-<td>围巾</td>
-</tr>
-<tr>
-<td>scissors</td>
-<td>剪刀</td>
-</tr>
-<tr>
-<td>sculpture</td>
-<td>雕塑</td>
-</tr>
-<tr>
-<td>sheep</td>
-<td>羊</td>
-</tr>
-<tr>
-<td>shirt</td>
-<td>衬衫</td>
-</tr>
-<tr>
-<td>shoe</td>
-<td>鞋</td>
-</tr>
-<tr>
-<td>short_pants</td>
-<td>短裤</td>
-</tr>
-<tr>
-<td>shrimp</td>
-<td>虾</td>
-</tr>
-<tr>
-<td>sink</td>
-<td>下沉</td>
-</tr>
-<tr>
-<td>skateboard</td>
-<td>滑板</td>
-</tr>
-<tr>
-<td>ski</td>
-<td>滑雪</td>
-</tr>
-<tr>
-<td>skirt</td>
-<td>短裙</td>
-</tr>
-<tr>
-<td>skullcap</td>
-<td>黄芩</td>
-</tr>
-<tr>
-<td>snake</td>
-<td>蛇</td>
-</tr>
-<tr>
-<td>snowboard</td>
-<td>滑雪板</td>
-</tr>
-<tr>
-<td>soccer_ball</td>
-<td>足球</td>
-</tr>
-<tr>
-<td>sock</td>
-<td>短袜</td>
-</tr>
-<tr>
-<td>sofa</td>
-<td>沙发</td>
-</tr>
-<tr>
-<td>sofa_bed</td>
-<td>沙发床</td>
-</tr>
-<tr>
-<td>sparrow</td>
-<td>麻雀</td>
-</tr>
-<tr>
-<td>speaker_(stero_equipment)</td>
-<td>扬声器_（立体声设备）</td>
-</tr>
-<tr>
-<td>spectacles</td>
-<td>眼镜</td>
-</tr>
-<tr>
-<td>spider</td>
-<td>蜘蛛</td>
-</tr>
-<tr>
-<td>spoon</td>
-<td>勺子</td>
-</tr>
-<tr>
-<td>sportswear</td>
-<td>运动服</td>
-</tr>
-<tr>
-<td>squirrel</td>
-<td>松鼠</td>
-</tr>
-<tr>
-<td>stool</td>
-<td>凳子</td>
-</tr>
-<tr>
-<td>stop_sign</td>
-<td>停止标志</td>
-</tr>
-<tr>
-<td>stove</td>
-<td>火炉</td>
-</tr>
-<tr>
-<td>straw_(for_drinking)</td>
-<td>稻草_（喝）</td>
-</tr>
-<tr>
-<td>strawberry</td>
-<td>草莓</td>
-</tr>
-<tr>
-<td>street_sign</td>
-<td>街道路标</td>
-</tr>
-<tr>
-<td>streetlight</td>
-<td>路灯</td>
-</tr>
-<tr>
-<td>suit_(clothing)</td>
-<td>套装_（服装）</td>
-</tr>
-<tr>
-<td>suitcase</td>
-<td>手提箱</td>
-</tr>
-<tr>
-<td>sunflower</td>
-<td>向日葵</td>
-</tr>
-<tr>
-<td>sunglasses</td>
-<td>太阳镜</td>
-</tr>
-<tr>
-<td>sunhat</td>
-<td>太阳帽</td>
-</tr>
-<tr>
-<td>surfboard</td>
-<td>冲浪板</td>
-</tr>
-<tr>
-<td>sushi</td>
-<td>寿司</td>
-</tr>
-<tr>
-<td>swimming_pool</td>
-<td>游泳池</td>
-</tr>
-<tr>
-<td>swimsuit</td>
-<td>泳装</td>
-</tr>
-<tr>
-<td>table</td>
-<td>桌子</td>
-</tr>
-<tr>
-<td>tablet_computer</td>
-<td>平板电脑</td>
-</tr>
-<tr>
-<td>taxi</td>
-<td>出租车</td>
-</tr>
-<tr>
-<td>teddy_bear</td>
-<td>玩具熊</td>
-</tr>
-<tr>
-<td>telephone</td>
-<td>电话</td>
-</tr>
-<tr>
-<td>television_set</td>
-<td>电视机</td>
-</tr>
-<tr>
-<td>tennis_ball</td>
-<td>网球</td>
-</tr>
-<tr>
-<td>tennis_racket</td>
-<td>网球拍</td>
-</tr>
-<tr>
-<td>tent</td>
-<td>帐篷</td>
-</tr>
-<tr>
-<td>tiger</td>
-<td>老虎</td>
-</tr>
-<tr>
-<td>toilet</td>
-<td>洗手间</td>
-</tr>
-<tr>
-<td>toilet_tissue</td>
-<td>卫生纸</td>
-</tr>
-<tr>
-<td>tomato</td>
-<td>番茄</td>
-</tr>
-<tr>
-<td>toothbrush</td>
-<td>牙刷</td>
-</tr>
-<tr>
-<td>towel</td>
-<td>毛巾</td>
-</tr>
-<tr>
-<td>tower</td>
-<td>塔</td>
-</tr>
-<tr>
-<td>toy</td>
-<td>玩具</td>
-</tr>
-<tr>
-<td>traffic_light</td>
-<td>红绿灯</td>
-</tr>
-<tr>
-<td>train_(railroad_vehicle)</td>
-<td>火车_（铁路_车辆）</td>
-</tr>
-<tr>
-<td>trash_can</td>
-<td>垃圾箱</td>
-</tr>
-<tr>
-<td>tray</td>
-<td>托盘</td>
-</tr>
-<tr>
-<td>tree</td>
-<td>树</td>
-</tr>
-<tr>
-<td>tripod</td>
-<td>三脚架</td>
-</tr>
-<tr>
-<td>trousers</td>
-<td>裤子</td>
-</tr>
-<tr>
-<td>truck</td>
-<td>卡车</td>
-</tr>
-<tr>
-<td>trumpet</td>
-<td>喇叭</td>
-</tr>
-<tr>
-<td>turtle</td>
-<td>龟</td>
-</tr>
-<tr>
-<td>umbrella</td>
-<td>伞</td>
-</tr>
-<tr>
-<td>vase</td>
-<td>花瓶</td>
-</tr>
-<tr>
-<td>vegetables</td>
-<td>蔬菜</td>
-</tr>
-<tr>
-<td>violin</td>
-<td>小提琴</td>
-</tr>
-<tr>
-<td>wall_socket</td>
-<td>墙上的插座</td>
-</tr>
-<tr>
-<td>watch</td>
-<td>手表</td>
-</tr>
-<tr>
-<td>water_jug</td>
-<td>水壶</td>
-</tr>
-<tr>
-<td>whale</td>
-<td>鲸</td>
-</tr>
-<tr>
-<td>wheel</td>
-<td>车轮</td>
-</tr>
-<tr>
-<td>wheelchair</td>
-<td>轮椅</td>
-</tr>
-<tr>
-<td>window</td>
-<td>窗户</td>
-</tr>
-<tr>
-<td>wineglass</td>
-<td>红酒杯</td>
-</tr>
-<tr>
-<td>zebra</td>
-<td>斑马</td>
+<td>Total</td>
+<td></td>
+<td>¥2001.83</td>
 </tr>
 </tbody>
 </table>
-<h2 id="_2">成本预估</h2>
-<p>//TODO</p>
+<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 4 seconds</p>
+<p>The cost of using this solution to process this image is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>$0.20</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>4096MB memory, 4 seconds run each time</td>
+<td>$266.8</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>$3.5</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, $0.09/GB</td>
+<td>$9</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, $0.50/GB</td>
+<td>$5</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，$0.1/GB each month</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>Total</td>
+<td></td>
+<td>$284.55</td>
+</tr>
+</tbody>
+</table>
 <!-- BEGIN INCLUDE include-deploy-uninstall.md -->
-<h2 id="_3">卸载部署</h2>
-<p>You can uninstall the <strong>Object Recognition</strong> feature via Amazon CloudFormation as described in <a href="../deployment/"><strong>Deployment Solution: Updating the Amazon CloudFormation Stack</strong></a> and make sure the <strong>ObjectRecognition</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
+<h2 id="uninstall-the-deployment">Uninstall the deployment</h2>
+<p>You can uninstall the <strong>Object Recognition</strong> feature via Amazon CloudFormation as described in <a href="../deploy-add-delete-api/">Add or remove AI features</a> and make sure the <strong>ObjectRecognition</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
 <div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>Uninstallation time takes approximately: <strong>10 Minutes</strong></p>
+<p class="admonition-title">Note</p>
+<p>Time to uninstall the deployment is approximately: <strong>10 Minutes</strong></p>
 </div>
 <!-- END INCLUDE -->
 
@@ -2429,7 +2383,7 @@ Response response = client.newCall(request).execute();
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b028fd86.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>
