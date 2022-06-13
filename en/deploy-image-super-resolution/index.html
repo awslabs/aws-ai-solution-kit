@@ -316,7 +316,7 @@
   
     <li class="md-nav__item">
       <a href="../regions/" class="md-nav__link">
-        Supported regions
+        Design considerations
       </a>
     </li>
   
@@ -478,7 +478,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-custom-ocr/" class="md-nav__link">
-        Custom Template OCR
+        Custom OCR
       </a>
     </li>
   
@@ -635,6 +635,13 @@
         <li class="md-nav__item">
   <a href="#applicable-scenarios" class="md-nav__link">
     Applicable scenarios
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements-for-aws-service-quotas" class="md-nav__link">
+    Requirements for AWS service quotas
   </a>
   
 </li>
@@ -879,6 +886,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#requirements-for-aws-service-quotas" class="md-nav__link">
+    Requirements for AWS service quotas
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rest-api-reference" class="md-nav__link">
     REST API Reference
   </a>
@@ -986,7 +1000,11 @@
 <p>Upscale the resolution and enhance details in the images.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to converting original image assets into high resolution images.</p>
-<p>This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click Support Center on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</p>
+<h2 id="requirements-for-aws-service-quotas">Requirements for AWS service quotas</h2>
+<ul>
+<li>This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</li>
+<li>The default <strong>AWS Lambda</strong> memory is about 4GB (4096 MB). If the AWS Lambda function limit in your AWS account is lower than 4096 MB, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket and request to increase the memory limit of the AWS Lambda service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</li>
+</ul>
 <h2 id="rest-api-reference">REST API Reference</h2>
 <ul>
 <li>

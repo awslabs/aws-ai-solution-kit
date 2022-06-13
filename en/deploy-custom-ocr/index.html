@@ -15,7 +15,7 @@
     
     
       
-        <title>Custom Template OCR - AI Solution Kit Deployment Guide</title>
+        <title>Custom OCR - AI Solution Kit Deployment Guide</title>
       
     
     
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Custom Template OCR
+              Custom OCR
             
           </span>
         </div>
@@ -316,7 +316,7 @@
   
     <li class="md-nav__item">
       <a href="../regions/" class="md-nav__link">
-        Supported regions
+        Design considerations
       </a>
     </li>
   
@@ -485,12 +485,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Custom Template OCR
+          Custom OCR
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Custom Template OCR
+        Custom OCR
       </a>
       
         
@@ -526,8 +526,14 @@
     Add templates
   </a>
   
-    <nav class="md-nav" aria-label="Add templates">
-      <ul class="md-nav__list">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-recognition" class="md-nav__link">
+    Content recognition
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#remove-templates" class="md-nav__link">
@@ -536,21 +542,9 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#list-all-templates" class="md-nav__link">
     List all templates
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#content-recog" class="md-nav__link">
-    Content recog
   </a>
   
 </li>
@@ -938,8 +932,14 @@
     Add templates
   </a>
   
-    <nav class="md-nav" aria-label="Add templates">
-      <ul class="md-nav__list">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-recognition" class="md-nav__link">
+    Content recognition
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#remove-templates" class="md-nav__link">
@@ -948,21 +948,9 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#list-all-templates" class="md-nav__link">
     List all templates
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#content-recog" class="md-nav__link">
-    Content recog
   </a>
   
 </li>
@@ -1075,13 +1063,32 @@
                 
 
 
-  <h1>Custom Template OCR</h1>
+  <h1>Custom OCR</h1>
 
 <p>You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to structured recognition of cards and tickets, such as logistics documents, invoices, business licenses, itineraries, and train tickets.</p>
 <h2 id="rest-api-reference">REST API Reference</h2>
 <h3 id="add-templates">Add templates</h3>
+<p>Before text recognition, you need to create a template through the <strong>Add Template API</strong>. In order to improve the accuracy of text recognition, the image for template creation should have similar details to the recognized image and clear text content. The same template can contain multiple recognition areas.</p>
+<p>To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software such as <a href="https://www.gimp.org/downloads/">GIMP</a> to assist in obtaining coordinate points. </p>
+<p>The following describes how to create a template:</p>
+<ol>
+<li>Scale the image size to 100% in the image processing software.</li>
+<li>Move the mouse to the image to get the X, Y value of the specified position coordinate point.</li>
+<li>
+<p>Create a sequence of four coordinate points of the rectangular frame in the clockwise order of upper left, upper right, lower right, and lower left.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The rectangular frame area must completely cover the text content to be recognized. On the premise of not covering other recognition rectangular areas, leave enough error-tolerant space on the four sides of the recognition area for accurate recognition purposes.</p>
+</div>
+</li>
+<li>
+<p>After the template is created, perform a text recognition test with the template original image and template ID to ensure that the template can recognize the required information.</p>
+</li>
+<li>(Optional) If the extracted information is found incomplete, confirm whether the coordinate points are correctly marked, and appropriately expand the recognition area to recreate the template.</li>
+</ol>
+<p>The following describe the API parameters:</p>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1184,10 +1191,115 @@
 <li>Example JSON response</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;模版的ID&quot;,
+    &quot;template_id&quot;: &quot;模板的ID&quot;,
 }
 </code></pre>
-<h4 id="remove-templates">Remove templates</h4>
+<h3 id="content-recognition">Content recognition</h3>
+<p>After the template is created, you can use the corresponding template ID to perform text recognition on the image, and the returned value is the name and text content of the recognized area in the template.</p>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>url</td>
+<td><em>String</em></td>
+<td>Choose url or img.</td>
+<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
+</tr>
+<tr>
+<td>img</td>
+<td><em>String</em></td>
+<td>Choose url or img.</td>
+<td>Base64 encoded image data.</td>
+</tr>
+<tr>
+<td>type</td>
+<td><em>String</em></td>
+<td>Fixed value is <code>query</code>.</td>
+<td></td>
+</tr>
+<tr>
+<td>template_id</td>
+<td><em>String</em></td>
+<td>Existing template ID.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON request</li>
+</ul>
+<pre><code class="language-json">{
+  &quot;template_id&quot;: &quot;已存在的模板ID&quot;, 
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><em>String</em></td>
+<td>Field name.</td>
+</tr>
+<tr>
+<td>value</td>
+<td><em>String</em></td>
+<td>Extracted value.</td>
+</tr>
+<tr>
+<td>score</td>
+<td><em>Float</em></td>
+<td>Confidence score.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<pre><code class="language-json">[
+    {
+        &quot;key&quot;: &quot;名称&quot;, 
+        &quot;value&quot;: &quot;亚马逊通技术服务(北京)有限公司&quot;, 
+        &quot;score&quot;: 97.98
+    }, 
+    {
+        &quot;key&quot;: &quot;识别号&quot;, 
+        &quot;value&quot;: &quot;91110116592334142D&quot;, 
+        &quot;score&quot;: 99.62
+    }, 
+    {
+        &quot;key&quot;: &quot;发票号&quot;, 
+        &quot;value&quot;: &quot;4403212222&quot;, 
+        &quot;score&quot;: 96.58
+    }
+]
+</code></pre>
+<h3 id="remove-templates">Remove templates</h3>
+<p>If you need to delete a template, you can delete it by specifying the template ID to be deleted. Note that a template cannot be recovered after it has been deleted.</p>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1225,7 +1337,7 @@
 </ul>
 <pre><code class="language-json">{
     &quot;type&quot;: &quot;del&quot;, 
-    &quot;template_id&quot;: &quot;已存在模版ID&quot;
+    &quot;template_id&quot;: &quot;已存在模板ID&quot;
 }
 </code></pre>
 <ul>
@@ -1251,10 +1363,11 @@
 <li>Example JSON response</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id&quot;: &quot;已删除模版的ID&quot;,
+    &quot;template_id&quot;: &quot;已删除模板的ID&quot;,
 }
 </code></pre>
 <h3 id="list-all-templates">List all templates</h3>
+<p>The created templates can be listed by ID.</p>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1309,111 +1422,8 @@
 <li>Example JSON response</li>
 </ul>
 <pre><code class="language-json">{
-    &quot;template_id_list&quot;: [&quot;已存在模版的列表&quot;],
+    &quot;template_id_list&quot;: [&quot;已存在模板的列表&quot;],
 }
-</code></pre>
-<h3 id="content-recog">Content recog</h3>
-<ul>
-<li>
-<p>HTTP request method: <code>POST</code></p>
-</li>
-<li>
-<p>Request body parameters</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>Name</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Required</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>url</td>
-<td><em>String</em></td>
-<td>Choose url or img.</td>
-<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
-</tr>
-<tr>
-<td>img</td>
-<td><em>String</em></td>
-<td>Choose url or img.</td>
-<td>Base64 encoded image data.</td>
-</tr>
-<tr>
-<td>type</td>
-<td><em>String</em></td>
-<td>Fixed value is <code>query</code>.</td>
-<td></td>
-</tr>
-<tr>
-<td>template_id</td>
-<td><em>String</em></td>
-<td>Existing template ID.</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Example JSON request</li>
-</ul>
-<pre><code class="language-json">{
-  &quot;template_id&quot;: &quot;已存在的模版ID&quot;, 
-  &quot;url&quot;: &quot;Image URL address&quot;
-}
-</code></pre>
-<ul>
-<li>Response parameters</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>Name</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>key</td>
-<td><em>String</em></td>
-<td>Field name.</td>
-</tr>
-<tr>
-<td>value</td>
-<td><em>String</em></td>
-<td>Extracted value.</td>
-</tr>
-<tr>
-<td>score</td>
-<td><em>Float</em></td>
-<td>Confidence score.</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Example JSON response</li>
-</ul>
-<pre><code class="language-json">[
-    {
-        &quot;key&quot;: &quot;名称&quot;, 
-        &quot;value&quot;: &quot;亚马逊通技术服务(北京)有限公司&quot;, 
-        &quot;score&quot;: 97.98
-    }, 
-    {
-        &quot;key&quot;: &quot;识别号&quot;, 
-        &quot;value&quot;: &quot;91110116592334142D&quot;, 
-        &quot;score&quot;: 99.62
-    }, 
-    {
-        &quot;key&quot;: &quot;发票号&quot;, 
-        &quot;value&quot;: &quot;4403212222&quot;, 
-        &quot;score&quot;: 96.58
-    }
-]
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
 <h2 id="api-test">API test</h2>

@@ -529,7 +529,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-custom-ocr/" class="md-nav__link">
-        自定义模版文字识别
+        自定义模板文字识别
       </a>
     </li>
   
@@ -557,7 +557,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-face-detection/" class="md-nav__link">
-        人脸识别
+        人脸检测
       </a>
     </li>
   
@@ -641,7 +641,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-pornography-detection/" class="md-nav__link">
-        色情内容审核
+        色情内容检测
       </a>
     </li>
   
@@ -837,10 +837,10 @@
 <p><strong>部署时间</strong></p>
 <ul>
 <li>
-<p>部署基于AWS Lambda架构的AI应用：约<strong>10</strong>分钟</p>
+<p>部署基于AWS Lambda架构的AI功能：约<strong>10</strong>分钟</p>
 </li>
 <li>
-<p>部署基于Amazon SageMaker架构的AI应用：约<strong>20</strong>分钟</p>
+<p>部署基于Amazon SageMaker架构的AI功能：约<strong>20</strong>分钟</p>
 </li>
 </ul>
 <h2 id="_1">前提条件</h2>
@@ -864,7 +864,7 @@
 <p>在<strong>指定堆栈详细信息</strong>页面，为您的解决方案堆栈分配一个账户内唯一且符合命名要求的名称。</p>
 </li>
 <li>
-<p>在<strong>参数</strong>部分，根据需要修改通用配置并选择需要部署的AI应用，然后选择<strong>下一步</strong>。</p>
+<p>在<strong>参数</strong>部分，根据需要修改通用配置并选择需要部署的AI功能，然后选择<strong>下一步</strong>。</p>
 <ul>
 <li>
 <p>您可以选择是否部署API资源浏览器，并选择API网关的认证方式。</p>
@@ -896,7 +896,7 @@
 </table>
 </li>
 <li>
-<p>您可以更改AI应用的参数为yes，部署需要的AI应用。AI应用的参数默认值均为no。</p>
+<p>您可以更改AI功能的参数为yes，部署需要的AI功能。AI功能的参数默认值均为no。</p>
 <table>
 <thead>
 <tr>
@@ -988,12 +988,12 @@
 </ol>
 <p>您可以在AWS CloudFormation控制台的<strong>状态</strong>列中查看堆栈的状态。创建完成后即可看到状态为<strong>CREATE_COMPLETE</strong>。</p>
 <h2 id="_3">后续操作</h2>
-<p>堆栈创建成功后，您可以在AWS CloudFormation的<strong>输出</strong>标签页中通过对应<strong>参数ID</strong>查询基于Amazon API Gateway的调用URL。</p>
+<p>堆栈创建成功后，您可以在AWS CloudFormation的<strong>输出（Outputs）</strong>标签页中通过对应<strong>参数ID</strong>查询基于Amazon API Gateway的调用URL。</p>
 <p><img alt="" src="../images/output.png" /></p>
 <p>然后，您可以进行以下操作：</p>
 <ul>
 <li>查看API并测试API调用。详情可参见<a href="../api-explorer/">API参考指南</a>。</li>
-<li>添加或删除AI应用。详情可参见<a href="../deploy-add-delete-api/">更新CloudFormation堆栈</a>。</li>
+<li>添加或删除AI功能。详情可参见<a href="../deploy-add-delete-api/">更新CloudFormation堆栈</a>。</li>
 </ul>
 
               
