@@ -2,8 +2,8 @@
 
 您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年6月，影响解决方案的成本因素主要包括：
 
-- AWS Lambda调用次数
-- AWS Lambda运行时间
+- Amazon Lambda调用次数
+- Amazon Lambda运行时间
 - Amazon API Gateway调用次数
 - Amazon API Gateway数据输出量
 - Amazon CloudWatch Logs存储量
@@ -17,8 +17,8 @@
 
 | 服务                                  | 用量                  | 费用      |
 |-------------------------------------|---------------------|---------|
-| AWS Lambda                     | 调用百万次                 | ¥1.36   |
-| AWS Lambda                     | 内存10240MB，每次运行1秒     | ¥1134.8  |
+| Amazon Lambda                     | 调用百万次                 | ¥1.36   |
+| Amazon Lambda                     | 内存10240MB，每次运行1秒     | ¥1134.8  |
 | Amazon API Gateway                | 调用百万次                 | ¥28.94  |
 | Amazon API Gateway             | 数据输出以每次10KB计算，¥0.933/GB | ¥9.33   |
 | Amazon CloudWatch Logs              | 每次10KB，¥6.228/GB    | ¥62.28  |
@@ -33,8 +33,8 @@
 
 | 服务                                  | 用量                 | 费用     |
 |-------------------------------------|--------------------|--------|
-| AWS Lambda                     | 调用百万次                | $0.20  |
-| AWS Lambda                     | 内存10240MB，每次运行1秒    | $166.7  |
+| Amazon Lambda                     | 调用百万次                | $0.20  |
+| Amazon Lambda                     | 内存10240MB，每次运行1秒    | $166.7  |
 | Amazon API Gateway                | 调用百万次                | $3.5   |
 | Amazon API Gateway             | 数据输出以每次10KB计算，$0.09/GB | $0.9   |
 | Amazon CloudWatch Logs              | 每次10KB，$0.50/GB    | $5     |

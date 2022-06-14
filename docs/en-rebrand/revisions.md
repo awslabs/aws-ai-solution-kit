@@ -1,0 +1,5 @@
+| Date  | Description |
+|----------|--------|
+| September 2021 | **Release 1.0.0** <br> Support the following AI features: <ol><li>General OCR</li><li>Image Super Resolution</li><li>Pornography Detection</li><li>Human Image Segmentation</li></ol> |
+| June 2022 | **Release 1.2.0** <br>Updated the following AI features: <ol><li>Optimized General OCR</li><li>General OCR (Traditional Chinese)</li><li>Custom OCR</li><li>Image Similarity</li><li>Object Recognition</li><li>Face Detection</li><li>Face Comparison</li><li>Human Attribute Recognition</li><li>Car License Plate</li><li>Text Similarity</li></ol> Updated the solution architecture: <ol><li>Support OpenAPI specification and integrate API Explorer</li><li>AI model containerization</li><li>Upgrade CDK to 2.20.0</li><li>Support CloudFormation deployment</li></ol> |
+

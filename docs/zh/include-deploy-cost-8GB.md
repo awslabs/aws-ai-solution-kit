@@ -33,8 +33,8 @@
 
 | 服务                                  | 用量                 | 费用     |
 |-------------------------------------|--------------------|--------|
-| Amazon Lambda                     | 调用百万次                | $0.20  |
-| Amazon Lambda                     | 内存8192MB，每次运行1秒    | $133.3  |
+| AWS Lambda                     | 调用百万次                | $0.20  |
+| AWS Lambda                     | 内存8192MB，每次运行1秒    | $133.3  |
 | Amazon API Gateway                | 调用百万次                | $3.5   |
 | Amazon API Gateway             | 数据输出以每次10KB计算，$0.09/GB | $0.9   |
 | Amazon CloudWatch Logs              | 每次10KB，$0.50/GB    | $5     |
