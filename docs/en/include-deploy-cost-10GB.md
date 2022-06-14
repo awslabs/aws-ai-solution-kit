@@ -1,4 +1,4 @@
-## Cost Estimation
+## Cost estimation
 
 You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
 

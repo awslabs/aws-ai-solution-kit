@@ -12,7 +12,7 @@ feature_scenario: Applicable to fast processing of pornographic content, thus he
 {%
   include "include-deploy-description.md"
 %}
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

@@ -12,7 +12,7 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 {%
   include "include-deploy-description.md"
 %}
-### REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

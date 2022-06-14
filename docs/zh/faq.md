@@ -1,16 +1,16 @@
-## 在中国区域部署解决方案如何开通ICP备案？
+## 1. 在中国区域部署解决方案如何开通ICP备案？
 
 本解决方案使用Amazon API Gateway来接收API调用请求，所以如果您希望在中国区域提供无需身份验证即可访问的API请求，需要申请并确保您的AWS账号已通过Internet Content Provider (ICP) 备案，80/443端口可以正常开启。具体流程可参见[ICP备案指南](https://www.amazonaws.cn/support/icp/)。
 
-## 部署解决方案时遇到*The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances*，如何解决？
+## 2. 部署解决方案时遇到*The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances*，如何解决？
 
-方案中的超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例，如果您AWS账户中对应实例限制不足，则会导致该功能部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅：[请求提高配额（目前此内容仅使用英语显示）](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
+方案中的超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例，如果您AWS账户中对应实例限制不足，则会导致该功能部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)。
 
-## 部署解决方案时遇到*Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*，如何解决？
+## 3. 部署解决方案时遇到*Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*，如何解决？
 
-方案中默认的**AWS Lambda**内存约为4GB（4096 MB），如果您AWS账户中AWS Lambda函数限制低于4096 MB，则会导致该部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高 **Lambda**服务的内存限额。具体步骤请参阅：[请求提高配额（目前此内容仅使用英语显示）](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
+方案中默认的**AWS Lambda**内存约为4GB（4096 MB），如果您AWS账户中AWS Lambda函数限制低于4096 MB，则会导致该部署异常。您可以在AWS管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高 **Lambda**服务的内存限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)。
 
-## 使用解决方案都需要哪些AWS Identity and Access Management (IAM)权限？
+## 4. 使用解决方案都需要哪些AWS Identity and Access Management (IAM)权限？
 
 您在部署解决方案之后，可以通过Amazon API Gateway调用API，需要的权限如下。其中**sagemaker:**仅限于**图像超分辨率**API。
 
@@ -78,7 +78,7 @@
 | sagemaker:InvokeEndpoint              |
 | sns:ListTopics                        |
 
-## 如何统一切换Amazon API Gateway中API的访问认证方式？
+## 5. 如何统一切换Amazon API Gateway中API的访问认证方式？
 
 您可以通过AWS CloudFormation更新堆栈，从而统一修改现有资源的属性。
 
@@ -98,7 +98,9 @@
 
 8. 确认更改，并选择**更新堆栈**。
 
-## 如何单独切换Amazon API Gateway中API的访问认证方式？
+## 6. 如何单独切换Amazon API Gateway中API的访问认证方式？
+
+按照以下步骤操作：
 
 1. 访问[Amazon API Gateway控制台](https://console.aws.amazon.com/apigateway/)。
 2. 从API列表中选择最新创建的方案API，打开API页面。您也可以按**已创建**的时间排序，便于查找。
@@ -110,7 +112,7 @@
 8. 点击方法执行左侧的**操作**下拉列表，选择**API操作**中的**部署 API**选项。
 9. 在**部署API**对话框，选择**prod**或自定义名称的部署阶段，请不要选择[新阶段]，然后点击下方部署按钮完成部署。
 
-## 如何创建和使用带API密钥的使用计划？
+## 7. 如何创建和使用带API密钥的使用计划？
 本解决方案支持API使用计划（Usage Plans）。部署解决方案并测试API后，您可以实施API Gateway使用计划，将它们作为面向客户的产品/服务提供。您可以配置使用计划和API密钥，以允许客户按照商定的可满足其业务需求和预算限制的请求速率和配额来访问选定API。
 
 如果需要的话，您可以为API设置默认方法级别限制或为单个API方法设置限制。API调用方必须在API请求的x-api-key标头中提供一个已分配的API密钥。 

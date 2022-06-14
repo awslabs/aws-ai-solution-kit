@@ -73,7 +73,7 @@ curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazon
 }'
 ```
 
-### Python （*AWS_IAM* Authentication）
+### Python (*AWS_IAM* Authentication)
 
 ``` python
 import requests
@@ -92,7 +92,7 @@ response = requests.request("POST", url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 ```
 
-### Python （*NONE* Authentication）
+### Python (*NONE* Authentication)
 
 ``` python
 import requests
