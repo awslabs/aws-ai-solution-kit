@@ -1075,18 +1075,20 @@
 <p>The following describes how to create a template:</p>
 <ol>
 <li>Scale the image size to 100% in the image processing software.</li>
-<li>Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to <strong>top left, top right, bottom right, bottom left</strong> order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area, recognition area example as follows.</li>
-</ol>
-<pre><code>[[[116, 335], [410, 335], [410, 374], [116, 374]], &quot;Phone Number&quot;],
-</code></pre>
-<pre><code>!!! Note "Description"
-    The rectangular box area must completely cover the text content to be recognized. Please leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas to get accurate recognition.
-</code></pre>
-<ol>
-<li>Please refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.</li>
+<li>
+<p>Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to <strong>top left, top right, bottom right, bottom left</strong> order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area, recognition area example as follows.</p>
+<p><code>[[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"],</code></p>
+</li>
+<li>
+<p>Please refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.</p>
+</li>
 <li>After creating the template, first perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.</li>
 <li>(Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. </li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Description</p>
+<p>The rectangular box area must completely cover the text content to be recognized. Please leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas to get accurate recognition.</p>
+</div>
 <p>The following describe the API parameters:</p>
 <ul>
 <li>
