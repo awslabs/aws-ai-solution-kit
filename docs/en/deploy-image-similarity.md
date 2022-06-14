@@ -112,7 +112,7 @@ With two images as input, it returns the cosine similarity of two images. This i
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

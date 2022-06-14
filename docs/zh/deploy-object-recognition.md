@@ -414,7 +414,7 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 | zebra                        | 斑马                 |
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

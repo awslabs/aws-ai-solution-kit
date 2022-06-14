@@ -68,7 +68,7 @@ feature_scenario: Applicable to identifying car license plates in car parking lo
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

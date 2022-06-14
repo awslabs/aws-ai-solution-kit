@@ -78,7 +78,7 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

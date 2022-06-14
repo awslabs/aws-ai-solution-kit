@@ -60,7 +60,7 @@ feature_scenario: Applicable to photo background replacement, post-processing, I
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

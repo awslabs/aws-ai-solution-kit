@@ -60,7 +60,7 @@ feature_scenario: 可应用于照片背景替换、后期处理、证件照制�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

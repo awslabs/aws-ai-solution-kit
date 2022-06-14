@@ -85,7 +85,7 @@ feature_scenario: 可应用于客户身份验证、照片分类等场景，例�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

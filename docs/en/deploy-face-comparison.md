@@ -85,7 +85,7 @@ feature_scenario: Applicable to customer authentication, photo classification an
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

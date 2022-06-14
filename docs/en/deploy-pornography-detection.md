@@ -60,7 +60,7 @@ feature_scenario: Applicable to fast processing of pornographic content, thus he
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%
