@@ -116,7 +116,12 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-cost/</loc>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-cost-10GB/</loc>
+         <lastmod>2022-06-14</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-cost-8GB/</loc>
          <lastmod>2022-06-14</lastmod>
          <changefreq>daily</changefreq>
     </url>

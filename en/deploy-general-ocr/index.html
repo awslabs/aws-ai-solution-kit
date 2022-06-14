@@ -548,16 +548,29 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost Estimation
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#cost-estimation-example-1" class="md-nav__link">
-    Cost estimation: example 1
+    Cost estimation example 1
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#cost-estimation-example-2" class="md-nav__link">
-    Cost estimation: example 2
+    Cost estimation example 2
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -935,16 +948,29 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost Estimation
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#cost-estimation-example-1" class="md-nav__link">
-    Cost estimation: example 1
+    Cost estimation example 1
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#cost-estimation-example-2" class="md-nav__link">
-    Cost estimation: example 2
+    Cost estimation example 2
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1195,8 +1221,18 @@ Response response = client.newCall(request).execute();
 </code></pre>
 <!-- END INCLUDE -->
 
-<h2 id="cost-estimation-example-1">Cost estimation: example 1</h2>
-<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in one second</p>
+<h2 id="cost-estimation">Cost Estimation</h2>
+<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
+<ul>
+<li>AWS Lambda invocations</li>
+<li>AWS Lambda running time</li>
+<li>Amazon API Gateway calls</li>
+<li>Amazon API Gateway data output</li>
+<li>Amazon CloudWatch Logs storage</li>
+<li>Amazon Elastic Container Registry storage</li>
+</ul>
+<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>
 <p>The cost of using this solution to process the image is shown below:</p>
 <table>
 <thead>
@@ -1214,8 +1250,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>4096MB memory, 1 second run each time</td>
-<td>¥453.9</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>¥907.8</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
@@ -1224,8 +1260,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>10KB data output each time, ¥0.933/GB</td>
-<td>¥9.33</td>
+<td>100KB data output each time, ¥0.933/GB</td>
+<td>¥93.3</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
@@ -1240,12 +1276,12 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>Total</td>
 <td></td>
-<td>¥556.16</td>
+<td>¥1010.06</td>
 </tr>
 </tbody>
 </table>
-<h2 id="cost-estimation-example-2">Cost estimation: example 2</h2>
-<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in one second</p>
+<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 1 seconds</p>
 <p>The cost of using this solution to process this image is shown below:</p>
 <table>
 <thead>
@@ -1257,39 +1293,39 @@ Response response = client.newCall(request).execute();
 </thead>
 <tbody>
 <tr>
-<td>Amazon Lambda</td>
-<td>1 million invokes</td>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
 <td>$0.20</td>
 </tr>
 <tr>
-<td>Amazon Lambda</td>
-<td>4096MB memory, 1 second run each time</td>
-<td>$66.7</td>
+<td>AWS Lambda</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>$133.3</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>1 million invokes</td>
+<td>1 million invocations</td>
 <td>$3.5</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>10KB data output each time, $0.09/GB</td>
-<td>$0.9</td>
+<td>100KB data output each time, $0.09/GB</td>
+<td>$9</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
-<td>10KB data output each time, $0.50/GB</td>
+<td>10KB each time, $0.50/GB</td>
 <td>$5</td>
 </tr>
 <tr>
 <td>Amazon Elastic Container Registry</td>
-<td>0.5GB storage, GB$0.1/GB each month</td>
+<td>0.5GB存储，$0.1/GB each month</td>
 <td>$0.05</td>
 </tr>
 <tr>
 <td>Total</td>
 <td></td>
-<td>$76.35</td>
+<td>$142.95</td>
 </tr>
 </tbody>
 </table>

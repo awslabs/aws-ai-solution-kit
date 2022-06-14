@@ -1274,16 +1274,9 @@ Response response = client.newCall(request).execute();
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
 <li>Amazon Elastic Container Registry storage</li>
-<li>Amazon SageMaker endpoint instance type</li>
-<li>Amazon SageMaker endpoint data input</li>
-<li>Amazon SageMaker endpoint data output</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The cost incurred by Amazon SageMaker is only applicable to Image Super Resolution.</p>
-</div>
 <h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
-<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 4 seconds</p>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>
 <p>The cost of using this solution to process the image is shown below:</p>
 <table>
 <thead>
@@ -1301,8 +1294,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>4096MB memory, 4 seconds run each time</td>
-<td>¥1815.6</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>¥907.8</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
@@ -1327,12 +1320,12 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>Total</td>
 <td></td>
-<td>¥2001.83</td>
+<td>¥1010.06</td>
 </tr>
 </tbody>
 </table>
 <h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
-<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 4 seconds</p>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 1 seconds</p>
 <p>The cost of using this solution to process this image is shown below:</p>
 <table>
 <thead>
@@ -1350,8 +1343,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>4096MB memory, 4 seconds run each time</td>
-<td>$266.8</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>$133.3</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
@@ -1376,7 +1369,7 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>Total</td>
 <td></td>
-<td>$284.55</td>
+<td>$142.95</td>
 </tr>
 </tbody>
 </table>

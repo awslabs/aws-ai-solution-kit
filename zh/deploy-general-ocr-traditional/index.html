@@ -1231,16 +1231,9 @@ Response response = client.newCall(request).execute();
 <li>Amazon API Gateway数据输出量</li>
 <li>Amazon CloudWatch Logs存储量</li>
 <li>Amazon Elastic Container Registry存储量</li>
-<li>Amazon SageMaker终端节点实例类型</li>
-<li>Amazon SageMaker终端节点数据输入量</li>
-<li>Amazon SageMaker终端节点数据输出量</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">说明</p>
-<p>Amazon SageMaker相关的费用仅适用于图像超分辨率方案。</p>
-</div>
 <h2 id="1">成本预估示例1</h2>
-<p>以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间4秒</p>
+<p>以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间1秒</p>
 <p>使用本方案处理此图像所需的成本费用如下表所示：</p>
 <table>
 <thead>
@@ -1258,8 +1251,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>内存4096MB，每次运行4秒</td>
-<td>¥1815.6</td>
+<td>内存8192MB，每次运行1秒</td>
+<td>¥907.8</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
@@ -1268,8 +1261,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>数据输出以每次100KB计算，¥0.933/GB</td>
-<td>¥93.3</td>
+<td>数据输出以每次10KB计算，¥0.933/GB</td>
+<td>¥9.33</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
@@ -1284,12 +1277,12 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>合计</td>
 <td></td>
-<td>¥2001.83</td>
+<td>¥1010.06</td>
 </tr>
 </tbody>
 </table>
 <h2 id="2">成本预估示例2</h2>
-<p>以美国东部（俄亥俄州）区域（us-east-2）为例，处理1MB图像，处理时间4秒</p>
+<p>以美国东部（俄亥俄州）区域（us-east-2）为例，处理1MB图像，处理时间1秒</p>
 <p>使用本方案处理此图像所需的成本费用如下表所示：</p>
 <table>
 <thead>
@@ -1301,14 +1294,14 @@ Response response = client.newCall(request).execute();
 </thead>
 <tbody>
 <tr>
-<td>AWS Lambda</td>
+<td>Amazon Lambda</td>
 <td>调用百万次</td>
 <td>$0.20</td>
 </tr>
 <tr>
-<td>AWS Lambda</td>
-<td>内存4096MB，每次运行4秒</td>
-<td>$266.8</td>
+<td>Amazon Lambda</td>
+<td>内存8192MB，每次运行1秒</td>
+<td>$133.3</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
@@ -1317,8 +1310,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>数据输出以每次100KB计算,$0.09/GB</td>
-<td>$9</td>
+<td>数据输出以每次10KB计算，$0.09/GB</td>
+<td>$0.9</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
@@ -1333,7 +1326,7 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>合计</td>
 <td></td>
-<td>$284.55</td>
+<td>$142.95</td>
 </tr>
 </tbody>
 </table>

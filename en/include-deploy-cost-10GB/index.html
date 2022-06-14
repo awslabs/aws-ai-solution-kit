@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,14 +8,14 @@
       
       
       
-        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-cost/">
+        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-cost-10GB/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.4">
     
     
       
-        <title>Include deploy cost - AI Solution Kit 实施指南</title>
+        <title>include deploy cost 10GB - AI Solution Kit Deployment Guide</title>
       
     
     
@@ -66,8 +66,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
-          跳转至
+        <a href="#cost-estimation" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -79,8 +79,8 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
-    <a href=".." title="AI Solution Kit 实施指南" class="md-header__button md-logo" aria-label="AI Solution Kit 实施指南" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AI Solution Kit Deployment Guide" class="md-header__button md-logo" aria-label="AI Solution Kit Deployment Guide" data-md-component="logo">
       
   <img src="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico" alt="logo">
 
@@ -92,13 +92,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            AI Solution Kit 实施指南
+            AI Solution Kit Deployment Guide
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Include deploy cost
+              include deploy cost 10GB
             
           </span>
         </div>
@@ -131,7 +131,7 @@
       <div class="md-header__option">
         <div class="md-select">
           
-          <button class="md-header__button md-icon" aria-label="选择当前语言">
+          <button class="md-header__button md-icon" aria-label="Select language">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
           </button>
           <div class="md-select__inner">
@@ -162,14 +162,14 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
@@ -179,7 +179,7 @@
       <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list"></ol>
         </div>
@@ -190,7 +190,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/awslabs/aws-ai-solution-kit" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -223,18 +223,18 @@
                     
 
 
-<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="AI Solution Kit 实施指南" class="md-nav__button md-logo" aria-label="AI Solution Kit 实施指南" data-md-component="logo">
+    <a href=".." title="AI Solution Kit Deployment Guide" class="md-nav__button md-logo" aria-label="AI Solution Kit Deployment Guide" data-md-component="logo">
       
   <img src="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico" alt="logo">
 
     </a>
-    AI Solution Kit 实施指南
+    AI Solution Kit Deployment Guide
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/awslabs/aws-ai-solution-kit" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -256,7 +256,7 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        概述
+        Welcome
       </a>
     </li>
   
@@ -271,7 +271,7 @@
   
     <li class="md-nav__item">
       <a href="../cost/" class="md-nav__link">
-        成本预估
+        Cost
       </a>
     </li>
   
@@ -286,7 +286,7 @@
   
     <li class="md-nav__item">
       <a href="../architecture/" class="md-nav__link">
-        架构概览
+        Architecture overview
       </a>
     </li>
   
@@ -301,7 +301,7 @@
   
     <li class="md-nav__item">
       <a href="../security/" class="md-nav__link">
-        安全信息
+        Security
       </a>
     </li>
   
@@ -316,7 +316,7 @@
   
     <li class="md-nav__item">
       <a href="../regions/" class="md-nav__link">
-        区域支持
+        Design considerations
       </a>
     </li>
   
@@ -331,7 +331,7 @@
   
     <li class="md-nav__item">
       <a href="../template/" class="md-nav__link">
-        模板信息
+        CloudFormation template
       </a>
     </li>
   
@@ -354,14 +354,14 @@
       
       
         <label class="md-nav__link" for="__nav_7">
-          部署解决方案
+          Automated deployment
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="部署解决方案" data-md-level="1">
+      <nav class="md-nav" aria-label="Automated deployment" data-md-level="1">
         <label class="md-nav__title" for="__nav_7">
           <span class="md-nav__icon md-icon"></span>
-          部署解决方案
+          Automated deployment
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -372,7 +372,7 @@
   
     <li class="md-nav__item">
       <a href="../deployment/" class="md-nav__link">
-        启动CloudFormation堆栈
+        Launch CloudFormation stack
       </a>
     </li>
   
@@ -386,7 +386,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-add-delete-api/" class="md-nav__link">
-        更新CloudFormation堆栈
+        Update CloudFormation stack
       </a>
     </li>
   
@@ -416,14 +416,14 @@
       
       
         <label class="md-nav__link" for="__nav_8">
-          API参考指南
+          API Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="API参考指南" data-md-level="1">
+      <nav class="md-nav" aria-label="API Reference" data-md-level="1">
         <label class="md-nav__title" for="__nav_8">
           <span class="md-nav__icon md-icon"></span>
-          API参考指南
+          API Reference
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -434,7 +434,7 @@
   
     <li class="md-nav__item">
       <a href="../api-explorer/" class="md-nav__link">
-        概述
+        Overview
       </a>
     </li>
   
@@ -448,7 +448,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-general-ocr/" class="md-nav__link">
-        通用文字识别（简体中文）
+        General OCR (Simplified Chinese)
       </a>
     </li>
   
@@ -462,7 +462,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-general-ocr-traditional/" class="md-nav__link">
-        通用文字识别（繁体中文）
+        General OCR (Traditional Chinese)
       </a>
     </li>
   
@@ -476,7 +476,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-custom-ocr/" class="md-nav__link">
-        自定义模板文字识别
+        Custom OCR
       </a>
     </li>
   
@@ -490,7 +490,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-car-license-plate/" class="md-nav__link">
-        车牌信息识别
+        Car License Plate
       </a>
     </li>
   
@@ -504,7 +504,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-face-detection/" class="md-nav__link">
-        人脸检测
+        Face Detection
       </a>
     </li>
   
@@ -518,7 +518,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-face-comparison/" class="md-nav__link">
-        人脸相似度比对
+        Face Comparison
       </a>
     </li>
   
@@ -532,7 +532,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-human-attribute-recognition/" class="md-nav__link">
-        人体结构化属性
+        Human Attribute Recognition
       </a>
     </li>
   
@@ -546,7 +546,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-human-image-segmentation/" class="md-nav__link">
-        智能人像分割
+        Human Image Segmentation
       </a>
     </li>
   
@@ -560,7 +560,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-image-similarity/" class="md-nav__link">
-        图像相似度
+        Image Similarity
       </a>
     </li>
   
@@ -574,7 +574,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-object-recognition/" class="md-nav__link">
-        通用物体识别
+        Object Recognition
       </a>
     </li>
   
@@ -588,7 +588,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-pornography-detection/" class="md-nav__link">
-        色情内容检测
+        Pornography Detection
       </a>
     </li>
   
@@ -602,7 +602,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-image-super-resolution/" class="md-nav__link">
-        图像超分辨率
+        Image Super Resolution
       </a>
     </li>
   
@@ -616,7 +616,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-text-similarity/" class="md-nav__link">
-        文本相似度
+        Text Similarity
       </a>
     </li>
   
@@ -638,7 +638,7 @@
   
     <li class="md-nav__item">
       <a href="../upgrade/" class="md-nav__link">
-        升级解决方案
+        Upgrade the solution
       </a>
     </li>
   
@@ -653,7 +653,7 @@
   
     <li class="md-nav__item">
       <a href="../uninstall/" class="md-nav__link">
-        卸载解决方案
+        Uninstall the solution
       </a>
     </li>
   
@@ -668,7 +668,7 @@
   
     <li class="md-nav__item">
       <a href="../additional-resources/" class="md-nav__link">
-        更多资源
+        Additional resources
       </a>
     </li>
   
@@ -683,7 +683,7 @@
   
     <li class="md-nav__item">
       <a href="../faq/" class="md-nav__link">
-        常见问题解答
+        FAQ
       </a>
     </li>
   
@@ -698,7 +698,7 @@
   
     <li class="md-nav__item">
       <a href="../source/" class="md-nav__link">
-        源代码
+        Source code
       </a>
     </li>
   
@@ -713,7 +713,7 @@
   
     <li class="md-nav__item">
       <a href="../revisions/" class="md-nav__link">
-        版本发布说明
+        Release Notes
       </a>
     </li>
   
@@ -732,35 +732,41 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      目录
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    成本预估
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost Estimation
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost Estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    Cost estimation example 1
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
-    成本预估示例1
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    Cost estimation example 2
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
-    成本预估示例2
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -778,120 +784,113 @@
                 
 
 
-  <h1>Include deploy cost</h1>
+  <h1>include deploy cost 10GB</h1>
 
-<h2 id="_1">成本预估</h2>
-<p>您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年5月，影响解决方案的成本因素主要包括：</p>
+<h2 id="cost-estimation">Cost Estimation</h2>
+<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
-<li>AWS Lambda调用次数</li>
-<li>AWS Lambda运行时间</li>
-<li>Amazon API Gateway调用次数</li>
-<li>Amazon API Gateway数据输出量</li>
-<li>Amazon CloudWatch Logs存储量</li>
-<li>Amazon Elastic Container Registry存储量</li>
-<li>Amazon SageMaker终端节点实例类型</li>
-<li>Amazon SageMaker终端节点数据输入量</li>
-<li>Amazon SageMaker终端节点数据输出量</li>
+<li>AWS Lambda invocations</li>
+<li>AWS Lambda running time</li>
+<li>Amazon API Gateway calls</li>
+<li>Amazon API Gateway data output</li>
+<li>Amazon CloudWatch Logs storage</li>
+<li>Amazon Elastic Container Registry storage</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">说明</p>
-<p>Amazon SageMaker相关的费用仅适用于图像超分辨率方案。</p>
-</div>
-<h2 id="1">成本预估示例1</h2>
-<p>以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间4秒</p>
-<p>使用本方案处理此图像所需的成本费用如下表所示：</p>
+<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>
+<p>The cost of using this solution to process the image is shown below:</p>
 <table>
 <thead>
 <tr>
-<th>服务</th>
-<th>用量</th>
-<th>费用</th>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>AWS Lambda</td>
-<td>调用百万次</td>
+<td>1 million invocations</td>
 <td>¥1.36</td>
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>内存4096MB，每次运行4秒</td>
-<td>¥1815.6</td>
+<td>10240MB memory, 1 seconds run each time</td>
+<td>¥1134.8</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>调用百万次</td>
+<td>1 million invocations</td>
 <td>¥28.94</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>数据输出以每次100KB计算，¥0.933/GB</td>
+<td>100KB data output each time, ¥0.933/GB</td>
 <td>¥93.3</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
-<td>每次10KB，¥6.228/GB</td>
+<td>10KB each time, ¥6.228/GB</td>
 <td>¥62.28</td>
 </tr>
 <tr>
 <td>Amazon Elastic Container Registry</td>
-<td>0.5GB存储，每月每GB¥0.69</td>
+<td>0.5GB storage, ¥0.69/GB each month</td>
 <td>¥0.35</td>
 </tr>
 <tr>
-<td>合计</td>
+<td>Total</td>
 <td></td>
-<td>¥2001.83</td>
+<td>¥1237.06</td>
 </tr>
 </tbody>
 </table>
-<h2 id="2">成本预估示例2</h2>
-<p>以美国东部（俄亥俄州）区域（us-east-2）为例，处理1MB图像，处理时间4秒</p>
-<p>使用本方案处理此图像所需的成本费用如下表所示：</p>
+<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 4 seconds</p>
+<p>The cost of using this solution to process this image is shown below:</p>
 <table>
 <thead>
 <tr>
-<th>服务</th>
-<th>用量</th>
-<th>费用</th>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>AWS Lambda</td>
-<td>调用百万次</td>
+<td>1 million invocations</td>
 <td>$0.20</td>
 </tr>
 <tr>
 <td>AWS Lambda</td>
-<td>内存4096MB，每次运行4秒</td>
-<td>$266.8</td>
+<td>10240MB memory, 1 seconds run each time</td>
+<td>$166.7</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>调用百万次</td>
+<td>1 million invocations</td>
 <td>$3.5</td>
 </tr>
 <tr>
 <td>Amazon API Gateway</td>
-<td>数据输出以每次100KB计算,$0.09/GB</td>
+<td>100KB data output each time, $0.09/GB</td>
 <td>$9</td>
 </tr>
 <tr>
 <td>Amazon CloudWatch Logs</td>
-<td>每次10KB，$0.50/GB</td>
+<td>10KB each time, $0.50/GB</td>
 <td>$5</td>
 </tr>
 <tr>
 <td>Amazon Elastic Container Registry</td>
-<td>0.5GB存储，每月每GB$0.1</td>
+<td>0.5GB存储，$0.1/GB each month</td>
 <td>$0.05</td>
 </tr>
 <tr>
-<td>合计</td>
+<td>Total</td>
 <td></td>
-<td>$284.55</td>
+<td>$176.35</td>
 </tr>
 </tbody>
 </table>
@@ -926,7 +925,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.config.lang": "ja", "search.config.pipeline": "trimmer, stemmer", "search.config.separator": "[\\s\\-\uff0c\u3002]+", "search.placeholder": "\u641c\u7d22", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version.title": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.85cb4492.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.f758a944.min.js"></script>

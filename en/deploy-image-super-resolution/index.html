@@ -1213,8 +1213,6 @@ Response response = client.newCall(request).execute();
 <h2 id="cost-estimation">Cost Estimation</h2>
 <p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
-<li>AWS Lambda invocations</li>
-<li>AWS Lambda running time</li>
 <li>Amazon API Gateway calls</li>
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
@@ -1235,16 +1233,6 @@ Response response = client.newCall(request).execute();
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>AWS Lambda</td>
-<td>1 million invocations</td>
-<td>$0.20</td>
-</tr>
-<tr>
-<td>AWS Lambda</td>
-<td>4096MB memory, 1 second run each time</td>
-<td>$66.7</td>
-</tr>
 <tr>
 <td>Amazon API Gateway</td>
 <td>1 million invocations</td>
@@ -1267,8 +1255,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon SageMaker</td>
-<td>Endpoint instance runs for 278 hours, ml.inf1.xlarge $0.297/hour</td>
-<td>$82.57</td>
+<td>Endpoint instance runs for 278 hours, ml.g4dn.xlarge $0.736/hour</td>
+<td>$204.61</td>
 </tr>
 <tr>
 <td>Amazon SageMaker</td>
@@ -1283,7 +1271,7 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>Total</td>
 <td></td>
-<td>$593.07</td>
+<td>$648.21</td>
 </tr>
 </tbody>
 </table>

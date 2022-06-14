@@ -1214,8 +1214,6 @@ Response response = client.newCall(request).execute();
 <h2 id="_4">成本预估</h2>
 <p>您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年5月，影响解决方案的成本因素主要包括：</p>
 <ul>
-<li>AWS Lambda调用次数</li>
-<li>AWS Lambda运行时间</li>
 <li>Amazon API Gateway调用次数</li>
 <li>Amazon API Gateway数据输出量</li>
 <li>Amazon CloudWatch Logs存储量</li>
@@ -1236,16 +1234,6 @@ Response response = client.newCall(request).execute();
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Amazon Lambda</td>
-<td>调用百万次</td>
-<td>$0.20</td>
-</tr>
-<tr>
-<td>Amazon Lambda</td>
-<td>内存4096MB，每次运行1秒</td>
-<td>$66.7</td>
-</tr>
 <tr>
 <td>Amazon API Gateway</td>
 <td>调用百万次</td>
@@ -1268,8 +1256,8 @@ Response response = client.newCall(request).execute();
 </tr>
 <tr>
 <td>Amazon SageMaker</td>
-<td>终端节点实例需要运行278小时，ml.inf1.xlarge $0.297/小时</td>
-<td>$82.57</td>
+<td>终端节点实例需要运行278小时，ml.g4dn.xlarge $0.736/小时</td>
+<td>$204.61</td>
 </tr>
 <tr>
 <td>Amazon SageMaker</td>
@@ -1284,7 +1272,7 @@ Response response = client.newCall(request).execute();
 <tr>
 <td>合计</td>
 <td></td>
-<td>$593.07</td>
+<td>$648.21</td>
 </tr>
 </tbody>
 </table>
