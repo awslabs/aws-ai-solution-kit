@@ -122,6 +122,9 @@ class TextSystem:
         for bno in range(len(dt_boxes)):
             tmp_box = copy.deepcopy(dt_boxes[bno])
             img_crop = self.get_rotate_crop_image(ori_im, tmp_box)
+            pad = min(img_crop.shape[:2])//10
+            if pad:
+                img_crop = cv2.copyMakeBorder(img_crop, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=(255,255,255))
             img_crop_list.append(img_crop)
         img_crop_list, angle_list = self.text_classifier(img_crop_list)
 
