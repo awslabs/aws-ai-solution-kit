@@ -1,0 +1,1 @@
+## This directory contains a set of example projects for the AWS AI Solution Kit.
