@@ -1,6 +1,6 @@
 INHERIT: ./mkdocs.base.yml
 site_name: AI Solution Kit 实施指南
-docs_dir: zh
+docs_dir: zh-branded
 site_dir: ./site/zh
 edit_uri: ''
 theme:
