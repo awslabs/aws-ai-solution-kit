@@ -15,14 +15,14 @@ jobs:
       CI: "true"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Setup Node.js
         uses: actions/setup-node@v2.2.0
         with:
-          node-version: 14.17.0
+          node-version: 10.8.1
       - name: Install dependencies
         run: yarn install --check-files
       - name: build
@@ -52,13 +52,13 @@ jobs:
     if: always() && needs.build.outputs.self_mutation_happened && !(github.event.pull_request.head.repo.full_name != github.repository)
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.PROJEN_GITHUB_TOKEN }}
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Download patch
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: .repo.patch
           path: ${{ runner.temp }}

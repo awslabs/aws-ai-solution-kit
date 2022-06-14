@@ -6,7 +6,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^14",
+      "version": "^10",
       "type": "build"
     },
     {
@@ -21,7 +21,7 @@
     },
     {
       "name": "aws-cdk",
-      "version": "^2.20.0",
+      "version": "^2.27.0",
       "type": "build"
     },
     {
@@ -75,7 +75,6 @@
     },
     {
       "name": "ts-node",
-      "version": "^9",
       "type": "build"
     },
     {
@@ -84,7 +83,7 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.20.0",
+      "version": "^2.27.0",
       "type": "runtime"
     },
     {
@@ -104,7 +103,7 @@
     },
     {
       "name": "deasync",
-      "version": "0.1.26",
+      "version": "^0.1.26",
       "type": "runtime"
     },
     {

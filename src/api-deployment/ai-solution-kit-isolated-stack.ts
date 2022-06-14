@@ -348,13 +348,13 @@ export class AISolutionKitIsolatedStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution', 'ConditionImageSuperResolution');
     }
 
-      // Stage base URL
-      {
-        new CfnOutput(this, 'Stage base URL', {
-          value: `${invokeUrl.toString()}/`,
-          description: 'Stage base URL',
-        });
-      }
+    // Stage base URL
+    {
+      new CfnOutput(this, 'Stage base URL', {
+        value: `${invokeUrl.toString()}/`,
+        description: 'Stage base URL',
+      });
+    }
   }
 
   private addOutput(cfnTemplate: CfnInclude, restApiId: string, apiPath: string, outputName: string, conditionName: string) {
