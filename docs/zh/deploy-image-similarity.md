@@ -113,7 +113,7 @@ feature_scenario: 可应用于商品识别，翻拍识别，智能相册等场�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

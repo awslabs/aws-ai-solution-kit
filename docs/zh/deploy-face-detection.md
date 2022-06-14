@@ -98,7 +98,7 @@ feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

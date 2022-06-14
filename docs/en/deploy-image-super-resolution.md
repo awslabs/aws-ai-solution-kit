@@ -70,8 +70,6 @@ feature_scenario: Applicable to converting original image assets into high resol
 
 You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
 
-- AWS Lambda invocations
-- AWS Lambda running time
 - Amazon API Gateway calls
 - Amazon API Gateway data output
 - Amazon CloudWatch Logs storage
@@ -88,16 +86,14 @@ The cost of using this solution is shown below:
 
 | Service                                 | Dimensions                                 | Cost      |
 |-------------------------------------|------------------------------------|---------|
-| AWS Lambda                     | 1 million invocations                                | $0.20   |
-| AWS Lambda                     | 4096MB memory, 1 second run each time                   | $66.7   |
 | Amazon API Gateway                | 1 million invocations                                | $3.5    |
 | Amazon API Gateway              | 4MB data output each time, $0.09/GB                 | $360    |
 | Amazon CloudWatch Logs              | 10KB each time, $0.50/GB                    | $0.05   |
 | Amazon Elastic Container Registry | 0.5GB storage, $0.1/GB per month                    | $0.05   |
-| Amazon SageMaker           | Endpoint instance runs for 278 hours, ml.inf1.xlarge $0.297/hour | $82.57  |
+| Amazon SageMaker           | Endpoint instance runs for 278 hours, ml.g4dn.xlarge $0.736/hour | $204.61  |
 | Amazon SageMaker          | Endpoint instance data input is 1MB each time, $0.016/GB                 | $16     |
 | Amazon SageMaker         | Endpoint instance data output is 4MB each time, $0.016/GB                 | $64     |
-| Total                                  |   | $593.07 |
+| Total                                  |   | $648.21 |
 
 
 {%

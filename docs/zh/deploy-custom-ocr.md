@@ -227,7 +227,7 @@ feature_scenario: 可应用于卡证票据类图片的结构化识别场景，�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

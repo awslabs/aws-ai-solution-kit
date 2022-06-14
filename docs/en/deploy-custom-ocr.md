@@ -232,7 +232,7 @@ The created templates can be listed by ID.
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

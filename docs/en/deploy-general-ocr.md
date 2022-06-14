@@ -76,38 +76,9 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
   include-markdown "include-deploy-code.md"
 %}
 
-## Cost estimation: example 1 
-
-In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in one second
-
-The cost of using this solution to process the image is shown below:
-
-| Service                                 | Dimensions                  | Cost      |
-|-------------------------------------|---------------------|---------|
-| AWS Lambda                     | 1 million invocations                 | ¥1.36   |
-| AWS Lambda                     | 4096MB memory, 1 second run each time     | ¥453.9  |
-| Amazon API Gateway                | 1 million invocations                  | ¥28.94  |
-| Amazon API Gateway             | 10KB data output each time, ¥0.933/GB | ¥9.33   |
-| Amazon CloudWatch Logs              | 10KB each time, ¥6.228/GB    | ¥62.28  |
-| Amazon Elastic Container Registry | 0.5GB storage, ¥0.69/GB each month    | ¥0.35   |
-| Total                                  |   | ¥556.16 |
-
-## Cost estimation: example 2
-
-In US East (Ohio) Region (us-east-2), process an image of 1MB in one second
-
-The cost of using this solution to process this image is shown below:
-
-| Service                                  | Dimensions                | Cost     |
-|-------------------------------------|--------------------|--------|
-| Amazon Lambda                     | 1 million invokes                | $0.20  |
-| Amazon Lambda                     | 4096MB memory, 1 second run each time    | $66.7  |
-| Amazon API Gateway                | 1 million invokes                | $3.5   |
-| Amazon API Gateway             | 10KB data output each time, $0.09/GB | $0.9   |
-| Amazon CloudWatch Logs              | 10KB data output each time, $0.50/GB    | $5     |
-| Amazon Elastic Container Registry | 0.5GB storage, GB$0.1/GB each month    | $0.05  |
-| Total                                 |   | $76.35 |
-
+{%
+  include "include-deploy-cost-8GB.md"
+%}
 
 {%
   include-markdown "include-deploy-uninstall.md"

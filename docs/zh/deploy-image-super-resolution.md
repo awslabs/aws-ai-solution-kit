@@ -69,8 +69,6 @@ feature_scenario: 可应用于等多种场景，解决原始图片分辨率不�
 
 您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年5月，影响解决方案的成本因素主要包括：
 
-- AWS Lambda调用次数
-- AWS Lambda运行时间
 - Amazon API Gateway调用次数
 - Amazon API Gateway数据输出量
 - Amazon CloudWatch Logs存储量
@@ -87,16 +85,14 @@ feature_scenario: 可应用于等多种场景，解决原始图片分辨率不�
 
 | 服务                                  | 用量                                 | 费用      |
 |-------------------------------------|------------------------------------|---------|
-| Amazon Lambda                     | 调用百万次                                | $0.20   |
-| Amazon Lambda                     | 内存4096MB，每次运行1秒                    | $66.7   |
 | Amazon API Gateway                | 调用百万次                                | $3.5    |
 | Amazon API Gateway              | 数据输出以每次4MB计算，$0.09/GB                  | $360    |
 | Amazon CloudWatch Logs              | 每次10KB，$0.50/GB                    | $0.05   |
 | Amazon Elastic Container Registry | 0.5GB存储，每月每GB$0.1                    | $0.05   |
-| Amazon SageMaker           | 终端节点实例需要运行278小时，ml.inf1.xlarge $0.297/小时 | $82.57  |
+| Amazon SageMaker           | 终端节点实例需要运行278小时，ml.g4dn.xlarge $0.736/小时 | $204.61  |
 | Amazon SageMaker          | 终端节点数据输入以每次1MB计算，$0.016/GB                 | $16     |
 | Amazon SageMaker         | 终端节点数据输出以每次4MB计算，$0.016/GB                 | $64     |
-| 合计                                  |   | $593.07 |
+| 合计                                  |   | $648.21 |
 
 
 {%

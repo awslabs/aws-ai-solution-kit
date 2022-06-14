@@ -60,7 +60,7 @@ feature_scenario: 可应用于对涉黄内容进行快速处理的场景。帮�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

@@ -68,7 +68,7 @@ feature_scenario: 可应用于停车场、小区自动识别车辆号牌信息�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

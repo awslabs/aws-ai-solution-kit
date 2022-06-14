@@ -178,7 +178,7 @@ feature_scenario: Applicable to scenarios such as smart security, smart retail, 
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

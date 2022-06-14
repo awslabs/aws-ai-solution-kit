@@ -78,7 +78,7 @@ feature_scenario: 可应用于纸质文档电子化，证件识别，内容审�
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%

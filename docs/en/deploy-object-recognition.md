@@ -416,7 +416,7 @@ The following is a list of supported entities for target detection.
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-10GB.md"
 %}
 
 {%

@@ -98,7 +98,7 @@ feature_scenario: Applicable to a variety of scenarios such as camera monitoring
 %}
 
 {%
-  include "include-deploy-cost.md"
+  include "include-deploy-cost-8GB.md"
 %}
 
 {%
