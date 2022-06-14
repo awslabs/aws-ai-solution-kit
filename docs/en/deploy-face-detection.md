@@ -42,13 +42,13 @@ feature_scenario: Applicable to a variety of scenarios such as camera monitoring
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Faces    |*List*   |List of detected faces in the image.|
-|+landmark_106    |*List*   |106 contour key points.|
-|++x    |*Int*   |Number of pixels the key point from the left edge.|
-|++y    |*Int*   |Number of pixels the key point from the upper edge.|
-|+gender    |*String*   |Gender information.|
-|+age    |*String*   |Age information.|
-|+BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
-|+Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
+|landmark_106    |*List*   |106 contour key points.|
+|x    |*Int*   |Number of pixels the key point from the left edge.|
+|y    |*Int*   |Number of pixels the key point from the upper edge.|
+|gender    |*String*   |Gender information.|
+|age    |*String*   |Age information.|
+|BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
+|Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
 |FaceModelVersion    |*String*   |Current model version.|
 
 - Example JSON response

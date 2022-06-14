@@ -65,23 +65,23 @@ feature_scenario: Applicable to scenarios such as smart security, smart retail, 
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Labels |*List* |List of human bodies recognized in the image.|
-|+upper_wear |*Dict* |Short Sleeve, Long Sleeve|
-|+upper_wear_texture |*Dict* |Pattern, Solid, Stripe/Check|
-|+lower_wear |*Dict* |Shorts/Skirts, Pants/Skirts|
-|+glasses |*Dict* |With glasses, without glasses|
-|+bag |*Dict* |With backpack, without backpack|
-|+headwear |*Dict* |With hat, without hat|
-|+orientation |*Dict* |left side, back side, front side, right side|
-|+upper_cut |*Dict* |with truncation, without truncation|
-|+lower_cut |*Dict* |with truncation, without truncation|
-|+occlusion |*Dict* |No Occlusion, Light Occlusion, Heavy Occlusion|
-|+face_mask |*Dict* |With mask, without mask|
-|+gender |*Dict* |Male, Female|
-|+age |*Dict* |Children, Teens, Middle-aged, Seniors|
-|+smoke |*Dict* |Smoking, non-smoking|
-|+cellphone |*Dict* |with telephone, without telephone|
-|+carrying_item |*Dict* |With or without carry|
-|+BoundingBox |*Dict* |Coordinate values of the human body in the image, including the percentage of top, left, width, height relative to the full screen|
+|upper_wear |*Dict* |Short Sleeve, Long Sleeve|
+|upper_wear_texture |*Dict* |Pattern, Solid, Stripe/Check|
+|lower_wear |*Dict* |Shorts/Skirts, Pants/Skirts|
+|glasses |*Dict* |With glasses, without glasses|
+|bag |*Dict* |With backpack, without backpack|
+|headwear |*Dict* |With hat, without hat|
+|orientation |*Dict* |left side, back side, front side, right side|
+|upper_cut |*Dict* |with truncation, without truncation|
+|lower_cut |*Dict* |with truncation, without truncation|
+|occlusion |*Dict* |No Occlusion, Light Occlusion, Heavy Occlusion|
+|face_mask |*Dict* |With mask, without mask|
+|gender |*Dict* |Male, Female|
+|age |*Dict* |Children, Teens, Middle-aged, Seniors|
+|smoke |*Dict* |Smoking, non-smoking|
+|cellphone |*Dict* |with telephone, without telephone|
+|carrying_item |*Dict* |With or without carry|
+|BoundingBox |*Dict* |Coordinate values of the human body in the image, including the percentage of top, left, width, height relative to the full screen|
 |LabelModelVersion |*String* |Current model version number|
 
 - Example JSON response

@@ -350,11 +350,11 @@ The following is a list of supported entities for target detection.
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Labels |*List* |List of recognized objects in the image|
-|+Name |*String* |Target category|
-|+Instances |*List* |List of category instances|
-|++BoundingBox |*JSON* |Coordinate value of the instance in the image, including the percentage of top, left, width, height relative to the full screen|
-|++Confidence |*Float* |Instance confidence, which is from 0 to 100|
-|+Confidence |*Int* |Maximum value of current class instance confidence|
+|Name |*String* |Target category|
+|Instances |*List* |List of category instances|
+|BoundingBox |*JSON* |Coordinate value of the instance in the image, including the percentage of top, left, width, height relative to the full screen|
+|Confidence |*Float* |Instance confidence, which is from 0 to 100|
+|Confidence |*Int* |Maximum value of current class instance confidence|
 |LabelModelVersion |*String* |Current model version number|
 
 - Example JSON response

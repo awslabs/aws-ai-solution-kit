@@ -43,11 +43,11 @@ feature_scenario: 可应用于IPC图像检测、交通、安防等行业中图�
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
 |Labels    |*List*   |图像中找到的目标列表|
-|+Name    |*String*   |目标类别名|
-|+Instances    |*List*   |类别实例列表|
-|++BoundingBox |*JSON*     |实例在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|++Confidence    |*Float*   |实例的置信度，0-100|
-|+Confidence    |*Int*   |当前类别实例置信度的最大值|
+|Name    |*String*   |目标类别名|
+|Instances    |*List*   |类别实例列表|
+|BoundingBox |*JSON*     |实例在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
+|Confidence    |*Float*   |实例的置信度，0-100|
+|Confidence    |*Int*   |当前类别实例置信度的最大值|
 |LabelModelVersion    |*String*   |当前模型版本号|
 
 - 返回示例

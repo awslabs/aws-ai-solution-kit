@@ -42,13 +42,13 @@ feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营�
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
 |Faces    |*List*   |图像中找到的人脸列表|
-|+landmark_106    |*List*   |106个关键点坐标|
-|++x    |*Int*   |关键点距左边缘的像素数|
-|++y    |*Int*   |关键点距上边缘的像素数|
-|+gender    |*String*   |性别|
-|+age    |*String*   |年龄|
-|+BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
-|+Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
+|landmark_106    |*List*   |106个关键点坐标|
+|x    |*Int*   |关键点距左边缘的像素数|
+|y    |*Int*   |关键点距上边缘的像素数|
+|gender    |*String*   |性别|
+|age    |*String*   |年龄|
+|BoundingBox |*JSON*     |人脸在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
+|Confidence    |*Float*   |识别人脸置信度值，为0到1区间内Float型数值|
 |FaceModelVersion    |*String*   |当前模型版本号|
 
 - 返回示例

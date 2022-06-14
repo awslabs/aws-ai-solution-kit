@@ -65,23 +65,23 @@ feature_scenario: 可应用于智慧安防、智慧零售、行人搜索等场�
 | **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
 |Labels    |*List*   |图像中找到的人体列表|
-|+upper_wear    |*Dict*   |短袖、长袖|
-|+upper_wear_texture    |*Dict*   |图案、纯色、条纹/格子|
-|+lower_wear    |*Dict*   |短裤/裙、长裤/裙|
-|+glasses    |*Dict*   |有眼镜、无眼镜|
-|+bag    |*Dict*   |有背包、无背包|
-|+headwear    |*Dict*   |有帽、无帽|
-|+orientation    |*Dict*   |左侧面、背面、正面、右侧面|
-|+upper_cut    |*Dict*   |有截断、无截断|
-|+lower_cut    |*Dict*   |有截断、无截断|
-|+occlusion    |*Dict*   |无遮挡、轻度遮挡、重度遮挡|
-|+face_mask    |*Dict*   |戴口罩、无口罩|
-|+gender    |*Dict*   |男性、女性|
-|+age    |*Dict*   |幼儿、青少年、中年、老年|
-|+smoke    |*Dict*   |吸烟、未吸烟|
-|+cellphone    |*Dict*   |使用手机、未使用手机|
-|+carrying_item    |*Dict*   |有手提物、无手提物|
-|+BoundingBox |*Dict*     |人体在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
+|upper_wear    |*Dict*   |短袖、长袖|
+|upper_wear_texture    |*Dict*   |图案、纯色、条纹/格子|
+|lower_wear    |*Dict*   |短裤/裙、长裤/裙|
+|glasses    |*Dict*   |有眼镜、无眼镜|
+|bag    |*Dict*   |有背包、无背包|
+|headwear    |*Dict*   |有帽、无帽|
+|orientation    |*Dict*   |左侧面、背面、正面、右侧面|
+|upper_cut    |*Dict*   |有截断、无截断|
+|lower_cut    |*Dict*   |有截断、无截断|
+|occlusion    |*Dict*   |无遮挡、轻度遮挡、重度遮挡|
+|face_mask    |*Dict*   |戴口罩、无口罩|
+|gender    |*Dict*   |男性、女性|
+|age    |*Dict*   |幼儿、青少年、中年、老年|
+|smoke    |*Dict*   |吸烟、未吸烟|
+|cellphone    |*Dict*   |使用手机、未使用手机|
+|carrying_item    |*Dict*   |有手提物、无手提物|
+|BoundingBox |*Dict*     |人体在图像中的的坐标值，包含top，left，width，height相对全画面的百分比|
 |LabelModelVersion    |*String*   |当前模型版本号|
 
 - 返回示例

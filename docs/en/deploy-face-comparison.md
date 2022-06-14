@@ -43,9 +43,9 @@ feature_scenario: Applicable to customer authentication, photo classification an
 | **Name** | **Type** | **Description**  |
 |----------|-----------|------------|
 |Faces    |*List*   |List of detected faces in the image.|
-|+face_hash    |*List*   |List with 768 parameters for a 768-dimensional face vector.|
-|+BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
-|+Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
+|face_hash    |*List*   |List with 768 parameters for a 768-dimensional face vector.|
+|BoundingBox |*JSON*     |Coordinate values of the face in the image, including the percentage of top, left, width, height relative to the full screen.|
+|Confidence    |*Float*   |Confidence score of the recognized face, which is a float type value between 0 and 1.|
 |FaceModelVersion    |*String*   |Current model version.|
 
 - Example JSON response
