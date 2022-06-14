@@ -27,7 +27,7 @@ The following describes how to create a template:
 2. Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to **top left, top right, bottom right, bottom left** order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area, recognition area example as follows.
 
     ```
-    [[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"],
+    [[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"]
     ```
 
 3. Please refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.
