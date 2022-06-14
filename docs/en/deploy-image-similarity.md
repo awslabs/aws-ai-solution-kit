@@ -13,7 +13,7 @@ feature_scenario: Applicable to scenarios such as commodity recognition, remake 
   include "include-deploy-description.md"
 %}
 
-## REST API Reference
+## API reference
 
 The API supports two input modes: single image and image pair.
 

@@ -13,7 +13,7 @@ feature_scenario: Applicable to customer authentication, photo classification an
   include "include-deploy-description.md"
 %}
 
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

@@ -12,7 +12,7 @@ feature_scenario: Applicable to a variety of scenarios such as camera monitoring
 {%
   include "include-deploy-description.md"
 %}
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

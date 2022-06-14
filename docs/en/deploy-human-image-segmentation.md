@@ -13,7 +13,7 @@ feature_scenario: Applicable to photo background replacement, post-processing, I
   include "include-deploy-description.md"
 %}
 
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

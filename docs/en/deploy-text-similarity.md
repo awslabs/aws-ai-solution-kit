@@ -12,7 +12,7 @@ feature_scenario: Applicable to search engines, recommendation systems, machine 
 {%
   include "include-deploy-description.md"
 %}
-## REST API Reference
+## API reference
 
 The API supports two input modes: single text or text pair.
 

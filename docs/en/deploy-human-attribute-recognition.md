@@ -35,7 +35,7 @@ feature_scenario: Applicable to scenarios such as smart security, smart retail, 
 | Telephone | No, Yes |
 | Whether to carry things | No, Yes |
 
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

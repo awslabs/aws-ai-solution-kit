@@ -8,7 +8,7 @@ The table below lists the supported APIs. You can click the **Details** link to 
 
 
 ### Optical Character Recognition (OCR)
-|    **API Name**   | **Description**    |  |
+|    **API Name**   | **Description**    | API |
 |--------------|------------|-------------|
 |General OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols from images, and return information such as coordinates and confidence.|[Details](deploy-general-ocr.md)|
 |General OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images, and return information such as coordinates and confidence.|[Details](deploy-general-ocr-traditional.md)|
@@ -16,7 +16,7 @@ The table below lists the supported APIs. You can click the **Details** link to 
 |Car License Plate|Recognize text on Chinese car license plate.|[Details](deploy-car-license-plate.md)|
 
 ### Face and Body
-|    **API Name**   | **Description**    |  |
+|    **API Name**   | **Description**    | API |
 |--------------|------------|-------------|
 |Face Detection|Detect the face in an image and return coordinate information of the face.|[Details](deploy-face-detection.md)|
 |Face Comparison|Compare two faces of the same person and return a confidence score of the similarity.|[Details](deploy-face-comparison.md)|
@@ -24,19 +24,19 @@ The table below lists the supported APIs. You can click the **Details** link to 
 |Human Image Segmentation|Segment human bodies from the image background.|[Details](deploy-human-image-segmentation.md)|
 
 ### Image Understanding
-|    **API Name**   | **Description**    |  |
+|    **API Name**   | **Description**    | API |
 |--------------|------------|-------------|
 |Image Similarity|Compare two images and return similarity score.|[Details](deploy-text-similarity.md)|
 |Object Recognition|Recognize objects and scenes in an image and return confidence score for each object or scene.|[Details](deploy-object-recognition.md)|
 |Pornography Detection|Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores.|[Details](deploy-pornography-detection.md)|
 
 ### Vision Production
-|    **API Name**   | **Description**    |  |
+|    **API Name**   | **Description**    | API |
 |--------------|------------|-------------|
 |Image Super Resolution|Upscale the resolution and enhance details in the images|[Details](deploy-image-super-resolution.md)|
 
 ### Natural Language Understanding (NLU)
-|    **API Name**   | **Description**    |  |
+|    **API Name**   | **Description**    | API |
 |--------------|------------|-------------|
 |Text Similarity|Compare two Chinese words or sentences and return similarity score|[Details](deploy-text-similarity.md)|
 

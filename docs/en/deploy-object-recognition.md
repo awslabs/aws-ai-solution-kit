@@ -320,7 +320,7 @@ The following is a list of supported entities for target detection.
 | wineglass                    |
 | zebra                        |
 
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 

@@ -13,7 +13,7 @@ feature_scenario: Applicable to identifying car license plates in car parking lo
   include "include-deploy-description.md"
 %}
 
-## REST API Reference
+## API reference
 
 - HTTP request method: `POST`
 
