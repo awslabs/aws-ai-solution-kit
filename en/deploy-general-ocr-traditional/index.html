@@ -497,18 +497,12 @@
     Applicable scenarios
   </a>
   
-    <nav class="md-nav" aria-label="Applicable scenarios">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
-  </a>
-  
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    API reference
+  </a>
   
 </li>
       
@@ -543,14 +537,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -569,10 +563,10 @@
       
         <li class="md-nav__item">
   <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
+    Cost estimation
   </a>
   
-    <nav class="md-nav" aria-label="Cost Estimation">
+    <nav class="md-nav" aria-label="Cost estimation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -889,18 +883,12 @@
     Applicable scenarios
   </a>
   
-    <nav class="md-nav" aria-label="Applicable scenarios">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
-  </a>
-  
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    API reference
+  </a>
   
 </li>
       
@@ -935,14 +923,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -961,10 +949,10 @@
       
         <li class="md-nav__item">
   <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
+    Cost estimation
   </a>
   
-    <nav class="md-nav" aria-label="Cost Estimation">
+    <nav class="md-nav" aria-label="Cost estimation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1012,7 +1000,7 @@
 <p>Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.</p>
-<h3 id="rest-api-reference">REST API Reference</h3>
+<h2 id="api-reference">API reference</h2>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1186,7 +1174,7 @@
   &quot;url&quot;:&quot;Image URL address&quot;
 }'
 </code></pre>
-<h3 id="python-aws_iam-authentication">Python （<em>AWS_IAM</em> Authentication）</h3>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
@@ -1202,7 +1190,7 @@ payload = {
 response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 </code></pre>
-<h3 id="python-none-authentication">Python （<em>NONE</em> Authentication）</h3>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 
@@ -1233,7 +1221,7 @@ Response response = client.newCall(request).execute();
 </code></pre>
 <!-- END INCLUDE -->
 
-<h2 id="cost-estimation">Cost Estimation</h2>
+<h2 id="cost-estimation">Cost estimation</h2>
 <p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
 <li>AWS Lambda invocations</li>

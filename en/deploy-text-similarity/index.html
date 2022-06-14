@@ -654,11 +654,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+    <nav class="md-nav" aria-label="API reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -711,14 +711,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -906,11 +906,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+    <nav class="md-nav" aria-label="API reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -963,14 +963,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -1040,7 +1040,7 @@
 <p>Compare two Chinese words or sentences and return similarity score.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to search engines, recommendation systems, machine translation, automatic response, named entity recognition, spelling error correction and other scenarios.</p>
-<h2 id="rest-api-reference">REST API Reference</h2>
+<h2 id="api-reference">API reference</h2>
 <p>The API supports two input modes: single text or text pair.</p>
 <h3 id="single-text-mode">Single text mode</h3>
 <p>With a single text as input, it returns the feature vectors of the text. You need to maintain a vector retrieval system. This is applicable to search or callback scenarios.</p>
@@ -1250,7 +1250,7 @@
   &quot;url&quot;:&quot;Image URL address&quot;
 }'
 </code></pre>
-<h3 id="python-aws_iam-authentication">Python （<em>AWS_IAM</em> Authentication）</h3>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
@@ -1266,7 +1266,7 @@ payload = {
 response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 </code></pre>
-<h3 id="python-none-authentication">Python （<em>NONE</em> Authentication）</h3>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 

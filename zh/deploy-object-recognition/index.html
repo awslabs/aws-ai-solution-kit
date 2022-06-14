@@ -612,6 +612,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    支持的目标识别实体列表
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     API参数说明
   </a>
@@ -619,7 +626,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     开始使用
   </a>
   
@@ -670,13 +677,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    支持的目标识别实体列表
-  </a>
   
 </li>
       
@@ -887,6 +887,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    支持的目标识别实体列表
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     API参数说明
   </a>
@@ -894,7 +901,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     开始使用
   </a>
   
@@ -949,13 +956,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    支持的目标识别实体列表
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
     成本预估
   </a>
@@ -999,279 +999,10 @@
 
   <h1>通用物体识别</h1>
 
-<p>检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别300类物体。</p>
+<p>检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别300类物体，详情可参见本文中支持的目标识别实体列表。</p>
 <h2 id="_1">适用场景</h2>
 <p>可应用于IPC图像检测、交通、安防等行业中图像场景的目标检测与跟踪。</p>
-<h2 id="api">API参数说明</h2>
-<ul>
-<li>
-<p>HTTP 方法: <code>POST</code></p>
-</li>
-<li>
-<p>Body 请求参数</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>是否必选</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>url</td>
-<td><em>String</em></td>
-<td>与 img 参数二选一</td>
-<td>图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。</td>
-</tr>
-<tr>
-<td>img</td>
-<td><em>String</em></td>
-<td>与 url 参数二选一</td>
-<td>进行 Base64 编码的图像数据</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>请求 Body 示例</li>
-</ul>
-<pre><code class="language-json">{
-&quot;url&quot;: &quot;图像的URL地址&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-&quot;img&quot;: &quot;Base64编码的图像数据&quot;
-}
-</code></pre>
-<ul>
-<li>返回参数</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>名称</strong></th>
-<th><strong>类型</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Labels</td>
-<td><em>List</em></td>
-<td>图像中找到的目标列表</td>
-</tr>
-<tr>
-<td>Name</td>
-<td><em>String</em></td>
-<td>目标类别名</td>
-</tr>
-<tr>
-<td>Instances</td>
-<td><em>List</em></td>
-<td>类别实例列表</td>
-</tr>
-<tr>
-<td>BoundingBox</td>
-<td><em>JSON</em></td>
-<td>实例在图像中的的坐标值，包含top，left，width，height相对全画面的百分比</td>
-</tr>
-<tr>
-<td>Confidence</td>
-<td><em>Float</em></td>
-<td>实例的置信度，0-100</td>
-</tr>
-<tr>
-<td>Confidence</td>
-<td><em>Int</em></td>
-<td>当前类别实例置信度的最大值</td>
-</tr>
-<tr>
-<td>LabelModelVersion</td>
-<td><em>String</em></td>
-<td>当前模型版本号</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>返回示例</li>
-</ul>
-<pre><code class="language-json">{
-    &quot;Labels&quot;: [
-        {
-            &quot;Name&quot;: &quot;car_(automobile)&quot;, 
-            &quot;Confidence&quot;: 67.87780523300171, 
-            &quot;Instances&quot;: [
-                {
-                    &quot;BoundingBox&quot;: {
-                        &quot;Width&quot;: 1.0013043403596384, 
-                        &quot;Height&quot;: 0.9958885181613408, 
-                        &quot;Left&quot;: -0.00021715163893532008, 
-                        &quot;Top&quot;: 0.00033918747441136817
-                    }, 
-                    &quot;Confidence&quot;: 67.87780523300171
-                }
-            ]
-        }, 
-        {
-            &quot;Name&quot;: &quot;mirror&quot;, 
-            &quot;Confidence&quot;: 59.2678964138031, 
-            &quot;Instances&quot;: [
-                {
-                    &quot;BoundingBox&quot;: {
-                        &quot;Width&quot;: 0.14041614532470703, 
-                        &quot;Height&quot;: 0.29166373257057565, 
-                        &quot;Left&quot;: 0.2743588984012604, 
-                        &quot;Top&quot;: 0.2794425819140053
-                    }, 
-                    &quot;Confidence&quot;: 59.2678964138031
-                }
-            ]
-        }, 
-        {
-            &quot;Name&quot;: &quot;window&quot;, 
-            &quot;Confidence&quot;: 16.396354138851166, 
-            &quot;Instances&quot;: [
-                {
-                    &quot;BoundingBox&quot;: {
-                        &quot;Width&quot;: 0.44319993257522583, 
-                        &quot;Height&quot;: 0.6673663154702585, 
-                        &quot;Left&quot;: 0.5509995222091675, 
-                        &quot;Top&quot;: 0.015529238811174562
-                    }, 
-                    &quot;Confidence&quot;: 16.396354138851166
-                }
-            ]
-        }
-    ], 
-    &quot;LabelModelVersion&quot;: &quot;1.2.0&quot;
-}
-</code></pre>
-<!-- BEGIN INCLUDE include-deploy-code.md -->
-<h2 id="_2">开始使用</h2>
-<h3 id="api_1">API资源浏览器</h3>
-<p><strong>前提条件</strong></p>
-<p>通过AWS CloudFormation<a href="../deployment/">部署解决方案</a>时，您需要：</p>
-<ul>
-<li>设置参数<strong>API Explorer</strong>为<em>yes</em>。</li>
-<li>设置参数<strong>API Gateway Authorization</strong>为<em>NONE</em>。</li>
-</ul>
-<p>否则，在API资源浏览器中只能看到该API的参考定义，而不能进行在线测试等操作。</p>
-<p><strong>操作步骤</strong></p>
-<ol>
-<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation控制台</a>。</li>
-<li>
-<p>从堆栈列表中选择方案的<strong>根堆栈</strong>，而不是嵌套堆栈。列表中嵌套堆栈的名称旁边会显示嵌套（NESTED）。</p>
-<p><img alt="" src="../images/root-stack.png" /></p>
-</li>
-<li>
-<p>打开<strong>输出（Outputs）</strong>标签页，找到<strong>APIExplorer</strong>对应的URL。</p>
-</li>
-<li>
-<p>点击URL访问API资源浏览器。页面将显示在部署解决方案时选中的API。</p>
-<p><img alt="" src="../images/api-explorer.png" /></p>
-</li>
-<li>
-<p>点击API右侧的向下箭头，展开显示API标准模型的请求方法。</p>
-</li>
-<li>点击右侧的测试（Try it out）按钮，并在Request body中输入正确的Body请求数据进行测试，并查看测试结果。</li>
-<li>确认格式正确后，点击下方的<strong>Execute</strong>。</li>
-<li>在<strong>Responses body</strong>中查看返回的JSON结果。您还可以通过右侧复制或下载按钮保存处理结果。</li>
-<li>在<strong>Response headers</strong>中查看响应头的相关信息。</li>
-<li>（可选）点击<strong>Execute</strong>右侧<strong>Clear</strong>按钮，即可清空<strong>Request body</strong>与<strong>Responses</strong>测试结果。</li>
-</ol>
-<h3 id="postmanaws_iam">Postman（<em>AWS_IAM</em>认证）</h3>
-<ol>
-<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation</a>控制台。</li>
-<li>从堆栈列表中选择方案的根堆栈。</li>
-<li>打开<strong>输出</strong>标签页，找到以 <strong>ObjectRecognition</strong> 为前缀的URL。</li>
-<li>
-<p>在Postman中新建标签页，并把URL粘贴到地址栏，选择<em>POST</em>作为HTTP调用方法。</p>
-<p><img alt="" src="../images/ocr-postman-1-zh.png" /></p>
-</li>
-<li>
-<p>打开Authorization配置，在下拉列表里选择Amazon Web Service Signature，并填写对应账户的AccessKey、SecretKey和Amazon Web Service Region（例如，cn-north-1或cn-northwest-1）。</p>
-<p><img alt="" src="../images/ocr-postman-2-zh.png" /></p>
-</li>
-<li>
-<p>打开Body配置项，选中raw和JSON数据类型。</p>
-</li>
-<li>
-<p>在Body中输入测试数据，单击Send按钮即可看到相应返回结果。</p>
-</li>
-</ol>
-<pre><code class="language-json">{
-  &quot;url&quot;: &quot;图像的URL地址&quot;
-}
-</code></pre>
-<p><img alt="" src="../images/ocr-postman-3-zh.png" /></p>
-<h3 id="curl">cURL</h3>
-<ul>
-<li>Windows</li>
-</ul>
-<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition&quot; ^
---header &quot;Content-Type: application/json&quot; ^
---data-raw &quot;{\&quot;url\&quot;: \&quot;图像的URL地址\&quot;}&quot;
-</code></pre>
-<ul>
-<li>Linux/MacOS</li>
-</ul>
-<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition' \
---header 'Content-Type: application/json' \
---data-raw '{
-  &quot;url&quot;:&quot;图像的URL地址&quot;
-}'
-</code></pre>
-<h3 id="pythonaws_iam">Python（<em>AWS_IAM</em>认证）</h3>
-<pre><code class="language-python">import requests
-import json
-from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
-
-auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
-                           aws_region='[AWS_REGION]',
-                           aws_service='execute-api')
-
-url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition'
-payload = {
-    'url': '图像的URL地址'
-}
-response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
-print(json.loads(response.text))
-</code></pre>
-<h3 id="pythonnone">Python（<em>NONE</em>认证）</h3>
-<pre><code class="language-python">import requests
-import json
-
-url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition&quot;
-
-payload = json.dumps({
-  &quot;url&quot;: &quot;图像的URL地址&quot;
-})
-headers = {
-  'Content-Type': 'application/json'
-}
-
-response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
-
-print(response.text)
-</code></pre>
-<h3 id="java">Java</h3>
-<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
-  .build();
-MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
-RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;图像的URL地址\&quot;\n}&quot;);
-Request request = new Request.Builder()
-  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/object_recognition&quot;)
-  .method(&quot;POST&quot;, body)
-  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
-  .build();
-Response response = client.newCall(request).execute();
-</code></pre>
-<!-- END INCLUDE -->
-
-<h2 id="_3">支持的目标识别实体列表</h2>
+<h2 id="_2">支持的目标识别实体列表</h2>
 <table>
 <thead>
 <tr>
@@ -2482,8 +2213,277 @@ Response response = client.newCall(request).execute();
 </tr>
 </tbody>
 </table>
+<h2 id="api">API参数说明</h2>
+<ul>
+<li>
+<p>HTTP 方法: <code>POST</code></p>
+</li>
+<li>
+<p>Body 请求参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>是否必选</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>url</td>
+<td><em>String</em></td>
+<td>与 img 参数二选一</td>
+<td>图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，最长边不超过 4096px。</td>
+</tr>
+<tr>
+<td>img</td>
+<td><em>String</em></td>
+<td>与 url 参数二选一</td>
+<td>进行 Base64 编码的图像数据</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求 Body 示例</li>
+</ul>
+<pre><code class="language-json">{
+&quot;url&quot;: &quot;图像的URL地址&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+&quot;img&quot;: &quot;Base64编码的图像数据&quot;
+}
+</code></pre>
+<ul>
+<li>返回参数</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Labels</td>
+<td><em>List</em></td>
+<td>图像中找到的目标列表</td>
+</tr>
+<tr>
+<td>Name</td>
+<td><em>String</em></td>
+<td>目标类别名</td>
+</tr>
+<tr>
+<td>Instances</td>
+<td><em>List</em></td>
+<td>类别实例列表</td>
+</tr>
+<tr>
+<td>BoundingBox</td>
+<td><em>JSON</em></td>
+<td>实例在图像中的的坐标值，包含top，left，width，height相对全画面的百分比</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td><em>Float</em></td>
+<td>实例的置信度，0-100</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td><em>Int</em></td>
+<td>当前类别实例置信度的最大值</td>
+</tr>
+<tr>
+<td>LabelModelVersion</td>
+<td><em>String</em></td>
+<td>当前模型版本号</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>返回示例</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;Labels&quot;: [
+        {
+            &quot;Name&quot;: &quot;car_(automobile)&quot;, 
+            &quot;Confidence&quot;: 67.87780523300171, 
+            &quot;Instances&quot;: [
+                {
+                    &quot;BoundingBox&quot;: {
+                        &quot;Width&quot;: 1.0013043403596384, 
+                        &quot;Height&quot;: 0.9958885181613408, 
+                        &quot;Left&quot;: -0.00021715163893532008, 
+                        &quot;Top&quot;: 0.00033918747441136817
+                    }, 
+                    &quot;Confidence&quot;: 67.87780523300171
+                }
+            ]
+        }, 
+        {
+            &quot;Name&quot;: &quot;mirror&quot;, 
+            &quot;Confidence&quot;: 59.2678964138031, 
+            &quot;Instances&quot;: [
+                {
+                    &quot;BoundingBox&quot;: {
+                        &quot;Width&quot;: 0.14041614532470703, 
+                        &quot;Height&quot;: 0.29166373257057565, 
+                        &quot;Left&quot;: 0.2743588984012604, 
+                        &quot;Top&quot;: 0.2794425819140053
+                    }, 
+                    &quot;Confidence&quot;: 59.2678964138031
+                }
+            ]
+        }, 
+        {
+            &quot;Name&quot;: &quot;window&quot;, 
+            &quot;Confidence&quot;: 16.396354138851166, 
+            &quot;Instances&quot;: [
+                {
+                    &quot;BoundingBox&quot;: {
+                        &quot;Width&quot;: 0.44319993257522583, 
+                        &quot;Height&quot;: 0.6673663154702585, 
+                        &quot;Left&quot;: 0.5509995222091675, 
+                        &quot;Top&quot;: 0.015529238811174562
+                    }, 
+                    &quot;Confidence&quot;: 16.396354138851166
+                }
+            ]
+        }
+    ], 
+    &quot;LabelModelVersion&quot;: &quot;1.2.0&quot;
+}
+</code></pre>
+<!-- BEGIN INCLUDE include-deploy-code.md -->
+<h2 id="_3">开始使用</h2>
+<h3 id="api_1">API资源浏览器</h3>
+<p><strong>前提条件</strong></p>
+<p>通过AWS CloudFormation<a href="../deployment/">部署解决方案</a>时，您需要：</p>
+<ul>
+<li>设置参数<strong>API Explorer</strong>为<em>yes</em>。</li>
+<li>设置参数<strong>API Gateway Authorization</strong>为<em>NONE</em>。</li>
+</ul>
+<p>否则，在API资源浏览器中只能看到该API的参考定义，而不能进行在线测试等操作。</p>
+<p><strong>操作步骤</strong></p>
+<ol>
+<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation控制台</a>。</li>
+<li>
+<p>从堆栈列表中选择方案的<strong>根堆栈</strong>，而不是嵌套堆栈。列表中嵌套堆栈的名称旁边会显示嵌套（NESTED）。</p>
+<p><img alt="" src="../images/root-stack.png" /></p>
+</li>
+<li>
+<p>打开<strong>输出（Outputs）</strong>标签页，找到<strong>APIExplorer</strong>对应的URL。</p>
+</li>
+<li>
+<p>点击URL访问API资源浏览器。页面将显示在部署解决方案时选中的API。</p>
+<p><img alt="" src="../images/api-explorer.png" /></p>
+</li>
+<li>
+<p>点击API右侧的向下箭头，展开显示API标准模型的请求方法。</p>
+</li>
+<li>点击右侧的测试（Try it out）按钮，并在Request body中输入正确的Body请求数据进行测试，并查看测试结果。</li>
+<li>确认格式正确后，点击下方的<strong>Execute</strong>。</li>
+<li>在<strong>Responses body</strong>中查看返回的JSON结果。您还可以通过右侧复制或下载按钮保存处理结果。</li>
+<li>在<strong>Response headers</strong>中查看响应头的相关信息。</li>
+<li>（可选）点击<strong>Execute</strong>右侧<strong>Clear</strong>按钮，即可清空<strong>Request body</strong>与<strong>Responses</strong>测试结果。</li>
+</ol>
+<h3 id="postmanaws_iam">Postman（<em>AWS_IAM</em>认证）</h3>
+<ol>
+<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation</a>控制台。</li>
+<li>从堆栈列表中选择方案的根堆栈。</li>
+<li>打开<strong>输出</strong>标签页，找到以 <strong>ObjectRecognition</strong> 为前缀的URL。</li>
+<li>
+<p>在Postman中新建标签页，并把URL粘贴到地址栏，选择<em>POST</em>作为HTTP调用方法。</p>
+<p><img alt="" src="../images/ocr-postman-1-zh.png" /></p>
+</li>
+<li>
+<p>打开Authorization配置，在下拉列表里选择Amazon Web Service Signature，并填写对应账户的AccessKey、SecretKey和Amazon Web Service Region（例如，cn-north-1或cn-northwest-1）。</p>
+<p><img alt="" src="../images/ocr-postman-2-zh.png" /></p>
+</li>
+<li>
+<p>打开Body配置项，选中raw和JSON数据类型。</p>
+</li>
+<li>
+<p>在Body中输入测试数据，单击Send按钮即可看到相应返回结果。</p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;图像的URL地址&quot;
+}
+</code></pre>
+<p><img alt="" src="../images/ocr-postman-3-zh.png" /></p>
+<h3 id="curl">cURL</h3>
+<ul>
+<li>Windows</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition&quot; ^
+--header &quot;Content-Type: application/json&quot; ^
+--data-raw &quot;{\&quot;url\&quot;: \&quot;图像的URL地址\&quot;}&quot;
+</code></pre>
+<ul>
+<li>Linux/MacOS</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  &quot;url&quot;:&quot;图像的URL地址&quot;
+}'
+</code></pre>
+<h3 id="pythonaws_iam">Python（<em>AWS_IAM</em>认证）</h3>
+<pre><code class="language-python">import requests
+import json
+from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
+
+auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
+                           aws_region='[AWS_REGION]',
+                           aws_service='execute-api')
+
+url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition'
+payload = {
+    'url': '图像的URL地址'
+}
+response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
+print(json.loads(response.text))
+</code></pre>
+<h3 id="pythonnone">Python（<em>NONE</em>认证）</h3>
+<pre><code class="language-python">import requests
+import json
+
+url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/object_recognition&quot;
+
+payload = json.dumps({
+  &quot;url&quot;: &quot;图像的URL地址&quot;
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
+
+print(response.text)
+</code></pre>
+<h3 id="java">Java</h3>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
+RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;图像的URL地址\&quot;\n}&quot;);
+Request request = new Request.Builder()
+  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/object_recognition&quot;)
+  .method(&quot;POST&quot;, body)
+  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
+  .build();
+Response response = client.newCall(request).execute();
+</code></pre>
+<!-- END INCLUDE -->
+
 <h2 id="_4">成本预估</h2>
-<p>您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年5月，影响解决方案的成本因素主要包括：</p>
+<p>您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年6月，影响解决方案的成本因素主要包括：</p>
 <ul>
 <li>AWS Lambda调用次数</li>
 <li>AWS Lambda运行时间</li>

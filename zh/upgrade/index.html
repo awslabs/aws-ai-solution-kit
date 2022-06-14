@@ -824,8 +824,8 @@
 <p>如果您想将原有API调用URL切换到新版本上，可以在部署新版本后，进行以下操作：</p>
 <ol>
 <li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation控制台</a>。</li>
-<li>从堆栈列表中选择方案的根堆栈。</li>
-<li>打开<strong>输出</strong>标签页，找到要调用的URL。</li>
+<li>从堆栈列表中选择方案的根堆栈。注意不要选择嵌套堆栈。</li>
+<li>打开<strong>输出（Outputs）</strong>标签页，找到要调用的URL。</li>
 <li>调用代码中替换原有调用URL地址。</li>
 <li>切换完成后，您可以在AWS CloudFormation控制台中彻底删除原有堆栈，从而避免产生额外的费用。整个删除过程大约需要10分钟。</li>
 </ol>

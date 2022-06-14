@@ -647,8 +647,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
 </li>
@@ -684,14 +684,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -893,8 +893,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
 </li>
@@ -930,14 +930,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -1005,7 +1005,7 @@
 <li>This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</li>
 <li>The default <strong>AWS Lambda</strong> memory is about 4GB (4096 MB). If the AWS Lambda function limit in your AWS account is lower than 4096 MB, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket and request to increase the memory limit of the AWS Lambda service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</li>
 </ul>
-<h2 id="rest-api-reference">REST API Reference</h2>
+<h2 id="api-reference">API reference</h2>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1163,7 +1163,7 @@
   &quot;url&quot;:&quot;Image URL address&quot;
 }'
 </code></pre>
-<h3 id="python-aws_iam-authentication">Python （<em>AWS_IAM</em> Authentication）</h3>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
@@ -1179,7 +1179,7 @@ payload = {
 response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 </code></pre>
-<h3 id="python-none-authentication">Python （<em>NONE</em> Authentication）</h3>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 

@@ -514,11 +514,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+    <nav class="md-nav" aria-label="API reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -585,14 +585,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -611,10 +611,10 @@
       
         <li class="md-nav__item">
   <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
+    Cost estimation
   </a>
   
-    <nav class="md-nav" aria-label="Cost Estimation">
+    <nav class="md-nav" aria-label="Cost estimation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -920,11 +920,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rest-api-reference" class="md-nav__link">
-    REST API Reference
+  <a href="#api-reference" class="md-nav__link">
+    API reference
   </a>
   
-    <nav class="md-nav" aria-label="REST API Reference">
+    <nav class="md-nav" aria-label="API reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -991,14 +991,14 @@
         
           <li class="md-nav__item">
   <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python （AWS_IAM Authentication）
+    Python (AWS_IAM Authentication)
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#python-none-authentication" class="md-nav__link">
-    Python （NONE Authentication）
+    Python (NONE Authentication)
   </a>
   
 </li>
@@ -1017,10 +1017,10 @@
       
         <li class="md-nav__item">
   <a href="#cost-estimation" class="md-nav__link">
-    Cost Estimation
+    Cost estimation
   </a>
   
-    <nav class="md-nav" aria-label="Cost Estimation">
+    <nav class="md-nav" aria-label="Cost estimation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1068,7 +1068,7 @@
 <p>You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.</p>
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to structured recognition of cards and tickets, such as logistics documents, invoices, business licenses, itineraries, and train tickets.</p>
-<h2 id="rest-api-reference">REST API Reference</h2>
+<h2 id="api-reference">API reference</h2>
 <h3 id="add-templates">Add templates</h3>
 <p>Before text recognition, you need to create a template through the <strong>Add Template API</strong>. In order to improve the accuracy of text recognition, the image for template creation should have similar details to the recognized image and clear text content. The same template can contain multiple recognition areas.</p>
 <p>To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software such as <a href="https://www.gimp.org/downloads/">GIMP</a> to assist in obtaining coordinate points. </p>
@@ -1076,20 +1076,20 @@
 <ol>
 <li>Scale the image size to 100% in the image processing software.</li>
 <li>
-<p>Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to <strong>top left, top right, bottom right, bottom left</strong> order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area, recognition area example as follows.</p>
+<p>Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to <strong>top left, top right, bottom right, bottom left</strong> order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area. A recognition area example is shown below.</p>
 <p><code>[[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"]</code></p>
 </li>
 <li>
-<p>Please refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.</p>
+<p>Refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.</p>
 </li>
-<li>After creating the template, first perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.</li>
-<li>(Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. </li>
+<li>After creating the template, perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.</li>
+<li>(Optional) If you found that the extracted information is incomplete, confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. </li>
 </ol>
-<div class="admonition note">
-<p class="admonition-title">Description</p>
-<p>The rectangular box area must completely cover the text content to be recognized. Please leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas to get accurate recognition.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The rectangular box area must completely cover the text content to be recognized. Leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas for accurate recognition.</p>
 </div>
-<p>The following describe the API parameters:</p>
+<p>The following describe the API reference:</p>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1500,7 +1500,7 @@
   &quot;url&quot;:&quot;Image URL address&quot;
 }'
 </code></pre>
-<h3 id="python-aws_iam-authentication">Python （<em>AWS_IAM</em> Authentication）</h3>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
@@ -1516,7 +1516,7 @@ payload = {
 response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
 print(json.loads(response.text))
 </code></pre>
-<h3 id="python-none-authentication">Python （<em>NONE</em> Authentication）</h3>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
 <pre><code class="language-python">import requests
 import json
 
@@ -1547,7 +1547,7 @@ Response response = client.newCall(request).execute();
 </code></pre>
 <!-- END INCLUDE -->
 
-<h2 id="cost-estimation">Cost Estimation</h2>
+<h2 id="cost-estimation">Cost estimation</h2>
 <p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
 <li>AWS Lambda invocations</li>
