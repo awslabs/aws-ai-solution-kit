@@ -24,14 +24,18 @@ To create a template, each area to be recognized needs to specify the four coord
 The following describes how to create a template:
 
 1. Scale the image size to 100% in the image processing software.
-2. Move the mouse to the image to get the X, Y value of the specified position coordinate point.
-3. Create a sequence of four coordinate points of the rectangular frame in the clockwise order of upper left, upper right, lower right, and lower left.
+2. Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to **top left, top right, bottom right, bottom left** order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area, recognition area example as follows.
 
-    !!! Note "Note"
-        The rectangular frame area must completely cover the text content to be recognized. On the premise of not covering other recognition rectangular areas, leave enough error-tolerant space on the four sides of the recognition area for accurate recognition purposes.
+```
+[[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"],
+```
 
-4. After the template is created, perform a text recognition test with the template original image and template ID to ensure that the template can recognize the required information.
-5. (Optional) If the extracted information is found incomplete, confirm whether the coordinate points are correctly marked, and appropriately expand the recognition area to recreate the template.
+    !!! Note "Description"
+        The rectangular box area must completely cover the text content to be recognized. Please leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas to get accurate recognition.
+
+3. Please refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.
+4. After creating the template, first perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
+5. (Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
 
 The following describe the API parameters:
 
