@@ -2,7 +2,7 @@ English | [简体中文](README_zh.md)
 
 ## Custom Template OCR sample for Health kit(Jiankang Bao)
 
-This repo is a sample project for [AI Solution Kit](https://github.com/awslabs/aws-ai-solution-kit). The Health Kit serves as areference for assessing citizens fitness for going back to work, entering/exitingpublic places, and other situations concerning COVID-19 prevention andcontrol. In this example, we use Custom Template OCR feature to recognize and extract Simplified Chinese information such as person name, ID card, Covid status in Health kit.
+This repo is a sample project for [AI Solution Kit](https://github.com/awslabs/aws-ai-solution-kit). The Health Kit serves as a reference for assessing citizen's fitness for going back to work, entering/exiting public places, and other situations concerning COVID-19 prevention and control. In this example, we use Custom Template OCR feature to recognize and extract Simplified Chinese information such as person name, ID card, Covid status in Health kit.
 
 ### Repository Structure
 ```
