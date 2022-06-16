@@ -12,7 +12,7 @@
 - [通用物体识别](deploy-object-recognition.md)
 - [色情内容检测](deploy-pornography-detection.md)
 - [图像超分辨率](deploy-image-super-resolution.md)
-- [文本相似度](deploy-text-similarity.md)|
+- [文本相似度](deploy-text-similarity.md)
 
 {%
   include "include-call-url.md"
