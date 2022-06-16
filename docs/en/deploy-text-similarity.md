@@ -5,7 +5,7 @@ feature_endpoint: text_similarity
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Compare two Chinese words or sentences and return similarity score.
+feature_description: Compare two Chinese words or sentences and return similarity score..
 feature_scenario: Applicable to search engines, recommendation systems, machine translation, automatic response, named entity recognition, spelling error correction and other scenarios.
 ---
 

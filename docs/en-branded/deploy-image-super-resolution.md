@@ -5,7 +5,7 @@ feature_endpoint: image_super_resolution
 deployment_time: 25 Minutes
 destroy_time: 20 Minutes
 sample_image: Image URL address
-feature_description: Upscale the resolution and enhance details in the images.
+feature_description: Upscale the resolution and enhance details in the images..
 feature_scenario: Applicable to converting original image assets into high resolution images.
 ---
 

@@ -65,12 +65,12 @@ This repository contains several pre-trained deep learning models based on AWS L
 ### **Computer Vision Production**
 |    **Feature Name**   | **Description**    |
 |--------------|-------------|
-|Image Super Resolution|Upscale the resolution and enhance details in the images|
+|Image Super Resolution|Upscale the resolution and enhance details in the images.|
 
 ### **Natural Language Understanding(NLU)**
 |    **Feature Name**   | **Description**    |
 |--------------|-------------|
-|Text Similarity|Compare two Chinese words or sentences and return similarity score|
+|Text Similarity|Compare two Chinese words or sentences and return similarity score.|
 
 
 
