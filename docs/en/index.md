@@ -21,7 +21,7 @@ The table below lists the supported APIs. You can click the **Details** link to 
 |Face Detection|Detect the face in an image, and map the detected facial features and contour key point information to 64 vector coordinates.|[Details](deploy-face-detection.md)|
 |Face Comparison|Compare two faces of the same person and return a confidence score of the similarity.|[Details](deploy-face-comparison.md)|
 |Human Attribute Recognition |Recognize the attributes of the human body in the image, and return the human body position coordinates and attribute analysis in each area, such as the semantic information of 16 attributes such as gender, age, and clothing.|[Details](deploy-human-attribute-recognition.md)|
-|Human Image Segmentation|Segment human bodies from background and return the alpha channel which is a color component representing the degree of transparency of a color..|[Details](deploy-human-image-segmentation.md)|
+|Human Image Segmentation|Segment human bodies from background and return the alpha channel which is a color component representing the degree of transparency of a color.|[Details](deploy-human-image-segmentation.md)|
 
 ### Image Understanding
 |    **API Name**   | **Description**    | API |
