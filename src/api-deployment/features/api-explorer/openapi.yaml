@@ -432,7 +432,7 @@ paths:
     post:
       tags:
         - Computer Vision
-      summary: Upscale the resolution and enhance details in the images
+      summary: Upscale the resolution and enhance details in the images.
       operationId: super-resolution
       requestBody:
         required: true
@@ -464,7 +464,7 @@ paths:
     post:
       tags:
         - Natural Language
-      summary: Compare two Chinese words or sentences and return similarity score
+      summary: Compare two Chinese words or sentences and return similarity score.
       operationId: text-similarity
       requestBody:
         required: true

@@ -138,7 +138,7 @@ Parameters:
       - "no"
 
   ImageSuperResolution:
-    Description: Upscale the resolution and enhance details in the images. Choose SageMaker instance type to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-super-resolution.
+    Description: Upscale the resolution and enhance details in the images.. Choose SageMaker instance type to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-super-resolution.
     Default: "no"
     Type: String
     AllowedValues:
@@ -148,7 +148,7 @@ Parameters:
       - "yes-ml.g4dn.8xlarge"
 
   ImageSimilarity:
-    Description: Compare two images and return similarity score. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-similarity.
+    Description: Compare two images by calculating the cosine distance from the image feature vector and converting it into confidence, and return similarity score. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-similarity.
     Default: "no"
     Type: String
     AllowedValues:
@@ -212,7 +212,7 @@ Parameters:
       - "no"
 
   TextSimilarity:
-    Description: Compare two Chinese words or sentences and return similarity score. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.
+    Description: Compare two Chinese words or sentences and return similarity score.. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.
     Default: "no"
     Type: String
     AllowedValues:

@@ -5,7 +5,7 @@ feature_endpoint: custom_ocr
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize the attributes of the human body in the image, and return the human body position coordinates and attribute analysis in each area, such as the semantic information of 16 attributes such as gender, age, and clothing.
+feature_description: Recognize the attributes of the human body in the image, and return the human body position coordinates and attribute analysis in each area, including the semantic information of 16 attributes such as gender, age, and clothing.
 
 feature_scenario: Applicable to scenarios such as smart security, smart retail, and pedestrian search.
 ---
