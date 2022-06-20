@@ -38,7 +38,7 @@ import {
 import { FeatureNestedStack } from './feature-nested-stack';
 import { ApiExplorerNestedStack } from './features/api-explorer';
 import { CarLicensePlateFeatureNestedStack } from './features/car-license-plate';
-import { CustomOCRFeatureNestedStack } from './features/custom-ocr';
+import { CustomOCRSMFeatureNestedStack } from './features/custom-ocr-sm';
 import { FaceComparisonFeatureNestedStack } from './features/face-comparison';
 import { FaceDetectionFeatureNestedStack } from './features/face-detection';
 import { GeneralOCRStandardSMFeatureNestedStack } from './features/general-ocr-standard-sm';
@@ -46,7 +46,7 @@ import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/gener
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/human-attribute-recognition';
 import { HumanImageSegmentationFeatureNestedStack } from './features/human-image-segmentation';
 import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
-import { ObjectRecognitionFeatureNestedStack } from './features/object-recognition';
+import { ObjectRecognitionSMFeatureNestedStack } from './features/object-recognition-sm';
 import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
 import { SuperResolutionGpuFeatureNestedStack } from './features/super-resolution-gpu';
 import { TextSimilarityFeatureNestedStack } from './features/text-similarity';
@@ -70,7 +70,7 @@ export class AISolutionKitSMStack extends Stack {
     this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.2.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
 
     const cfnTemplate = new CfnInclude(this, 'CfnTemplate', {
-      templateFile: path.join(__dirname, 'parameter-group.template'),
+      templateFile: path.join(__dirname, 'parameter-group-sm.template'),
     });
 
     const api = new RestApi(this, 'AiSolutionKitApi', {
@@ -197,9 +197,9 @@ export class AISolutionKitSMStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese', 'ConditionGeneralOCRTraditionalChinese');
     }
 
-    // Feature: Custom OCR
+    // Feature: Custom OCR SM
     {
-      const customOCRFeatureNestedStack = new CustomOCRFeatureNestedStack(this, 'Custom-OCR', {
+      const customOCRFeatureNestedStack = new CustomOCRSMFeatureNestedStack(this, 'Custom-OCR', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
@@ -288,9 +288,9 @@ export class AISolutionKitSMStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection', 'Pornography Detection', 'ConditionPornographyDetection');
     }
 
-    // Feature: Object Recognition
+    // Feature: Object Recognition SM
     {
-      const objectRecognition = new ObjectRecognitionFeatureNestedStack(this, 'Object-Recognition', {
+      const objectRecognition = new ObjectRecognitionSMFeatureNestedStack(this, 'Object-Recognition', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,

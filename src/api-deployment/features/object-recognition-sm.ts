@@ -4,12 +4,12 @@ import { Construct } from 'constructs';
 import { FeatureNestedStack, FeatureNestedStackProps } from '../feature-nested-stack';
 import { SageMakerFeatureConstruct } from '../sagemaker-feature-construct';
 
-export class GeneralOCRStandardSMFeatureNestedStack extends FeatureNestedStack {
+export class ObjectRecognitionSMFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'general-ocr-standard';
-    this.templateOptions.description = '(SO8023-ocr) - AI Solution Kit - General OCR Simplified Chinese. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.';
+    const featureName = 'object-recognition';
+    this.templateOptions.description = '(SO8023-object-recognition) - AI Solution Kit - Object Recognition. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
 
     Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}Repository`, `ai-solution-kit-${featureName}`);
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
@@ -23,7 +23,7 @@ export class GeneralOCRStandardSMFeatureNestedStack extends FeatureNestedStack {
         serviceToken: props.ecrDeployment.serviceToken,
         resourceType: 'Custom::AISolutionKitECRLambda',
         properties: {
-          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/general-ocr-standard-sm:latest',
+          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/object-recognition-sm:latest',
           DestImage: `docker://${stackRepo.repositoryUri}`,
           RepositoryName: `${stackRepo.repositoryName}`,
         },
