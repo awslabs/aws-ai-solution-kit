@@ -42,6 +42,7 @@ import { CustomOCRSMFeatureNestedStack } from './features/custom-ocr-sm';
 import { FaceComparisonFeatureNestedStack } from './features/face-comparison';
 import { FaceDetectionFeatureNestedStack } from './features/face-detection';
 import { GeneralOCRStandardSMFeatureNestedStack } from './features/general-ocr-standard-sm';
+import { GeneralOCRAdvancedSMFeatureNestedStack } from './features/general-ocr-advanced-sm';
 import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/general-ocr-traditional-chinese';
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/human-attribute-recognition';
 import { HumanImageSegmentationFeatureNestedStack } from './features/human-image-segmentation';
@@ -173,7 +174,7 @@ export class AISolutionKitSMStack extends Stack {
 
     // Feature: General OCR Standard SM
     {
-      const generalOCR = new GeneralOCRStandardSMFeatureNestedStack(this, 'General-OCR', {
+      const generalOCR = new GeneralOCRStandardSMFeatureNestedStack(this, 'General-OCR-Standard', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
@@ -184,6 +185,19 @@ export class AISolutionKitSMStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard', 'ConditionGeneralOCR');
     }
 
+    // Feature: General OCR Advanced SM
+    {
+      const generalOCR = new GeneralOCRAdvancedSMFeatureNestedStack(this, 'General-OCR-Advanced', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props?.ecrRegistry,
+      });
+      (generalOCR.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCR');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-advanced', 'General OCR Advanced', 'ConditionGeneralOCR');
+    }
+      
     // Feature: General OCR - Traditional Chinese
     {
       const generalOCRTraditionalChinese = new GeneralOCRTraditionalChineseFeatureNestedStack(this, 'General-OCR-Traditional-Chinese', {
