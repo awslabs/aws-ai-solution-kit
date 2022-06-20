@@ -179,6 +179,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props?.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (generalOCR.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCR');
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-advanced', 'General OCR Advanced', 'ConditionGeneralOCR');
@@ -193,6 +194,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (generalOCRTraditionalChinese.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChinese');
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese', 'ConditionGeneralOCRTraditionalChinese');
@@ -220,6 +222,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (carLicensePlate.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCarLicensePlate');
       this.addOutput(cfnTemplate, api.restApiId, 'car-license-plate', 'Car License Plate', 'ConditionCarLicensePlate');
@@ -233,6 +236,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (faceComparison.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceComparison');
       this.addOutput(cfnTemplate, api.restApiId, 'face-comparison', 'Face Comparison', 'ConditionFaceComparison');
@@ -246,6 +250,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (faceDetection.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceDetection');
       this.addOutput(cfnTemplate, api.restApiId, 'face-detection', 'Face Detection', 'ConditionFaceDetection');
@@ -259,6 +264,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (humanAttributeRecognition.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanAttributeRecognition');
       this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition', 'ConditionHumanAttributeRecognition');
@@ -286,6 +292,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (pornographyDetection.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionPornographyDetection');
       this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection', 'Pornography Detection', 'ConditionPornographyDetection');
@@ -313,6 +320,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (textSimilarity.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionTextSimilarity');
       this.addOutput(cfnTemplate, api.restApiId, 'text-similarity', 'Text Similarity', 'ConditionTextSimilarity');
@@ -326,6 +334,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
       });
       (imageSimilarity.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSimilarity');
       this.addOutput(cfnTemplate, api.restApiId, 'image-similarity', 'Image Similarity', 'ConditionImageSimilarity');
