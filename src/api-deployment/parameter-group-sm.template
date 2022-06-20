@@ -131,10 +131,10 @@ Parameters:
 
   CustomOCR:
     Description: Recognize and extract estructured text by predefined OCR templates. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.
-    Default: "yes"
+    Default: "yes-ml.m5d.2xlarge"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-ml.m5d.2xlarge"
       - "no"
 
   ImageSuperResolution:
@@ -157,10 +157,10 @@ Parameters:
 
   ObjectRecognition:
     Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
-    Default: "yes"
+    Default: "yes-ml.m5d.2xlarge"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-ml.m5d.2xlarge"
       - "no"
 
   FaceComparison:
@@ -234,11 +234,11 @@ Conditions:
       
   ConditionCustomOCR: !Equals 
       - !Ref CustomOCR
-      - "yes"
+      - "yes-ml.m5d.2xlarge"
       
   ConditionObjectRecognition: !Equals 
       - !Ref ObjectRecognition
-      - "yes"
+      - "yes-ml.m5d.2xlarge"
       
   ConditionFaceComparison: !Equals 
       - !Ref FaceComparison

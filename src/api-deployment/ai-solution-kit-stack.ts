@@ -206,6 +206,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 10240,
       });
       (customOCRFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCR');
       this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr', 'Custom OCR', 'ConditionCustomOCR');
@@ -271,6 +272,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 10240,
       });
       (humanImageSegmentation.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
       this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation', 'ConditionHumanImageSegmentation');
@@ -297,6 +299,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 10240,
       });
       (objectRecognition.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionObjectRecognition');
       this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition', 'ConditionObjectRecognition');

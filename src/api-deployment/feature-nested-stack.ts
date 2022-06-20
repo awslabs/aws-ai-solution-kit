@@ -10,6 +10,10 @@ export interface FeatureNestedStackProps extends NestedStackProps {
   readonly ecrDeployment?: ECRDeployment;
   readonly updateCustomResourceProvider: Provider;
   readonly instanceType?: string;
+  /**
+     * @default 8192
+     */
+  readonly lambdaMemorySize?: number;
 
   /**
    * ECR Registry

@@ -19,7 +19,7 @@ export class GeneralOCRTraditionalChineseFeatureNestedStack extends FeatureNeste
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 8192,
+      lambdaMemorySize: props.lambdaMemorySize,
       lambdaTimeout: Duration.seconds(30),
     });
   }

@@ -19,7 +19,7 @@ export class ObjectRecognitionFeatureNestedStack extends FeatureNestedStack {
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      lambdaMemorySize: 10240,
+      lambdaMemorySize: props.lambdaMemorySize,
       lambdaTimeout: Duration.seconds(19),
     });
   }

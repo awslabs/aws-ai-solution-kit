@@ -29,7 +29,7 @@ export interface LambdaFeatureProps {
   readonly lambdaTimeout?: Duration;
 
   /**
-     * @default 2048
+     * @default 8192
      */
   readonly lambdaMemorySize?: number;
   readonly lambdaDockerImageUrl?: string;

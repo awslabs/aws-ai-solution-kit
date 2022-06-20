@@ -87,7 +87,7 @@ export class CustomOCRIsolatedFeatureNestedStack extends FeatureNestedStack {
             },
           ),
           timeout: Duration.seconds(29),
-          memorySize: 10240,
+          memorySize: props.lambdaMemorySize,
           vpc: featureVPC,
           // allowPublicSubnet: true,
           vpcSubnets: {
