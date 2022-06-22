@@ -4,7 +4,7 @@ import main
 from aikits_utils import readimg, lambda_return
 
 model_path = os.environ['MODEL_PATH']
-model = main.RetinaFace(model_file = model_path + 'det.onnx')
+model = main.SCRFD(model_file = model_path + 'det.onnx')
 arcface_model = main.ArcFaceONNX(model_file= model_path + 'w600k_r50.onnx')
 
 def read_img(body):
@@ -36,6 +36,7 @@ def handler(event, context):
         return lambda_return(400, 'invalid param')
 
     bboxes, kpss = model.detect(img)
+    kpss = kpss[:,:5][:,[0,1,4,2,3]] # `LeftEye, RightEye, leftMouth, rightMouth, noise` to `LeftEye, RightEye, noise, leftMouth, rightMouth`
     face_list = []
     for i in range(len(bboxes)):
         face = {

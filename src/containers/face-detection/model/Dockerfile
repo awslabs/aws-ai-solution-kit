@@ -12,7 +12,7 @@ RUN pip3 install --target ${FUNCTION_DIR} awslambdaric
 RUN mkdir -p ${FUNCTION_DIR}/model
 RUN yum install -y wget
 RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/det.onnx -O ${FUNCTION_DIR}/model/det.onnx
-RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/genderage.onnx -O ${FUNCTION_DIR}/model/genderage.onnx
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/attribute.onnx -O ${FUNCTION_DIR}/model/attribute.onnx
 RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/landmark.onnx -O ${FUNCTION_DIR}/model/landmark.onnx
 
 WORKDIR ${FUNCTION_DIR}

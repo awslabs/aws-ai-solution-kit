@@ -4,9 +4,9 @@ import main
 from aikits_utils import readimg, lambda_return
 
 model_path = os.environ['MODEL_PATH']
-model = main.RetinaFace(model_file = model_path + 'det.onnx')
+model = main.SCRFD(model_file = model_path + 'det.onnx')
 landmark_model_2d = main.Landmark(model_file = model_path + 'landmark.onnx')
-attribute_model = main.Attribute(model_file = model_path + 'genderage.onnx')
+attribute_model = main.Attribute(model_file = model_path + 'attribute.onnx')
 def read_img(body):
     if 'url' in body:
         inputs = readimg(body, ['url'])
@@ -55,9 +55,9 @@ def handler(event, context):
                 'y': int(row[1])
             }),
         face.update(landmark_106=landmark_106)
-        gender, age = attribute_model.get(img, bboxes[i])
-        face.update(gender= 'male' if gender else 'female')
-        face.update(age= int(age))
+        attribute_pred = attribute_model.get(img, bboxes[i])
+        face.update(gender= attribute_pred['Gender'][0].lower())
+        face.update(age= int((attribute_pred['AgeRange'][0]+attribute_pred['AgeRange'][1])/2))
         face_list.append(face)
 
     output = {
