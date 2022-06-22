@@ -115,7 +115,7 @@ Parameters:
 
   GeneralOCR:
     Description: Recognize and extract alphabetical characters, numbers, symbols, and Simplified Chinese, return the coordinate position and confidence scores of the text. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
-    Default: "yes"
+    Default: "no"
     Type: String
     AllowedValues:
       - "yes"

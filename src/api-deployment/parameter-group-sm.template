@@ -189,7 +189,7 @@ Parameters:
 
   HumanImageSegmentation:
     Description: Segment human bodies from background and return the alpha channel. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-image-segmentation/.
-    Default: "no"
+    Default: "yes"
     Type: String
     AllowedValues:
       - "yes"
