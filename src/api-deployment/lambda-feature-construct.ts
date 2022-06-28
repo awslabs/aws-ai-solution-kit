@@ -3,6 +3,11 @@ import {
   AuthorizationType, Deployment, LambdaIntegration, RestApi,
 } from 'aws-cdk-lib/aws-apigateway';
 import { Repository } from 'aws-cdk-lib/aws-ecr';
+import {
+  ManagedPolicy,
+  Role,
+  ServicePrincipal,
+} from 'aws-cdk-lib/aws-iam';
 import { DockerImageCode, DockerImageFunction } from 'aws-cdk-lib/aws-lambda';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
@@ -63,6 +68,9 @@ export class LambdaFeatureConstruct extends Construct {
           RepositoryName: `${stackRepo.repositoryName}`,
         },
       });
+      const myRole = new Role(this, `${props.featureName}Role`, {
+        assumedBy: new ServicePrincipal('lambda.amazonaws.com'),
+      });
       const appFunction = new DockerImageFunction(
         this,
         `${props.featureName}App`,
@@ -75,8 +83,11 @@ export class LambdaFeatureConstruct extends Construct {
           ),
           timeout: props.lambdaTimeout,
           memorySize: props.lambdaMemorySize,
+          role: myRole,
         },
       );
+      myRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'));
+      myRole.addManagedPolicy(ManagedPolicy.fromAwsManagedPolicyName('AmazonS3ReadOnlyAccess'));
       appFunction.node.addDependency(ecrCR);
       // const lambdaInt = new LambdaIntegration(appFunction, { proxy: true });
       const rootRestApi = RestApi.fromRestApiAttributes(this, 'client-api', {
