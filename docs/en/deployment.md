@@ -14,8 +14,8 @@ If you choose to launch the stack from AWS China Regions, make sure a domain reg
 
 1. Log in to the AWS Management Console and select the link to launch the AWS CloudFormation stack.
 
-    - [Launch the stack in Global Regions][template-china1]
-    - [Launch the stack in China Regions][template-global]
+    - [Launch the stack in Global Regions][template-global]
+    - [Launch the stack in China Regions][template-china1]
  
 2. The template is launched in the default region after you log in to the console. To launch the solution in a different AWS Region, use the Region selector in the console navigation bar.
 
@@ -74,7 +74,6 @@ Next, you can perform the following operations:
 
 [template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
-[template-china2]:https://cn-northwest-1.console.amazonaws.cn/cloudformation/home?region=cn-northwest-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 
 [template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
 

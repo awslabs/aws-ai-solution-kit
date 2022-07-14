@@ -14,8 +14,8 @@ If you choose to launch the stack from Amazon Web Services China Regions, make s
 
 1. Log in to the Amazon Web Services Management Console and select the link to launch the Amazon CloudFormation stack.
 
-    - [Launch the stack in Global Regions][template-china1]
-    - [Launch the stack in China Regions][template-global]
+    - [Launch the stack in Global Regions][template-global]
+    - [Launch the stack in China Regions][template-china1]
  
 2. The template is launched in the default region after you log in to the console. To launch the solution in a different Amazon Web Services Region, use the Region selector in the console navigation bar.
 
