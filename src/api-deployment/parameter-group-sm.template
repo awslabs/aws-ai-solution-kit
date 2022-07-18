@@ -164,7 +164,7 @@ Parameters:
       - "no"
 
   FaceComparison:
-    Description: Compare two faces of same person and return a confidence score of the similarity. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-facec-omparison.
+    Description: Compare two faces of same person and return a confidence score of the similarity. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-comparison.
     Default: "no"
     Type: String
     AllowedValues:
