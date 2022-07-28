@@ -180,4 +180,54 @@
          <lastmod>2022-07-28</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/admin/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/architecture/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/clean/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/cost/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/deploy-ask/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/deploy-workshop-backend/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/deploy-workshop-ui/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/introduction/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/requisites/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://www.amazonaws.cn/solutions/ai-solution-kit/workshop/user/</loc>
+         <lastmod>2022-07-28</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
