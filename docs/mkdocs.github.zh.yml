@@ -1,0 +1,56 @@
+INHERIT: ./mkdocs.github.base.yml
+site_name: AI Solution Kit
+docs_dir: zh
+site_dir: ./site/zh
+edit_uri: ''
+theme:
+  language: zh
+nav:
+  - 实施指南:
+    - 概述: index.md
+    - 成本预估: cost.md
+    - 架构概览: architecture.md
+    - 安全信息: security.md
+    - 区域支持: regions.md
+    - 模板信息: template.md
+    - 部署解决方案:
+        - 启动CloudFormation堆栈: deployment.md
+        - 更新CloudFormation堆栈: deploy-add-delete-api.md 
+    - API参考指南:
+        - 概述: api-explorer.md
+        - 通用文字识别（简体中文）: deploy-general-ocr.md
+        - 通用文字识别（繁体中文）: deploy-general-ocr-traditional.md
+        - 自定义模板文字识别: deploy-custom-ocr.md
+        - 车牌信息识别: deploy-car-license-plate.md
+        - 人脸检测: deploy-face-detection.md
+        - 人脸相似度比对: deploy-face-comparison.md
+        - 人体结构化属性: deploy-human-attribute-recognition.md
+        - 智能人像分割: deploy-human-image-segmentation.md
+        - 图像相似度: deploy-image-similarity.md
+        - 通用物体识别: deploy-object-recognition.md
+        - 色情内容检测: deploy-pornography-detection.md
+        - 图像超分辨率: deploy-image-super-resolution.md
+        - 文本相似度: deploy-text-similarity.md
+    - 升级解决方案: upgrade.md
+    - 卸载解决方案: uninstall.md
+    - 更多资源: additional-resources.md
+    - 常见问题解答: faq.md
+    - 源代码: source.md
+    - 版本发布说明: revisions.md
+
+      
+    # - 语音技术:
+    #   - 语音技术: audio.md
+  - 动手实验:
+    - 1 简介: workshop/introduction.md
+    - 2 前提条件: workshop/requisites.md
+    - 3 架构概览: workshop/architecture.md
+    - 4 准备实验环境:
+      - 4.1 部署AI Solution Kit: workshop/deploy-ask.md
+      - 4.2 部署示例程序后端: workshop/deploy-workshop-backend.md
+      - 4.3 部署示例程序前端: workshop/deploy-workshop-ui.md
+    - 5 体验以图搜图功能:
+      - 5.1 管理员操作: workshop/admin.md
+      - 5.2 普通用户操作: workshop/user.md
+    - 6 清理资源: workshop/clean.md
+    - 7 成本预估: workshop/cost.md

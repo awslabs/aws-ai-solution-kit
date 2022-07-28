@@ -52,3 +52,4 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
+.DS_Store

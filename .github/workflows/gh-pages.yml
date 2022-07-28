@@ -28,10 +28,8 @@ jobs:
           python3 -m pip install mkdocs-macros-plugin
       - name: Build mkdocs
         run: |
-          sed -i 's/zh-branded/zh/g' docs/mkdocs.zh.yml
-          sed -i 's/en-branded/en/g' docs/mkdocs.en.yml
-          mkdocs build -f ./docs/mkdocs.en.yml
-          mkdocs build -f ./docs/mkdocs.zh.yml
+          mkdocs build -f ./docs/mkdocs.github.en.yml
+          mkdocs build -f ./docs/mkdocs.github.zh.yml
           cp -av ./docs/index.html ./docs/site
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
