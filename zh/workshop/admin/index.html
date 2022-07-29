@@ -1151,11 +1151,14 @@ year = {2018}
 </code></pre>
 <h2 id="_1">下载数据集到本地</h2>
 <p>下载数据集需要使用python3，如果没有python3，请自行安装，参见：<a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p>
-<p>下载<a href="https://aws-gcr-solutions-workshop.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/v1.0.0/download.zip">运行脚本</a>，解压后运行<code>python3 download.py</code>进行下载数据集。下载数据集预计需要11分钟。</p>
+<p>下载<a href="https://aws-gcr-solutions-workshop.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/v1.0.0/download.zip">运行脚本</a>，解压后运行以下命令进行下载数据集。下载数据集预计需要11分钟。</p>
+<pre><code>pip install tqdm
+python3 download.py
+</code></pre>
 <h2 id="s3">上传数据集到S3</h2>
 <p>在进行此步骤前，需要确认4.2章节的堆栈已部署完毕。
 把下载的图片上传到S3，s3为4.2章节中CloudFormation输出页签中s3Bucket的值。</p>
-<p><strong>方式1，使用命令行(约2分钟)：</strong><br />
+<p><strong>方式1，使用命令行(约3分钟)：</strong><br />
 如果已配置访问密钥，使用命令行cd到下载数据集的目录下，然后运行<br />
 <code>aws s3 sync ./ s3://{s3Bucket}</code>  </p>
 <p><img alt="" src="../images/admin-0.png" /></p>
