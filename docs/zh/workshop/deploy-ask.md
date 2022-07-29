@@ -1,3 +1,4 @@
+![](images/deploy-ask.png)
 登陆亚马逊云科技控制台<https://cn-north-1.console.amazonaws.cn/console>，
 然后点击此[链接](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)进入CloudFormation部署页面，在页面底部右下角选择**下一步**。
 ![](images/deploy-ask-1.png)
