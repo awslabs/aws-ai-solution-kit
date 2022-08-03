@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-FROM lambci/lambda:build-go1.x
+#FROM lambci/lambda:build-go1.x
+FROM public.ecr.aws/sam/build-go1.x
 
 USER root
 
