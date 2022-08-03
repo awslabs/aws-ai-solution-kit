@@ -16,7 +16,7 @@ RUN yum -y install \
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
-    GOPROXY=https://goproxy.io,https://goproxy.cn,direct
+    GOPROXY=direct,https://goproxy.cn,https://goproxy.io
 
 WORKDIR /ws
 
