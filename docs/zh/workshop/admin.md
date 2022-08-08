@@ -21,6 +21,8 @@ python3 download.py
 在进行此步骤前，需要确认4.2章节的堆栈已部署完毕。
 把下载的图片上传到S3，s3为4.2章节中CloudFormation输出页签中s3Bucket的值。
 
+注意：该S3为部署示例程序后端时创建的，不能使用自己创建的S3。
+
 **方式1，使用命令行(约3分钟)：**  
 如果已配置访问密钥，使用命令行cd到下载数据集的目录下，然后运行  
 `aws s3 sync ./ s3://{s3Bucket}`  
@@ -32,5 +34,9 @@ python3 download.py
 ![](images/admin-1.png)
 ## 创建图片索引
 用浏览器打开下载的示例程序前端文件admin.htm，在InvokeBaseUrl中填入4.2章节中CloudFormation输出页签中InvokeBaseUrl的值。
+
+注意：InvokeBaseUrl的值以“/demo/”结尾，不是以“/prod/”结尾。
+
+
 点击“创建索引”按钮，将发送请求到服务器端进行，此步预计需要5分钟，当进度条到达100%时表示创建索引完毕。
 ![](images/admin-2.png)

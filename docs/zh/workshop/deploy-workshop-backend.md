@@ -1,5 +1,12 @@
 ![](images/deploy-workshop-backend.png)
-点击[链接](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit-workshop&templateURL=https://aws-gcr-solutions-workshop.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/v1.0.0/AI-Solution-Kit-workshop.template)进入部署页面，在页面底部右下角选择**下一步**。
+点击下表中的链接进入CloudFormation部署页面。
+
+|区域|10GB版本(生产环境使用，速度快)|3GB版本(适用未提升lambda限额)|
+|--|--|--|
+|中国|[部署中国区域10GB版本](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit-workshop&templateURL=https://aws-gcr-solutions-workshop.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/v1.0.0/AI-Solution-Kit-workshop.template)|[部署中国区域3GB版本](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit-workshop&templateURL=https://aws-gcr-solutions-workshop.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/v1.0.0/AI-Solution-Kit-workshop-3G.template)|
+|全球|[部署全球区域10GB版本](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit-workshop&templateURL=https://aws-gcr-solutions-workshop.s3.us-west-2.amazonaws.com/ai-solution-kit/v1.0.0/AI-Solution-Kit-workshop.template)|[部署全球区域3GB版本](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit-workshop&templateURL=https://aws-gcr-solutions-workshop.s3.us-west-2.amazonaws.com/ai-solution-kit/v1.0.0/AI-Solution-Kit-workshop-3G.template)|
+
+在页面底部右下角选择**下一步**。
 ![](images/deploy-workshop-backend-1.png)
 在**指定堆栈详细信息**页面的参数部分，StagebaseURL参数请输入上一章节中部署CloudFormation的输出页签中StagebaseURL的值，其他保持默认不变，在页面底部右下角选择**下一步**。
 ![](images/deploy-workshop-backend-2.png)

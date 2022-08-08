@@ -1,8 +1,8 @@
 本次动手实验中，架构分为3个部分：  
 
 1. AI Solution Kit  - 通用物体识别、图片相似度功能。提供核心AI 能力。
-2. Workshop 前端程序 (Workshop UI) 
-3. Workshop 后端程序（Workshop backend）
+2. Workshop 前端程序(Workshop UI)
+3. Workshop 后端程序(Workshop backend)
 ![总体结构](images/overview.png)
 
 ## AI Solution Kit架构

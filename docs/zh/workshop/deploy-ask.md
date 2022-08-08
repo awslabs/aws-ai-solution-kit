@@ -1,6 +1,13 @@
 ![](images/deploy-ask.png)
-登陆亚马逊云科技控制台<https://cn-north-1.console.amazonaws.cn/console>，
-然后点击此[链接](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)进入CloudFormation部署页面，在页面底部右下角选择**下一步**。
+登陆亚马逊云科技控制台[中国区域](https://cn-north-1.console.amazonaws.cn/console)或[全球区域](https://us-east-1.console.aws.amazon.com/console/home)，
+点击下表中的链接进入CloudFormation部署页面。
+
+|区域|10GB版本(生产环境使用，速度快)|3GB版本(适用未提升lambda限额)|
+|--|--|--|
+|中国|[部署中国区域10GB版本](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)|[部署中国区域3GB版本](https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit-3G.template)|
+|全球|[部署全球区域10GB版本](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template)|[部署全球区域3GB版本](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit-3G.template)|
+
+在页面底部右下角选择**下一步**。
 ![](images/deploy-ask-1.png)
 在**指定堆栈详细信息**页面的参数部分对API的部署进行配置。把图片相似度（Image Similarity）和对象检测（Object Recognition）的参数设置为“yes”，其他保持默认不变，在页面底部右下角选择**下一步**。
 ![](images/deploy-ask-2.png)
