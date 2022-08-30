@@ -5,7 +5,7 @@ feature_endpoint: face_detection
 deployment_time: 9 Minutes
 destroy_time: 6 Minutes
 sample_image: Image URL address
-feature_description: Detect the face in an image, and map the detected facial features and contour key point information to 64 vector coordinates. 
+feature_description: Detect the face in an image, and map the detected facial features and contour key point information to 106 vector coordinates. 
 feature_scenario: Applicable to a variety of scenarios such as camera monitoring, facial feature analysis, and interactive marketing.
 ---
 

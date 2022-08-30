@@ -1,0 +1,38 @@
+{
+  "name": "cdk",
+  "version": "0.1.0",
+  "bin": {
+    "cdk": "bin/cdk.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "npm run test && npm run synth",
+    "cleanup:tsc": "tsc --build ./ --clean",
+    "test:watch": "jest --watch",
+    "test:update": "jest --updateSnapshot",
+    "test:compile": "tsc --noEmit --project tsconfig.jest.json",
+    "watch": "tsc -w",
+    "eslint": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern src test",
+    "cdk": "cdk",
+    "diff": "cdk diff",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy",
+    "destroy": "cdk destroy"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.2",
+    "@types/node": "10.17.27",
+    "@types/prettier": "2.6.0",
+    "aws-cdk": "^2.38.1",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.8.1",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.31.1",
+    "cdk-bootstrapless-synthesizer": "^2.1.1",
+    "constructs": "^10.0.0",
+    "source-map-support": "^0.5.21"
+  }
+}

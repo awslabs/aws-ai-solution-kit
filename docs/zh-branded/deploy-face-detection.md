@@ -5,7 +5,7 @@ feature_endpoint: face_detection
 deployment_time: 9 分钟
 destroy_time: 6 分钟
 sample_image: 图像的URL地址
-feature_description: 识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到64个矢量坐标上。
+feature_description: 识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到106个矢量坐标上。
 feature_scenario: 可应用于摄像头监控、人脸特征分析、互动营销等多种场景。
 ---
 

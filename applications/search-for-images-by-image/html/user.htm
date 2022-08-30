@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html data-lt-installed="true" lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="AI Solution Kit Demo">
+    <meta name="author" content="Yi Yan">
+    <title>AI Solution Kit Demo</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico">
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <meta name="theme-color" content="#7952b3">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        .btn, .card {
+            border-radius: 0px;
+        }
+        .img-thumbnail {
+            border-radius: 0px;
+            width: 16rem;
+            height: 18rem;
+            padding: 0px;
+            border: 0px;
+        }
+        .search-result {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .search-result .search-item {
+            width: 400px;
+            height: 577px;
+            text-align:center;
+            border: 1px solid #ccc;
+            background-color: #ddd;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="css/carousel.css" rel="stylesheet">
+    <script>
+        var scale = 1;
+        var boxes = new Array();
+        function fill_canvas(img) {
+
+            var canvas = document.getElementById('src-canvas');
+            var ctx = canvas.getContext('2d');
+            
+            canvas.width = document.getElementById('imag').width;
+            canvas.height = document.getElementById('imag').height;
+            
+            scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+
+            ctx.drawImage(img, 0, 0, img.width * scale, img.height * scale);
+        }
+
+        function getRndColor() {
+            var r = 255*Math.random()|0,
+                g = 255*Math.random()|0,
+                b = 255*Math.random()|0;
+            return 'rgb(' + r + ',' + g + ',' + b + ')';
+        }
+        function disbableAll() {
+            $('#rs-status').css("visibility", "visible");
+        }
+        function enableAll() {
+            $('#rs-status').css("visibility", "hidden");
+        }
+        jQuery.support.cors = true;
+        var globalPayload;
+        function rs(imgUrl, type) {
+            var baseUrl = $('#InvokeBaseUrl').val().trim();
+            if(baseUrl == ""){
+                alert("请输入InvokeBaseUrl");
+                return;
+            }
+            if (imgUrl == null || imgUrl == "") {
+                alert("请输入图片地址或选择图片");
+                return;
+            }
+            $("#imag").attr('src', imgUrl);
+            var img = new Image();
+            img.src = imgUrl;
+            img.onload = function () {
+                fill_canvas(img);
+            }
+            var json;
+            if (type == null) {
+                json = {'url': imgUrl };
+            } else if (type == 'img') {
+                json = {'img': imgUrl.substr(imgUrl.indexOf(',') + 1)};
+            }
+            globalPayload = json;
+            disbableAll();
+            $.ajax({
+                contentType: 'application/json',
+                type: 'POST',
+                url: baseUrl+"search",
+                // url: baseUrl,
+                crossDomain: true,
+                dataType: "json",
+                data: JSON.stringify(json),
+                success: function (result) {
+                    console.info(result);
+                    boxes = new Array();
+                    var message = result.list;
+                    var htmlStr="";
+                    for (var i in message) {
+                        htmlStr+="<div class='search-item'><img src='"+message[i]+"'  height='577'></div>";
+                        // htmlStr+="<img src='"+message[i]+"'  height='577'> ";
+                        // $("#result"+i).attr('src', message[i]);
+                    }
+                    let resultShow = document.getElementById('result');
+                    resultShow.innerHTML = htmlStr;
+
+                    objects = result.objects;
+                    for (var i in objects) {
+                        var canvas = document.getElementById('src-canvas');
+                        var ctx = canvas.getContext('2d');
+                        ctx.beginPath();
+                        ctx.lineWidth = "2";
+                        ctx.strokeStyle = 'green';
+                        for (var n in objects[i].Instances) {
+                            box = objects[i].Instances[n].BoundingBox;
+                            ctx.rect(box.Left * canvas.width, box.Top * canvas.height, box.Width * canvas.width, box.Height * canvas.height);
+                            ctx.font = "20px Arial";
+                            ctx.fillStyle = getRndColor();
+                            confidenceStr = ''+objects[i].Confidence;
+                            ctx.fillText('['+objects[i].Name +']', box.Left * canvas.width, box.Top * canvas.height + 20);
+                            ctx.stroke();
+                            boxes.push({"name":objects[i].Name,"box":box,
+                                        "canvasBox":{"Left":box.Left * canvas.width,"Top":box.Top * canvas.height,"Width":box.Width * canvas.width,"Height":box.Height * canvas.height}});
+                        }
+                    }
+                    enableAll();
+                },
+                error: function (message) {
+                    console.log(message);
+                    alert("提交数据失败！" + message);
+                    enableAll();
+                }
+            });
+        }
+
+
+        function rsBox(type,box) {
+            var baseUrl = $('#InvokeBaseUrl').val().trim();
+            if(baseUrl == ""){
+                alert("请输入InvokeBaseUrl");
+                return;
+            }
+            disbableAll();
+            json = {"payload":globalPayload,"type":type,"box":box};
+            $.ajax({
+                contentType: 'application/json',
+                type: 'POST',
+                url: baseUrl+"searchBox",
+                crossDomain: true,
+                dataType: "json",
+                data: JSON.stringify(json),
+                success: function (result) {
+                    var message = result.list;
+                    var htmlStr="";
+                    for (var i in message) {
+                        htmlStr+="<div class='search-item'><img src='"+message[i]+"'  height='577'></div>";
+                    }
+                    let resultShow = document.getElementById('result');
+                    resultShow.innerHTML = htmlStr;
+                    enableAll();
+                },
+                error: function (message) {
+                    console.log(message);
+                    alert("提交数据失败！" + message);
+                    enableAll();
+                }
+            });
+        }
+
+        function readFile() {
+            console.info("选择文件");
+            if (this.files && this.files[0]) {
+                file = this.files[0];
+                var FR = new FileReader();
+
+                FR.addEventListener("load", function (e) {
+                    var img = document.createElement("img");
+                    img.src = e.target.result;
+                    var width = img.width;
+                    var height = img.height;
+                    // if (width > 2920 || height > 2920) {
+                    //     alert('图片大小超过了限制!');
+                    //     return;
+                    // }
+                    imgbase = e.target.result;
+                    rs(imgbase, 'img')
+                });
+                FR.readAsDataURL(this.files[0]);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color: #252f3d;">
+            <div class="container">
+                <div class="collapse navbar-collapse">
+                    <a href="index.htm" class="d-flex align-items-center mb-2 mb-lg-0 text-decoration-none">
+                        <img class="center-block" src="img/cn-logo.png" alt="" width="100" height="50">
+                        <span class="navbar-brand">&nbsp;&nbsp;AI Solution Kit Demo</span>
+                    </a>
+
+                    <div class="navbar-nav me-auto mb-2 mb-md-0">
+                    </div>
+                    <div class="d-flex">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Deployment Guide</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                          <li><a class="dropdown-item" target="_blank" href="https://awslabs.github.io/aws-ai-solution-kit/en/">English</a></li>
+                          <li><a class="dropdown-item" target="_blank" href="https://awslabs.github.io/aws-ai-solution-kit/zh/">中文</a></li>
+                        </ul>
+                      </li>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">API Reference</a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                          <li><a class="dropdown-item" target="_blank" href="https://awslabs.github.io/aws-ai-solution-kit/en/api-explorer/">English</a></li>
+                          <li><a class="dropdown-item" target="_blank" href="https://awslabs.github.io/aws-ai-solution-kit/zh/api-explorer/">中文</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                        <!-- <a type="link" href="https://www.amazonaws.cn/solutions/ai-solution-kit/" target="_blank" class="btn btn-primary" style="background-color: #ec7211; width: 130px;">了解更多</a> -->
+                        <a type="button" class="btn btn-primary" target="_blank"
+                            href="https://github.com/awslabs/aws-ai-solution-kit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-github" viewBox="0 0 16 16">
+                                <use xlink:href="#github" />
+                            </svg>
+                            View on GitHub
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+    <main role="main">
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active" style="height: 12rem; top: 18px;">
+                    <img class="bd-placeholder-img" style="height: 12rem;" width="100%" height="100%" focusable="false"
+                        src="img/large-orange.png"></img>
+                        <div class="container">
+                            <div class="carousel-caption text-start" style="bottom: 1rem;">
+                                <h2>电商平台主页</h2>
+                                <p>用户上传自己的图片，从平台中搜索
+                                </p>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="container py-4">
+                <div class="row">
+                    <div class="col">
+                        <input id="InvokeBaseUrl" type="text" class="form-control" placeholder="InvokeBaseUrl" value=""><br>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">选择图片<div id="rs-status" class="spinner-border" role="status" style="visibility: hidden;"></div></div>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <input id="inputURL" type="text" class="form-control" placeholder="提交 URL">
+                            <button class="btn btn-outline-secondary" type="button" onclick="rs($('#inputURL').val())">提交 URL</button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="$('#inp').trigger('click');">上传本地图片</button>
+                            <div class="container"><div class="text-muted">最大支持上传分辨率1920*1080</div></div>
+                            <input id="inp" type='file' style="display:none">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                原图
+                            </div>
+                            <div class="card-body">
+                                <img id="imag" src="img/no-image.png" class="img-fluid rounded-start" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                识别结果
+                            </div>
+                            <div class="card-body">
+                                <canvas id="src-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        搜索结果
+                    </div>
+                    <div class="card-body search-result" id="result">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <footer class="container py-5">
+        <p class="float-end"><a href="#">Back to top</a></p>
+        <p>&copy; 亚马逊云科技 大中华区解决方案研发中心 2022 &middot; <a href="https://www.amazonaws.cn/en/privacy/?nc1=f_pr">Privacy</a>
+            &middot; <a href="https://www.amazonaws.cn/terms/?nc1=f_cc">Terms</a></p>
+    </footer>
+    <script>
+        document.getElementById("inp").addEventListener("change", readFile);
+
+        var canvas = document.getElementById('src-canvas');
+
+        function isIntersect(point, canvasBox) {
+            if(point.x >= canvasBox.Left && point.x <= (canvasBox.Left + canvasBox.Width)
+              && point.y >= canvasBox.Top && point.y <= (canvasBox.Top + canvasBox.Height))
+                return true;
+            return false;
+        }
+
+        canvas.addEventListener('click', (e) => {
+            const mousePoint = {
+                x: e.clientX - canvas.getBoundingClientRect().left,
+                y: e.clientY - canvas.getBoundingClientRect().top
+            };
+            for(i = 0;i< boxes.length;i++){
+                box = boxes[i];
+                if (isIntersect(mousePoint, box.canvasBox)) {
+                    console.info('click on box: ' + box.name);
+                    rsBox(box.name,box.box);
+                    return;
+                }
+            }
+            // boxes.forEach(box => {
+            //     if (isIntersect(mousePoint, box.canvasBox)) {
+            //         console.info('click on box: ' + box.name);
+            //         return;
+            //     }
+            // });
+        });
+    </script>
+</body>
+
+</html>

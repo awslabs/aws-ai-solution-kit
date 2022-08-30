@@ -1,0 +1,7 @@
+elasticsearch==7.13.4
+requests
+requests-aws4auth
+mangum
+uvicorn
+fastapi
+Pillow
