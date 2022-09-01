@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/python:3.9
 
 ARG FUNCTION_DIR="/opt/program"
 # Lite version
-ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/infer-ocr-model-viet/standard"
+ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/infer-ocr-model-viet"
 ARG MODEL_VERSION="1.2.0"
 
 ADD / ${FUNCTION_DIR}/
