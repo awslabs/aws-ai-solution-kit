@@ -1,1 +1,1 @@
-# OCR Lite Model for AI Solution Kit
+# OCR Vietnamese Model for AI Solution Kit
