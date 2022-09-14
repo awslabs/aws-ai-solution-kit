@@ -198,9 +198,9 @@ def handler(event, context):
         row = {
             "words": row[1][0],
             "location": {
-                "top": int(row[0][0][1]),
-                "left": int(row[0][0][0]),
-                "width": int(row[0][2][0] - row[0][0][0]),
+                "top": int(row[0][0][1] / 2),
+                "left": int(row[0][0][0] / 2),
+                "width": int((row[0][2][0] - row[0][0][0]) / 2),
                 "height": int(row[0][2][1] - row[0][0][1]),
             },
             "score": float(row[1][1]),
