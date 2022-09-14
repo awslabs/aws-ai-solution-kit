@@ -1,0 +1,1 @@
+API_ENDPOINT='https://c5jduogr78.execute-api.us-east-1.amazonaws.com/prod'
