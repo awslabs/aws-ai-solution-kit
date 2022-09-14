@@ -104,7 +104,7 @@ class TextSystem:
             found = False
             for box, rec_reuslt in zip(dt_boxes, rec_res):
                 text, score = rec_reuslt
-                if score >= self.drop_score and len(text) == 7:
+                if score >= self.drop_score and len(text) >= 7:
                     found = True
 
             if not found:
@@ -201,7 +201,7 @@ def handler(event, context):
                 "top": int(row[0][0][1] / 2),
                 "left": int(row[0][0][0] / 2),
                 "width": int((row[0][2][0] - row[0][0][0]) / 2),
-                "height": int(row[0][2][1] - row[0][0][1]),
+                "height": int(row[0][2][1] - row[0][0][1] / 2),
             },
             "score": float(row[1][1]),
         }
