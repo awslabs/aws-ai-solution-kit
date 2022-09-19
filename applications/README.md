@@ -6,3 +6,4 @@
 |---------|
 | [Custom Template OCR sample for Health kit](./custom-ocr-healthy-code/) |
 | [Search for images by image](./search-for-images-by-image/) |
+| [Cloud Photo Booth](./ai-photo-booth/) |
