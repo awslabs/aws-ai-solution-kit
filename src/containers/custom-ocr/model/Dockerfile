@@ -3,7 +3,7 @@ FROM public.ecr.aws/lambda/python:3.9
 ARG FUNCTION_DIR="/opt/program"
 # Lite version
 ARG MODEL_URL_OCR="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/infer-ocr-model/standard"
-ARG MODEL_VERSION_OCR="v1.0.0"
+ARG MODEL_VERSION_OCR="v1.3.0"
 ARG MODEL_URL_CUSTOM="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/custom-ocr"
 ARG MODEL_VERSION_CUSTOM="1.2.0"
 

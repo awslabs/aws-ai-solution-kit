@@ -147,7 +147,7 @@ class TextDetector():
         postprocess_params["thresh"] = 0.3
         postprocess_params["box_thresh"] = 0.3
         postprocess_params["max_candidates"] = 1000
-        postprocess_params["unclip_ratio"] = 1.6
+        postprocess_params["unclip_ratio"] = 2.0
         postprocess_params["use_dilation"] = True
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
@@ -239,7 +239,7 @@ class TextRecognizer():
         self.limited_max_width = 1280
         self.limited_min_width = 16
 
-        self.rec_image_shape = [3, 32, 320]
+        self.rec_image_shape = [3, 48, 480]
         self.character_type = 'ch'
         self.rec_batch_num = 6
         self.rec_algorithm = 'CRNN'
@@ -258,8 +258,8 @@ class TextRecognizer():
     def resize_norm_img(self, img, max_wh_ratio):
         imgC, imgH, imgW = self.rec_image_shape
         max_wh_ratio = max(max_wh_ratio, imgW / imgH)
-        imgW = int((32 * max_wh_ratio))
-        imgW = max(min(imgW, self.limited_max_width), self.limited_min_width)
+        imgW = int((48 * max_wh_ratio))
+        # imgW = max(min(imgW, self.limited_max_width), self.limited_min_width)
         h, w = img.shape[:2]
         ratio = w / float(h)
         ratio_imgH = math.ceil(imgH * ratio)
