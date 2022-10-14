@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Custom Template Tool</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+		<style>
+.area {
+  overflow: hidden;
+  position: relative;
+}
+
+.area:hover {
+  cursor: crosshair;
+}
+
+.area IMG {
+  display: block;
+  max-width: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.area .rect {
+  opacity: 0;
+  transition: all 0s ease;
+  position: absolute;
+  border: 1px solid red;
+  z-index: 1;
+}
+
+.area.draw .rect,
+.area.drawn .rect {
+  opacity: 1;
+}
+</style>
+<script type="text/javascript">
+let img = {};
+let position = {};
+
+function imgMatrix() {
+  let imgShow = $('#imgShow');
+  let offset = imgShow.offset();
+
+  img.width = imgShow.outerWidth();
+  img.height = imgShow.outerHeight();
+  img.offsetX = offset.left - $(document).scrollLeft();
+  img.offsetY = offset.top - $(document).scrollTop();
+}
+
+function positionMatrix(e, mousedown = false) {
+  if (mousedown) {
+    position.top = (100 / img.height) * ( (e.pageY - $(document).scrollTop()) - img.offsetY);
+    position.left = (100 / img.width) * ( (e.pageX - $(document).scrollLeft()) - img.offsetX);
+  }
+  position.right = 100 - ((100 / img.width) * ((e.pageX - $(document).scrollLeft()) - img.offsetX));
+  position.bottom = 100 - ((100 / img.height) * ((e.pageY - $(document).scrollTop()) - img.offsetY));
+}
+
+$(document).on('mousemove', '.area', function(e) {
+  imgMatrix();
+  if ($(this).hasClass('draw')) {
+    positionMatrix(e);
+    if ((100 - position.bottom) < position.top) {
+      $('.rect', this).css({
+        top: (100 - position.bottom) + '%',
+        bottom: (100 - position.top) + '%'
+      });
+    } else {
+      $('.rect', this).css({
+        bottom: position.bottom + '%',
+        top: position.top + '%',
+      });
+    }
+    if ((100 - position.right) < position.left) {
+      $('.rect', this).css({
+        left: (100 - position.right) + '%',
+        right: (100 - position.left) + '%'
+      });
+    } else {
+      $('.rect', this).css({
+        right: position.right + '%',
+        left: position.left + '%'
+      });
+    }
+  }
+});
+
+$(document).on('mousedown', '.area', function(e) {
+  $(this).removeClass('drawn');
+  imgMatrix();
+  positionMatrix(e, true);
+  $('.rect', this).css({
+    left: position.left + '%',
+    top: position.top + '%',
+    right: position.right + '%',
+    bottom: position.bottom + '%'
+  });
+  $(this).addClass('draw');
+});
+
+
+$(document).on('mouseup', '.area', function(e) {
+  imgMatrix();
+  if ($(this).hasClass('draw')) {
+    positionMatrix(e);
+    if ((Math.trunc(position.left) === Math.trunc(100 - position.right)) && (Math.trunc(position.top) === Math.trunc(100 - position.bottom))) {
+      $(this).removeClass('draw drawn');
+    } else {
+      $(this).addClass('drawn').removeClass('draw');
+    }
+  }
+  postRect();
+});
+
+
+$(window).on('resize', function(e) {
+  imgMatrix();
+});
+
+var template=[];
+function postRect(){
+  var title=prompt("Please enter the name of the selection box.");
+  if(!title){
+    return;
+  }
+  offImg=$("#imgShow").offset();
+  offRect=$(".rect").offset();
+  x=Math.round(offRect.left-offImg.left);
+  y=Math.round(offRect.top-offImg.top);
+  width=$(".rect").width();
+  height=$(".rect").height();
+  // console.info(`x:${x}`);
+  // console.info(`y:${y}`);
+  // console.info(width);
+  // console.info(height);
+  template.push([[[x,y],[(x+width),(y)],[(x+width),(y+height)],[x,(y+height)]],title]);
+  drawTable();
+}
+
+function drawTable(){
+  var htmlStr="";
+  for(let i=0;i<template.length;i++){
+      htmlStr+='<tr><td class="text-center">'+JSON.stringify(template[i][0])+'</td><td class="text-center">'+template[i][1]+'</td><td class="text-center"><a href="javascript:delRow('+i+')">Delete</a></td></tr>';
+  }
+  //修改表格内容
+  let tbody = document.getElementById('tbody');
+  tbody.innerHTML = htmlStr;
+  payload.template=template;
+  result=JSON.stringify(payload);
+  $("#result").text(result);
+  
+}
+
+function delRow(i){
+  if(!(confirm("do you want to delete template ("+template[i][1]+")?"))){
+    return;
+  }
+  template.splice(i,1);
+  drawTable();
+}
+
+function copyResult(){
+  result=$("#result").text();
+  navigator.clipboard.writeText(result);
+}
+</script>
+</head>
+<body>
+      <div class="container py-4">
+        <div class="card">
+          <div class="card-header">Template Image<div id="rs-status" class="spinner-border" role="status" style="visibility: hidden;"></div></div>
+          <div class="card-body">
+              <div class="input-group">
+                  <input id="inputURL" type="text" class="form-control" placeholder="URL" value="">
+                  <button class="btn btn-outline-secondary" type="button" onclick="readUrl($('#inputURL').val())">From URL</button>
+                  <button class="btn btn-outline-secondary" type="button" onclick="$('#inputFile').trigger('click');">Local file</button>
+                  <input id="inputFile" type='file' style="display:none">
+              </div>
+          </div>
+        </div>
+
+        <div class="area" id="area">
+          <img  id="imgShow"/>
+          <div class="rect">
+          </div>
+        </div>
+        <div>
+          <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center">Position</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center">Detele</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <textarea id="result" rows="5" class="form-control"></textarea>
+          <button class="btn btn-outline-secondary" type="button" onclick="copyResult();">Copy to clipboard</button>
+        </div>
+      </div>
+</body>
+<script>
+var payload={"type": "add"};
+var imgHidden;
+function readUrl(imgUrl){
+  if (!imgUrl) {
+    alert("Please give the image URL");
+    return;
+  }
+  imgHidden = document.createElement("img");
+  imgHidden.src = imgUrl;
+  delete payload.img;
+  payload.url = imgUrl;
+  // setTimeout("onloadImg('"+imgUrl+"','url')",500);
+  imgHidden.onload = function () {
+    onloadImg(imgUrl);
+  }
+}
+
+function readFile() {
+  $(".area").removeClass('drawn');
+  if (this.files && this.files[0]) {
+      file = this.files[0];
+      var FR = new FileReader();
+      FR.addEventListener("load", function (e) {
+          imgHidden = document.createElement("img");
+          imgHidden.src = e.target.result;
+          imgUrl = imgHidden.src;
+          delete payload.url;
+          payload.img = imgUrl.substr(imgUrl.indexOf(',') + 1);
+          // setTimeout("onloadImg('"+imgUrl+"','img')",500);
+          imgHidden.onload = function () {
+            onloadImg(imgUrl);
+          }
+      });
+      FR.readAsDataURL(this.files[0]);
+  }
+}
+
+function onloadImg(imgUrl){
+  var width = imgHidden.width;
+  var height = imgHidden.height;
+  console.info(`width111:${width}`);
+  console.info(`height:${height}`);
+  if(width == 0){
+    alert("Please refresh the page and choose the file again");
+    return;
+  }
+  document.getElementById("area").style.width=width+"px";
+  var imgShow = document.getElementById("imgShow");
+  imgShow.src = imgUrl;
+  initTemplate();
+}
+
+function initTemplate(){
+  $(".area").removeClass('drawn');
+  template=[];
+  drawTable();
+}
+document.getElementById("inputFile").addEventListener("change", readFile);
+</script>
+</html>
