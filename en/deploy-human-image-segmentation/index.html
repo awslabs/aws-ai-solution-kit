@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-human-image-segmentation/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+      <meta name="generator" content="mkdocs-1.4.0, mkdocs-material-8.5.6">
     
     
       
@@ -19,13 +19,14 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.69437709.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.20d9efc8.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
         
       
       
+
     
     
     
@@ -42,6 +43,7 @@
     
       
 
+    
     
     
   </head>
@@ -66,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#applicable-scenarios" class="md-skip">
+        <a href="#macro-syntax-error" class="md-skip">
           Skip to content
         </a>
       
@@ -169,7 +171,7 @@
       </label>
       <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
@@ -193,7 +195,7 @@
         <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     awslabs/aws-ai-solution-kit
@@ -278,7 +280,7 @@
       <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     awslabs/aws-ai-solution-kit
@@ -615,135 +617,12 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Human Image Segmentation
-          <span class="md-nav__icon md-icon"></span>
-        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         Human Image Segmentation
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#applicable-scenarios" class="md-nav__link">
-    Applicable scenarios
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    API reference
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-test" class="md-nav__link">
-    API test
-  </a>
-  
-    <nav class="md-nav" aria-label="API test">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-explorer" class="md-nav__link">
-    API Explorer
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postman-aws_iam-authentication" class="md-nav__link">
-    Postman (AWS_IAM Authentication）
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#curl" class="md-nav__link">
-    cURL
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python (AWS_IAM Authentication)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-none-authentication" class="md-nav__link">
-    Python (NONE Authentication)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#java" class="md-nav__link">
-    Java
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cost-estimation" class="md-nav__link">
-    Cost estimation
-  </a>
-  
-    <nav class="md-nav" aria-label="Cost estimation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cost-estimation-example-1" class="md-nav__link">
-    Cost estimation example 1
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cost-estimation-example-2" class="md-nav__link">
-    Cost estimation example 2
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#uninstall-the-deployment" class="md-nav__link">
-    Uninstall the deployment
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -949,117 +828,8 @@
   
   
   
+    
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#applicable-scenarios" class="md-nav__link">
-    Applicable scenarios
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-reference" class="md-nav__link">
-    API reference
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-test" class="md-nav__link">
-    API test
-  </a>
-  
-    <nav class="md-nav" aria-label="API test">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#api-explorer" class="md-nav__link">
-    API Explorer
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postman-aws_iam-authentication" class="md-nav__link">
-    Postman (AWS_IAM Authentication）
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#curl" class="md-nav__link">
-    cURL
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-aws_iam-authentication" class="md-nav__link">
-    Python (AWS_IAM Authentication)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#python-none-authentication" class="md-nav__link">
-    Python (NONE Authentication)
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#java" class="md-nav__link">
-    Java
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cost-estimation" class="md-nav__link">
-    Cost estimation
-  </a>
-  
-    <nav class="md-nav" aria-label="Cost estimation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cost-estimation-example-1" class="md-nav__link">
-    Cost estimation example 1
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cost-estimation-example-2" class="md-nav__link">
-    Cost estimation example 2
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#uninstall-the-deployment" class="md-nav__link">
-    Uninstall the deployment
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -1067,340 +837,27 @@
               </div>
             
           
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
                 
+                  
 
 
-  <h1>Human Image Segmentation</h1>
-
-<p>Segment human bodies from background and return the alpha channel which is a color component representing the degree of transparency of a color.</p>
-<h2 id="applicable-scenarios">Applicable scenarios</h2>
-<p>Applicable to photo background replacement, post-processing, ID photo production, portrait cutout beautification, background blur and many other scenarios.</p>
-<h2 id="api-reference">API reference</h2>
-<ul>
-<li>
-<p>HTTP request method: <code>POST</code></p>
-</li>
-<li>
-<p>Request body parameters</p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>Name</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Required</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>url</td>
-<td><em>String</em></td>
-<td>Choose url or img.</td>
-<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
-</tr>
-<tr>
-<td>img</td>
-<td><em>String</em></td>
-<td>Choose url or img.</td>
-<td>Base64 encoded image data.</td>
-</tr>
-<tr>
-<td>type</td>
-<td><em>String</em></td>
-<td>No</td>
-<td>By default, type is empty, and it will return the Base64 encoding of the Alpha channel of the image after removing the background. When type is <code>foreground</code>, it will return the Base64 encoding of the transparent background image in PNG format.</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Example JSON request</li>
-</ul>
-<pre><code class="language-json">{
-&quot;url&quot;: &quot;Image URL address&quot;,
-&quot;type&quot;: &quot;foreground&quot;
-}
+<h1 id="macro-syntax-error"><em>Macro Syntax Error</em></h1>
+<p><em>Line 48 in Markdown file:</em> <strong>expected token 'end of statement block', got 'string'</strong> </p>
+<pre><code class="language-python">  include-markdown &quot;include-deploy-code.md&quot;
 </code></pre>
-<pre><code class="language-json">{
-&quot;img&quot;: &quot;Base64-encoded image data&quot;,
-&quot;type&quot;: &quot;foreground&quot;
-}
-</code></pre>
-<ul>
-<li>Response parameters</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th><strong>Name</strong></th>
-<th><strong>Type</strong></th>
-<th><strong>Description</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>result</td>
-<td><em>String</em></td>
-<td>Base64 encoded image data</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Example JSON response</li>
-</ul>
-<pre><code class="language-json">{
-  &quot;result&quot;: &quot;Base64 encoded image data&quot;
-}
-</code></pre>
-<!-- BEGIN INCLUDE include-deploy-code.md -->
-<h2 id="api-test">API test</h2>
-<p>You can use the following tools (API explorer, Postman, cURL, Python, Java) to test calling APIs.</p>
-<h3 id="api-explorer">API Explorer</h3>
-<p><strong>Prerequisites</strong></p>
-<p>When <a href="../deployment/">deploying the solution</a>, you need to：</p>
-<ul>
-<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
-<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
-</ul>
-<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test calling API online. </p>
-<p><strong>Steps</strong></p>
-<ol>
-<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
-<li>
-<p>On the <strong>Stacks</strong> page, select the solution’s root stack. Do not select the NESTED stack.</p>
-<p><img alt="" src="../images/root-stack-en.png" /></p>
-</li>
-<li>
-<p>Choose the <strong>Outputs</strong> tab, and find the URL for APIExplorer.</p>
-</li>
-<li>
-<p>Click the URL to access the API explorer. The APIs that you have selected during deployment will be displayed. </p>
-<p><img alt="" src="../images/api-explorer.png" /></p>
-</li>
-<li>
-<p>For the API you want to test, click the down arrow to display the request method.</p>
-</li>
-<li>Choose the <strong>Try it out</strong> button, and enter the correct Body data to test API and check the test result.</li>
-<li>Make sure the format is correct, and choose <strong>Execute</strong>.</li>
-<li>Check the returned result in JSON format in the <strong>Responses body</strong>. If needed, copy or download the result.</li>
-<li>Check the <strong>Response headers</strong>.</li>
-<li>(Optional) Choose <strong>Clear</strong> next to the <strong>Execute</strong> button to clear the request body and responses. </li>
-</ol>
-<h3 id="postman-aws_iam-authentication">Postman (<em>AWS_IAM</em> Authentication）</h3>
-<ol>
-<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
-<li>On the <strong>Stacks</strong> page, select the solution’s root stack.</li>
-<li>Choose the <strong>Outputs</strong> tab, and find the URL with the prefix <code>GeneralOCR</code>.</li>
-<li>
-<p>Create a new tab in Postman. Paste the URL into the address bar, and select <em>POST</em> as the HTTP call method.</p>
-<p><img alt="" src="../images/ocr-postman-1-en.png" /></p>
-</li>
-<li>
-<p>Open the Authorization configuration, select Amazon Web Service Signature from the drop-down list, and enter the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).</p>
-<p><img alt="" src="../images/ocr-postman-2-en.png" /></p>
-</li>
-<li>
-<p>Open the Body configuration item and select the raw and JSON data types. </p>
-</li>
-<li>Enter the test data in the Body, and click the <strong>Send</strong> button to see the corresponding return results.</li>
-</ol>
-<pre><code class="language-json">{
-  &quot;url&quot;: &quot;Image URL address&quot;
-}
-</code></pre>
-<p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
-<h3 id="curl">cURL</h3>
-<ul>
-<li>Windows</li>
-</ul>
-<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/human_image_segmentation&quot; ^
---header &quot;Content-Type: application/json&quot; ^
---data-raw &quot;{\&quot;url\&quot;: \&quot;Image URL address\&quot;}&quot;
-</code></pre>
-<ul>
-<li>Linux/MacOS</li>
-</ul>
-<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/human_image_segmentation' \
---header 'Content-Type: application/json' \
---data-raw '{
-  &quot;url&quot;:&quot;Image URL address&quot;
-}'
-</code></pre>
-<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
-<pre><code class="language-python">import requests
-import json
-from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
-
-auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
-                           aws_region='[AWS_REGION]',
-                           aws_service='execute-api')
-
-url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/human_image_segmentation'
-payload = {
-    'url': 'Image URL address'
-}
-response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
-print(json.loads(response.text))
-</code></pre>
-<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
-<pre><code class="language-python">import requests
-import json
-
-url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/human_image_segmentation&quot;
-
-payload = json.dumps({
-  &quot;url&quot;: &quot;Image URL address&quot;
-})
-headers = {
-  'Content-Type': 'application/json'
-}
-
-response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
-
-print(response.text)
-</code></pre>
-<h3 id="java">Java</h3>
-<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
-  .build();
-MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
-RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;Image URL address\&quot;\n}&quot;);
-Request request = new Request.Builder()
-  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/human_image_segmentation&quot;)
-  .method(&quot;POST&quot;, body)
-  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
-  .build();
-Response response = client.newCall(request).execute();
-</code></pre>
-<!-- END INCLUDE -->
-
-<h2 id="cost-estimation">Cost estimation</h2>
-<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
-<ul>
-<li>AWS Lambda invocations</li>
-<li>AWS Lambda running time</li>
-<li>Amazon API Gateway calls</li>
-<li>Amazon API Gateway data output</li>
-<li>Amazon CloudWatch Logs storage</li>
-<li>Amazon Elastic Container Registry storage</li>
-</ul>
-<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
-<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>
-<p>The cost of using this solution to process the image is shown below:</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Dimensions</th>
-<th>Cost</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AWS Lambda</td>
-<td>1 million invocations</td>
-<td>¥1.36</td>
-</tr>
-<tr>
-<td>AWS Lambda</td>
-<td>10240MB memory, 1 seconds run each time</td>
-<td>¥1134.8</td>
-</tr>
-<tr>
-<td>Amazon API Gateway</td>
-<td>1 million invocations</td>
-<td>¥28.94</td>
-</tr>
-<tr>
-<td>Amazon API Gateway</td>
-<td>100KB data output each time, ¥0.933/GB</td>
-<td>¥93.3</td>
-</tr>
-<tr>
-<td>Amazon CloudWatch Logs</td>
-<td>10KB each time, ¥6.228/GB</td>
-<td>¥62.28</td>
-</tr>
-<tr>
-<td>Amazon Elastic Container Registry</td>
-<td>0.5GB storage, ¥0.69/GB each month</td>
-<td>¥0.35</td>
-</tr>
-<tr>
-<td>Total</td>
-<td></td>
-<td>¥1237.06</td>
-</tr>
-</tbody>
-</table>
-<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
-<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 4 seconds</p>
-<p>The cost of using this solution to process this image is shown below:</p>
-<table>
-<thead>
-<tr>
-<th>Service</th>
-<th>Dimensions</th>
-<th>Cost</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AWS Lambda</td>
-<td>1 million invocations</td>
-<td>$0.20</td>
-</tr>
-<tr>
-<td>AWS Lambda</td>
-<td>10240MB memory, 1 seconds run each time</td>
-<td>$166.7</td>
-</tr>
-<tr>
-<td>Amazon API Gateway</td>
-<td>1 million invocations</td>
-<td>$3.5</td>
-</tr>
-<tr>
-<td>Amazon API Gateway</td>
-<td>100KB data output each time, $0.09/GB</td>
-<td>$9</td>
-</tr>
-<tr>
-<td>Amazon CloudWatch Logs</td>
-<td>10KB each time, $0.50/GB</td>
-<td>$5</td>
-</tr>
-<tr>
-<td>Amazon Elastic Container Registry</td>
-<td>0.5GB存储，$0.1/GB each month</td>
-<td>$0.05</td>
-</tr>
-<tr>
-<td>Total</td>
-<td></td>
-<td>$176.35</td>
-</tr>
-</tbody>
-</table>
-<!-- BEGIN INCLUDE include-deploy-uninstall.md -->
-<h2 id="uninstall-the-deployment">Uninstall the deployment</h2>
-<p>You can uninstall the <strong>Human Image Segmentation</strong> feature via Amazon CloudFormation as described in <a href="../deploy-add-delete-api/">Add or remove AI features</a> and make sure the <strong>HumanImageSegmentation</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
-<div class="admonition info">
-<p class="admonition-title">Note</p>
-<p>Time to uninstall the deployment is approximately: <strong>9 Minutes</strong></p>
-</div>
-<!-- END INCLUDE -->
 
 
 
 
-              
-            </article>
-            
-          </div>
+
+                
+              </article>
+            </div>
+          
+          
         </div>
         
       </main>
@@ -1464,10 +921,10 @@ Response response = client.newCall(request).execute();
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      <script src="../assets/javascripts/bundle.078830c0.min.js"></script>
       
     
   </body>
