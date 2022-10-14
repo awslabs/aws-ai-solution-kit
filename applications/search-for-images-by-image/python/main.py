@@ -174,7 +174,7 @@ def es_search(features,type = None):
                 'query': {
                     "bool":{
                         "must":[
-                            {'knn': {'ask_img_vector': {'vector': features, 'k': 3*k}}},
+                            {'knn': {'ask_img_vector': {'vector': features, 'k': 4*k}}},
                             {"term":{"type":type}},
                         ]}}}
     res = es.search(request_timeout=30, index="idx_ask",
