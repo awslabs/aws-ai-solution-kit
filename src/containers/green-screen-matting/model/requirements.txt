@@ -1,0 +1,6 @@
+numpy
+Pillow
+onnxruntime-gpu
+boto3
+flask
+gevent
