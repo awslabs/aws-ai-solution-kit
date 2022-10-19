@@ -7,6 +7,7 @@ import { AISolutionKitSMStack } from './api-deployment/ai-solution-kit-sm-stack'
 import { AISolutionKit3GStack } from './api-deployment/ai-solution-kit-3g-stack';
 import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 import { AISolutionKitOcrBlankStack } from './api-deployment/ai-solution-kit-ocr-blank-stack';
+import { AISolutionKitChineseOCRStack } from './api-deployment/ai-solution-kit-chinese-ocr-stack';
 import { LambdaContainersStack } from './containers/lambda-containers-stack';
 
 
@@ -61,6 +62,14 @@ if (buildContainers === 'true' || deployContainers === 'true') {
   });
 
   new AISolutionKitOcrBlankStack(app, 'AI-Solution-Kit-Ocr-Blank', {
+    synthesizer: synthesizer(),
+    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+    tags: {
+      app: 'ai-solution-kit',
+    },
+  });
+
+  new AISolutionKitChineseOCRStack(app, 'AI-Solution-Kit-Ocr', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
     tags: {
