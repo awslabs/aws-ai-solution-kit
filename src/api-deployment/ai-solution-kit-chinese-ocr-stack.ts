@@ -86,7 +86,7 @@ export class AISolutionKitChineseOCRStack extends Stack {
     // Feature: General OCR - Traditional Chinese
     {
       Repository.fromRepositoryName(this, `ai-solution-kit-general-ocr-traditional-chinese-repository`, `ai-solution-kit-general-ocr-traditional-chinese`);
-      const stackRepo = new Repository(this, `ai-solution-kit-general-ocr`, {
+      const stackRepo = new Repository(this, `ai-solution-kit-traditional-chinese-general-ocr`, {
         repositoryName: `ai-solution-kit-general-ocr-traditional-chinese`,
         removalPolicy: RemovalPolicy.RETAIN,
       });
