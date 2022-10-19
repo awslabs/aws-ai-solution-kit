@@ -1,0 +1,1 @@
+# Human Part Segmentation Model for AI Solution Kit
