@@ -1,5 +1,4 @@
-#FROM 727897471807.dkr.ecr.cn-north-1.amazonaws.com.cn/pytorch-inference:1.12.1-gpu-py38-cu113-ubuntu20.04-sagemaker
-FROM 763104351884.dkr.ecr.us-west-2.amazonaws.com/pytorch-inference:1.12.1-gpu-py38-cu113-ubuntu20.04-sagemaker
+FROM 727897471807.dkr.ecr.cn-north-1.amazonaws.com.cn/pytorch-inference:1.12.1-gpu-py38-cu113-ubuntu20.04-sagemaker
 
 ARG FUNCTION_DIR="/opt/ml/model"
 
