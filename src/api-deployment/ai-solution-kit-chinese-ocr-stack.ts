@@ -78,6 +78,7 @@ export class AISolutionKitChineseOCRStack extends Stack {
           role: myRole,
         },
       );
+      appFunction.node.addDependency(ecrCR);
     }
     // Feature: General OCR - Traditional Chinese
     {
@@ -115,6 +116,7 @@ export class AISolutionKitChineseOCRStack extends Stack {
           role: myRole,
         },
       );
+      appFunction.node.addDependency(ecrCR);
     }
 
   }

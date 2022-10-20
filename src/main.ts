@@ -29,45 +29,45 @@ if (buildContainers === 'true' || deployContainers === 'true') {
   const ecrRegistry = app.node.tryGetContext('ecrRegistry');
   console.log('Use ECR Resistry: ' + ecrRegistry);
 
-  new AISolutionKitStack(app, 'AI-Solution-Kit', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKitStack(app, 'AI-Solution-Kit', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 
-  new AISolutionKitIsolatedStack(app, 'AI-Solution-Kit-Isolated', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKitIsolatedStack(app, 'AI-Solution-Kit-Isolated', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 
-  new AISolutionKitSMStack(app, 'AI-Solution-Kit-SM', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKitSMStack(app, 'AI-Solution-Kit-SM', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 
-  new AISolutionKit3GStack(app, 'AI-Solution-Kit-3G', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKit3GStack(app, 'AI-Solution-Kit-3G', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 
-  new AISolutionKitOcrBlankStack(app, 'AI-Solution-Kit-Ocr-Blank', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKitOcrBlankStack(app, 'AI-Solution-Kit-Ocr-Blank', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 
   new AISolutionKitChineseOCRStack(app, 'AI-Solution-Kit-Chinese-Ocr', {
     synthesizer: synthesizer(),
