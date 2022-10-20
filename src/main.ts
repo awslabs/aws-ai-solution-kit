@@ -69,7 +69,7 @@ if (buildContainers === 'true' || deployContainers === 'true') {
     },
   });
 
-  new AISolutionKitChineseOCRStack(app, 'AI-Solution-Kit-Ocr', {
+  new AISolutionKitChineseOCRStack(app, 'AI-Solution-Kit-Chinese-Ocr', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
     tags: {
