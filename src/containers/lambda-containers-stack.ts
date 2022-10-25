@@ -142,6 +142,24 @@ export class LambdaContainersStack extends Stack {
         code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model'),
       },
     );
+
+    const GreenScreenMatting = new DockerImageFunction(
+      this,
+      'green-screen-matting',
+      {
+        functionName: 'green-screen-matting',
+        code: DockerImageCode.fromImageAsset('src/containers/green-screen-matting/model'),
+      },
+    );
+
+    const GeneralOCRViet = new DockerImageFunction(
+      this,
+      'general-ocr-viet',
+      {
+        functionName: 'general-ocr-viet',
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-viet/model-standard'),
+      },
+    );
   }
 
   private buildLambdaImage(imageName: string, codeDirectory: string) {
