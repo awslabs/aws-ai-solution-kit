@@ -262,7 +262,7 @@ Conditions:
       
   ConditionHumanImageSegmentation: !Equals 
       - !Ref HumanImageSegmentation
-      - "yes"
+      - "yes-ml.g4dn.xlarge"
       
   ConditionPornographyDetection: !Equals 
       - !Ref PornographyDetection
