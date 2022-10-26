@@ -291,7 +291,7 @@ export class AISolutionKitSMStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (greenScreenMatting.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
-      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition', 'ConditionHumanImageSegmentation');
+      this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation', 'ConditionHumanImageSegmentation');
     }
 
     // Feature: Pornography Detection
