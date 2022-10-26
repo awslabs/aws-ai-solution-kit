@@ -44,7 +44,7 @@ import { FaceDetectionFeatureNestedStack } from './features/face-detection';
 import { GeneralOCRFeatureNestedStack } from './features/general-ocr';
 import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/general-ocr-traditional-chinese';
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/human-attribute-recognition';
-import { HumanImageSegmentationFeatureNestedStack } from './features/human-image-segmentation';
+import { GreenScreenMattingSMFeatureNestedStack } from './features/green-screen-matting-sm';
 import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
 import { ObjectRecognitionSMFeatureNestedStack } from './features/object-recognition-sm';
 import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
@@ -281,18 +281,17 @@ export class AISolutionKitSMStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition', 'ConditionHumanAttributeRecognition');
     }
 
-    // Feature: Human Image Segmentation
+    // Feature: Green Screen Matting SM
     {
-      const humanImageSegmentation = new HumanImageSegmentationFeatureNestedStack(this, 'Human-Image-Segmentation', {
+      const greenScreenMatting = new GreenScreenMattingSMFeatureNestedStack(this, 'Human-Image-Segmentation', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
-        lambdaMemorySize: 3008,
       });
-      (humanImageSegmentation.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
-      this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation', 'ConditionHumanImageSegmentation');
+      (greenScreenMatting.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
+      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition', 'ConditionHumanImageSegmentation');
     }
 
     // Feature: Pornography Detection

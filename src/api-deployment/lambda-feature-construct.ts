@@ -118,7 +118,7 @@ export class LambdaFeatureConstruct extends Construct {
         removalPolicy: RemovalPolicy.DESTROY,
       });
       apiProvider.node.addDependency(post);
-      deployment.node.addDependency(apiProvider);
+      // deployment.node.addDependency(apiProvider);
     }
   }
 }
