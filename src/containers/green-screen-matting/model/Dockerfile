@@ -2,8 +2,8 @@ FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.12.1-gpu-p
 
 ARG FUNCTION_DIR="/opt/ml/model"
 
-ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/green-screen-matting"
-ARG MODEL_VERSION="1.2.0"
+ARG MODEL_URL=""
+ARG MODEL_VERSION=""
 
 ADD / ${FUNCTION_DIR}/
 
@@ -11,8 +11,8 @@ RUN pip install -r ${FUNCTION_DIR}/requirements.txt
 
 
 RUN mkdir -p ${FUNCTION_DIR}/model
-#RUN yum install -y wget
-RUN wget -c $MODEL_URL/$MODEL_VERSION/chroma-key.onnx -O ${FUNCTION_DIR}/model/chroma-key.onnx
+# RUN yum install -y wget
+# RUN wget -c $MODEL_URL/$MODEL_VERSION/chroma-key.onnx -O ${FUNCTION_DIR}/model/chroma-key.onnx
 
 WORKDIR ${FUNCTION_DIR}
 ENV PYTHONUNBUFFERED=TRUE
