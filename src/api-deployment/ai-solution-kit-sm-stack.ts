@@ -44,7 +44,7 @@ import { FaceDetectionFeatureNestedStack } from './features/face-detection';
 import { GeneralOCRFeatureNestedStack } from './features/general-ocr';
 import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/general-ocr-traditional-chinese';
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/human-attribute-recognition';
-import { GreenScreenMattingSMFeatureNestedStack } from './features/green-screen-matting-sm';
+import { HumanImageSegmentationFeatureNestedStack } from './features/human-image-segmentation';
 import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
 import { ObjectRecognitionSMFeatureNestedStack } from './features/object-recognition-sm';
 import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
@@ -281,16 +281,17 @@ export class AISolutionKitSMStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition', 'ConditionHumanAttributeRecognition');
     }
 
-    // Feature: Green Screen Matting SM
+    // Feature: Human Image Segmentation
     {
-      const greenScreenMatting = new GreenScreenMattingSMFeatureNestedStack(this, 'Human-Image-Segmentation', {
+      const humanImageSegmentation = new HumanImageSegmentationFeatureNestedStack(this, 'Human-Image-Segmentation', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 3008,
       });
-      (greenScreenMatting.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
+      (humanImageSegmentation.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentation');
       this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation', 'ConditionHumanImageSegmentation');
     }
 

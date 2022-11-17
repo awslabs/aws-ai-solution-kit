@@ -189,10 +189,10 @@ Parameters:
 
   HumanImageSegmentation:
     Description: Segment human bodies from background and return the alpha channel. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-image-segmentation/.
-    Default: "yes-ml.g4dn.xlarge"
+    Default: "yes"
     Type: String
     AllowedValues:
-      - "yes-ml.g4dn.xlarge"
+      - "yes"
       - "no"
 
   PornographyDetection:
@@ -262,7 +262,7 @@ Conditions:
       
   ConditionHumanImageSegmentation: !Equals 
       - !Ref HumanImageSegmentation
-      - "yes-ml.g4dn.xlarge"
+      - "yes"
       
   ConditionPornographyDetection: !Equals 
       - !Ref PornographyDetection
