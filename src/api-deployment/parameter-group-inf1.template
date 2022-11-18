@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: API Deployment Configuration
+        Parameters:
+          - APIGatewayAuthorization
+          - APIGatewayStageName
+
+      - Label:
+          default: Facial & Body Recognition APIs
+        Parameters:
+          - HumanImageSegmentation
+
+    ParameterLabels:
+      APIGatewayStageName:
+        default: API Gateway Stage Name
+
+      APIGatewayAuthorization:
+        default: API Gateway Authorization
+
+      HumanImageSegmentation: 
+        default: Human Image Segmentation
+
+Parameters:
+  APIGatewayStageName:
+    Description: Enter a name for API deployment Stage name. Default value is 'prod'. See https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html.
+    Default: "prod"
+    Type: String
+
+  APIGatewayAuthorization:
+    Description: Control access to the REST APIs. See https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html.
+    Default: "AWS_IAM"
+    Type: String
+    AllowedValues:
+      - "AWS_IAM"
+      - "NONE"
+
+  HumanImageSegmentation:
+    Description: Segment human bodies from background and return the alpha channel. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-image-segmentation/.
+    Default: "yes-ml.inf1.xlarge"
+    Type: String
+    AllowedValues:
+      - "yes-ml.inf1.xlarge"
+      - "no"
+
+Conditions:
+  ConditionHumanImageSegmentation: !Equals 
+      - !Ref HumanImageSegmentation
+      - "yes-ml.inf1.xlarge"
