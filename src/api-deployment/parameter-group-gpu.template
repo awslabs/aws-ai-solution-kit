@@ -39,13 +39,13 @@ Parameters:
 
   HumanImageSegmentation:
     Description: Segment human bodies from background and return the alpha channel. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-image-segmentation/.
-    Default: "yes-ml.inf1.xlarge"
+    Default: "yes"
     Type: String
     AllowedValues:
-      - "yes-ml.inf1.xlarge"
+      - "yes"
       - "no"
 
 Conditions:
   ConditionHumanImageSegmentation: !Equals 
       - !Ref HumanImageSegmentation
-      - "yes-ml.inf1.xlarge"
+      - "yes"

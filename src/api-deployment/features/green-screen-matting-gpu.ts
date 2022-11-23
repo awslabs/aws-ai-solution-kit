@@ -7,7 +7,7 @@ import {
 } from "../feature-nested-stack";
 import { SageMakerFeatureConstruct } from "../sagemaker-feature-construct";
 
-export class GreenScreenMattingSMFeatureNestedStack extends FeatureNestedStack {
+export class GreenScreenMattingGpuFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
     super(scope, id, props);
     const featureName = "human-segmentation";
@@ -63,7 +63,7 @@ export class GreenScreenMattingSMFeatureNestedStack extends FeatureNestedStack {
               stackRepo.repositoryName
             ).repositoryUri
           }:latest`,
-          sageMakerInstanceType: "ml.inf1.xlarge",
+          sageMakerInstanceType: "ml.g4dn.xlarge",
         }
       );
       sageMakerConstruct.node.addDependency(ecrCR);

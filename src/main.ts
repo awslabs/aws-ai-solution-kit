@@ -4,7 +4,7 @@ import { BootstraplessStackSynthesizer, CompositeECRRepositoryAspect } from 'cdk
 import 'source-map-support/register';
 import { AISolutionKitIsolatedStack } from './api-deployment/ai-solution-kit-isolated-stack';
 import { AISolutionKitSMStack } from './api-deployment/ai-solution-kit-sm-stack';
-import { AISolutionKitInf1Stack } from './api-deployment/ai-solution-kit-inf1-stack';
+import { AISolutionKitGpuStack } from './api-deployment/ai-solution-kit-gpu-stack';
 import { AISolutionKit3GStack } from './api-deployment/ai-solution-kit-3g-stack';
 import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 import { AISolutionKitOcrBlankStack } from './api-deployment/ai-solution-kit-ocr-blank-stack';
@@ -54,7 +54,7 @@ if (buildContainers === 'true' || deployContainers === 'true') {
     },
   });
 
-  new AISolutionKitInf1Stack(app, 'AI-Solution-Kit-Inf1', {
+  new AISolutionKitGpuStack(app, 'AI-Solution-Kit-Inf1', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
     tags: {

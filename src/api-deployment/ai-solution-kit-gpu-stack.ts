@@ -26,7 +26,7 @@ import { Construct } from "constructs";
 import * as path from "path";
 import { DockerImageName, ECRDeployment } from "../lib/cdk-ecr-deployment/lib";
 import { FeatureNestedStack } from "./feature-nested-stack";
-import { GreenScreenMattingSMFeatureNestedStack } from "./features/green-screen-matting-sm";
+import { GreenScreenMattingGpuFeatureNestedStack } from "./features/green-screen-matting-gpu";
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
@@ -40,7 +40,7 @@ export interface AISolutionKitStackProps extends StackProps {
   readonly ecrRegistry: string;
 }
 
-export class AISolutionKitInf1Stack extends Stack {
+export class AISolutionKitGpuStack extends Stack {
   constructor(scope: Construct, id: string, props: AISolutionKitStackProps) {
     super(scope, id, props);
     this.templateOptions.description =
@@ -149,7 +149,7 @@ export class AISolutionKitInf1Stack extends Stack {
     );
     // Feature: Green Screen Matting SM
     {
-      const greenScreenMatting = new GreenScreenMattingSMFeatureNestedStack(
+      const greenScreenMatting = new GreenScreenMattingGpuFeatureNestedStack(
         this,
         "Human-Image-Segmentation",
         {
