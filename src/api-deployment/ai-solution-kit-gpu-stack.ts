@@ -47,7 +47,7 @@ export class AISolutionKitGpuStack extends Stack {
       "(SO8023) - AI Solution Kit - Template version v1.2.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.";
 
     const cfnTemplate = new CfnInclude(this, "CfnTemplate", {
-      templateFile: path.join(__dirname, "parameter-group-inf1.template"),
+      templateFile: path.join(__dirname, "parameter-group-gpu.template"),
     });
 
     const api = new RestApi(this, "AiSolutionKitApi", {
