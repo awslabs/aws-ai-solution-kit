@@ -54,7 +54,7 @@ if (buildContainers === 'true' || deployContainers === 'true') {
     },
   });
 
-  new AISolutionKitGpuStack(app, 'AI-Solution-Kit-Inf1', {
+  new AISolutionKitGpuStack(app, 'AI-Solution-Kit-Gpu', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
     tags: {
