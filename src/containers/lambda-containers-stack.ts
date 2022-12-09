@@ -62,14 +62,14 @@ export class LambdaContainersStack extends Stack {
     /**
          * @deprecated use `ImageSuperResolutionGPU`
          */
-    const ImageSuperResolutionLambda = new DockerImageFunction(
-      this,
-      'image-super-resolution-lambda',
-      {
-        functionName: 'image-super-resolution-lambda',
-        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution-lambda/model'),
-      },
-    );
+    // const ImageSuperResolutionLambda = new DockerImageFunction(
+    //   this,
+    //   'image-super-resolution-lambda',
+    //   {
+    //     functionName: 'image-super-resolution-lambda',
+    //     code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution-lambda/model'),
+    //   },
+    // );
 
     const ObjectRecognition = new DockerImageFunction(
       this,
@@ -158,6 +158,15 @@ export class LambdaContainersStack extends Stack {
       {
         functionName: 'general-ocr-viet',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr-viet/model-standard'),
+      },
+    );
+      
+    const ImageSuperResolution = new DockerImageFunction(
+      this,
+      'image-super-resolution',
+      {
+        functionName: 'image-super-resolution',
+        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model'),
       },
     );
   }
