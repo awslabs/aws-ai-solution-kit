@@ -1,4 +1,3 @@
 numpy
 onnxruntime-gpu==1.6.0
 transformers
-GPUtil
