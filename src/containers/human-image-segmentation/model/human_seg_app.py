@@ -8,8 +8,13 @@ import onnxruntime
 from PIL import Image
 from aikits_utils import readimg, lambda_return
 
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+    
 model_path = os.environ['MODEL_PATH']
-ort_session = onnxruntime.InferenceSession(model_path + '/humanseg_720.onnx')
+ort_session = onnxruntime.InferenceSession(model_path + '/humanseg_720.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session.run(None, {"input": np.zeros([1, 3, 64, 64], dtype='float32')})
 def read_img(body):
     if 'url' in body:

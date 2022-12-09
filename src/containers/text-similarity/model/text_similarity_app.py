@@ -5,8 +5,13 @@ import onnxruntime
 from transformers import BertTokenizerFast
 from aikits_utils import lambda_return
 
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+    
 model_path = os.environ['MODEL_PATH']
-ort_session = onnxruntime.InferenceSession(model_path + '/CoSENT.onnx')
+ort_session = onnxruntime.InferenceSession(model_path + '/CoSENT.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session.run(None, {"input_ids": np.zeros([1, 1], dtype='int64'), "token_type_ids": np.zeros([1, 1], dtype='int64'), "attention_mask": np.zeros([1, 1], dtype='int64')})
 tokenizer = BertTokenizerFast.from_pretrained(model_path +'/tokenizer')
 def get_embedding(text):

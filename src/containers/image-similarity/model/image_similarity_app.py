@@ -6,8 +6,13 @@ import onnxruntime
 import cv2
 from aikits_utils import readimg, lambda_return
 
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+
 model_path = os.environ['MODEL_PATH']
-ort_session = onnxruntime.InferenceSession(model_path + '/image-similarity.onnx')
+ort_session = onnxruntime.InferenceSession(model_path + '/image-similarity.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 
 def get_cos_similar(v1, v2):
     num = float(np.dot(v1, v2))

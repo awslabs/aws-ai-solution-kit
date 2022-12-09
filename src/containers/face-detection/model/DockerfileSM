@@ -1,0 +1,32 @@
+FROM nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+
+RUN apt update \
+    && apt install -y --no-install-recommends wget python3 python3-pip \
+    && ln -sf python3 /usr/bin/python \
+    && ln -sf pip3 /usr/bin/pip \
+    && pip install --upgrade pip \
+    && pip install wheel setuptools
+    
+ARG FUNCTION_DIR="/opt/ml/model"
+ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/face-detection"
+ARG MODEL_VERSION="1.2.0"
+
+ADD / ${FUNCTION_DIR}/
+
+RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
+RUN pip3 install flask gevent GPUtil
+
+RUN mkdir -p ${FUNCTION_DIR}/model
+
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/det.onnx -O ${FUNCTION_DIR}/model/det.onnx
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/attribute.onnx -O ${FUNCTION_DIR}/model/attribute.onnx
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/landmark.onnx -O ${FUNCTION_DIR}/model/landmark.onnx
+
+WORKDIR ${FUNCTION_DIR}
+ENV PYTHONUNBUFFERED=TRUE
+ENV PYTHONDONTWRITEBYTECODE=TRUE
+ENV PYTHONIOENCODING="utf8"
+ENV MODEL_NAME="standard"
+ENV MODEL_PATH="${FUNCTION_DIR}/model/"
+
+ENTRYPOINT ["python", "sm_predictor.py"]

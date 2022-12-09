@@ -7,6 +7,7 @@ from aikits_utils import readimg, lambda_return
 
 from main import *
 
+
 if environ["MODEL_NAME"] is None:
     environ["MODEL_NAME"] = "advanced"
 
