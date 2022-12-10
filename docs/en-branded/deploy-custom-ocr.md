@@ -23,16 +23,15 @@ To create a template, each area to be recognized needs to specify the four coord
 
 The following describes how to create a template:
 
-1. Scale the image size to 100% in the image processing software.
-2. Move the mouse to the image and get the X, Y values of the coordinate points at the specified position. According to **top left, top right, bottom right, bottom left** order to record the four coordinate points of the rectangular box respectively, and specify the name of the recognition area. A recognition area example is shown below.
+1. Click on Tools [link](https://awslabs.github.io/aws-ai-solution-kit/zh/tools/custom-template/index.htm).
+2. Click on **Select Local Image**.
+3. Move the mouse over the image, click on the top left corner of the content to be recognized, then slide the mouse to the bottom right corner, release the mouse and enter the corresponding logo name in the pop-up dialog box.
+4. Repeat step 3 if there are multiple contents to be recognized.
+5. Click **Copy Result to Clipboard**, this content is request Body, create a custom template, and record the template ID after successful creation.
+6. After creating the template, first conduct a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
+7. (Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
 
-    ```
-    [[[116, 335], [410, 335], [410, 374], [116, 374]], "Phone Number"]
-    ```
-
-3. Refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.
-4. After creating the template, perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
-5. (Optional) If you found that the extracted information is incomplete, confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
+Translated with www.DeepL.com/Translator (free version)
 
 !!! Important "Important"
     The rectangular box area must completely cover the text content to be recognized. Leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas for accurate recognition.

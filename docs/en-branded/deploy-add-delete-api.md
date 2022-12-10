@@ -12,7 +12,7 @@ You can update the Amazon CloudFormation stack to add new AI features or remove 
 
 4. Select **Use current template**, and choose **Next**.
 
-5. Update the parameters as needed, and choose **Next**. For example, if you have chosen `no` for **Custom Template OCR**, you can change it to `yes` to add the feature.
+5. Update the parameters as needed, and choose **Next**. For example, if you have chosen `no` for **Custom Template OCR**, you can change it to `yes-Lambda` or `yes-SageMaker` to add this feature.
 
 6. On the **Configure stack options** page, choose **Next**.
 

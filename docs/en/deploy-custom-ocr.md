@@ -19,17 +19,19 @@ feature_scenario: Applicable to structured recognition of cards and tickets, suc
 
 Before text recognition, you need to create a template through the **Add Template API**. In order to improve the accuracy of text recognition, the image for template creation should have similar details to the recognized image and clear text content. The same template can contain multiple recognition areas.
 
-To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software to assist in obtaining coordinate points, or use this solution tool to create templates.
+To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software such as [GIMP](https://www.gimp.org/downloads/ ) to assist in obtaining coordinate points. 
 
-The following is a description of this solution tool:
+The following describes how to create a template:
 
-1. Click tool [link](../tools/custom-template/index.htm)。
-2. Click **Local file**。
-3. Move the mouse over the picture to identify the content, click the upper left corner, slide the mouse to the lower right corner, release the mouse, and enter the identification name in the pop-up dialog box.
-4. If there are multiple items to be identified, repeat step 3.
-5. Click**Copy to clipboard**.This content is the request body.Refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.
-6. After creating the template, perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
-7. (Optional) If you found that the extracted information is incomplete, confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
+1. Click on Tools [link](https://awslabs.github.io/aws-ai-solution-kit/zh/tools/custom-template/index.htm).
+2. Click on **Select Local Image**.
+3. Move the mouse over the image, click on the top left corner of the content to be recognized, then slide the mouse to the bottom right corner, release the mouse and enter the corresponding logo name in the pop-up dialog box.
+4. Repeat step 3 if there are multiple contents to be recognized.
+5. Click **Copy Result to Clipboard**, this content is request Body, create a custom template, and record the template ID after successful creation.
+6. After creating the template, first conduct a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
+7. (Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
+
+Translated with www.DeepL.com/Translator (free version)
 
 !!! Important "Important"
     The rectangular box area must completely cover the text content to be recognized. Leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas for accurate recognition.
