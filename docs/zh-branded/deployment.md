@@ -2,9 +2,9 @@
 
 **部署时间**
 
-- 部署基于Amazon Lambda架构的AI功能：约**10**分钟
+- 部署基于Amazon Lambda架构的功能：约**10**分钟
 
-- 部署基于Amazon SageMaker架构的AI功能：约**20**分钟
+- 部署基于Amazon SageMaker架构的功能：约**20**分钟
 
 ## 前提条件
 
@@ -33,7 +33,7 @@
         | **APIGatewayAuthorization**  | NONE  | API网关的认证方式。默认为*NONE*，即无权限认证方式。您还可以选择使用[IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html)权限控制对API的访问。|
         | **APIGatewayStageName**    | prod    | API网关（URI）中的第一个路径字段。详情可参见[阶段变量](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html)。 |
 
-    - 您可以更改AI功能的参数为yes，部署需要的AI功能。AI功能的参数默认值均为no。
+    - 请您在需要使用的AI功能的下拉列表中选择所需实例类型进行部署。所有AI功能的参数默认值均为no。
 
         |  参数名称   |  默认值 |  描述 |
         |  ----------  | ---------| -----------  |
