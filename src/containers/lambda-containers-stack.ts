@@ -19,7 +19,11 @@ export class LambdaContainersStack extends Stack {
       'general-ocr-advanced',
       {
         functionName: 'general-ocr-advanced',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -28,7 +32,11 @@ export class LambdaContainersStack extends Stack {
       'general-ocr-standard',
       {
         functionName: 'general-ocr-standard',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -37,7 +45,11 @@ export class LambdaContainersStack extends Stack {
       'general-ocr-traditional-standard',
       {
         functionName: 'general-ocr-traditional-standard',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -46,7 +58,11 @@ export class LambdaContainersStack extends Stack {
       'pornography-detection',
       {
         functionName: 'pornography-detection',
-        code: DockerImageCode.fromImageAsset('src/containers/pornography-detection/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/pornography-detection/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -55,28 +71,24 @@ export class LambdaContainersStack extends Stack {
       'human-image-segmentation',
       {
         functionName: 'human-image-segmentation',
-        code: DockerImageCode.fromImageAsset('src/containers/human-image-segmentation/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/human-image-segmentation/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
-
-    /**
-         * @deprecated use `ImageSuperResolutionGPU`
-         */
-    // const ImageSuperResolutionLambda = new DockerImageFunction(
-    //   this,
-    //   'image-super-resolution-lambda',
-    //   {
-    //     functionName: 'image-super-resolution-lambda',
-    //     code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution-lambda/model'),
-    //   },
-    // );
 
     const ObjectRecognition = new DockerImageFunction(
       this,
       'object-recognition',
       {
         functionName: 'object-recognition',
-        code: DockerImageCode.fromImageAsset('src/containers/object-recognition/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/object-recognition/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -85,7 +97,11 @@ export class LambdaContainersStack extends Stack {
       'face-comparison',
       {
         functionName: 'face-comparison',
-        code: DockerImageCode.fromImageAsset('src/containers/face-comparison/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/face-comparison/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -94,7 +110,11 @@ export class LambdaContainersStack extends Stack {
       'face-detection',
       {
         functionName: 'face-detection',
-        code: DockerImageCode.fromImageAsset('src/containers/face-detection/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/face-detection/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -103,7 +123,11 @@ export class LambdaContainersStack extends Stack {
       'human-attribute',
       {
         functionName: 'human-attribute',
-        code: DockerImageCode.fromImageAsset('src/containers/human-attribute/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/human-attribute/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -112,7 +136,11 @@ export class LambdaContainersStack extends Stack {
       'car-license-plate',
       {
         functionName: 'car-license-plate',
-        code: DockerImageCode.fromImageAsset('src/containers/license-plate/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/license-plate/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -121,7 +149,11 @@ export class LambdaContainersStack extends Stack {
       'custom-ocr',
       {
         functionName: 'custom-ocr',
-        code: DockerImageCode.fromImageAsset('src/containers/custom-ocr/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/custom-ocr/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -130,7 +162,11 @@ export class LambdaContainersStack extends Stack {
       'text-similarity',
       {
         functionName: 'text-similarity',
-        code: DockerImageCode.fromImageAsset('src/containers/text-similarity/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/text-similarity/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -139,7 +175,11 @@ export class LambdaContainersStack extends Stack {
       'image-similarity',
       {
         functionName: 'image-similarity',
-        code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -148,7 +188,11 @@ export class LambdaContainersStack extends Stack {
       'green-screen-matting',
       {
         functionName: 'green-screen-matting',
-        code: DockerImageCode.fromImageAsset('src/containers/green-screen-matting/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/green-screen-matting/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
 
@@ -157,16 +201,24 @@ export class LambdaContainersStack extends Stack {
       'general-ocr-viet',
       {
         functionName: 'general-ocr-viet',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-viet/model-standard'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-viet/model-standard',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
-      
+
     const ImageSuperResolution = new DockerImageFunction(
       this,
       'image-super-resolution',
       {
         functionName: 'image-super-resolution',
-        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model',
+          {
+            file: 'Dockerfile.lambda'
+          }
+        ),
       },
     );
   }
