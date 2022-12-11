@@ -6,4 +6,4 @@ six==1.16.0
 urllib3==1.26.6
 opencv-python-headless==4.5.3.56
 boto3
-onnxruntime-gpu==1.6.0
+onnxruntime

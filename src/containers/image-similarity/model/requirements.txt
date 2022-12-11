@@ -1,5 +1,5 @@
 numpy
 Pillow
-onnxruntime-gpu==1.6.0
+onnxruntime
 opencv-python-headless==4.5.3.56
 boto3

@@ -10,5 +10,5 @@ python-dateutil==2.8.2
 certifi==2022.12.7
 idna==2.10
 chardet==4.0.0
-onnxruntime-gpu==1.6.0
+onnxruntime
 boto3

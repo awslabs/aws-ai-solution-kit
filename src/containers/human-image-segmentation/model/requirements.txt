@@ -1,4 +1,4 @@
 numpy
 Pillow
-onnxruntime-gpu==1.6
+onnxruntime
 boto3
