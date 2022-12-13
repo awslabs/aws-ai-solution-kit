@@ -7,11 +7,11 @@
 - Amazon CloudWatch Logs存储量
 - Amazon Elastic Container Registry存储量
 
-如果您选择基于AWS Lambda架构部署，成本还包括：
+如果您选择基于AWS Lambda架构部署，影响成本的因素还包括：
 - AWS Lambda调用次数
 - AWS Lambda运行时间
 
-与之对应的Amazon SageMaker架构部署，成本包括：
+与之对应的Amazon SageMaker架构部署，影响成本的因素还包括：
 - Amazon SageMaker终端节点实例类型
 - Amazon SageMaker终端节点数据输入量
 - Amazon SageMaker终端节点数据输出量

@@ -5,12 +5,12 @@ You will be responsible for the cost of using each of the Amazon services when r
 - Amazon CloudWatch Logs storage
 - Amazon Elastic Container Registry storage
 
-If you choose an Amazon Lambda based deployment, the costs will include:
+If you choose an Amazon Lambda based deployment, the factors also include:
 
 - Amazon Lambda invocations
 - Amazon Lambda running time
 
-If you choose an Amazon SageMaker based deployment, the costs will include:
+If you choose an Amazon SageMaker based deployment, the factors also include:
 
 - Amazon SageMaker endpoint node instance type
 - Amazon SageMaker endpoint node data input
