@@ -16,7 +16,7 @@ ADD / ${FUNCTION_DIR}/
 
 RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
 RUN pip3 install flask gevent GPUtil
-RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu==1.6.0 -y
+RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu==1.6.0
 
 RUN mkdir -p ${FUNCTION_DIR}/model
 RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/yolox_l.onnx -O ${FUNCTION_DIR}/model/yolox_l.onnx
