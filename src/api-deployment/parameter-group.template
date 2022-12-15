@@ -134,7 +134,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   ImageSuperResolution:
@@ -168,7 +169,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   FaceDetection:
@@ -208,7 +210,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   TextSimilarity:
@@ -234,7 +237,11 @@ Conditions:
       
   ConditionCustomOCR: !Equals 
       - !Ref CustomOCR
-      - "yes"
+      - "yes-lambda"
+
+  ConditionCustomOCRSageMaker: !Equals 
+      - !Ref CustomOCR
+      - "yes-sagemaker"
       
   ConditionObjectRecognition: !Equals 
       - !Ref ObjectRecognition
@@ -242,7 +249,11 @@ Conditions:
       
   ConditionFaceComparison: !Equals 
       - !Ref FaceComparison
-      - "yes"
+      - "yes-lambda"
+
+  ConditionFaceComparisonSageMaker: !Equals 
+      - !Ref FaceComparison
+      - "yes-sagemaker"
       
   ConditionFaceDetection: !Equals 
       - !Ref FaceDetection
