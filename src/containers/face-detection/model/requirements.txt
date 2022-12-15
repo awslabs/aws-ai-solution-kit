@@ -13,3 +13,4 @@ chardet==4.0.0
 onnxruntime
 scikit-image
 boto3
+GPUtil
