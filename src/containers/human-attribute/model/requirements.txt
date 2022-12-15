@@ -12,3 +12,4 @@ idna==2.10
 chardet==4.0.0
 onnxruntime
 boto3
+GPUtil

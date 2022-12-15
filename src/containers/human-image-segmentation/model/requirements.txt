@@ -2,3 +2,4 @@ numpy
 Pillow
 onnxruntime
 boto3
+GPUtil

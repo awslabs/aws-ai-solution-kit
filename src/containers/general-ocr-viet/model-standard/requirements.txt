@@ -13,3 +13,4 @@ certifi==2022.12.7
 idna==2.10
 chardet==4.0.0
 boto3
+GPUtil
