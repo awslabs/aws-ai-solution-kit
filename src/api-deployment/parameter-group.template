@@ -281,7 +281,11 @@ Conditions:
       
   ConditionCarLicensePlate: !Equals 
       - !Ref CarLicensePlate
-      - "yes"
+      - "yes-lambda"
+
+  ConditionCarLicensePlateSageMaker: !Equals 
+      - !Ref CarLicensePlate
+      - "yes-sagemaker"
       
   ConditionImageSuperResolution: !Not 
     - !Equals

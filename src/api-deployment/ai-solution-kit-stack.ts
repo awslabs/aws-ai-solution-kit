@@ -228,7 +228,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (customOCRSageMakerFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr', 'Custom OCR', 'ConditionCustomOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr', 'Custom OCR SageMaker', 'ConditionCustomOCRSageMaker');
     }
 
     // Feature: Car Licenst Plate
@@ -255,7 +255,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (carLicensePlateSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCarLicensePlateSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'car-license-plate', 'Car License Plate', 'ConditionCarLicensePlateSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'car-license-plate', 'Car License Plate SageMaker', 'ConditionCarLicensePlateSageMaker');
     }
 
     // Feature: Face Comparison
@@ -282,7 +282,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (faceComparison.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceComparisonSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'face-comparison', 'Face Comparison', 'ConditionFaceComparisonSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'face-comparison', 'Face Comparison SageMaker', 'ConditionFaceComparisonSageMaker');
     }
 
     // Feature: Face Detection
