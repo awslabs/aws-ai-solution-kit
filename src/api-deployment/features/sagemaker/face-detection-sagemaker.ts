@@ -4,12 +4,12 @@ import { Construct } from 'constructs';
 import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
 import { SageMakerFeatureConstruct } from '../../sagemaker-feature-construct';
 
-export class CarLicensePlateSageMakerFeatureNestedStack extends FeatureNestedStack {
+export class FaceDetectionSageMakerFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'car-license-plate';
-    this.templateOptions.description = '(SO8023-car-license-plate-sagemaker) - AI Solution Kit - Car License Plate. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
+    const featureName = 'face-detection';
+    this.templateOptions.description = '(SO8023-face-detection-sagemaker) - AI Solution Kit - Face Detection. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
 
     Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
@@ -22,7 +22,7 @@ export class CarLicensePlateSageMakerFeatureNestedStack extends FeatureNestedSta
         serviceToken: props.ecrDeployment.serviceToken,
         resourceType: 'Custom::AISolutionKitECRSageMaker',
         properties: {
-          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/car-license-plate-sm:latest',
+          SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/${featureName}-sm:latest`,
           DestImage: `docker://${stackRepo.repositoryUri}`,
           RepositoryName: `${stackRepo.repositoryName}`,
         },

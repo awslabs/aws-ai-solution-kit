@@ -48,12 +48,21 @@ import { HumanImageSegmentationFeatureNestedStack } from './features/human-image
 import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
 import { ObjectRecognitionFeatureNestedStack } from './features/object-recognition';
 import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
-import { SuperResolutionGpuFeatureNestedStack } from './features/super-resolution-gpu';
 import { TextSimilarityFeatureNestedStack } from './features/text-similarity';
 
 import { CarLicensePlateSageMakerFeatureNestedStack } from './features/sagemaker/car-license-plate-sagemaker';
 import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custom-ocr-sagemaker';
 import { FaceComparisonSageMakerFeatureNestedStack } from './features/sagemaker/face-comparison-sagemaker';
+import { FaceDetectionSageMakerFeatureNestedStack } from './features/sagemaker/face-detection-sagemaker';
+import { GeneralOCRSageMakerFeatureNestedStack } from './features/sagemaker/general-ocr-sagemaker';
+import { GeneralOCRTraditionalChineseSageMakerFeatureNestedStack } from './features/sagemaker/general-ocr-traditional-chinese-sagemaker';
+import { HumanAttributeRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/human-attribute-recognition-sagemaker';
+import { HumanImageSegmentationSageMakerFeatureNestedStack } from './features/sagemaker/human-image-segmentation-sagemaker';
+import { ImageSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/image-similarity-sagemaker';
+import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/object-recognition-sagemaker';
+import { PornographyDetectionSageMakerFeatureNestedStack } from './features/sagemaker/pornography-detection-sagemaker';
+import { SuperResolutionSageMakerFeatureNestedStack } from './features/sagemaker/super-resolution-sagemaker';
+import { TextSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/text-similarity-sagemaker';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
@@ -190,6 +199,19 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard', 'ConditionGeneralOCR');
     }
 
+    // Feature: General OCR SageMaker
+    {
+      const generalOCRSageMaker = new GeneralOCRSageMakerFeatureNestedStack(this, 'General-OCR-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props?.ecrRegistry,
+      });
+      (generalOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard SageMaker', 'ConditionGeneralOCRSageMaker');
+    }
+
     // Feature: General OCR - Traditional Chinese
     {
       const generalOCRTraditionalChinese = new GeneralOCRTraditionalChineseFeatureNestedStack(this, 'General-OCR-Traditional-Chinese', {
@@ -202,6 +224,19 @@ export class AISolutionKitStack extends Stack {
       });
       (generalOCRTraditionalChinese.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChinese');
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese', 'ConditionGeneralOCRTraditionalChinese');
+    }
+
+    // Feature: General OCR - Traditional Chinese SageMaker
+    {
+      const generalOCRTraditionalChineseSageMaker = new GeneralOCRTraditionalChineseSageMakerFeatureNestedStack(this, 'General-OCR-Traditional-Chinese-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (generalOCRTraditionalChineseSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChineseSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese SageMaker', 'ConditionGeneralOCRTraditionalChineseSageMaker');
     }
 
     // Feature: Custom OCR
@@ -274,14 +309,14 @@ export class AISolutionKitStack extends Stack {
 
     // Feature: Face Comparison SageMaker
     {
-      const faceComparison = new FaceComparisonFeatureNestedStack(this, 'Face-Comparison-SageMaker', {
+      const faceComparisonSageMaker = new FaceComparisonSageMakerFeatureNestedStack(this, 'Face-Comparison-SageMaker', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
       });
-      (faceComparison.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceComparisonSageMaker');
+      (faceComparisonSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceComparisonSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'face-comparison', 'Face Comparison SageMaker', 'ConditionFaceComparisonSageMaker');
     }
 
@@ -299,6 +334,19 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'face-detection', 'Face Detection', 'ConditionFaceDetection');
     }
 
+    // Feature: Face Detection SageMaker
+    {
+      const faceDetectionSageMaker = new FaceDetectionSageMakerFeatureNestedStack(this, 'Face-Detection-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (faceDetectionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceDetectionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'face-detection', 'Face Detection SageMaker', 'ConditionFaceDetectionSageMaker');
+    }
+
     // Feature: Human Attribute Recognition
     {
       const humanAttributeRecognition = new HumanAttributeRecognitionFeatureNestedStack(this, 'Human-Attribute-Recognition', {
@@ -311,6 +359,19 @@ export class AISolutionKitStack extends Stack {
       });
       (humanAttributeRecognition.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanAttributeRecognition');
       this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition', 'ConditionHumanAttributeRecognition');
+    }
+
+    // Feature: Human Attribute Recognition SageMaker
+    {
+      const humanAttributeRecognitionSageMaker = new HumanAttributeRecognitionSageMakerFeatureNestedStack(this, 'Human-Attribute-Recognition-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (humanAttributeRecognitionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanAttributeRecognitionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition SageMaker', 'ConditionHumanAttributeRecognitionSageMaker');
     }
 
     // Feature: Human Image Segmentation
@@ -327,6 +388,19 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation', 'ConditionHumanImageSegmentation');
     }
 
+    // Feature: Human Image Segmentation SageMaker
+    {
+      const humanImageSegmentationSageMaker = new HumanImageSegmentationSageMakerFeatureNestedStack(this, 'Human-Image-Segmentation-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (humanImageSegmentationSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentationSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation SageMaker', 'ConditionHumanImageSegmentationSageMaker');
+    }
+
     // Feature: Pornography Detection
     {
       const pornographyDetection = new PornographyDetectionFeatureNestedStack(this, 'Pornography-Detection', {
@@ -339,6 +413,19 @@ export class AISolutionKitStack extends Stack {
       });
       (pornographyDetection.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionPornographyDetection');
       this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection', 'Pornography Detection', 'ConditionPornographyDetection');
+    }
+
+    // Feature: Pornography Detection SageMaker
+    {
+      const pornographyDetectionSageMaker = new PornographyDetectionSageMakerFeatureNestedStack(this, 'Pornography-Detection-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (pornographyDetectionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionPornographyDetectionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection', 'Pornography Detection SageMaker', 'ConditionPornographyDetectionSageMaker');
     }
 
     // Feature: Object Recognition
@@ -355,6 +442,19 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition', 'ConditionObjectRecognition');
     }
 
+    // Feature: Object Recognition SageMaker
+    {
+      const objectRecognitionSageMaker = new ObjectRecognitionSageMakerFeatureNestedStack(this, 'Object-Recognition-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (objectRecognitionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionObjectRecognitionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition SageMaker', 'ConditionObjectRecognitionSageMaker');
+    }
+
     // Feature: Text Similarity
     {
       const textSimilarity = new TextSimilarityFeatureNestedStack(this, 'Text-Similarity', {
@@ -367,6 +467,19 @@ export class AISolutionKitStack extends Stack {
       });
       (textSimilarity.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionTextSimilarity');
       this.addOutput(cfnTemplate, api.restApiId, 'text-similarity', 'Text Similarity', 'ConditionTextSimilarity');
+    }
+
+    // Feature: Text Similarity SageMaker
+    {
+      const textSimilaritySageMaker = new TextSimilaritySageMakerFeatureNestedStack(this, 'Text-Similarity-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (textSimilaritySageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionTextSimilaritySageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'text-similarity', 'Text Similarity SageMaker', 'ConditionTextSimilaritySageMaker');
     }
 
     // Feature: Image Similarity
@@ -383,24 +496,30 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'image-similarity', 'Image Similarity', 'ConditionImageSimilarity');
     }
 
-    // Feature: Super Resolution GPU
+    // Feature: Image Similarity SageMaker
     {
-      const map = new CfnMapping(this, 'instanceTypeMapping', {
-        mapping: {
-          'yes-ml.g4dn.xlarge': { value: 'ml.g4dn.xlarge' },
-          'yes-ml.g4dn.2xlarge': { value: 'ml.g4dn.2xlarge' },
-          'yes-ml.g4dn.8xlarge': { value: 'ml.g4dn.8xlarge' },
-        },
-      });
-      const instanceType = map.findInMap(cfnTemplate.getParameter('ImageSuperResolution').valueAsString, 'value');
-      const superResolutionGpu = new SuperResolutionGpuFeatureNestedStack(this, 'Super-Resolution', {
+      const imageSimilaritySageMaker = new ImageSimilaritySageMakerFeatureNestedStack(this, 'Image-Similarity-SageMaker', {
         restApi: api,
         customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
-        instanceType: instanceType,
+        ecrRegistry: props.ecrRegistry,
       });
-      (superResolutionGpu.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolution');
-      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution', 'ConditionImageSuperResolution');
+      (imageSimilaritySageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSimilaritySageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'image-similarity', 'Image Similarity SageMaker', 'ConditionImageSimilaritySageMaker');
+    }
+
+    // Feature: Super Resolution SageMaker
+    {
+      const superResolutionSageMaker = new SuperResolutionSageMakerFeatureNestedStack(this, 'Super-Resolution-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (superResolutionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolutionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
     }
 
     // Stage base URL

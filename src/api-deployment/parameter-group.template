@@ -118,7 +118,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   GeneralOCRTraditionalChinese:
@@ -126,7 +127,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   CustomOCR:
@@ -144,16 +146,15 @@ Parameters:
     Type: String
     AllowedValues:
       - "no"
-      - "yes-ml.g4dn.xlarge"
-      - "yes-ml.g4dn.2xlarge"
-      - "yes-ml.g4dn.8xlarge"
+      - "yes-sagemaker"
 
   ImageSimilarity:
     Description: Compare two images by calculating the cosine distance from the image feature vector and converting it into confidence, and return similarity score. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-similarity.
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   ObjectRecognition:
@@ -161,7 +162,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   FaceComparison:
@@ -178,7 +180,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   HumanAttributeRecognition:
@@ -186,7 +189,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   HumanImageSegmentation:
@@ -194,7 +198,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   PornographyDetection:
@@ -202,7 +207,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
   CarLicensePlate:
@@ -219,7 +225,8 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes"
+      - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
 Conditions:
@@ -227,67 +234,103 @@ Conditions:
       - !Ref APIExplorer
       - "yes"
 
+  ConditionCarLicensePlate: !Equals 
+      - !Ref CarLicensePlate
+      - "yes-lambda"
+      
   ConditionGeneralOCR: !Equals 
       - !Ref GeneralOCR
-      - "yes"
+      - "yes-lambda"
       
   ConditionGeneralOCRTraditionalChinese: !Equals 
       - !Ref GeneralOCRTraditionalChinese
-      - "yes"
+      - "yes-lambda"
       
   ConditionCustomOCR: !Equals 
       - !Ref CustomOCR
       - "yes-lambda"
 
-  ConditionCustomOCRSageMaker: !Equals 
-      - !Ref CustomOCR
-      - "yes-sagemaker"
-      
   ConditionObjectRecognition: !Equals 
       - !Ref ObjectRecognition
-      - "yes"
+      - "yes-lambda"
       
   ConditionFaceComparison: !Equals 
       - !Ref FaceComparison
       - "yes-lambda"
 
-  ConditionFaceComparisonSageMaker: !Equals 
-      - !Ref FaceComparison
-      - "yes-sagemaker"
-      
   ConditionFaceDetection: !Equals 
       - !Ref FaceDetection
-      - "yes"
+      - "yes-lambda"
       
   ConditionImageSimilarity: !Equals 
       - !Ref ImageSimilarity
-      - "yes"
+      - "yes-lambda"
       
   ConditionTextSimilarity: !Equals 
       - !Ref TextSimilarity
-      - "yes"
+      - "yes-lambda"
       
   ConditionHumanAttributeRecognition: !Equals 
       - !Ref HumanAttributeRecognition
-      - "yes"
+      - "yes-lambda"
       
   ConditionHumanImageSegmentation: !Equals 
       - !Ref HumanImageSegmentation
-      - "yes"
+      - "yes-lambda"
       
   ConditionPornographyDetection: !Equals 
       - !Ref PornographyDetection
-      - "yes"
-      
-  ConditionCarLicensePlate: !Equals 
-      - !Ref CarLicensePlate
       - "yes-lambda"
-
+      
   ConditionCarLicensePlateSageMaker: !Equals 
       - !Ref CarLicensePlate
       - "yes-sagemaker"
+
+  ConditionGeneralOCRSageMaker: !Equals 
+      - !Ref GeneralOCR
+      - "yes-sagemaker"
       
-  ConditionImageSuperResolution: !Not 
-    - !Equals
+  ConditionGeneralOCRTraditionalChineseSageMaker: !Equals 
+      - !Ref GeneralOCRTraditionalChinese
+      - "yes-sagemaker"
+      
+  ConditionCustomOCRSageMaker: !Equals 
+      - !Ref CustomOCR
+      - "yes-sagemaker"
+
+  ConditionObjectRecognitionSageMaker: !Equals 
+      - !Ref ObjectRecognition
+      - "yes-sagemaker"
+      
+  ConditionFaceComparisonSageMaker: !Equals 
+      - !Ref FaceComparison
+      - "yes-sagemaker"
+
+  ConditionFaceDetectionSageMaker: !Equals 
+      - !Ref FaceDetection
+      - "yes-sagemaker"
+      
+  ConditionImageSimilaritySageMaker: !Equals 
+      - !Ref ImageSimilarity
+      - "yes-sagemaker"
+      
+  ConditionTextSimilaritySageMaker: !Equals 
+      - !Ref TextSimilarity
+      - "yes-sagemaker"
+      
+  ConditionHumanAttributeRecognitionSageMaker: !Equals 
+      - !Ref HumanAttributeRecognition
+      - "yes-sagemaker"
+      
+  ConditionHumanImageSegmentationSageMaker: !Equals 
+      - !Ref HumanImageSegmentation
+      - "yes-sagemaker"
+      
+  ConditionPornographyDetectionSageMaker: !Equals 
+      - !Ref PornographyDetection
+      - "yes-sagemaker"
+      
+  ConditionImageSuperResolutionSageMaker: !Equals 
       - !Ref ImageSuperResolution
-      - "no"
+      - "yes-sagemaker"
+      

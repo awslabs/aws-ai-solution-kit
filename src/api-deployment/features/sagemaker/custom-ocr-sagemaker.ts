@@ -22,7 +22,7 @@ export class CustomOCRSageMakerFeatureNestedStack extends FeatureNestedStack {
         serviceToken: props.ecrDeployment.serviceToken,
         resourceType: 'Custom::AISolutionKitECRSageMaker',
         properties: {
-          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/custom-ocr-sagemaker:latest',
+          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/custom-ocr-sm:latest',
           DestImage: `docker://${stackRepo.repositoryUri}`,
           RepositoryName: `${stackRepo.repositoryName}`,
         },
