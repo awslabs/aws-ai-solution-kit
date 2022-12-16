@@ -136,11 +136,22 @@ export class SageMakerFeatureConstruct extends Construct {
       restApiId: props.rootRestApi.restApiId,
       rootResourceId: props.rootRestApi.root.resourceId,
     });
+    const updateProvider = new CustomResource(this, 'updateProvider', {
+      serviceToken: props.updateCustomResourceProvider.serviceToken,
+      resourceType: 'Custom::AISolutionKitApiProvider',
+      properties: {
+        featureName: `${props.featureName}`,
+        updateType: 'update',
+      },
+      removalPolicy: RemovalPolicy.RETAIN,
+    });
     const deployment = new Deployment(this, 'new_deployment', {
       api: rootRestApi,
       retainDeployments: true,
     });
     const resource = rootRestApi.root.addResource(props.restApiResourcePath);
+    resource.node.addDependency(updateProvider);
+
     const post = resource.addMethod('POST',
       sageMakerIntegration,
       {
