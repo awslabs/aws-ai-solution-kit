@@ -13,7 +13,7 @@ export class CarLicensePlateSageMakerFeatureNestedStack extends FeatureNestedSta
 
     Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
-      repositoryName: `ai-solution-kit-${featureName}`,
+      repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,
     });
 
