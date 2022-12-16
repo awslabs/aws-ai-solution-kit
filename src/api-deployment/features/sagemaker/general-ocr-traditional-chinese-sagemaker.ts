@@ -22,7 +22,7 @@ export class GeneralOCRTraditionalChineseSageMakerFeatureNestedStack extends Fea
         serviceToken: props.ecrDeployment.serviceToken,
         resourceType: 'Custom::AISolutionKitECRSageMaker',
         properties: {
-          SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/general-ocr-traditional-standard-sagemaker:latest`,
+          SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/general-ocr-traditional-standard-sagemaker:latest',
           DestImage: `docker://${stackRepo.repositoryUri}`,
           RepositoryName: `${stackRepo.repositoryName}`,
         },

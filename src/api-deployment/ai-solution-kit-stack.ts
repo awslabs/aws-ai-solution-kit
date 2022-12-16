@@ -48,7 +48,6 @@ import { HumanImageSegmentationFeatureNestedStack } from './features/human-image
 import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
 import { ObjectRecognitionFeatureNestedStack } from './features/object-recognition';
 import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
-import { TextSimilarityFeatureNestedStack } from './features/text-similarity';
 
 import { CarLicensePlateSageMakerFeatureNestedStack } from './features/sagemaker/car-license-plate-sagemaker';
 import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custom-ocr-sagemaker';
@@ -63,6 +62,7 @@ import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemak
 import { PornographyDetectionSageMakerFeatureNestedStack } from './features/sagemaker/pornography-detection-sagemaker';
 import { SuperResolutionSageMakerFeatureNestedStack } from './features/sagemaker/super-resolution-sagemaker';
 import { TextSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/text-similarity-sagemaker';
+import { TextSimilarityFeatureNestedStack } from './features/text-similarity';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
