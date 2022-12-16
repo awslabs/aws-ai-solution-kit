@@ -11,7 +11,7 @@ export class HumanImageSegmentationSageMakerFeatureNestedStack extends FeatureNe
     const featureName = 'human-segmentation';
     this.templateOptions.description = '(SO8023-human-segmentation-sagemaker) - AI Solution Kit - Human Image Segmentation. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-segmentation.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,

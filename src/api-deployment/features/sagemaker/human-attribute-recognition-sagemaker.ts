@@ -11,7 +11,7 @@ export class HumanAttributeRecognitionSageMakerFeatureNestedStack extends Featur
     const featureName = 'human-attribute';
     this.templateOptions.description = '(SO8023-human-attribute-sagemaker) - AI Solution Kit - Human Attribute Recognition. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-attribute.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,

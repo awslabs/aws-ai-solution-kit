@@ -11,7 +11,7 @@ export class GeneralOCRTraditionalChineseSageMakerFeatureNestedStack extends Fea
     const featureName = 'general-ocr-traditional-chinese';
     this.templateOptions.description = '(SO8023-ocr-traditiona-sagemaker) - AI Solution Kit - General OCR Traditional Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,

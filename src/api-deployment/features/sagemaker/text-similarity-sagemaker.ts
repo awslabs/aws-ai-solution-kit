@@ -11,7 +11,7 @@ export class TextSimilaritySageMakerFeatureNestedStack extends FeatureNestedStac
     const featureName = 'text-similarity';
     this.templateOptions.description = '(SO8023-text-similarity-sagemaker) - AI Solution Kit - Image Similarity. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,

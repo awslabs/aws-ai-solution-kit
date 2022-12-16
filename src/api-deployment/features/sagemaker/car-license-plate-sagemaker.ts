@@ -11,7 +11,7 @@ export class CarLicensePlateSageMakerFeatureNestedStack extends FeatureNestedSta
     const featureName = 'car-license-plate';
     this.templateOptions.description = '(SO8023-car-license-plate-sagemaker) - AI Solution Kit - Car License Plate. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,

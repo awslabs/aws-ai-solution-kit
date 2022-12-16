@@ -11,7 +11,7 @@ export class CustomOCRSageMakerFeatureNestedStack extends FeatureNestedStack {
     const featureName = 'custom-ocr';
     this.templateOptions.description = '(SO8023-custom-ocr-sagemaker) - AI Solution Kit - Custom OCR. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.';
 
-    Repository.fromRepositoryName(this, `ai-solution-kit-${featureName}-repo`, `ai-solution-kit-${featureName}`);
+
     const stackRepo = new Repository(this, `ai-solution-kit-${featureName}`, {
       repositoryName: `ai-solution-kit-${featureName}-sagemaker`,
       removalPolicy: RemovalPolicy.RETAIN,
