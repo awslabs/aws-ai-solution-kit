@@ -22,7 +22,7 @@ export class HumanImageSegmentationSageMakerFeatureNestedStack extends FeatureNe
         serviceToken: props.ecrDeployment.serviceToken,
         resourceType: 'Custom::AISolutionKitECRSageMaker',
         properties: {
-          SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/human-image-segmentation-sm:latest`,
+          SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/human-image-segmentation-sagemaker:latest`,
           DestImage: `docker://${stackRepo.repositoryUri}`,
           RepositoryName: `${stackRepo.repositoryName}`,
         },
