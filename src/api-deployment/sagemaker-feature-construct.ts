@@ -149,7 +149,7 @@ export class SageMakerFeatureConstruct extends Construct {
       api: rootRestApi,
       retainDeployments: true,
     });
-    const resource = rootRestApi.root.addResource(props.restApiResourcePath);
+    const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
     resource.node.addDependency(updateProvider);
 
     const post = resource.addMethod('POST',
@@ -171,8 +171,8 @@ export class SageMakerFeatureConstruct extends Construct {
 
     const invokeUrl = Fn.conditionIf(
       'IsChinaRegionCondition',
-      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com.cn/-stage-/${props.restApiResourcePath}`,
-      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com/-stage-/${props.restApiResourcePath}`,
+      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com.cn/-stage-/${props.restApiResourcePath}-ml`,
+      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com/-stage-/${props.restApiResourcePath}-ml`,
     );
     new CfnOutput(this, `${props.featureName}-URL`, { value: invokeUrl.toString() });
   }

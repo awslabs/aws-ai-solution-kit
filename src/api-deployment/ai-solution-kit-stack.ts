@@ -209,7 +209,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props?.ecrRegistry,
       });
       (generalOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard SageMaker', 'ConditionGeneralOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard-ml', 'General OCR Standard SageMaker', 'ConditionGeneralOCRSageMaker');
     }
 
     // Feature: General OCR - Traditional Chinese
@@ -236,7 +236,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (generalOCRTraditionalChineseSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChineseSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese SageMaker', 'ConditionGeneralOCRTraditionalChineseSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese-ml', 'General OCR Traditional Chinese SageMaker', 'ConditionGeneralOCRTraditionalChineseSageMaker');
     }
 
     // Feature: Custom OCR
@@ -263,7 +263,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (customOCRSageMakerFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr', 'Custom OCR SageMaker', 'ConditionCustomOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr-ml', 'Custom OCR SageMaker', 'ConditionCustomOCRSageMaker');
     }
 
     // Feature: Car Licenst Plate
@@ -290,7 +290,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (carLicensePlateSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCarLicensePlateSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'car-license-plate', 'Car License Plate SageMaker', 'ConditionCarLicensePlateSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'car-license-plate-ml', 'Car License Plate SageMaker', 'ConditionCarLicensePlateSageMaker');
     }
 
     // Feature: Face Comparison
@@ -317,7 +317,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (faceComparisonSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceComparisonSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'face-comparison', 'Face Comparison SageMaker', 'ConditionFaceComparisonSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'face-comparison-ml', 'Face Comparison SageMaker', 'ConditionFaceComparisonSageMaker');
     }
 
     // Feature: Face Detection
@@ -344,7 +344,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (faceDetectionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionFaceDetectionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'face-detection', 'Face Detection SageMaker', 'ConditionFaceDetectionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'face-detection-ml', 'Face Detection SageMaker', 'ConditionFaceDetectionSageMaker');
     }
 
     // Feature: Human Attribute Recognition
@@ -371,7 +371,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (humanAttributeRecognitionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanAttributeRecognitionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'human-attribute', 'Human Attribute Recognition SageMaker', 'ConditionHumanAttributeRecognitionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'human-attribute-ml', 'Human Attribute Recognition SageMaker', 'ConditionHumanAttributeRecognitionSageMaker');
     }
 
     // Feature: Human Image Segmentation
@@ -398,7 +398,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (humanImageSegmentationSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionHumanImageSegmentationSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation', 'Human Image Segmentation SageMaker', 'ConditionHumanImageSegmentationSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'human-segmentation-ml', 'Human Image Segmentation SageMaker', 'ConditionHumanImageSegmentationSageMaker');
     }
 
     // Feature: Pornography Detection
@@ -425,7 +425,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (pornographyDetectionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionPornographyDetectionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection', 'Pornography Detection SageMaker', 'ConditionPornographyDetectionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'pornography-detection-ml', 'Pornography Detection SageMaker', 'ConditionPornographyDetectionSageMaker');
     }
 
     // Feature: Object Recognition
@@ -452,7 +452,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (objectRecognitionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionObjectRecognitionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition SageMaker', 'ConditionObjectRecognitionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition-ml', 'Object Recognition SageMaker', 'ConditionObjectRecognitionSageMaker');
     }
 
     // Feature: Text Similarity
@@ -479,7 +479,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (textSimilaritySageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionTextSimilaritySageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'text-similarity', 'Text Similarity SageMaker', 'ConditionTextSimilaritySageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'text-similarity-ml', 'Text Similarity SageMaker', 'ConditionTextSimilaritySageMaker');
     }
 
     // Feature: Image Similarity
@@ -506,7 +506,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (imageSimilaritySageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSimilaritySageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'image-similarity', 'Image Similarity SageMaker', 'ConditionImageSimilaritySageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'image-similarity-ml', 'Image Similarity SageMaker', 'ConditionImageSimilaritySageMaker');
     }
 
     // Feature: Super Resolution SageMaker
@@ -519,7 +519,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (superResolutionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolutionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution-ml', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
     }
 
     // Stage base URL
