@@ -31,8 +31,6 @@ The following describes how to create a template:
 6. After creating the template, first conduct a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.
 7. (Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. 
 
-Translated with www.DeepL.com/Translator (free version)
-
 !!! Important "Important"
     The rectangular box area must completely cover the text content to be recognized. Leave enough space for error tolerance on all sides of the recognition area without covering other recognition rectangular areas for accurate recognition.
 

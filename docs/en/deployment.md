@@ -33,7 +33,7 @@ If you choose to launch the stack from AWS China Regions, make sure a domain reg
         | **APIGatewayAuthorization** | NONE | The authentication method of the API gateway. The default is *NONE*, which means no privilege authentication method. You can also choose to use the [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) permission to control access to the API. |
         | **APIGatewayStageName** | prod | The first path field in the API gateway (URI). For more information, see [stageVariable](https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/stage-variables.html). | 
 
-    - You can select the instance type from the list of the feature. The default value for all feature parameters is no.
+    - You can deploy the feature by selecting **yes-lambda** or **yes-sagemaker**. The default value for all feature parameters is no.
 
         | Parameter ID | Default | Description |
         | ---------- | ---------| ----------- |
