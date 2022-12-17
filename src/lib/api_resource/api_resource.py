@@ -22,7 +22,7 @@ def stage_exists(api_client, api_id, stage_name):
         return True
 
 
-def create_api(feature_name):
+def create_deployment(feature_name):
     if stage_exists(api_client, api_id, stage_name):
         deployment_id = api_client.get_deployments(restApiId=api_id)['items'][-1]['id']
         api_client.get_stage(restApiId=api_id, stageName=stage_name)
@@ -79,8 +79,10 @@ def lambda_handler(event, context):
         request_type = event['RequestType'].upper() if ('RequestType' in event) else ""
         # fix for update
         if 'CREATE' in request_type or 'UPDATE' in request_type:
-            print(event)
-            create_api(feature_name=event['ResourceProperties']['featureName'])
+            if 'updateType' in event['ResourceProperties'] and event['ResourceProperties']['updateType'] == 'update':
+                delete_api(feature_name=event['ResourceProperties']['featureName'])
+            
+            create_deployment(feature_name=event['ResourceProperties']['featureName'])
             result = {
                 'StatusCode': '200',
                 'Body': {'message': 'create success'}

@@ -1,9 +1,11 @@
 import { Aws, CfnCondition, CfnOutput, CustomResource, Fn, RemovalPolicy } from 'aws-cdk-lib';
 import { AuthorizationType, AwsIntegration, Deployment, RestApi } from 'aws-cdk-lib/aws-apigateway';
+import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { Effect, ManagedPolicy, PolicyDocument, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { CfnEndpoint, CfnEndpointConfig, CfnModel } from 'aws-cdk-lib/aws-sagemaker';
 import { Provider } from 'aws-cdk-lib/custom-resources';
 import { Construct } from 'constructs';
+import { ECRDeployment } from '../lib/cdk-ecr-deployment/lib';
 
 export interface SageMakerFeatureProps {
   readonly featureName: string;
@@ -18,9 +20,9 @@ export interface SageMakerFeatureProps {
   readonly updateCustomResourceProvider: Provider;
   readonly sageMakerInstanceType: string;
   // readonly sageMakerDefaultInstanceType?: string;
-  readonly sageMakerDockerImageUrl?: string;
-  readonly sageMakerDockerImageUrlCN?: string;
   readonly sageMakerDockerImageTag?: string;
+
+  readonly sageMakerEcrDeployment: ECRDeployment;
 }
 
 export class SageMakerFeatureConstruct extends Construct {
@@ -28,6 +30,21 @@ export class SageMakerFeatureConstruct extends Construct {
   constructor(scope: Construct, id: string, props: SageMakerFeatureProps) {
 
     super(scope, id);
+
+    const stackRepo = new Repository(this, `ai-solution-kit-${props.featureName}`, {
+      repositoryName: `ai-solution-kit-${props.featureName}-sagemaker`,
+      removalPolicy: RemovalPolicy.RETAIN,
+    });
+
+    const ecrCR = new CustomResource(this, `${props.featureName}-ecr`, {
+      serviceToken: props.sageMakerEcrDeployment.serviceToken,
+      resourceType: 'Custom::AISolutionKitECRSageMaker',
+      properties: {
+        SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/${props.featureName}-sagemaker:latest`,
+        DestImage: `docker://${stackRepo.repositoryUri}`,
+        RepositoryName: `${stackRepo.repositoryName}`,
+      },
+    });
 
     const sagemakerExecuteRole = new Role(
       this,
@@ -46,13 +63,6 @@ export class SageMakerFeatureConstruct extends Construct {
       'IsChinaRegionCondition',
       { expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn') });
 
-    // configure container image name
-    const imageUrl = Fn.conditionIf(
-      'IsChinaRegionCondition',
-      props.sageMakerDockerImageUrlCN,
-      props.sageMakerDockerImageUrl,
-    );
-
     // create model
     const sagemakerEndpointModel = new CfnModel(
       this,
@@ -61,13 +71,14 @@ export class SageMakerFeatureConstruct extends Construct {
         executionRoleArn: sagemakerExecuteRole.roleArn,
         containers: [
           {
-            image: imageUrl.toString(),
+            image: `${Repository.fromRepositoryName(this, `${props.featureName}-sagemaker`, stackRepo.repositoryName).repositoryUri}:latest`,
             mode: 'SingleModel',
             environment: {},
           },
         ],
       },
     );
+    sagemakerEndpointModel.node.addDependency(ecrCR)
 
     // create endpoint configuration
     const sagemakerEndpointConfig = new CfnEndpointConfig(
@@ -140,7 +151,8 @@ export class SageMakerFeatureConstruct extends Construct {
       api: rootRestApi,
       retainDeployments: true,
     });
-    const resource = rootRestApi.root.addResource(props.restApiResourcePath);
+    const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
+
     const post = resource.addMethod('POST',
       sageMakerIntegration,
       {
@@ -157,12 +169,5 @@ export class SageMakerFeatureConstruct extends Construct {
       removalPolicy: RemovalPolicy.RETAIN,
     });
     apiProvider.node.addDependency(post);
-
-    const invokeUrl = Fn.conditionIf(
-      'IsChinaRegionCondition',
-      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com.cn/-stage-/${props.restApiResourcePath}`,
-      `https://${post.api.restApiId}.execute-api.${Aws.REGION}.amazonaws.com/-stage-/${props.restApiResourcePath}`,
-    );
-    new CfnOutput(this, `${props.featureName}-URL`, { value: invokeUrl.toString() });
   }
 }

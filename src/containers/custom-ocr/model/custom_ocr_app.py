@@ -10,30 +10,35 @@ from main import *
 import hashlib
 import pickle
 from aikits_utils import readimg, lambda_return
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+
 
 model_path = os.environ['MODEL_PATH']
 os.makedirs('/mnt/custom-ocr/', exist_ok=True)
-ort_session_backbone = onnxruntime.InferenceSession(model_path + 'matcher_backbone.onnx', providers=['CPUExecutionProvider'])
+ort_session_backbone = onnxruntime.InferenceSession(model_path + 'matcher_backbone.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session_backbone.run(['feat_c', 'feat_f'], {'img': np.zeros([1, 1, 64, 64], dtype='float32')})
 
-ort_session_pos_encoding = onnxruntime.InferenceSession(model_path + 'matcher_pos_encoding.onnx', providers=['CPUExecutionProvider'])
+ort_session_pos_encoding = onnxruntime.InferenceSession(model_path + 'matcher_pos_encoding.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session_pos_encoding.run(['feat_c_out'], {'feat_c_in': np.zeros([1, 256, 64, 64], dtype='float32')})
 
-ort_session_loftr_coarse = onnxruntime.InferenceSession(model_path + 'matcher_loftr_coarse.onnx', providers=['CPUExecutionProvider'])
+ort_session_loftr_coarse = onnxruntime.InferenceSession(model_path + 'matcher_loftr_coarse.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session_loftr_coarse.run(['feat_c0_out', 'feat_c1_out'], {'feat_c0_in': np.zeros([1, 64, 256], dtype='float32'), 'feat_c1_in': np.zeros([1, 64, 256], dtype='float32')})
 
-ort_session_coarse_matching = onnxruntime.InferenceSession(model_path + 'matcher_coarse_matching.onnx', providers=['CPUExecutionProvider'])
+ort_session_coarse_matching = onnxruntime.InferenceSession(model_path + 'matcher_coarse_matching.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 
-ort_session_fine_preprocess = onnxruntime.InferenceSession(model_path + 'matcher_fine_preprocess.onnx', providers=['CPUExecutionProvider'])
+ort_session_fine_preprocess = onnxruntime.InferenceSession(model_path + 'matcher_fine_preprocess.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session_fine_preprocess.run(['feat_f0_unfold', 'feat_f1_unfold'],
                                     {'feat_f0': np.zeros([1, 128, 64, 64], dtype='float32'), 'feat_f1': np.zeros([1, 128, 64, 64], dtype='float32'), 'feat_c0': np.zeros([1, 64, 256], dtype='float32'), 'feat_c1':np.zeros([1, 64, 256], dtype='float32'),
                                      'b_ids': np.zeros([1], dtype='int64'), 'i_ids': np.zeros([1], dtype='int64'), 'j_ids': np.zeros([1], dtype='int64')})
 
-ort_session_loftr_fine = onnxruntime.InferenceSession(model_path + 'matcher_loftr_fine.onnx', providers=['CPUExecutionProvider'])
+ort_session_loftr_fine = onnxruntime.InferenceSession(model_path + 'matcher_loftr_fine.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 _ = ort_session_loftr_fine.run(['feat_f0_unfold_out', 'feat_f1_unfold_out'],
                                {'feat_f0_unfold_in': np.zeros([1, 64, 128], dtype='float32'), 'feat_f1_unfold_in': np.zeros([1, 64, 128], dtype='float32')})
 
-ort_session_fine_matching = onnxruntime.InferenceSession(model_path + 'matcher_fine_matching.onnx', providers=['CPUExecutionProvider'])
+ort_session_fine_matching = onnxruntime.InferenceSession(model_path + 'matcher_fine_matching.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 
 
 lmdb_root = "/mnt/custom-ocr"

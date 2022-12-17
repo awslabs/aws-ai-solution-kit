@@ -7,7 +7,7 @@ import { ECRDeployment } from '../lib/cdk-ecr-deployment/lib';
 export interface FeatureNestedStackProps extends NestedStackProps {
   readonly restApi: RestApi;
   readonly customAuthorizationType?: AuthorizationType;
-  readonly ecrDeployment?: ECRDeployment;
+  readonly ecrDeployment: ECRDeployment;
   readonly updateCustomResourceProvider: Provider;
   readonly instanceType?: string;
   /**

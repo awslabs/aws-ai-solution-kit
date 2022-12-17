@@ -10,6 +10,11 @@ from PIL import Image, ImageDraw
 from imaug import create_operators, transform
 from postprocess import build_post_process
 
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+
 onnxruntime.set_default_logger_severity(4)
 
 def draw_ocr_box_txt(image,
@@ -53,7 +58,7 @@ class TextClassifier():
         }
         self.postprocess_op = build_post_process(postprocess_params)
 
-        self.ort_session = onnxruntime.InferenceSession(self.weights_path)
+        self.ort_session = onnxruntime.InferenceSession(self.weights_path, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
 
     def resize_norm_img(self, img):
         imgC, imgH, imgW = self.cls_image_shape
@@ -152,7 +157,7 @@ class TextDetector():
         postprocess_params["use_dilation"] = True
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
-        self.ort_session = onnxruntime.InferenceSession(self.weights_path)
+        self.ort_session = onnxruntime.InferenceSession(self.weights_path, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 64, 64], dtype='float32')})
 
     # load_pytorch_weights
@@ -253,7 +258,7 @@ class TextRecognizer():
         }
         self.postprocess_op = build_post_process(postprocess_params)
 
-        self.ort_session = onnxruntime.InferenceSession(self.weights_path)
+        self.ort_session = onnxruntime.InferenceSession(self.weights_path, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 32, 64], dtype='float32')})
 
     def resize_norm_img(self, img, max_wh_ratio):

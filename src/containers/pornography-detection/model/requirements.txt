@@ -1,9 +1,10 @@
 base64image==0.5.1
-numpy==1.22
-openvino==2021.4.0
-Pillow==9.3.0
+numpy
+Pillow
 python-dateutil==2.8.2
 six==1.16.0
 urllib3==1.26.6
 opencv-python-headless==4.5.3.56
 boto3
+onnxruntime
+GPUtil

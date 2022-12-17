@@ -52,10 +52,3 @@ junit.xml
 /cdk.out/
 .cdk.staging/
 .parcel-cache/
-.DS_Store
-.idea
-applications/search-for-images-by-image/cdk/cdk.out/
-applications/search-for-images-by-image/cdk/deployment/cdk.out/
-applications/search-for-images-by-image/cdk/deployment/global-s3-assets/
-applications/search-for-images-by-image/cdk/deployment/regional-s3-assets/
-applications/search-for-images-by-image/html/sample/

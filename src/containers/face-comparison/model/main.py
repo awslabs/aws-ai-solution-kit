@@ -9,6 +9,11 @@ import pickle
 import face_align
 import transform
 
+import GPUtil
+cuda_available = True if len(GPUtil.getGPUs()) else False
+if cuda_available:
+    print(GPUtil.getGPUs()[0].name)
+
 def softmax(z):
     assert len(z.shape) == 2
     s = np.max(z, axis=1)
@@ -65,7 +70,7 @@ class RetinaFace:
         self.model_file = model_file
         self.session = session
         self.taskname = 'detection'
-        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CPUExecutionProvider'])
+        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         self.center_cache = {}
         self.nms_thresh = 0.4
         self.det_thresh = 0.5
@@ -250,7 +255,7 @@ class Landmark:
         self.model_file = model_file
         self.input_mean = 0.0
         self.input_std = 1.0
-        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CPUExecutionProvider'])
+        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         input_cfg = self.session.get_inputs()[0]
         input_shape = input_cfg.shape
         input_name = input_cfg.name
@@ -312,7 +317,7 @@ class Attribute:
         self.model_file = model_file
         self.input_mean = 0.0
         self.input_std = 1.0
-        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CPUExecutionProvider'])
+        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         input_cfg = self.session.get_inputs()[0]
         input_shape = input_cfg.shape
         input_name = input_cfg.name
@@ -366,7 +371,7 @@ class ArcFaceONNX:
         self.taskname = 'recognition'
         self.input_mean = 0.0
         self.input_std = 1.0
-        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CPUExecutionProvider'])
+        self.session = onnxruntime.InferenceSession(self.model_file, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         input_cfg = self.session.get_inputs()[0]
         input_shape = input_cfg.shape
         input_name = input_cfg.name
@@ -404,7 +409,7 @@ class SCRFD:
         if self.session is None:
             assert self.model_file is not None
             assert osp.exists(self.model_file)
-            self.session = onnxruntime.InferenceSession(self.model_file, providers=['CPUExecutionProvider'])
+            self.session = onnxruntime.InferenceSession(self.model_file, providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
         self.center_cache = {}
         self.nms_thresh = 0.4
         self.det_thresh = 0.5

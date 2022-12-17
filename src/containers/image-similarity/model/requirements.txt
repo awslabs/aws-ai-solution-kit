@@ -1,5 +1,6 @@
-numpy==1.22.0
-Pillow==9.3.0
-onnxruntime==1.8.1
+numpy
+Pillow
+onnxruntime
 opencv-python-headless==4.5.3.56
 boto3
+GPUtil

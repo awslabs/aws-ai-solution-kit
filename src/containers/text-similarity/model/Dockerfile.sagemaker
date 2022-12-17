@@ -1,0 +1,35 @@
+FROM nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+
+RUN apt update \
+    && apt install -y --no-install-recommends wget python3 python3-pip unzip \
+    && ln -sf python3 /usr/bin/python \
+    && ln -sf pip3 /usr/bin/pip \
+    && pip install --upgrade pip \
+    && pip install wheel setuptools
+
+ARG FUNCTION_DIR="/opt/ml/model"
+# Lite version
+ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/text-similarity"
+ARG MODEL_VERSION="1.2.0"
+
+ADD / ${FUNCTION_DIR}/
+
+RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
+RUN pip3 install flask gevent
+RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu==1.6.0
+
+RUN mkdir -p ${FUNCTION_DIR}/model
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/CoSENT.zip -O ${FUNCTION_DIR}/model/CoSENT.zip
+RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/tokenizer.zip -O ${FUNCTION_DIR}/model/tokenizer.zip
+RUN unzip ${FUNCTION_DIR}/model/CoSENT.zip -d ${FUNCTION_DIR}/model/
+RUN unzip ${FUNCTION_DIR}/model/tokenizer.zip -d ${FUNCTION_DIR}/model/
+
+WORKDIR ${FUNCTION_DIR}
+ENV PYTHONUNBUFFERED=TRUE
+ENV PYTHONDONTWRITEBYTECODE=TRUE
+ENV PYTHONIOENCODING="utf8"
+ENV MODEL_NAME="standard"
+ENV MODEL_PATH="${FUNCTION_DIR}/model/"
+#ENV LD_LIBRARY_PATH /usr/local/cuda/compat:$LD_LIBRARY_PATH
+
+ENTRYPOINT ["python", "sm_predictor.py"]

@@ -14,21 +14,42 @@ export class LambdaContainersStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const GeneralOCRAdvanced = new DockerImageFunction(
-      this,
-      'general-ocr-advanced',
-      {
-        functionName: 'general-ocr-advanced',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced'),
-      },
-    );
-
     const GeneralOCRStandard = new DockerImageFunction(
       this,
       'general-ocr-standard',
       {
         functionName: 'general-ocr-standard',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const GeneralOCRStandardSageMaker = new DockerImageFunction(
+      this,
+      'general-ocr-standard-sagemaker',
+      {
+        functionName: 'general-ocr-standard-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
+      },
+    );
+
+    const GeneralOCRAdvanced = new DockerImageFunction(
+      this,
+      'general-ocr-advanced',
+      {
+        functionName: 'general-ocr-advanced',
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
       },
     );
 
@@ -37,16 +58,50 @@ export class LambdaContainersStack extends Stack {
       'general-ocr-traditional-standard',
       {
         functionName: 'general-ocr-traditional-standard',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard'),
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
       },
     );
 
-    const NudityDetection = new DockerImageFunction(
+    const GeneralOCRTraditionalStandardSageMaker = new DockerImageFunction(
+      this,
+      'general-ocr-traditional-standard-sagemaker',
+      {
+        functionName: 'general-ocr-traditional-standard-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
+      },
+    );
+
+    const PornographyDetection = new DockerImageFunction(
       this,
       'pornography-detection',
       {
         functionName: 'pornography-detection',
-        code: DockerImageCode.fromImageAsset('src/containers/pornography-detection/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/pornography-detection/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const PornographyDetectionSageMaker = new DockerImageFunction(
+      this,
+      'pornography-detection-sagemaker',
+      {
+        functionName: 'pornography-detection-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/pornography-detection/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -55,19 +110,24 @@ export class LambdaContainersStack extends Stack {
       'human-image-segmentation',
       {
         functionName: 'human-image-segmentation',
-        code: DockerImageCode.fromImageAsset('src/containers/human-image-segmentation/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/human-image-segmentation/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
       },
     );
 
-    /**
-         * @deprecated use `ImageSuperResolutionGPU`
-         */
-    const ImageSuperResolutionLambda = new DockerImageFunction(
+    const HumanImageSegmentationSageMaker = new DockerImageFunction(
       this,
-      'image-super-resolution-lambda',
+      'human-image-segmentation-sagemaker',
       {
-        functionName: 'image-super-resolution-lambda',
-        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution-lambda/model'),
+        functionName: 'human-image-segmentation-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/human-image-segmentation/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -76,7 +136,24 @@ export class LambdaContainersStack extends Stack {
       'object-recognition',
       {
         functionName: 'object-recognition',
-        code: DockerImageCode.fromImageAsset('src/containers/object-recognition/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/object-recognition/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const ObjectRecognitionSageMaker = new DockerImageFunction(
+      this,
+      'object-recognition-sagemaker',
+      {
+        functionName: 'object-recognition-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/object-recognition/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -85,7 +162,24 @@ export class LambdaContainersStack extends Stack {
       'face-comparison',
       {
         functionName: 'face-comparison',
-        code: DockerImageCode.fromImageAsset('src/containers/face-comparison/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/face-comparison/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const FaceComparisonSageMaker = new DockerImageFunction(
+      this,
+      'face-comparison-sagemaker',
+      {
+        functionName: 'face-comparison-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/face-comparison/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -94,7 +188,24 @@ export class LambdaContainersStack extends Stack {
       'face-detection',
       {
         functionName: 'face-detection',
-        code: DockerImageCode.fromImageAsset('src/containers/face-detection/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/face-detection/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const FaceDetectionSageMaker = new DockerImageFunction(
+      this,
+      'face-detection-sagemaker',
+      {
+        functionName: 'face-detection-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/face-detection/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -103,7 +214,24 @@ export class LambdaContainersStack extends Stack {
       'human-attribute',
       {
         functionName: 'human-attribute',
-        code: DockerImageCode.fromImageAsset('src/containers/human-attribute/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/human-attribute/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const HumanAttributeSageMaker = new DockerImageFunction(
+      this,
+      'human-attribute-sagemaker',
+      {
+        functionName: 'human-attribute-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/human-attribute/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -112,7 +240,24 @@ export class LambdaContainersStack extends Stack {
       'car-license-plate',
       {
         functionName: 'car-license-plate',
-        code: DockerImageCode.fromImageAsset('src/containers/license-plate/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/license-plate/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const LicensePlateSageMaker = new DockerImageFunction(
+      this,
+      'car-license-plate-sagemaker',
+      {
+        functionName: 'car-license-plate-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/license-plate/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -121,7 +266,24 @@ export class LambdaContainersStack extends Stack {
       'custom-ocr',
       {
         functionName: 'custom-ocr',
-        code: DockerImageCode.fromImageAsset('src/containers/custom-ocr/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/custom-ocr/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const CustomOcrSageMaker = new DockerImageFunction(
+      this,
+      'custom-ocr-sagemaker',
+      {
+        functionName: 'custom-ocr-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/custom-ocr/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -130,7 +292,24 @@ export class LambdaContainersStack extends Stack {
       'text-similarity',
       {
         functionName: 'text-similarity',
-        code: DockerImageCode.fromImageAsset('src/containers/text-similarity/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/text-similarity/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const TextSimilaritySageMaker = new DockerImageFunction(
+      this,
+      'text-similarity-sagemaker',
+      {
+        functionName: 'text-similarity-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/text-similarity/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
@@ -139,37 +318,50 @@ export class LambdaContainersStack extends Stack {
       'image-similarity',
       {
         functionName: 'image-similarity',
-        code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model'),
+        code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
       },
     );
 
-    const GreenScreenMatting = new DockerImageFunction(
+    const ImageSimilaritySageMaker = new DockerImageFunction(
       this,
-      'green-screen-matting',
+      'image-similarity-sagemaker',
       {
-        functionName: 'green-screen-matting',
-        code: DockerImageCode.fromImageAsset('src/containers/green-screen-matting/model'),
+        functionName: 'image-similarity-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/image-similarity/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
 
-    const GeneralOCRViet = new DockerImageFunction(
+    const ImageSuperResolution = new DockerImageFunction(
       this,
-      'general-ocr-viet',
+      'image-super-resolution',
       {
-        functionName: 'general-ocr-viet',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr-viet/model-standard'),
+        functionName: 'image-super-resolution',
+        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
       },
     );
-  }
 
-  private buildLambdaImage(imageName: string, codeDirectory: string) {
-    // example: this.buildLambdaImage('general-ocr-advanced', 'src/containers/models/general-ocr/model-advanced');
-    new DockerImageFunction(
+    const ImageSuperResolutionSageMaker = new DockerImageFunction(
       this,
-      imageName,
+      'image-super-resolution-sagemaker',
       {
-        functionName: imageName,
-        code: DockerImageCode.fromImageAsset(codeDirectory),
+        functionName: 'image-super-resolution-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
       },
     );
   }
