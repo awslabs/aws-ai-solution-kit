@@ -40,7 +40,7 @@ export class SageMakerFeatureConstruct extends Construct {
       serviceToken: props.sageMakerEcrDeployment.serviceToken,
       resourceType: 'Custom::AISolutionKitECRSageMaker',
       properties: {
-        SrcImage: 'docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/car-license-plate-sagemaker:latest',
+        SrcImage: `docker://public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit/${props.featureName}-sagemaker:latest`,
         DestImage: `docker://${stackRepo.repositoryUri}`,
         RepositoryName: `${stackRepo.repositoryName}`,
       },
@@ -147,21 +147,11 @@ export class SageMakerFeatureConstruct extends Construct {
       restApiId: props.rootRestApi.restApiId,
       rootResourceId: props.rootRestApi.root.resourceId,
     });
-    const updateProvider = new CustomResource(this, 'updateProvider', {
-      serviceToken: props.updateCustomResourceProvider.serviceToken,
-      resourceType: 'Custom::AISolutionKitApiProvider',
-      properties: {
-        featureName: `${props.featureName}`,
-        updateType: 'update',
-      },
-      removalPolicy: RemovalPolicy.RETAIN,
-    });
     const deployment = new Deployment(this, 'new_deployment', {
       api: rootRestApi,
       retainDeployments: true,
     });
     const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
-    resource.node.addDependency(updateProvider);
 
     const post = resource.addMethod('POST',
       sageMakerIntegration,

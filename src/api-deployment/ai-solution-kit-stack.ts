@@ -121,7 +121,7 @@ export class AISolutionKitStack extends Stack {
         },
       }),
       memorySize: 2048,
-      timeout: Duration.seconds(19),
+      timeout: Duration.minutes(2),
       environment: {
         REST_API_ID: api.restApiId,
         STAGE_NAME: cfnTemplate.getParameter('APIGatewayStageName').valueAsString,
