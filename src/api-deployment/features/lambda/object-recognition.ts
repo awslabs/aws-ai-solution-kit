@@ -1,15 +1,14 @@
 import { Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { APIFeature } from '../../api-feature';
-import { FeatureNestedStack, FeatureNestedStackProps } from '../feature-nested-stack';
-import { LambdaFeatureConstruct } from '../lambda-feature-construct';
+import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
+import { LambdaFeatureConstruct } from '../../lambda-feature-construct';
 
-export class CarLicensePlateFeatureNestedStack extends FeatureNestedStack {
+export class ObjectRecognitionFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'car-license-plate';
-    this.templateOptions.description = '(SO8023-car-license-plate) - AI Solution Kit - Car License Plate. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
+    const featureName = 'object-recognition';
+    this.templateOptions.description = '(SO8023-object-recognition) - AI Solution Kit - Object Recognition. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

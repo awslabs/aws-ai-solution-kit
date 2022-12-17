@@ -37,17 +37,18 @@ import {
 } from '../lib/cdk-ecr-deployment/lib';
 import { FeatureNestedStack } from './feature-nested-stack';
 import { ApiExplorerNestedStack } from './features/api-explorer';
-import { CarLicensePlateFeatureNestedStack } from './features/car-license-plate';
-import { CustomOCRFeatureNestedStack } from './features/custom-ocr';
-import { FaceComparisonFeatureNestedStack } from './features/face-comparison';
-import { FaceDetectionFeatureNestedStack } from './features/face-detection';
-import { GeneralOCRFeatureNestedStack } from './features/general-ocr';
-import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/general-ocr-traditional-chinese';
-import { HumanAttributeRecognitionFeatureNestedStack } from './features/human-attribute-recognition';
-import { HumanImageSegmentationFeatureNestedStack } from './features/human-image-segmentation';
-import { ImageSimilarityFeatureNestedStack } from './features/image-similarity';
-import { ObjectRecognitionFeatureNestedStack } from './features/object-recognition';
-import { PornographyDetectionFeatureNestedStack } from './features/pornography-detection';
+import { CarLicensePlateFeatureNestedStack } from './features/lambda/car-license-plate';
+import { CustomOCRFeatureNestedStack } from './features/lambda/custom-ocr';
+import { FaceComparisonFeatureNestedStack } from './features/lambda/face-comparison';
+import { FaceDetectionFeatureNestedStack } from './features/lambda/face-detection';
+import { GeneralOCRFeatureNestedStack } from './features/lambda/general-ocr';
+import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/lambda/general-ocr-traditional-chinese';
+import { HumanAttributeRecognitionFeatureNestedStack } from './features/lambda/human-attribute-recognition';
+import { HumanImageSegmentationFeatureNestedStack } from './features/lambda/human-image-segmentation';
+import { ImageSimilarityFeatureNestedStack } from './features/lambda/image-similarity';
+import { ObjectRecognitionFeatureNestedStack } from './features/lambda/object-recognition';
+import { PornographyDetectionFeatureNestedStack } from './features/lambda/pornography-detection';
+import { TextSimilarityFeatureNestedStack } from './features/lambda/text-similarity';
 
 import { CarLicensePlateSageMakerFeatureNestedStack } from './features/sagemaker/car-license-plate-sagemaker';
 import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custom-ocr-sagemaker';
@@ -62,7 +63,6 @@ import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemak
 import { PornographyDetectionSageMakerFeatureNestedStack } from './features/sagemaker/pornography-detection-sagemaker';
 import { SuperResolutionSageMakerFeatureNestedStack } from './features/sagemaker/super-resolution-sagemaker';
 import { TextSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/text-similarity-sagemaker';
-import { TextSimilarityFeatureNestedStack } from './features/text-similarity';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;

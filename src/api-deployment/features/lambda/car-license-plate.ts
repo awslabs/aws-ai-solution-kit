@@ -1,14 +1,14 @@
 import { Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { FeatureNestedStack, FeatureNestedStackProps } from '../feature-nested-stack';
-import { LambdaFeatureConstruct } from '../lambda-feature-construct';
+import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
+import { LambdaFeatureConstruct } from '../../lambda-feature-construct';
 
-export class TextSimilarityFeatureNestedStack extends FeatureNestedStack {
+export class CarLicensePlateFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'text-similarity';
-    this.templateOptions.description = '(SO8023-text-similarity) - AI Solution Kit - Text Similarity. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
+    const featureName = 'car-license-plate';
+    this.templateOptions.description = '(SO8023-car-license-plate) - AI Solution Kit - Car License Plate. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

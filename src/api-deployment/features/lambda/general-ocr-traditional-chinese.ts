@@ -1,7 +1,7 @@
 import { Duration } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { FeatureNestedStack, FeatureNestedStackProps } from '../feature-nested-stack';
-import { LambdaFeatureConstruct } from '../lambda-feature-construct';
+import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
+import { LambdaFeatureConstruct } from '../../lambda-feature-construct';
 
 export class GeneralOCRTraditionalChineseFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {

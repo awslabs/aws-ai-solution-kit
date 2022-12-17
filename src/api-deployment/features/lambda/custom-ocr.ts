@@ -5,8 +5,7 @@ import { Repository } from 'aws-cdk-lib/aws-ecr';
 import { FileSystem as efsFileSystem, LifecyclePolicy, PerformanceMode, ThroughputMode } from 'aws-cdk-lib/aws-efs';
 import { DockerImageCode, DockerImageFunction, FileSystem } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { APIFeature } from '../../api-feature';
-import { FeatureNestedStack, FeatureNestedStackProps } from '../feature-nested-stack';
+import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
 
 export class CustomOCRFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
