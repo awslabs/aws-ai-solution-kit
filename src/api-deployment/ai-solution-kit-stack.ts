@@ -80,7 +80,7 @@ export class AISolutionKitStack extends Stack {
   constructor(scope: Construct, id: string, props: AISolutionKitStackProps) {
 
     super(scope, id, props);
-    this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.2.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
+    this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.3.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
 
     const cfnTemplate = new CfnInclude(this, 'CfnTemplate', {
       templateFile: path.join(__dirname, 'parameter-group.template'),
