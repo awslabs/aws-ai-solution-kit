@@ -8,7 +8,7 @@ export class GeneralOCRTraditionalChineseFeatureNestedStack extends FeatureNeste
 
     super(scope, id, props);
     const featureName = 'general-ocr-traditional-chinese';
-    this.templateOptions.description = '(SO8023-ocr-traditional) - AI Solution Kit - General OCR Traditional Chinese. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.';
+    this.templateOptions.description = '(SO8023-ocr-traditional) - AI Solution Kit - General OCR Traditional Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.';
 
     new LambdaFeatureConstruct(this, `${featureName}`, {
       rootRestApi: props.restApi,

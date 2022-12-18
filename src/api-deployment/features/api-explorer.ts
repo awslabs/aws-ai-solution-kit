@@ -20,7 +20,7 @@ export class ApiExplorerNestedStack extends NestedStack {
   constructor(scope: Construct, id: string, props: ApiExplorerProps) {
 
     super(scope, id, props);
-    this.templateOptions.description = '(SO8023-api-explorer) - AI Solution Kit - API Explorer. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/api-explorer.';
+    this.templateOptions.description = '(SO8023-api-explorer) - AI Solution Kit - API Explorer. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/api-explorer.';
     new CfnCondition(this,
       'IsChinaRegionCondition',
       { expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn') });

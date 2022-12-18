@@ -8,7 +8,7 @@ export class ImageSimilarityFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'image-similarity';
-    this.templateOptions.description = '(SO8023-image-similarity) - AI Solution Kit - Image Similarity. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-similarity.';
+    this.templateOptions.description = '(SO8023-image-similarity) - AI Solution Kit - Image Similarity. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-image-similarity.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

@@ -9,7 +9,7 @@ export class FaceComparisonSageMakerFeatureNestedStack extends FeatureNestedStac
 
     super(scope, id, props);
     const featureName = 'face-comparison';
-    this.templateOptions.description = '(SO8023-face-comparison-sagemaker) - AI Solution Kit - Face Comparison. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-comparison.';
+    this.templateOptions.description = '(SO8023-face-comparison-sagemaker) - AI Solution Kit - Face Comparison. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-comparison.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

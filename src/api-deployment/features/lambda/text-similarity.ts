@@ -8,7 +8,7 @@ export class TextSimilarityFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'text-similarity';
-    this.templateOptions.description = '(SO8023-text-similarity) - AI Solution Kit - Text Similarity. Template version v1.2.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
+    this.templateOptions.description = '(SO8023-text-similarity) - AI Solution Kit - Text Similarity. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,
