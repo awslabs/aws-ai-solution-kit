@@ -822,6 +822,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#8-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-instances-with-current-utilization-of-instances-and-a-request-delta-of-instances-please-contact-aws-support-to-request-an-increase-for-this-limit-how-do-i-resolve-this" class="md-nav__link">
+    8. When deploying the solution, I encountered The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is * Instances, with current utilization of * Instances and a request delta of * Instances. Please contact AWS support to request an increase for this limit. How do I resolve this?
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -949,6 +956,13 @@
         <li class="md-nav__item">
   <a href="#7-how-to-create-and-use-a-usage-plan-with-api-key" class="md-nav__link">
     7. How to create and use a usage plan with API key?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-instances-with-current-utilization-of-instances-and-a-request-delta-of-instances-please-contact-aws-support-to-request-an-increase-for-this-limit-how-do-i-resolve-this" class="md-nav__link">
+    8. When deploying the solution, I encountered The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is * Instances, with current utilization of * Instances and a request delta of * Instances. Please contact AWS support to request an increase for this limit. How do I resolve this?
   </a>
   
 </li>
@@ -1203,6 +1217,8 @@
 <p>This solution supports API Usage Plans. After deploying the solution and testing the APIs, you can implement API Gateway Usage Plans and offer them as a customer-facing product/service. You can configure usage plans and API keys to allow customers to access selected APIs at agreed request rates and quotas that meet their business needs and budget constraints.</p>
 <p>You can set default method level limits for APIs or set limits for individual API methods if desired. The API caller must provide an assigned API key in the x-api-key header of the API request. </p>
 <p>To configure an <em>API usage plan</em>, refer to <a href="https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/api-gateway-create-usage-plans.html">Configure Usage Plan</a>.</p>
+<h2 id="8-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-instances-with-current-utilization-of-instances-and-a-request-delta-of-instances-please-contact-aws-support-to-request-an-increase-for-this-limit-how-do-i-resolve-this">8. When deploying the solution, I encountered <em>The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is * Instances, with current utilization of * Instances and a request delta of * Instances. Please contact AWS support to request an increase for this limit.</em> How do I resolve this?</h2>
+<p>The SageMaker endpoint type used in the solution is <code>ml.g4dn.xlarge</code>, the service limit (also known as the quotas) is the maximum number of service resources or operations used in your account, you will be prompted with this error message after the number of endpoints exceeds the service limit, the default number of service endpoints of type <code>ml.m4.xlarge</code> supported in most regions is 4, you can follow the <a href="https://docs.aws.amazon.com/zh_cn/servicequotas/latest/userguide/request-quota-increase.html">Upgrade Service Quota</a> guidelines to increase the limit SageMaker service quota.</p>
 
 
 
