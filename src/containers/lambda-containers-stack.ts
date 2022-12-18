@@ -354,9 +354,9 @@ export class LambdaContainersStack extends Stack {
 
     const ImageSuperResolutionSageMaker = new DockerImageFunction(
       this,
-      'image-super-resolution-sagemaker',
+      'super-resolution-sagemaker',
       {
-        functionName: 'image-super-resolution-sagemaker',
+        functionName: 'super-resolution-sagemaker',
         code: DockerImageCode.fromImageAsset('src/containers/image-super-resolution/model',
           {
             file: 'Dockerfile.sagemaker',
