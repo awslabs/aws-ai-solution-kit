@@ -114,3 +114,7 @@ You can set default method level limits for APIs or set limits for individual AP
 
 To configure an *API usage plan*, refer to [Configure Usage Plan](https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/api-gateway-create-usage-plans.html).
 
+
+## 8. When deploying the solution, I encountered *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is * Instances, with current utilization of * Instances and a request delta of * Instances. Please contact AWS support to request an increase for this limit.* How do I resolve this?
+
+The SageMaker endpoint type used in the solution is `ml.g4dn.xlarge`, the service limit (also known as the quotas) is the maximum number of service resources or operations used in your account, you will be prompted with this error message after the number of endpoints exceeds the service limit, the default number of service endpoints of type `ml.m4.xlarge` supported in most regions is 4, you can follow the [Upgrade Service Quota](https://docs.aws.amazon.com/zh_cn/servicequotas/latest/userguide/request-quota-increase.html) guidelines to increase the limit SageMaker service quota.
