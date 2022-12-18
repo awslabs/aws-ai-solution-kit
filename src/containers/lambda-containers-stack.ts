@@ -68,9 +68,9 @@ export class LambdaContainersStack extends Stack {
 
     const GeneralOCRTraditionalStandardSageMaker = new DockerImageFunction(
       this,
-      'general-ocr-traditional-standard-sagemaker',
+      'general-ocr-traditional-chinese-sagemaker',
       {
-        functionName: 'general-ocr-traditional-standard-sagemaker',
+        functionName: 'general-ocr-traditional-chinese-sagemaker',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard',
           {
             file: 'Dockerfile.sagemaker',
