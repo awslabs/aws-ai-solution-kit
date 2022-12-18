@@ -15,7 +15,7 @@ export class GeneralOCRTraditionalChineseFeatureNestedStack extends FeatureNeste
       authorizationType: props.customAuthorizationType,
       restApiResourcePath: `${featureName}`,
       lambdaEcrDeployment: props.ecrDeployment,
-      lambdaDockerImageUrl: `${props.ecrRegistry}/general-ocr-traditional-standard:latest`,
+      lambdaDockerImageUrl: `${props.ecrRegistry}/general-ocr-traditional-chinese:latest`,
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,

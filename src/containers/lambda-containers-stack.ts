@@ -55,9 +55,9 @@ export class LambdaContainersStack extends Stack {
 
     const GeneralOCRTraditionalStandard = new DockerImageFunction(
       this,
-      'general-ocr-traditional-standard',
+      'general-ocr-traditional-chinese',
       {
-        functionName: 'general-ocr-traditional-standard',
+        functionName: 'general-ocr-traditional-chinese',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr-traditional/model-standard',
           {
             file: 'Dockerfile.lambda',

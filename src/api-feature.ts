@@ -10,7 +10,7 @@ export declare enum APIFeature {
 
   FACE_DETECTION = 'face-detection',
 
-  GENERAL_OCR_TRADITIONAL_CHINESE = 'general-ocr-traditional-chinese',
+  GENERAL_OCR_TRADITIONAL_CHINESE = 'general-ocr-traditional-standard',
 
   GENERAL_OCR = 'general-ocr',
 
