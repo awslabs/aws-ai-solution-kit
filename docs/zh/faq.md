@@ -119,3 +119,5 @@
 
 如您需要配置*API使用计划*，请参考[配置使用计划](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/api-gateway-create-usage-plans.html)。
 
+## 8. 部署解决方案时遇到 *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is * Instances, with current utilization of * Instances and a request delta of * Instances. Please contact AWS support to request an increase for this limit.*，如何解决？
+解决方案中使用的 SageMaker 终端节点类型为 `ml.g4dn.xlarge` ，服务限额（也称为限制）是您的账户中使用的服务资源或操作的最大数量，在终端节点数量超过了服务限额后，系统将会提示您这个错误信息，大多数区域支持的服务端点类型为 `ml.m4.xlarge` 的数量默认为4个，您可以按照 [提升服务配额](https://docs.amazonaws.cn/sagemaker/latest/dg/regions-quotas.html#service-limit-increase-request-procedure) 指引提高限制 SageMaker 服务配额。
