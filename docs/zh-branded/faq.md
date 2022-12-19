@@ -2,9 +2,9 @@
 
 本解决方案使用Amazon API Gateway来接收API调用请求，所以如果您希望在中国区域提供无需身份验证即可访问的API请求，需要申请并确保您的亚马逊云科技账号已通过Internet Content Provider (ICP) 备案，80/443端口可以正常开启。具体流程可参见[ICP备案指南](https://www.amazonaws.cn/support/icp/)。
 
-## 2. 部署解决方案时遇到*The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances*，如何解决？
+## 2. 在部署解决方案后，如何更改 AI 功能的部署类型？
 
-方案中的超分辨率API需要创建一个基于**Amazon SageMaker**的GPU类型实例，如果您亚马逊云科技账户中对应实例限制不足，则会导致该功能部署异常。您可以在亚马逊云科技管理控制台上方工具栏点击**支持中心**，创建支持工单，要求提高**Amazon SageMaker**服务的实例限额。具体步骤请参阅[请求提高配额](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)。
+请访问[CloudFormation控制台](https://console.aws.amazon.com/cloudformation/)，从堆栈列表中选择部署完成的解决方案根堆栈，注意不要选择嵌套堆栈（NESTED）。选择**更新**。在参数部分，更改相应的参数信息，然后选择下一步。例如，如果Custom Template OCR原来为no，可以更改设置为yes-lambda或yes-sagemaker，从而添加自定义模板文字识别功能；或者可以更改现有设置yes-lambda，变成yes-sagemaker，从而将自定义模板文字识别功能的架构从Lambda到SageMaker。
 
 ## 3. 部署解决方案时遇到*Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*，如何解决？
 

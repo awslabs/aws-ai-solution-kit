@@ -2,9 +2,9 @@
 
 This solution uses Amazon API Gateway to receive API call requests. If you want to provide API requests that can be accessed without authentication in the AWS China Regions, you need to apply for and ensure that your AWS account has been registered with the Internet Content Provider (ICP), and 80 /443 port can be enabled normally. For more information, refer to [ICP Recordal](https://www.amazonaws.cn/support/icp/).
 
-## 2. When deploying the solution, I encountered *The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances*. How to resolve it?
+## 2. How do I change the feature deployment type after deploying the solution?
 
-This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click **Support Center** on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see [AWS service quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html).
+Please visit [CloudFormation Console](https://console.aws.amazon.com/cloudformation/) and select the root stack of the deployed solution from the list of stacks, taking care not to select the nested stack (NESTED). Select **Update**. In the Parameters section, change the appropriate parameter information and select Next. For example, if **Custom OCR** was `no`, you can add Custom OCR by changing the setting to `yes-lambda` or `yes-sagemaker`; or you can change the existing setting `yes-lambda` to `yes-sagemaker`, thus changing the architecture of Custom OCR from Lambda to SageMaker.
 
 ## 3. When deploying the solution, I encountered *Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008*. How to resolve it?
 
