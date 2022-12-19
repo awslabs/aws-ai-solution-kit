@@ -1,6 +1,6 @@
 ## 成本预估
 
-您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年6月，影响解决方案的成本因素主要包括：
+您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至2022年12月，影响解决方案的成本因素主要包括：
 
 - Amazon API Gateway调用次数
 - Amazon API Gateway数据输出量
@@ -8,10 +8,12 @@
 - Amazon Elastic Container Registry存储量
 
 如果您选择基于AWS Lambda架构部署，影响成本的因素还包括：
+
 - AWS Lambda调用次数
 - AWS Lambda运行时间
 
 与之对应的Amazon SageMaker架构部署，影响成本的因素还包括：
+
 - Amazon SageMaker终端节点实例类型
 - Amazon SageMaker终端节点数据输入量
 - Amazon SageMaker终端节点数据输出量
