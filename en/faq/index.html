@@ -781,8 +781,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-how-to-resolve-it" class="md-nav__link">
-    2. When deploying the solution, I encountered The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances. How to resolve it?
+  <a href="#2-how-do-i-change-the-feature-deployment-type-after-deploying-the-solution" class="md-nav__link">
+    2. How do I change the feature deployment type after deploying the solution?
   </a>
   
 </li>
@@ -919,8 +919,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-how-to-resolve-it" class="md-nav__link">
-    2. When deploying the solution, I encountered The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances. How to resolve it?
+  <a href="#2-how-do-i-change-the-feature-deployment-type-after-deploying-the-solution" class="md-nav__link">
+    2. How do I change the feature deployment type after deploying the solution?
   </a>
   
 </li>
@@ -986,8 +986,8 @@
 
 <h2 id="1-how-to-make-icp-recordal-when-deploying-the-solution-in-aws-china-regions">1. How to make ICP recordal when deploying the solution in AWS China Regions?</h2>
 <p>This solution uses Amazon API Gateway to receive API call requests. If you want to provide API requests that can be accessed without authentication in the AWS China Regions, you need to apply for and ensure that your AWS account has been registered with the Internet Content Provider (ICP), and 80 /443 port can be enabled normally. For more information, refer to <a href="https://www.amazonaws.cn/support/icp/">ICP Recordal</a>.</p>
-<h2 id="2-when-deploying-the-solution-i-encountered-the-account-level-service-limit-mlg4dnxlarge-for-endpoint-usage-is-0-instances-how-to-resolve-it">2. When deploying the solution, I encountered <em>The account-level service limit 'ml.g4dn.xlarge for endpoint usage' is 0 Instances</em>. How to resolve it?</h2>
-<p>This API needs to create a GPU instance based on Amazon SageMaker. If the corresponding instance limit in your AWS account is insufficient, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket to request an increase in the instance limit of the Amazon SageMaker service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</p>
+<h2 id="2-how-do-i-change-the-feature-deployment-type-after-deploying-the-solution">2. How do I change the feature deployment type after deploying the solution?</h2>
+<p>Please visit <a href="https://console.aws.amazon.com/cloudformation/">CloudFormation Console</a> and select the root stack of the deployed solution from the list of stacks, taking care not to select the nested stack (NESTED). Select <strong>Update</strong>. In the Parameters section, change the appropriate parameter information and select Next. For example, if <strong>Custom OCR</strong> was <code>no</code>, you can add Custom OCR by changing the setting to <code>yes-lambda</code> or <code>yes-sagemaker</code>; or you can change the existing setting <code>yes-lambda</code> to <code>yes-sagemaker</code>, thus changing the architecture of Custom OCR from Lambda to SageMaker.</p>
 <h2 id="3-when-deploying-the-solution-i-encountered-resource-handler-returned-message-memorysize-value-failed-to-satisfy-constraint-member-must-have-value-less-than-or-equal-to-3008-how-to-resolve-it">3. When deploying the solution, I encountered <em>Resource handler returned message: "'MemorySize' value failed to satisfy constraint: Member must have value less than or equal to 3008</em>. How to resolve it?</h2>
 <p>The default <strong>AWS Lambda</strong> memory is about 4GB (4096 MB). If the AWS Lambda function limit in your AWS account is lower than 4096 MB, the API feature will be deployed abnormally. You can click <strong>Support Center</strong> on the toolbar at the top of the AWS Management Console to create a support ticket and request to increase the memory limit of the AWS Lambda service. For more information, see <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html">AWS service quotas</a>.</p>
 <h2 id="4-what-aws-identity-and-access-management-iam-permissions-are-required-to-deploy-the-solution">4. What AWS Identity and Access Management (IAM) permissions are required to deploy the solution?</h2>
