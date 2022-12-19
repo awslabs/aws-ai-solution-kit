@@ -839,20 +839,22 @@
 
 <p>You will be responsible for the cost of using each of the AWS services when running the solution. As of June 2022, the main factors affecting the solution cost include:</p>
 <ul>
-<li>AWS Lambda invocations</li>
-<li>AWS Lambda running time</li>
 <li>Amazon API Gateway calls</li>
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
 <li>Amazon Elastic Container Registry storage</li>
+</ul>
+<p>If you choose an Amazon Lambda based deployment, the factors also include:</p>
+<ul>
+<li>Amazon Lambda invocations</li>
+<li>Amazon Lambda running time</li>
+</ul>
+<p>If you choose an Amazon SageMaker based deployment, the factors also include:</p>
+<ul>
 <li>Amazon SageMaker endpoint node instance type</li>
 <li>Amazon SageMaker endpoint node data input</li>
 <li>Amazon SageMaker endpoint node data output</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The cost incurred by Amazon SageMaker is only applicable to <strong>Image Super Resolution</strong>.</p>
-</div>
 <p>You can refer to the Cost Estimation section corresponding to each API to check the deployment and actual usage cost estimation for each API feature.</p>
 <table>
 <thead>

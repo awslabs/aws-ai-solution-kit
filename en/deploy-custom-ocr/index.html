@@ -1154,16 +1154,16 @@
 <h2 id="api-reference">API reference</h2>
 <h3 id="add-templates">Add templates</h3>
 <p>Before text recognition, you need to create a template through the <strong>Add Template API</strong>. In order to improve the accuracy of text recognition, the image for template creation should have similar details to the recognized image and clear text content. The same template can contain multiple recognition areas.</p>
-<p>To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software to assist in obtaining coordinate points, or use this solution tool to create templates.</p>
-<p>The following is a description of this solution tool:</p>
+<p>To create a template, each area to be recognized needs to specify the four coordinate points of the rectangular frame and the name of the area. You can use common image processing software such as <a href="https://www.gimp.org/downloads/">GIMP</a> to assist in obtaining coordinate points. </p>
+<p>The following describes how to create a template:</p>
 <ol>
-<li>Click tool <a href="../tools/custom-template/index.htm">link</a>。</li>
-<li>Click <strong>Local file</strong>。</li>
-<li>Move the mouse over the picture to identify the content, click the upper left corner, slide the mouse to the lower right corner, release the mouse, and enter the identification name in the pop-up dialog box.</li>
-<li>If there are multiple items to be identified, repeat step 3.</li>
-<li>Click<strong>Copy to clipboard</strong>.This content is the request body.Refer to the Add Template API Request Body example to create a custom template and record the template ID after successful creation.</li>
-<li>After creating the template, perform a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.</li>
-<li>(Optional) If you found that the extracted information is incomplete, confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. </li>
+<li>Go to <a href="https://awslabs.github.io/aws-ai-solution-kit/zh/tools/custom-template/index.htm">Tools</a>.</li>
+<li>Click <strong>Select Local Image</strong>.</li>
+<li>Move the mouse over the image, click the top left corner of the content to be recognized, then slide the mouse to the bottom right corner, release the mouse and enter the corresponding logo name in the pop-up dialog box.</li>
+<li>Repeat step 3 if there are multiple contents to be recognized.</li>
+<li>Click <strong>Copy Result to Clipboard</strong>, this content is request Body, create a custom template, and record the template ID after successful creation.</li>
+<li>After creating the template, first conduct a text recognition test with the original image and template ID to ensure that the template can accurately recognize the required information.</li>
+<li>(Optional) If you find that the extracted information is incomplete, please confirm that the coordinate points are marked correctly and recreate the template by expanding the recognition area appropriately. </li>
 </ol>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -1630,12 +1630,21 @@ Response response = client.newCall(request).execute();
 <h2 id="cost-estimation">Cost estimation</h2>
 <p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
-<li>AWS Lambda invocations</li>
-<li>AWS Lambda running time</li>
 <li>Amazon API Gateway calls</li>
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
 <li>Amazon Elastic Container Registry storage</li>
+</ul>
+<p>If you choose an Amazon Lambda based deployment, the factors also include:</p>
+<ul>
+<li>Amazon Lambda invocations</li>
+<li>Amazon Lambda running time</li>
+</ul>
+<p>If you choose an Amazon SageMaker based deployment, the factors also include:</p>
+<ul>
+<li>Amazon SageMaker endpoint node instance type</li>
+<li>Amazon SageMaker endpoint node data input</li>
+<li>Amazon SageMaker endpoint node data output</li>
 </ul>
 <h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
 <p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>

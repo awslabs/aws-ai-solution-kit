@@ -1289,12 +1289,21 @@ Response response = client.newCall(request).execute();
 <h2 id="cost-estimation">Cost estimation</h2>
 <p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.</p>
 <ul>
-<li>AWS Lambda invocations</li>
-<li>AWS Lambda running time</li>
 <li>Amazon API Gateway calls</li>
 <li>Amazon API Gateway data output</li>
 <li>Amazon CloudWatch Logs storage</li>
 <li>Amazon Elastic Container Registry storage</li>
+</ul>
+<p>If you choose an Amazon Lambda based deployment, the factors also include:</p>
+<ul>
+<li>Amazon Lambda invocations</li>
+<li>Amazon Lambda running time</li>
+</ul>
+<p>If you choose an Amazon SageMaker based deployment, the factors also include:</p>
+<ul>
+<li>Amazon SageMaker endpoint node instance type</li>
+<li>Amazon SageMaker endpoint node data input</li>
+<li>Amazon SageMaker endpoint node data output</li>
 </ul>
 <h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
 <p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds</p>
