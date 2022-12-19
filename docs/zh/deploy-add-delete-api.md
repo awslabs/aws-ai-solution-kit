@@ -12,7 +12,7 @@
 
 4. 在**指定模板**页面，选择**使用当前模板**，然后选择**下一步**。
 
-5. 在参数部分，更改相应的参数信息，然后选择**下一步**。例如，如果**Custom Template OCR**原来为no，可以更改设置为yes，从而添加**自定义模板文字识别**功能。
+5. 在参数部分，更改相应的参数信息，然后选择**下一步**。例如，如果**Custom Template OCR**原来为no，可以更改设置为yes-Lambda或yes-SageMaker，从而添加**自定义模板文字识别**功能。
 
 6. 在**配置堆栈选项**页面，选择**下一步**。
 
@@ -20,6 +20,6 @@
 
 8. 确认更改，并选择**更新堆栈**。
 
-[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
 
-[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
