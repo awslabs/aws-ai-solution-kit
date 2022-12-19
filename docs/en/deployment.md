@@ -33,7 +33,7 @@ If you choose to launch the stack from AWS China Regions, make sure a domain reg
         | **APIGatewayAuthorization** | NONE | The authentication method of the API gateway. The default is *NONE*, which means no privilege authentication method. You can also choose to use the [IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html) permission to control access to the API. |
         | **APIGatewayStageName** | prod | The first path field in the API gateway (URI). For more information, see [stageVariable](https://docs.aws.amazon.com/en_us/apigateway/latest/developerguide/stage-variables.html). | 
 
-    - You can change the parameter for each AI feature to **yes** to deploy it. By default, it is **no** for each AI feature.
+    - You can deploy the feature by selecting **yes-lambda** or **yes-sagemaker**. The default value for all feature parameters is no.
 
         | Parameter ID | Default | Description |
         | ---------- | ---------| ----------- |
@@ -72,9 +72,9 @@ Next, you can perform the following operations:
 - Add or remove AI features. For more information, see [Update CloudFormation stack](deploy-add-delete-api.md).
 
 
-[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
 
 
-[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AIKitsInferOCRStack&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
 
 

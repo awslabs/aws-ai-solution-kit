@@ -2,12 +2,21 @@
 
 You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
 
-- AWS Lambda invocations
-- AWS Lambda running time
 - Amazon API Gateway calls
 - Amazon API Gateway data output
 - Amazon CloudWatch Logs storage
 - Amazon Elastic Container Registry storage
+
+If you choose an Amazon Lambda based deployment, the factors also include:
+
+- Amazon Lambda invocations
+- Amazon Lambda running time
+
+If you choose an Amazon SageMaker based deployment, the factors also include:
+
+- Amazon SageMaker endpoint node instance type
+- Amazon SageMaker endpoint node data input
+- Amazon SageMaker endpoint node data output
 
 ### Cost estimation example 1
 

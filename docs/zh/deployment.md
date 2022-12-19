@@ -33,7 +33,7 @@
         | **APIGatewayAuthorization**  | NONE  | API网关的认证方式。默认为*NONE*，即无权限认证方式。您还可以选择使用[IAM](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/permissions.html)权限控制对API的访问。|
         | **APIGatewayStageName**    | prod    | API网关（URI）中的第一个路径字段。详情可参见[阶段变量](https://docs.aws.amazon.com/zh_cn/apigateway/latest/developerguide/stage-variables.html)。 |
 
-    - 您可以更改AI功能的参数为yes，部署需要的AI功能。AI功能的参数默认值均为no。
+    - 请您在需要使用的功能的下拉列表中选择所需实例类型进行部署，您可以通过选择 **yes-lambda** 或者 **yes-sagemaker** 来部署所需要的功能。所有功能的参数默认值均为 **no**。
 
         |  参数名称   |  默认值 |  描述 |
         |  ----------  | ---------| -----------  |
@@ -72,6 +72,6 @@
 
 
 
-[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
 
-[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.2.0/AI-Solution-Kit.template
+[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
