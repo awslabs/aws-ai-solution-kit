@@ -1508,13 +1508,17 @@ Response response = client.newCall(request).execute();
 <li>Amazon CloudWatch Logs存储量</li>
 <li>Amazon Elastic Container Registry存储量</li>
 </ul>
-<p>如果您选择基于Amazon Lambda架构部署，影响成本的因素还包括：
-- Amazon Lambda调用次数
-- Amazon Lambda运行时间</p>
-<p>与之对应的Amazon SageMaker架构部署，影响成本的因素还包括：
-- Amazon SageMaker终端节点实例类型
-- Amazon SageMaker终端节点数据输入量
-- Amazon SageMaker终端节点数据输出量</p>
+<p>如果您选择基于Amazon Lambda架构部署，影响成本的因素还包括：</p>
+<ul>
+<li>Amazon Lambda调用次数</li>
+<li>Amazon Lambda运行时间</li>
+</ul>
+<p>与之对应的Amazon SageMaker架构部署，影响成本的因素还包括：</p>
+<ul>
+<li>Amazon SageMaker终端节点实例类型</li>
+<li>Amazon SageMaker终端节点数据输入量</li>
+<li>Amazon SageMaker终端节点数据输出量</li>
+</ul>
 <h2 id="1">成本预估示例1</h2>
 <p>以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间1秒</p>
 <p>使用本方案处理此图像所需的成本费用如下表所示：</p>
