@@ -1,5 +1,5 @@
 base64image==0.5.1
-numpy
+numpy==1.23.5
 Pillow
 python-dateutil==2.8.2
 six==1.16.0
