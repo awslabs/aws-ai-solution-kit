@@ -9,7 +9,7 @@ export class ObjectRecognitionSageMakerFeatureNestedStack extends FeatureNestedS
 
     super(scope, id, props);
     const featureName = 'object-recognition';
-    this.templateOptions.description = '(SO8023-object-recognition-sagemaker) - AI Solution Kit - Object Recognition. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
+    this.templateOptions.description = '(SO8023-org) - AI Solution Kit - Object Recognition. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

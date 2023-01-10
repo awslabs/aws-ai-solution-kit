@@ -9,7 +9,7 @@ export class TextSimilaritySageMakerFeatureNestedStack extends FeatureNestedStac
 
     super(scope, id, props);
     const featureName = 'text-similarity';
-    this.templateOptions.description = '(SO8023-text-similarity-sagemaker) - AI Solution Kit - Text Similarity. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
+    this.templateOptions.description = '(SO8023-tsg) - AI Solution Kit - Text Similarity. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

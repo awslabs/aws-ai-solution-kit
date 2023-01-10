@@ -9,7 +9,7 @@ export class CustomOCRSageMakerFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'custom-ocr';
-    this.templateOptions.description = '(SO8023-custom-ocr-sagemaker) - AI Solution Kit - Custom OCR. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.';
+    this.templateOptions.description = '(SO8023-cog) - AI Solution Kit - Custom OCR. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

@@ -9,7 +9,7 @@ export class CarLicensePlateSageMakerFeatureNestedStack extends FeatureNestedSta
 
     super(scope, id, props);
     const featureName = 'car-license-plate';
-    this.templateOptions.description = '(SO8023-car-license-plate-sagemaker) - AI Solution Kit - Car License Plate. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
+    this.templateOptions.description = '(SO8023-clg) - AI Solution Kit - Car License Plate. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {
