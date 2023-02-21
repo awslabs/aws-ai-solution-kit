@@ -2,9 +2,8 @@
 import { App, Aspects } from 'aws-cdk-lib';
 import { BootstraplessStackSynthesizer, CompositeECRRepositoryAspect } from 'cdk-bootstrapless-synthesizer';
 import 'source-map-support/register';
-import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 import { LambdaContainersStack } from './containers/lambda-containers-stack';
-
+import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 
 const app = new App();
 const buildContainers = app.node.tryGetContext('build-container');
