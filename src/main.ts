@@ -32,7 +32,7 @@ if (buildContainers === 'true' || deployContainers === 'true') {
       app: 'ai-solution-kit',
     },
   });
-  new AISolutionKitOcrBetaStack(app, 'AI-Solution-Kit-Advanced-Ocr', {
+  new AISolutionKitOcrBetaStack(app, 'AI-Solution-Kit-Advanced-Ocr-SageMaker', {
     synthesizer: synthesizer(),
     ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
     tags: {
