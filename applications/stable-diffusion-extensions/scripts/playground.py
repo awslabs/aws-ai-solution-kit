@@ -40,8 +40,8 @@ estimator = Estimator(image_uri=container_image_uri,
 
 ###############################################################
 
-# Start the training job
-estimator.fit({'train': training_dataset_s3_path}, wait=False)
+# Start the training job, wait for it to complete. note such training data is not used for training, it is just a placeholder
+estimator.fit({'training_dataset_s3_path': training_dataset_s3_path}, wait=True)
 
 ###############################################################
 

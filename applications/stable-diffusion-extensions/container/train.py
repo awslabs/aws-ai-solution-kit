@@ -5,6 +5,11 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+from sagemaker_training import environment
+
+env = environment.Environment()
+# get the folder where the model should be saved
+model_dir = env.model_dir
 
 # Define the Stable Diffusion model
 class StableDiffusionModel(nn.Module):
@@ -34,11 +39,13 @@ def train(model, device, train_loader, optimizer, criterion, epoch):
 
 def main():
     parser = argparse.ArgumentParser()
+    # full argument list refer to: https://github.com/aws/sagemaker-training-toolkit/blob/master/src/sagemaker_training/params.py
     parser.add_argument('--epochs', type=int, default=10, help='Number of training epochs')
     parser.add_argument('--batch-size', type=int, default=64, help='Batch size for training')
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate')
     parser.add_argument('--n-channels', type=int, default=64, help='Number of channels in the model')
     parser.add_argument('--n-blocks', type=int, default=4, help='Number of convolutional blocks in the model')
+    parser.add_argument('--training_dataset_s3_path', type=str, help='S3 path to the training dataset')
     args = parser.parse_args()
 
     # Set up device and data loaders
@@ -56,13 +63,13 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
     criterion = nn.MSELoss()
 
-    # Train the model
+    # Train the model using the training data
     for epoch in range(1, args.epochs + 1):
         train(model, device, train_loader, optimizer, criterion, epoch)
 
     # Save the trained model
-    model_dir = os.environ.get('SM_MODEL_DIR', './model')
-    torch.save(model.state_dict(), os.path.join(model_dir, 'model.pt'))
+    os.makedirs('/opt/ml/model', exist_ok=True)
+    torch.save(model.state_dict(), os.path.join(model_dir, 'model.pth'))
 
 if __name__ == '__main__':
     main()
