@@ -13,5 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the custom training script into the container
 COPY train.py /opt/ml/code/train.py
 
-# define train.py as the script entry point
+# this environment variable is used by the SageMaker PyTorch container to determine our user code directory.
+ENV SAGEMAKER_SUBMIT_DIRECTORY /opt/ml/code
+
+# this environment variable is used by the SageMaker PyTorch container to determine our program entry point
+# for training and serving.
 ENV SAGEMAKER_PROGRAM train.py

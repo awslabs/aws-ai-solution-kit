@@ -1,3 +1,6 @@
+# Code below mainly to demonstrate the usage of the SageMaker SDK with BYOC containers, while the container folder
+# contains the Dockerfile and the entrypoint script for the container, and you should build the container and push it
+# to ECR before running the code below.
 import boto3
 import sagemaker
 from sagemaker import get_execution_role

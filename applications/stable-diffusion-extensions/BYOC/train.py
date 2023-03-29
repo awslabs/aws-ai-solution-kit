@@ -17,7 +17,7 @@ class StableDiffusionModel(nn.Module):
         super(StableDiffusionModel, self).__init__()
         self.n_channels = n_channels
         self.n_blocks = n_blocks
-        self.blocks = nn.Sequential(*[nn.Conv2d(self.n_channels, self.n_channels, 3, padding=1) for _ in range(self.n_blocks)])
+        self.blocks = nn.Sequential(*[nn.Conv2d(3, self.n_channels, 32, padding=1) for _ in range(self.n_blocks)])
 
     def forward(self, x):
         return x + self.blocks(x)
