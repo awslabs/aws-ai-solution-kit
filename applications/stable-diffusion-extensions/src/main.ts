@@ -33,7 +33,6 @@ export class TxtImgInferenceCdkStack extends Stack {
     const endpointNameParam = new CfnParameter(this, 'txt2img-endpoint-name', {
       type: 'String',
       description: 'SageMaker endpoint name for txt2img/img2img Inference Service',
-      default: 'txt2img-endpoint',
     });
 
     // Create an S3 bucket to store input and output payloads
@@ -46,6 +45,8 @@ export class TxtImgInferenceCdkStack extends Stack {
       memorySize: 3008,
       environment: {
         BUCKET_NAME: payloadBucket.bucketName,
+        BUCKET_INPUT_PREFIX: 'prefix/input.jpg',
+        BUCKET_OUTPUT_PREFIX: 'prefix/output.jpg',
         ENDPOINT_NAME: endpointNameParam.valueAsString,
       },
     });
