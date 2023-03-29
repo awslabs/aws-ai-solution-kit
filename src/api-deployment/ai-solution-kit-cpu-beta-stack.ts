@@ -76,7 +76,7 @@ export interface AISolutionKitStackProps extends StackProps {
   readonly ecrRegistry: string;
 }
 
-export class AISolutionKitStack extends Stack {
+export class AISolutionKitCpuBetaStack extends Stack {
   constructor(scope: Construct, id: string, props: AISolutionKitStackProps) {
 
     super(scope, id, props);
