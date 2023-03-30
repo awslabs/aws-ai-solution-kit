@@ -4,9 +4,10 @@ import boto3
 import requests
 import os
 import base64
+import json
 
 # Input parameters for the API URL and API key
-API_URL = 'https://1234567890.execute-api.us-east-1.amazonaws.com/Prod'
+API_URL = "cfn output from the middleware stack"
 API_KEY = '12345678901234567890'
 BUCKET = 'my-bucket'
 
@@ -40,22 +41,23 @@ with open("input.jpeg", "rb") as f:
         input_payload = image_bytes.decode("utf-8")
     
     # Invoke the SageMaker endpoint with image bytes
-    response = requests.post(
+    ret = requests.post(
         ENDPOINT_NAME,
         headers={"x-api-key": API_KEY},
         # pass the input payload as json string
         data=input_payload
     )
-
-    print('Response content: {}'.format(response.content))
+    response = json.loads(ret.text)
 
     # Read the inference response to check if response contain s3_bucket and s3_prefix, if so, read the inference result from S3
     # otherwise, read the inference result from response body
-    inference_result = response["Body"].read()
-    if "s3_bucket" in inference_result and "s3_prefix" in inference_result:
-        bucket = inference_result["s3_bucket"]
-        output_key = inference_result["s3_prefix"]
-        inference_result = s3.get_object(Bucket=bucket, Key=output_key)["Body"].read().decode("utf-8")
+    if "response_type" in response and response["response_type"] == "s3":
+        bucket = response["s3_bucket"]
+        output_key = response["s3_prefix"]
+        # Download image bytes from S3 and write to local file
+        inference_result = s3.get_object(Bucket=bucket, Key=output_key)["Body"].read()
     else:
-        inference_result = inference_result.decode("utf-8")
+        inference_result = response["base64"]
 
+    with open("output.jpg", "wb") as f:
+        f.write(inference_result)

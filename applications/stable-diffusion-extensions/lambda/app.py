@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 import base64
+from io import BytesIO
 
 sagemaker = boto3.client("sagemaker-runtime")
 s3 = boto3.client("s3")
@@ -36,22 +37,20 @@ def lambda_handler(event, _context):
         # wrap payload in a json string for this example with specific key "img" required by the model
         Body=json.dumps({"img": input_payload})
     )
+    print(f"Raw Response: {response}")
 
-    # Read the image from the inference response
-    inference_result = response["Body"]
+    # Read the image from the inference response and return with base64 encoding
+    inference_result = json.loads(response["Body"].read().decode("utf-8"))['result']
     print(f"Inference result: {inference_result}")
-
-    # Parse StreamingBody to bytes
-    inference_result = base64.b64decode(inference_result.read())
-    print(f"Decoded Inference result: {inference_result}")
 
     # Save the inference response to S3 if it exceeds payload size limits
     if len(inference_result) > 6*1024*1024:  # Adjust the limit based on your payload size limits (e.g., 6 MB)
-        s3.put_object(Bucket=BUCKET_NAME, Key=BUCKET_OUTPUT_PREFIX, Body=inference_result)
+
+        s3.put_object(Bucket=BUCKET_NAME, Key=BUCKET_OUTPUT_PREFIX, Body=BytesIO(base64.b64decode(inference_result)))
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "Inference result saved in S3",
+                "response_type": "s3",
                 "s3_bucket": BUCKET_NAME,
                 "s3_prefix": BUCKET_OUTPUT_PREFIX
             })
@@ -59,5 +58,8 @@ def lambda_handler(event, _context):
     else:
         return {
             "statusCode": 200,
-            "body": inference_result.decode("utf-8")
+            "body": json.dumps({
+                "response_type": "base64",
+                "base64": inference_result
+            })
         }
