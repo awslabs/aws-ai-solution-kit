@@ -255,7 +255,7 @@ AWS CDK code to create API Gateway, Lambda and SageMaker inference endpoint for 
 based on Stable Diffusion. S3 is used to store large payloads and passed as object reference in the API Gateway 
 request and Lambda function to avoid request payload limitation
 */
-export class TxtImgInferenceStack extends Stack {
+export class SdInferenceStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -341,5 +341,7 @@ const app = new App();
 // new TxtImgInferenceCdkStack(app, 'TxtImgInferenceCdkStack-dev', { env: devEnv });
 
 new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
+
+// new SdInferenceStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
 
 app.synth();
