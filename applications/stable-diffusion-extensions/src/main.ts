@@ -21,7 +21,7 @@ export class Middleware extends Stack {
 }
 
 /*
-AWS CDK TypeScript code to create API Gateway, Step Function and SageMaker for Stable Diffusion BYOC model creation and deployment. The API Gateway will trigger Step Function after it receive request, then training job on Step Function will use official Python SageMaker SDK to execute training job on SageMaker, then waiting job will wait such training job complete and trigger deployment job to deploy model onto SageMaker inference, finally it will send SNS notification to subscribe user.
+AWS CDK TypeScript code to create API Gateway, Step Function and SageMaker for Stable Diffusion BYOC model creation and deployment. The API Gateway will trigger Step Function after it receive request, then training job on Step Function will use official Python SageMaker SDK to execute training job on SageMaker, then waiting job will wait such training job complete and trigger deployment job to deploy model onto SageMaker inference, finally it will send SNS notification to subscribe user. Also we configure the checkpoint option for SageMaker to store checkpoint periodically, so that if training job is interrupted, we can resume training from last checkpoint.
 */
 export class SdTrainDeployStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -119,12 +119,13 @@ export class SdTrainDeployStack extends Stack {
         dataSource: {
           s3DataSource: {
             s3DataType: sfn_tasks.S3DataType.S3_PREFIX,
-            s3Location: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket'),
+            s3Location: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Train'),
           },
         },
       }],
+      // This should be where the checkpoint is stored
       outputDataConfig: {
-        s3OutputLocation: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket'),
+        s3OutputLocation: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Output'),
       },
       resourceConfig: {
         instanceCount: 1,
@@ -216,7 +217,7 @@ export class SdTrainDeployStack extends Stack {
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         requestTemplates: {
           "application/json": `{
-            "input": "{\\"actionType\\": \\"create\\", \\"JobName\\": \\"$context.requestId\\", \\"S3Bucket\\": \\"$input.params('S3Bucket')\\", \\"InstanceType\\": \\"$input.params('InstanceType')\\"}",
+            "input": "{\\"actionType\\": \\"create\\", \\"JobName\\": \\"$context.requestId\\", \\"S3Bucket_Train\\": \\"$input.params('S3Bucket_Train')\\", \\"S3Bucket_Output\\": \\"$input.params('S3Bucket_Output')\\", \\"InstanceType\\": \\"$input.params('InstanceType')\\"}",
             "stateMachineArn": "${stateMachine.stateMachineArn}"
           }`,
         },
@@ -272,8 +273,10 @@ export class SdInferenceStack extends Stack {
       description: 'SageMaker endpoint name for txt2img/img2img Inference Service',
     });
 
-    // Create an S3 bucket to store input and output payloads
-    const payloadBucket = new s3.Bucket(this, 'PayloadBucket');
+    // Create an S3 bucket to store input and output payloads with public access blocked
+    const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    });
 
     // Create a Lambda function for inference
     const inferenceLambda = new lambda.DockerImageFunction(this, 'InferenceLambda', {

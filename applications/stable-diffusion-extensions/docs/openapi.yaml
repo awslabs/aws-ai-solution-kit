@@ -1,0 +1,159 @@
+openapi: 3.0.3
+info:
+  title: SageMaker and S3 API
+  description: A RESTful API for interacting with SageMaker and S3 resources.
+  version: 1.0.0
+
+paths:
+  # This operation can be redundant if we get the pre-signed URL instead
+  /s3/prefix:
+    get:
+      summary: Allocate S3 prefix for training data
+      operationId: allocateS3Prefix
+      responses:
+        '200':
+          description: Successfully allocated S3 prefix
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  prefix:
+                    type: string
+
+  /s3/upload:
+    post:
+      summary: Generate pre-signed S3 URL to upload training data
+      operationId: generatePresignedUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+      responses:
+        '200':
+          description: Successfully generated pre-signed URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signedUrl:
+                    type: string
+
+  /sagemaker/solo-deployment:
+    post:
+      summary: Deploy a SageMaker model
+      operationId: deploySageMakerModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                modelName:
+                  type: string
+                modelDataUrl:
+                  type: string
+                instanceType:
+                  type: string
+      responses:
+        '200':
+          description: Successfully deployed the model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  endpointName:
+                    type: string
+
+  /sagemaker/training-deployment:
+    post:
+      summary: Train and deploy a SageMaker model
+      operationId: trainAndDeploySageMakerModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trainingJobName:
+                  type: string
+                trainingDataUrl:
+                  type: string
+                validationDataUrl:
+                  type: string
+                modelOutputUrl:
+                  type: string
+                instanceType:
+                  type: string
+      responses:
+        '200':
+          description: Successfully trained and deployed the model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trainingJobArn:
+                    type: string
+                  modelArn:
+                    type: string
+                  endpointName:
+                    type: string
+
+  /sagemaker/inference:
+    post:
+      summary: Run inference on a SageMaker model
+      operationId: runSageMakerInference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                endpointName:
+                  type: string
+                inputData:
+                  type: array
+                  items:
+                    type: number
+      responses:
+        '200':
+          description: Successfully ran inference
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  outputData:
+                    type: array
+                    items:
+                      type: number
+
+  /sagemaker/checkpoint:
+    get:
+      summary: Fetch SageMaker checkpoint
+      operationId: fetchSageMakerCheckpoint
+      parameters:
+        - name: trainingJobName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully fetched the checkpoint
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
