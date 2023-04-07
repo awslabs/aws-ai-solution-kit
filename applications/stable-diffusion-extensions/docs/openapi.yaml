@@ -86,6 +86,24 @@ paths:
               properties:
                 trainingJobName:
                   type: string
+                sagemakerHyperParams:
+                  # json or object?
+                  type: object
+                  properties:
+                    sagemakerEntryPoint:
+                      type: string
+                sagemakerImageUri:
+                  type: string
+                modelUrl:
+                  type: string
+                trainingParams:
+                  # json or object?
+                  type: object
+                  properties:
+                    modelName:
+                      type: string
+                    class_gen_method:
+                      type: string
                 trainingDataUrl:
                   type: string
                 validationDataUrl:
@@ -94,6 +112,8 @@ paths:
                   type: string
                 instanceType:
                   type: string
+                instanceCount:
+                  type: number
       responses:
         '200':
           description: Successfully trained and deployed the model
@@ -157,3 +177,62 @@ paths:
               schema:
                 type: string
                 format: binary
+           
+  /sagemaker/create-model:
+    post:
+      summary: Create model by SageMaker serverless inference
+      operationId: createModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                endpointName:
+                  type: string
+                # input
+                ckptUrl:
+                  type: string
+                # output
+                newModelUrl:
+                  type: string
+                createModelParams:
+                  # json or object?
+                  type: string
+      responses:
+        '200':
+          description: Successfully ran create model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    
+  /sagemaker/deployment-model-operator-server:
+    post:
+      summary: Deploy a model operator server by Sagemaker serverless inference. This server can be used for model creating and model merging.
+      operationId: deployModelOperatorServer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                SagemakerImgUri:
+                  type: string
+                instanceType:
+                  type: string
+      responses:
+        '200':
+          description: Successfully deployed the model operator server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  endpointName:
+                    type: string
