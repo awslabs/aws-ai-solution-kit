@@ -1,6 +1,0 @@
-numpy==1.23.5
-Pillow
-onnxruntime-gpu
-boto3
-flask
-gevent

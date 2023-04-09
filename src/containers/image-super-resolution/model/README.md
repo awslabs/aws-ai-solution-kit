@@ -1,1 +1,0 @@
-# Super Resolution Model for AI Solution Kit
