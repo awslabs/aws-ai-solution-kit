@@ -49,7 +49,6 @@ aws ecr get-login-password --region us-west-2 | docker login -u AWS --password-s
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
 cp ${dockerfile} .
-cp extensions/sd-webui-sagemaker/.dockerignore .
 
 # Build the docker image locally with the image name and then push it to ECR
 # with the full name.
