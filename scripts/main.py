@@ -10,17 +10,36 @@ from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_
 
 import sys
 import pickle
+
 # TODO: Automaticly append the dependent module path.
 sys.path.append("extensions/sd_dreambooth_extension")
 sys.path.append("extensions/aws-ai-solution-kit")
+sys.path.append("extensions/aws-ai-solution-kit/scripts")
 # TODO: Do not use the dreambooth status module.
 from dreambooth.shared import status
 from dreambooth_sagemaker.train import start_sagemaker_training
+import sagemaker_ui
 
 db_model_name = None
 db_use_txt2img = None
 db_sagemaker_train = None
 job_link_list = []
+
+class SageMakerUI(scripts.Script):
+    def title(self):
+        return "SageMaker embeddings"
+
+    def show(self, is_txt2img):
+        return scripts.AlwaysVisible
+
+    def ui(self, is_txt2img):
+        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button  = sagemaker_ui.create_ui()
+
+        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button]
+
+    def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button):
+        pass
+
 
 def on_after_component_callback(component, **_kwargs):
     global db_model_name, db_use_txt2img, db_sagemaker_train
@@ -65,9 +84,9 @@ def on_ui_tabs():
                             gr.HTML(value=f"<span class='hhh'>{job_link}</span>")
     return (sagemaker_interface, "SageMaker", "sagemaker_interface"),
 
+
 script_callbacks.on_after_component(on_after_component_callback)
 script_callbacks.on_ui_tabs(on_ui_tabs)
-
 # create new tabs for create Model
 origin_callback = script_callbacks.ui_tabs_callback
 
