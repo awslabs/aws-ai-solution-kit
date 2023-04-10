@@ -5,6 +5,7 @@ import threading
 import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
+from modules.ui import create_refresh_button
 from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3
 
 import sys
@@ -66,3 +67,159 @@ def on_ui_tabs():
 
 script_callbacks.on_after_component(on_after_component_callback)
 script_callbacks.on_ui_tabs(on_ui_tabs)
+
+# create new tabs for create Model
+origin_callback = script_callbacks.ui_tabs_callback
+
+
+def ui_tabs_callback():
+    res = origin_callback()
+    for extension_ui in res:
+        if extension_ui[1] == 'Dreambooth':
+            for key in list(extension_ui[0].blocks):
+                val = extension_ui[0].blocks[key]
+                if type(val) is gr.Tab:
+                    if val.label == 'Create':
+                        with extension_ui[0]:
+                            with val.parent:
+                                with gr.Tab('Create From Cloud'):
+                                    with gr.Column():
+                                        cloud_db_create_model = gr.Button(
+                                            value="Create Model From Cloud", variant="primary"
+                                        )
+                                    cloud_db_new_model_name = gr.Textbox(label="Name")
+                                    with gr.Row():
+                                        cloud_db_create_from_hub = gr.Checkbox(
+                                            label="Create From Hub", value=False
+                                        )
+                                        cloud_db_512_model = gr.Checkbox(label="512x Model", value=True)
+                                    with gr.Column(visible=False) as hub_row:
+                                        cloud_db_new_model_url = gr.Textbox(
+                                            label="Model Path",
+                                            placeholder="runwayml/stable-diffusion-v1-5",
+                                        )
+                                        cloud_db_new_model_token = gr.Textbox(
+                                            label="HuggingFace Token", value=""
+                                        )
+                                    with gr.Column(visible=True) as local_row:
+                                        with gr.Row():
+                                            cloud_db_new_model_src = gr.Dropdown(
+                                                label="Source Checkpoint",
+                                                choices=sorted(get_sd_cloud_models()),
+                                            )
+                                            create_refresh_button(
+                                                cloud_db_new_model_src,
+                                                get_sd_cloud_models,
+                                                lambda: {"choices": sorted(get_sd_cloud_models())},
+                                                "refresh_sd_models",
+                                            )
+                                    cloud_db_new_model_extract_ema = gr.Checkbox(
+                                        label="Extract EMA Weights", value=False
+                                    )
+                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
+                                with gr.Tab('Select From Cloud'):
+                                    with gr.Row():
+                                        cloud_db_model_name = gr.Dropdown(
+                                            label="Model", choices=sorted(get_cloud_db_models())
+                                        )
+                                        create_refresh_button(
+                                            cloud_db_model_name,
+                                            get_cloud_db_models,
+                                            lambda: {"choices": sorted(get_cloud_db_models())},
+                                            "refresh_db_models",
+                                        )
+                                    with gr.Row():
+                                        cloud_db_snapshot = gr.Dropdown(
+                                            label="Cloud Snapshot to Resume",
+                                            choices=sorted(get_cloud_model_snapshots()),
+                                        )
+                                        create_refresh_button(
+                                            cloud_db_snapshot,
+                                            get_cloud_model_snapshots,
+                                            lambda: {"choices": sorted(get_cloud_model_snapshots())},
+                                            "refresh_db_snapshots",
+                                        )
+                                    with gr.Row(visible=False) as lora_model_row:
+                                        cloud_db_lora_model_name = gr.Dropdown(
+                                            label="Lora Model", choices=get_sorted_lora_cloud_models()
+                                        )
+                                        create_refresh_button(
+                                            cloud_db_lora_model_name,
+                                            get_sorted_lora_cloud_models,
+                                            lambda: {"choices": get_sorted_lora_cloud_models()},
+                                            "refresh_lora_models",
+                                        )
+                                    with gr.Row():
+                                        gr.HTML(value="Loaded Model from Cloud:")
+                                        cloud_db_model_path = gr.HTML()
+                                    with gr.Row():
+                                        gr.HTML(value="Cloud Model Revision:")
+                                        cloud_db_revision = gr.HTML(elem_id="cloud_db_revision")
+                                    with gr.Row():
+                                        gr.HTML(value="Cloud Model Epoch:")
+                                        cloud_db_epochs = gr.HTML(elem_id="cloud_db_epochs")
+                                    with gr.Row():
+                                        gr.HTML(value="V2 Model From Cloud:")
+                                        cloud_db_v2 = gr.HTML(elem_id="cloud_db_v2")
+                                    with gr.Row():
+                                        gr.HTML(value="Has EMA:")
+                                        cloud_db_has_ema = gr.HTML(elem_id="cloud_db_has_ema")
+                                    with gr.Row():
+                                        gr.HTML(value="Source Checkpoint From Cloud:")
+                                        cloud_db_src = gr.HTML()
+
+
+                            cloud_db_create_model.click(
+                                fn=cloud_create_model,
+                                # _js=
+                                inputs=[
+                                    cloud_db_new_model_name,
+                                    cloud_db_create_from_hub,
+                                    cloud_db_new_model_url,
+                                    cloud_db_new_model_token,
+                                    cloud_db_new_model_extract_ema,
+                                    cloud_db_train_unfrozen,
+                                    cloud_db_512_model,
+                                ],
+                                outputs=[
+                                    cloud_db_model_name,
+                                    cloud_db_model_path,
+                                    cloud_db_revision,
+                                    cloud_db_epochs,
+                                    cloud_db_src,
+                                    cloud_db_has_ema,
+                                    cloud_db_v2,
+                                    # cloud_db_resolution,
+                                    # cloud_db_status,
+                                ]
+                            )
+
+                        break
+
+    return res
+
+script_callbacks.ui_tabs_callback = ui_tabs_callback
+
+def get_sorted_lora_cloud_models():
+    return []
+
+def get_cloud_model_snapshots():
+    return []
+
+def get_cloud_db_models():
+    return []
+
+def get_sd_cloud_models():
+    return []
+
+def cloud_create_model(
+        new_model_name: str,
+        ckpt_path: str,
+        from_hub=False,
+        new_model_url="",
+        new_model_token="",
+        extract_ema=False,
+        train_unfrozen=False,
+        is_512=True,
+):
+    raise NotImplemented
