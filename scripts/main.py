@@ -11,7 +11,7 @@ import sys
 import pickle
 # TODO: Automaticly append the dependent module path.
 sys.path.append("extensions/sd_dreambooth_extension")
-sys.path.append("extensions/sd-webui-sagemaker")
+sys.path.append("extensions/aws-ai-solution-kit")
 # TODO: Do not use the dreambooth status module.
 from dreambooth.shared import status
 from dreambooth_sagemaker.train import start_sagemaker_training
