@@ -158,12 +158,14 @@ def sagemaker_api(_, app: FastAPI):
         print('-------invocation------')
         print(req)
 
-        print(f"json is {json.loads(req.txt2img_payload.json())}")
+        print(f"json is {json.loads(req.json())}")
 
         try:
             if req.task == 'text-to-image':
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
                 return response.json()
+            elif req.task == 'controlnet_txt2img':
+                response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
             elif req.task == 'image-to-image':
                 # self.download_s3files(embeddings_s3uri, os.path.join(script_path, shared.cmd_opts.embeddings_dir))
                 # sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings()
