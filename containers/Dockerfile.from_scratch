@@ -1,10 +1,10 @@
 FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-gpu-py39-cu117-ubuntu20.04-sagemaker
 
-
 RUN pwd
-COPY . /opt/ml/code/
+COPY stable-diffusion-webui /opt/ml/code/
+COPY inference/serve /opt/ml/code
 RUN mkdir -p /root/.cache/huggingface/accelerate
-COPY default_config.yaml /root/.cache/huggingface/accelerate/
+COPY inference/default_config.yaml /root/.cache/huggingface/accelerate/
 # RUN pip install --upgrade pip
 # RUN pip install sagemaker==2.143.0
 
