@@ -1,1 +1,0 @@
-# Sample code of Amazon Sagemaker Async Inference with SageMaker Python SDK
