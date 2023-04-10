@@ -1,1 +1,0 @@
-# OCR Standard Model for AI Solution Kit

@@ -1,1 +1,0 @@
-# Human Part Segmentation Feature for AI Solution Kit

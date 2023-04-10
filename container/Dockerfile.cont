@@ -1,0 +1,16 @@
+FROM 683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-sagemaker:latest
+
+
+# RUN pwd
+COPY sagemaker_entrypoint_json.py /opt/ml/code/extensions/sd-webui-sagemaker/
+COPY utils.py /opt/ml/code/extensions/sd-webui-sagemaker/
+# 
+# RUN ls /opt/ml/code
+# RUN ls /
+# RUN pip install -r /opt/ml/code/requirements.txt
+# RUN pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt
+# WORKDIR /opt/ml/code
+
+# RUN pip uninstall -y xformers
+# ENV SAGEMAKER_PROGRAM sagemaker_dreambooth_train.py
+

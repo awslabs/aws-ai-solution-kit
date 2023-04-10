@@ -1,9 +1,0 @@
-Dockerfile
-Dockerfile*
-node_modules
-coverage
-test-reports
-**/*.md
-main
-main.sha256
-cdk.out

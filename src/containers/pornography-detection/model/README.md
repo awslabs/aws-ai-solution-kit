@@ -1,1 +1,0 @@
-# Pornographic Image Detection Model for AI Solution Kit

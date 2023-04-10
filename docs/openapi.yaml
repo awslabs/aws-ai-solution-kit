@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: SageMaker and S3 API
+  description: A RESTful API for interacting with SageMaker and S3 resources.
+  version: 1.0.0
+
+paths:
+  # This operation can be redundant if we get the pre-signed URL instead
+
+  /sagemaker/create-middleware-train-job:
+    post:
+      summary: Generate pre-signed S3 URL to upload data and job id
+      operationId: createMiddlewareTrainJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instanceType:
+                  type: string
+                instanceNum:
+                  type: number
+                trainParam:
+                  type: object
+      responses:
+        '200':
+          description: Successfully generated pre-signed URL and job id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  # s3 bucket root path
+                  s3Url:
+                    type: string
+                  trainJobId:
+                    type: string
+
+  /sagemaker/upload-data-complete:
+    post:
+      summary: Upload data complete for training job
+      operationId: updateDataComplete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                trainJobId:
+                  type: string
+      responses:
+        '200':
+          description: Finish upload data for training
+
+  /sagemaker/train-sagemaker-model:
+    post:
+      summary: Train a SageMaker model
+      operationId: trainSageMakerModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # bucket s3 root path
+                s3Url:
+                  type: string
+                trainJobId:
+                  type: string
+                instanceType:
+                  type: string
+                instanceNum:
+                  type: number
+                trainParam:
+                  type: object
+                sagemakerImageUrl:
+                  type: string
+      responses:
+        '200':
+          description: Successfully trained model
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trainingJobArn:
+                    type: string
+
+  /sagemaker/deploy-webui-api-server:
+    post:
+        summary: Deploy a model operator server by Sagemaker serverless inference. This server can be used for model creating and model merging.
+        operationId: deployWebuiApiServer
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sagemakerImgUri:
+                    type: string
+                  instanceType:
+                    type: string
+        responses:
+          '200':
+            description: Successfully deployed the model operator server
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    endpointName:
+                      type: string
+
+  /sagemaker/create-dreambooth-model:
+    post:
+        summary: Create dreambooth model
+        operationId: createDreamboothModel
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  # endpoint from /sagemaker/deploy-webui-api-server
+                  endpointName:
+                    type: string
+                  S3Url:
+                    type: string
+                  modelParam:
+                    type: object
+        responses:
+          '200':
+            description: Successfully create the dreambooth model 
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+
+
+  /sagemaker/deploy-sagemaker-endpoint:
+    post:
+      summary: Deploy a SageMaker Endpoint for Inference
+      operationId: deploySageMakerEndpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sagemakerImgUri:
+                  type: string
+                instanceType:
+                  type: string
+                instanceNum:
+                  type: number
+      responses:
+        '200':
+          description: Successfully deployed the endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  endpointName:
+                    type: string
+
+  /sagemaker/update-sagemaker-endpoint:
+    post:
+      summary: Update models in an endpoint (Async)
+      operationId: updatetSagemaker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                endpointName:
+                  type: string
+                S3Url:
+                  type: string
+                modelParam:
+                  type: object
+      responses:
+        '200':
+          description: Successfully update modes in the endpoint
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+
+  /sagemaker/run-sagemaker-inference:
+    post:
+      summary: Run inference on a SageMaker model (Async)
+      operationId: runSageMakerInference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                endpointName:
+                  type: string
+                S3Url:
+                  type: string
+                modelParam:
+                  type: object
+      responses:
+        '200':
+          description: Successfully ran inference
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inferenceJobArn:
+                    type: string

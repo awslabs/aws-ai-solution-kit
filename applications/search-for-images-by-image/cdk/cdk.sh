@@ -1,1 +1,0 @@
-cdk deploy --parameters StagebaseURL=https://1jvreeyefk.execute-api.cn-north-1.amazonaws.com.cn/prod/ --parameters InstanceType=c5.large.search

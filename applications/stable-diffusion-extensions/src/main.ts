@@ -1,21 +1,17 @@
-<<<<<<< HEAD
-#!/usr/bin/env node
-import { App, Aspects } from 'aws-cdk-lib';
-import { BootstraplessStackSynthesizer, CompositeECRRepositoryAspect } from 'cdk-bootstrapless-synthesizer';
-import 'source-map-support/register';
-import { AISolutionKitCpuBetaStack } from './api-deployment/ai-solution-kit-cpu-beta-stack';
-import { AISolutionKitOcrBetaStack } from './api-deployment/ai-solution-kit-ocr-beta-stack';
-import { AISolutionKitLambdaMemoryLessStack } from './api-deployment/ai-solution-kit-lambda-memory-less-stack';
-import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
-import { LambdaContainersStack } from './containers/lambda-containers-stack';
-=======
-import { App, Stack, StackProps, Duration, CfnParameter, CfnOutput, Size } from 'aws-cdk-lib';
+import {
+  App,
+  Stack,
+  StackProps,
+  Duration,
+  CfnParameter,
+  CfnOutput,
+  Size,
+} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as iam from 'aws-cdk-lib/aws-iam';
->>>>>>> e23235a3fe121257a8fd3297ec82293b04da6ba6
 
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
@@ -23,59 +19,11 @@ import * as sfn_tasks from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import * as sns_subscriptions from 'aws-cdk-lib/aws-sns-subscriptions';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
+import { SDAsyncInferenceStack } from './SDAsyncInferenceStack';
 
-<<<<<<< HEAD
-const app = new App();
-const buildContainers = app.node.tryGetContext('build-container');
-const deployContainers = app.node.tryGetContext('deploy-container');
-
-if (buildContainers === 'true' || deployContainers === 'true') {
-  console.log('Building containers');
-  // Docker images building stack
-  new LambdaContainersStack(app, 'Lambda-Containers-Stack', {
-    synthesizer: synthesizer(),
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
-} else {
-  // CloudFormation deployment stack - Default
-  const ecrRegistry = app.node.tryGetContext('ecrRegistry');
-  console.log('Use ECR Resistry: ' + ecrRegistry);
-
-  new AISolutionKitStack(app, 'AI-Solution-Kit', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
-  new AISolutionKitOcrBetaStack(app, 'AI-Solution-Kit-Advanced-Ocr-SageMaker', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
-  new AISolutionKitCpuBetaStack(app, 'AI-Solution-Kit-Cpu-Beta-SageMaker', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
-  new AISolutionKitLambdaMemoryLessStack(app, 'AI-Solution-Kit-Lambda-Memory-Less-Stack', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
-=======
 export class Middleware extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
->>>>>>> e23235a3fe121257a8fd3297ec82293b04da6ba6
 
     // define resources here...
   }
@@ -105,7 +53,9 @@ export class SdTrainDeployStack extends Stack {
     const snsTopic = new sns.Topic(this, 'StableDiffusionSnsTopic');
 
     // Subscribe user to SNS notifications
-    snsTopic.addSubscription(new sns_subscriptions.EmailSubscription(emailParam.valueAsString));
+    snsTopic.addSubscription(
+      new sns_subscriptions.EmailSubscription(emailParam.valueAsString)
+    );
 
     // Step Function Creation initial process
     // Create IAM role for Step Function
@@ -138,7 +88,7 @@ export class SdTrainDeployStack extends Stack {
           'sagemaker:ListEndpoints',
           'sagemaker:ListModels',
           'sagemaker:ListProcessingJobs',
-          'sagemaker:ListProcessingJobsForHyperParameterTuningJob'
+          'sagemaker:ListProcessingJobsForHyperParameterTuningJob',
         ],
         resources: ['*'],
       })
@@ -147,7 +97,12 @@ export class SdTrainDeployStack extends Stack {
     sagemakerRole.addToPolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
-        actions: ['s3:ListBucket', 's3:GetObject', 's3:PutObject', 's3:DeleteObject'],
+        actions: [
+          's3:ListBucket',
+          's3:GetObject',
+          's3:PutObject',
+          's3:DeleteObject',
+        ],
         resources: ['*'],
       })
     );
@@ -162,78 +117,114 @@ export class SdTrainDeployStack extends Stack {
 
     // Create DynamoDB table to store training job id
     const trainingTable = new dynamodb.Table(this, 'TrainingTable', {
-      tableName : 'TrainingTable',
+      tableName: 'TrainingTable',
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
 
     // Initial step to receive request from API Gateway and start training job
-    const trainingJob = new sfn_tasks.SageMakerCreateTrainingJob(this, 'TrainModel', {
-      trainingJobName: sfn.JsonPath.stringAt('$.JobName'),
-      algorithmSpecification: {
-        algorithmName: 'stable-diffusion-byoc',
-        trainingImage: sfn_tasks.DockerImage.fromRegistry('763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.8.0-cpu-py3'),
-        trainingInputMode: sfn_tasks.InputMode.FILE,
-      },
-      inputDataConfig: [{
-        channelName: 'train',
-        dataSource: {
-          s3DataSource: {
-            s3DataType: sfn_tasks.S3DataType.S3_PREFIX,
-            s3Location: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Train'),
-          },
+    const trainingJob = new sfn_tasks.SageMakerCreateTrainingJob(
+      this,
+      'TrainModel',
+      {
+        trainingJobName: sfn.JsonPath.stringAt('$.JobName'),
+        algorithmSpecification: {
+          algorithmName: 'stable-diffusion-byoc',
+          trainingImage: sfn_tasks.DockerImage.fromRegistry(
+            '763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.8.0-cpu-py3'
+          ),
+          trainingInputMode: sfn_tasks.InputMode.FILE,
         },
-      }],
-      // This should be where the checkpoint is stored
-      outputDataConfig: {
-        s3OutputLocation: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Output'),
-      },
-      resourceConfig: {
-        instanceCount: 1,
-        instanceType: new ec2.InstanceType(sfn.JsonPath.stringAt('$.InstanceType')),
-        volumeSize: Size.gibibytes(50),
-      }, // optional: default is 1 instance of EC2 `M4.XLarge` with `10GB` volume
-      stoppingCondition: {
-        maxRuntime: Duration.hours(2),
-      }, // optional: default is 1 hour
-    });
+        inputDataConfig: [
+          {
+            channelName: 'train',
+            dataSource: {
+              s3DataSource: {
+                s3DataType: sfn_tasks.S3DataType.S3_PREFIX,
+                s3Location:
+                  sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Train'),
+              },
+            },
+          },
+        ],
+        // This should be where the checkpoint is stored
+        outputDataConfig: {
+          s3OutputLocation:
+            sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Output'),
+        },
+        resourceConfig: {
+          instanceCount: 1,
+          instanceType: new ec2.InstanceType(
+            sfn.JsonPath.stringAt('$.InstanceType')
+          ),
+          volumeSize: Size.gibibytes(50),
+        }, // optional: default is 1 instance of EC2 `M4.XLarge` with `10GB` volume
+        stoppingCondition: {
+          maxRuntime: Duration.hours(2),
+        }, // optional: default is 1 hour
+      }
+    );
 
     // Step to store training id into DynamoDB after training job complete
-    const storeTrainingId = new sfn_tasks.LambdaInvoke(this, 'StoreTrainingId', {
-      lambdaFunction: new lambda.DockerImageFunction(this, 'StoreTrainingIdFunction', {
-        code: lambda.DockerImageCode.fromImageAsset('lambda/train'),
-        timeout: Duration.minutes(15),
-        memorySize: 3008,
-        environment: {
-          TABLE_NAME: trainingTable.tableName,
-          JOB_NAME: sfn.JsonPath.stringAt('$.JobName'),
-        },
-      }),
-      outputPath: '$.Payload',
-    });
- 
+    const storeTrainingId = new sfn_tasks.LambdaInvoke(
+      this,
+      'StoreTrainingId',
+      {
+        lambdaFunction: new lambda.DockerImageFunction(
+          this,
+          'StoreTrainingIdFunction',
+          {
+            code: lambda.DockerImageCode.fromImageAsset('lambda/train'),
+            timeout: Duration.minutes(15),
+            memorySize: 3008,
+            environment: {
+              TABLE_NAME: trainingTable.tableName,
+              JOB_NAME: sfn.JsonPath.stringAt('$.JobName'),
+            },
+          }
+        ),
+        outputPath: '$.Payload',
+      }
+    );
+
     // Step to create endpoint configuration
-    const createEndpointConfig = new sfn_tasks.SageMakerCreateEndpointConfig(this, 'CreateEndpointConfig', {
-      endpointConfigName: sfn.JsonPath.stringAt('$.JobName'),
-      productionVariants: [{
-        initialInstanceCount: 1,
-        instanceType: new ec2.InstanceType(sfn.JsonPath.stringAt('$.InstanceType')),
-        modelName: sfn.JsonPath.stringAt('$.JobName'),
-        variantName: 'AllTraffic',
-      }],
-    });
+    const createEndpointConfig = new sfn_tasks.SageMakerCreateEndpointConfig(
+      this,
+      'CreateEndpointConfig',
+      {
+        endpointConfigName: sfn.JsonPath.stringAt('$.JobName'),
+        productionVariants: [
+          {
+            initialInstanceCount: 1,
+            instanceType: new ec2.InstanceType(
+              sfn.JsonPath.stringAt('$.InstanceType')
+            ),
+            modelName: sfn.JsonPath.stringAt('$.JobName'),
+            variantName: 'AllTraffic',
+          },
+        ],
+      }
+    );
 
     // Step to create endpoint
-    const createEndpoint = new sfn_tasks.SageMakerCreateEndpoint(this, 'CreateEndpoint', {
-      endpointName: sfn.JsonPath.stringAt('$.JobName'),
-      endpointConfigName: sfn.JsonPath.stringAt('$.JobName'),
-    });
+    const createEndpoint = new sfn_tasks.SageMakerCreateEndpoint(
+      this,
+      'CreateEndpoint',
+      {
+        endpointName: sfn.JsonPath.stringAt('$.JobName'),
+        endpointConfigName: sfn.JsonPath.stringAt('$.JobName'),
+      }
+    );
 
     // Step to send SNS notification
-    const sendNotification = new sfn_tasks.SnsPublish(this, 'SendNotification', {
-      topic: snsTopic,
-      message: sfn.TaskInput.fromText('Training job completed'),
-    });
+    const sendNotification = new sfn_tasks.SnsPublish(
+      this,
+      'SendNotification',
+      {
+        topic: snsTopic,
+        message: sfn.TaskInput.fromText('Training job completed'),
+      }
+    );
 
     // Create Step Function
     const stateMachine = new sfn.StateMachine(this, 'TrainDeployStateMachine', {
@@ -248,19 +239,20 @@ export class SdTrainDeployStack extends Stack {
     // Create an API Gateway, will merge with existing API Gateway
     const api = new apigw.RestApi(this, 'train-deploy-api', {
       restApiName: 'Stable Diffusion Train and Deploy API',
-      description: 'This service is used to train and deploy Stable Diffusion models.',
+      description:
+        'This service is used to train and deploy Stable Diffusion models.',
     });
 
-    const credentialsRole = new iam.Role(this, "getRole", {
-      assumedBy: new iam.ServicePrincipal("apigateway.amazonaws.com"),
+    const credentialsRole = new iam.Role(this, 'getRole', {
+      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
     });
-    
+
     credentialsRole.attachInlinePolicy(
-      new iam.Policy(this, "getPolicy", {
+      new iam.Policy(this, 'getPolicy', {
         statements: [
           new iam.PolicyStatement({
             // Access to trigger the Step Function
-            actions: ["states:StartExecution"],
+            actions: ['states:StartExecution'],
             effect: iam.Effect.ALLOW,
             resources: [stateMachine.stateMachineArn],
           }),
@@ -270,23 +262,23 @@ export class SdTrainDeployStack extends Stack {
 
     // Add a POST method with prefix train-deploy and integration with Step Function
     const trainDeploy = api.root.addResource('train-deploy');
-    const trainDeployIntegration = new apigw.AwsIntegration ({
+    const trainDeployIntegration = new apigw.AwsIntegration({
       service: 'states',
       action: 'StartExecution',
       options: {
         credentialsRole: credentialsRole,
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         requestTemplates: {
-          "application/json": `{
+          'application/json': `{
             "input": "{\\"actionType\\": \\"create\\", \\"JobName\\": \\"$context.requestId\\", \\"S3Bucket_Train\\": \\"$input.params('S3Bucket_Train')\\", \\"S3Bucket_Output\\": \\"$input.params('S3Bucket_Output')\\", \\"InstanceType\\": \\"$input.params('InstanceType')\\"}",
             "stateMachineArn": "${stateMachine.stateMachineArn}"
           }`,
         },
         integrationResponses: [
           {
-            statusCode: "200",
+            statusCode: '200',
             responseTemplates: {
-              "application/json": `{"done": true}`,
+              'application/json': '{"done": true}',
             },
           },
         ],
@@ -294,8 +286,8 @@ export class SdTrainDeployStack extends Stack {
     });
 
     trainDeploy.addMethod('POST', trainDeployIntegration, {
-      apiKeyRequired: true, 
-      methodResponses: [{ statusCode: "200" }],
+      apiKeyRequired: true,
+      methodResponses: [{ statusCode: '200' }],
     });
 
     // Add API Key to the API Gateway
@@ -308,7 +300,6 @@ export class SdTrainDeployStack extends Stack {
     new CfnOutput(this, 'train-deploy-api-url', {
       value: api.url,
     });
-
   }
 }
 
@@ -316,8 +307,9 @@ export class SdTrainDeployStack extends Stack {
 AWS CDK code to create API Gateway, Lambda and SageMaker inference endpoint for txt2img/img2img inference 
 based on Stable Diffusion. S3 is used to store large payloads and passed as object reference in the API Gateway 
 request and Lambda function to avoid request payload limitation
+Note: Sync Inference is put here for reference, we use Async Inference now
 */
-export class SdInferenceStack extends Stack {
+export class SdSyncInferenceStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
@@ -331,7 +323,8 @@ export class SdInferenceStack extends Stack {
 
     const endpointNameParam = new CfnParameter(this, 'txt2img-endpoint-name', {
       type: 'String',
-      description: 'SageMaker endpoint name for txt2img/img2img Inference Service',
+      description:
+        'SageMaker endpoint name for txt2img/img2img Inference Service',
     });
 
     // Create an S3 bucket to store input and output payloads with public access blocked
@@ -340,17 +333,21 @@ export class SdInferenceStack extends Stack {
     });
 
     // Create a Lambda function for inference
-    const inferenceLambda = new lambda.DockerImageFunction(this, 'InferenceLambda', {
-      code: lambda.DockerImageCode.fromImageAsset('lambda/inference'),
-      timeout: Duration.minutes(15),
-      memorySize: 3008,
-      environment: {
-        BUCKET_NAME: payloadBucket.bucketName,
-        BUCKET_INPUT_PREFIX: 'prefix/input.jpg',
-        BUCKET_OUTPUT_PREFIX: 'prefix/output.jpg',
-        ENDPOINT_NAME: endpointNameParam.valueAsString,
-      },
-    });
+    const inferenceLambda = new lambda.DockerImageFunction(
+      this,
+      'InferenceLambda',
+      {
+        code: lambda.DockerImageCode.fromImageAsset('lambda/inference'),
+        timeout: Duration.minutes(15),
+        memorySize: 3008,
+        environment: {
+          BUCKET_NAME: payloadBucket.bucketName,
+          BUCKET_INPUT_PREFIX: 'prefix/input.jpg',
+          BUCKET_OUTPUT_PREFIX: 'prefix/output.jpg',
+          ENDPOINT_NAME: endpointNameParam.valueAsString,
+        },
+      }
+    );
 
     // Grant Lambda permission to read/write from/to the S3 bucket
     payloadBucket.grantReadWrite(inferenceLambda);
@@ -360,18 +357,19 @@ export class SdInferenceStack extends Stack {
       new iam.PolicyStatement({
         actions: ['sagemaker:InvokeEndpoint'],
         resources: ['*'],
-      }),
+      })
     );
 
     // Create an API Gateway
     const api = new apigw.RestApi(this, 'txt2img-api', {
       restApiName: 'txt2img/img2img Inference Service',
-      description: 'Inference service for txt2img/img2img based on Stable Diffusion',
+      description:
+        'Inference service for txt2img/img2img based on Stable Diffusion',
     });
 
     // Create a POST method for the API Gateway and connect it to the Lambda function
     const txt2imgIntegration = new apigw.LambdaIntegration(inferenceLambda);
-    
+
     // Add a POST method with prefix inference
     const inference = api.root.addResource('inference');
     inference.addMethod('POST', txt2imgIntegration, {
@@ -388,7 +386,6 @@ export class SdInferenceStack extends Stack {
     new CfnOutput(this, 'txt2img-api-url', {
       value: api.url,
     });
-
   }
 }
 
@@ -404,8 +401,8 @@ const app = new App();
 
 // new TxtImgInferenceCdkStack(app, 'TxtImgInferenceCdkStack-dev', { env: devEnv });
 
-new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
+// new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
 
-// new SdInferenceStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
+new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', { env: devEnv });
 
 app.synth();
