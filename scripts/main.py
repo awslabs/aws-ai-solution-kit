@@ -72,6 +72,7 @@ def on_after_component_callback(component, **_kwargs):
         )
 
 def on_ui_tabs():
+    buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
     with gr.Blocks() as sagemaker_interface:
         with gr.Row():
             gr.HTML(value="Select a pipeline to using SageMaker.", elem_id="hint_row")
@@ -82,6 +83,25 @@ def on_ui_tabs():
                         db_model_name = gr.Dropdown(elem_id='pipeline', label='Pipeline', choices=["dreambooth_train"])
                         for job_link in job_link_list:
                             gr.HTML(value=f"<span class='hhh'>{job_link}</span>")
+        with  gr.Row():
+            with gr.Column(variant="panel", scale=1):
+                gr.HTML(value="AWS Connect Setting")
+                api_url_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Url", label="API Url")
+                api_token_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Token", label="API Token")
+            with gr.Column(variant="panel", scale=2):
+                gr.HTML(value="Resource")
+                gr.Dataframe(
+                    headers=["Extension", "Column header", "Column Header"],
+                    datatype=["str", "str", "str"],
+                    row_count=5,
+                    col_count=(3, "fixed"),
+                    value=[['Dreambooth','Cell Value','Cell Value'],
+                           ['LoRA','Cell Value','Cell Value'],
+                           ['ControlNet','Cell Value','Cell Value']])
+            with gr.Column(variant="panel", scale=1):
+                gr.HTML(value="Model")
+                model_select_dropdown = gr.Dropdown(buildin_model_list, label="Select Built-In")
+
     return (sagemaker_interface, "SageMaker", "sagemaker_interface"),
 
 

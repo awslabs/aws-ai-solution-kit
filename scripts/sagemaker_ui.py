@@ -43,6 +43,55 @@ def sagemaker_deploy(instance_type):
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type}............")
 
+import json
+import requests
+
+def generate_on_cloud():
+    endopint_url = "https://runtime.sagemaker.us-west-2.amazonaws.com/endpoints/ask-webui-api-gpu-2023-04-10-05-53-21-649/invocations"
+    # print(f"Current working directory: {os.getcwd()}")
+    # load json files
+    with open("ui-config.json") as f:
+        params_dict = json.load(f)
+    print(f"Current parameters are {params_dict}")
+    # construct payload
+    payload = {
+    "task": "text-to-image", 
+    "txt2img_payload": {
+        "enable_hr": "False", 
+        "denoising_strength": 0.7, 
+        "firstphase_width": 0, 
+        "firstphase_height": 0, 
+        "prompt": "girl", 
+        "styles": ["None", "None"], 
+        "seed": -1.0, 
+        "subseed": -1.0, 
+        "subseed_strength": 0, 
+        "seed_resize_from_h": 0, 
+        "seed_resize_from_w": 0, 
+        "sampler_index": "Euler a", 
+        "batch_size": 1, 
+        "n_iter": 1, 
+        "steps": 20, 
+        "cfg_scale": 7, 
+        "width": 768, 
+        "height": 768, 
+        "restore_faces": "False", 
+        "tiling": "False", 
+        "negative_prompt": "", 
+        "eta": 1, 
+        "s_churn": 0, 
+        "s_tmax": 1, 
+        "s_tmin": 0, 
+        "s_noise": 1, 
+        "override_settings": {}, 
+        "script_args": [0, "False", "False", "False", "", 1, "", 0, "", "True", "True", "True"]}, 
+        "username": ""
+        }
+
+    response = requests.post(url=endopint_url, json=payload)
+
+
+
 def create_ui():
     import modules.ui
 
@@ -60,9 +109,10 @@ def create_ui():
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
+                generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
-                gr.HTML(value="Advanced Model-optional")
+                gr.HTML(value="Extra Networks")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
