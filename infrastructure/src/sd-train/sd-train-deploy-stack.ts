@@ -1,14 +1,27 @@
 import { PythonLayerVersion } from '@aws-cdk/aws-lambda-python-alpha';
-import { aws_dynamodb as dynamodb, CfnParameter, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import {
+  aws_apigateway,
+  aws_dynamodb,
+  aws_dynamodb as dynamodb,
+  aws_s3,
+  CfnParameter,
+  RemovalPolicy,
+  Stack,
+  StackProps,
+} from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
-import { CreateModelJobApi } from './create-model-job';
+import { CreateModelJobApi } from './create-model-job-api';
 import { RestApiGateway } from './rest-api-gateway';
 
 
 export class SdTrainDeployStack extends Stack {
+
+  public readonly s3Bucket: aws_s3.Bucket;
+  public readonly trainingTable: aws_dynamodb.Table;
+  public readonly apiGateway: aws_apigateway.RestApi;
 
   private readonly srcRoot='../middleware_api/lambda';
 
@@ -17,9 +30,9 @@ export class SdTrainDeployStack extends Stack {
 
     // const snsTopic = this.createSns();
 
-    const s3_bucket = this.s3Bucket();
+    this.s3Bucket = this.createS3Bucket();
     // Create DynamoDB table to store training job id
-    const trainingTable = new dynamodb.Table(this, 'TrainingTable', {
+    this.trainingTable = new dynamodb.Table(this, 'TrainingTable', {
       tableName: 'TrainingTable',
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
@@ -31,7 +44,7 @@ export class SdTrainDeployStack extends Stack {
     //   trainingTable: trainingTable,
     // });
 
-    const apiGateway = new RestApiGateway(this);
+    this.apiGateway = new RestApiGateway(this).apiGateway;
     // POST /train
     // new SagemakerTrainApi(this, {
     //   api: apiGateway.apiGateway,
@@ -41,11 +54,11 @@ export class SdTrainDeployStack extends Stack {
     // });
     const commonLayer = this.commonLayer();
     new CreateModelJobApi(this, {
-      apiGateway: apiGateway.apiGateway,
+      apiGateway: this.apiGateway,
       apiResource: 'model',
-      s3Bucket: s3_bucket,
+      s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
-      trainingTable: trainingTable,
+      trainingTable: this.trainingTable,
       commonLayer: commonLayer,
     });
   }
@@ -69,7 +82,7 @@ export class SdTrainDeployStack extends Stack {
   //   return snsTopic;
   // }
 
-  private s3Bucket(): s3.Bucket {
+  private createS3Bucket(): s3.Bucket {
     // CDK parameters for API Gateway API Key and SageMaker endpoint name
     const bucketName = new CfnParameter(this, 'aigc-bucket-name', {
       type: 'String',
