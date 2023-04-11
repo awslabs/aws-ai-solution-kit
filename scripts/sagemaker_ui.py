@@ -45,11 +45,17 @@ def sagemaker_deploy(instance_type):
 
 import json
 import requests
+from sagemaker.predictor import Predictor
+from sagemaker.predictor_async import AsyncPredictor
+from sagemaker.serializers import JSONSerializer
+from sagemaker.deserializers import JSONDeserializer
+from sagemaker.async_inference.waiter_config import WaiterConfig
+from sagemaker.async_inference.async_inference_response import AsyncInferenceResponse
 
 def generate_on_cloud():
-    endopint_url = "https://runtime.sagemaker.us-west-2.amazonaws.com/endpoints/ask-webui-api-gpu-2023-04-10-05-53-21-649/invocations"
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
+    # stage 1: make payload
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
@@ -87,8 +93,38 @@ def generate_on_cloud():
         "script_args": [0, "False", "False", "False", "", 1, "", 0, "", "True", "True", "True"]}, 
         "username": ""
         }
+    
+    # stage 2: inference using endpoint_name
+    endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
 
-    response = requests.post(url=endopint_url, json=payload)
+    predictor = Predictor(endpoint_name)
+
+    predictor = AsyncPredictor(predictor, name=endpoint_name)
+    predictor.serializer = JSONSerializer()
+    predictor.deserializer = JSONDeserializer()
+    prediction = predictor.predict_async(data=payload)
+    output_path = prediction.output_path
+
+    # stage 3: get result
+    new_predictor = Predictor(endpoint_name)
+
+    new_predictor = AsyncPredictor(new_predictor, name=endpoint_name)
+    new_predictor.serializer = JSONSerializer()
+    new_predictor.deserializer = JSONDeserializer()
+    new_prediction = AsyncInferenceResponse(new_predictor, output_path)
+    config = WaiterConfig(
+    max_attempts=100, #  number of attempts
+    delay=10 #  time in seconds to wait between attempts
+    )
+    new_prediction.get_result(config)
+
+    s3_resource = boto3.resource('s3')
+    def get_bucket_and_key(s3uri):
+        pos = s3uri.find('/', 5)
+        bucket = s3uri[5 : pos]
+        key = s3uri[pos + 1 : ]
+        return bucket, key
+
 
 
 
