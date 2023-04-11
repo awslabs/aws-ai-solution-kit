@@ -25,8 +25,14 @@ based on Stable Diffusion. S3 is used to store large payloads and passed as obje
 request and Lambda function to avoid request payload limitation
 Note: Sync Inference is put here for reference, we use Async Inference now
 */
+interface SDAsyncInferenceStackProps extends StackProps {
+  api_gate_way: apigw.RestApi;
+  s3_bucket: s3.Bucket;
+  training_table: dynamodb.Table;
+}
+
 export class SDAsyncInferenceStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+  constructor(scope: Construct, id: string, props?: SDAsyncInferenceStackProps) {
     super(scope, id, props);
 
     // CDK parameters for API Gateway API Key and SageMaker endpoint name
@@ -37,11 +43,6 @@ export class SDAsyncInferenceStack extends Stack {
       default: '12345678901234567890',
     });
 
-    // const endpointNameParam = new CfnParameter(this, "txt2img-endpoint-name", {
-    //   type: "String",
-    //   description:
-    //     "SageMaker endpoint name for txt2img/img2img Inference Service",
-    // });
 
     // Create an S3 bucket to store input and output payloads with public access blocked
     const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
@@ -53,7 +54,7 @@ export class SDAsyncInferenceStack extends Stack {
       this,
       'InferenceLambda',
       {
-        code: lambda.DockerImageCode.fromImageAsset('lambda/inference'),
+        code: lambda.DockerImageCode.fromImageAsset('../middleware_api/lambda/inference'),
         timeout: Duration.minutes(15),
         memorySize: 3008,
         environment: {
@@ -111,7 +112,7 @@ export class SDAsyncInferenceStack extends Stack {
       ),
     });
 
-    // create Dynamodb table to save the cloudfront config version data
+    // create Dynamodb table to save the inference job data
     const sd_inference_job_table = new dynamodb.Table(
       this,
       'SD_Inference_job',
@@ -171,7 +172,7 @@ export class SDAsyncInferenceStack extends Stack {
       memorySize: 256,
       timeout: Duration.seconds(900),
       code: lambda.Code.fromAsset(
-        path.join(__dirname, '../lambda/inference_result_notification'),
+        path.join(__dirname, '../../middleware_api/lambda/inference_result_notification'),
       ),
       role: lambdaRole,
       environment: {
@@ -183,10 +184,6 @@ export class SDAsyncInferenceStack extends Stack {
       logRetention: RetentionDays.ONE_WEEK,
     });
 
-    // // Subscribe the Lambda function to the SNS topic
-    // inference_result_topic.addSubscription(
-    //   new subs.LambdaSubscription(handler),
-    // );
 
     // Add the SNS topic as an event source for the Lambda function
     handler.addEventSource(
