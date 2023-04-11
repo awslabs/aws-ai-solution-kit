@@ -12,14 +12,15 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 
 import { Construct } from 'constructs';
-import { SDAsyncInferenceStack } from './SDAsyncInferenceStack';
+import { SdTrainDeployStack } from './sd-train/sd-train-deploy-stack';
+// import { SDAsyncInferenceStack } from './SDAsyncInferenceStack';
 
 export class Middleware extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    // define resources here...
   }
+
 }
 
 /*
@@ -111,7 +112,7 @@ export class SdSyncInferenceStack extends Stack {
 // for development, use account/region from cdk cli
 const devEnv = {
   account: process.env.CDK_DEFAULT_ACCOUNT,
-  region: 'us-west-2',
+  region: process.env.CDK_DEFAULT_REGION,
 };
 
 const app = new App();
@@ -122,6 +123,8 @@ const app = new App();
 
 // new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
 
-new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', { env: devEnv });
+// new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', { env: devEnv });
+
+new SdTrainDeployStack(app, 'SdDreamBoothTrainStack', { env: devEnv });
 
 app.synth();

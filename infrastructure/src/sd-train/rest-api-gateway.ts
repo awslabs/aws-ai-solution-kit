@@ -5,7 +5,8 @@ import {
   aws_iam as iam,
 
 } from 'aws-cdk-lib';
-import { AwsIntegrationProps } from 'aws-cdk-lib/aws-apigateway';
+import { AccessLogFormat, AwsIntegrationProps, LogGroupLogDestination } from 'aws-cdk-lib/aws-apigateway';
+import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 export class RestApiGateway {
@@ -27,13 +28,33 @@ export class RestApiGateway {
       default: '09876543210987654321',
     });
 
+    const apiAccessLogGroup = new logs.LogGroup(
+      this.scope,
+      'aigc-api-logs',
+    );
+
     // Create an API Gateway, will merge with existing API Gateway
     const api = new apigw.RestApi(this.scope, 'train-deploy-api', {
       restApiName: 'Stable Diffusion Train and Deploy API',
       description:
                 'This service is used to train and deploy Stable Diffusion models.',
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(apiAccessLogGroup),
+        accessLogFormat: AccessLogFormat.clf(),
+      },
     });
 
+    // Add API Key to the API Gateway
+    const apiKey = api.addApiKey('sd-extension-api-key', {
+      apiKeyName: 'sd-extension-api-key',
+      value: apiKeyParam.valueAsString,
+    });
+
+    const usagePlan = api.addUsagePlan('sd-extension-api-usage-plan', {});
+    usagePlan.addApiKey(apiKey);
+    usagePlan.addApiStage({
+      stage: api.deploymentStage,
+    });
     // Output the API Gateway URL
     new CfnOutput(this.scope, 'train-deploy-api-url', {
       value: api.url,
@@ -46,7 +67,6 @@ export class RestApiGateway {
 export interface SagemakerTrainApiProps {
   api: apigw.RestApi;
   stateMachineArn: string;
-  apiKey: string;
   apiResource: string;
 }
 
@@ -55,7 +75,7 @@ export class SagemakerTrainApi {
 
   constructor(scope: Construct, props: SagemakerTrainApiProps) {
     this.scope = scope;
-    this.trainApi(props.api, props.stateMachineArn, props.apiKey, props.apiResource);
+    this.trainApi(props.api, props.stateMachineArn, props.apiResource);
   }
 
   private credentialsRole(stateMachineArn: string): iam.Role {
@@ -79,7 +99,7 @@ export class SagemakerTrainApi {
   }
 
   // Add a POST method with prefix train-deploy and integration with Step Function
-  private trainApi(api: apigw.RestApi, stateMachineArn: string, apiKey: string, apiResource: string) {
+  private trainApi(api: apigw.RestApi, stateMachineArn: string, apiResource: string) {
 
     const trainDeploy = api.root.addResource(apiResource);
 
@@ -109,12 +129,6 @@ export class SagemakerTrainApi {
     trainDeploy.addMethod('POST', trainDeployIntegration, {
       apiKeyRequired: true,
       methodResponses: [{ statusCode: '200' }],
-    });
-
-    // Add API Key to the API Gateway
-    api.addApiKey('sd-extension-api-key', {
-      apiKeyName: 'sd-extension-api-key',
-      value: apiKey,
     });
   }
 }
