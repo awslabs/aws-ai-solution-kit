@@ -71,6 +71,10 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[]
         )
 
+def update_connect_config(api_url, api_token):
+    # function code to call update the api_url and token
+    print(f"update the api_url:{api_url} and token: {api_token}............")
+    
 def on_ui_tabs():
     buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
     with gr.Blocks() as sagemaker_interface:
@@ -88,6 +92,8 @@ def on_ui_tabs():
                 gr.HTML(value="AWS Connect Setting")
                 api_url_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Url", label="API Url")
                 api_token_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Token", label="API Token")
+                aws_connect_button = gr.Button(value="Update Setting", variant='primary')
+                aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
             with gr.Column(variant="panel", scale=2):
                 gr.HTML(value="Resource")
                 gr.Dataframe(
