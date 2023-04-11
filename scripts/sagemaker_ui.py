@@ -43,6 +43,11 @@ def sagemaker_deploy(instance_type):
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type}............")
 
+import json
+
+def generate_on_cloud():
+    print(f"Current working directory: {os.getcwd()}")
+
 def create_ui():
     import modules.ui
 
@@ -60,6 +65,7 @@ def create_ui():
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
+                generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
