@@ -62,7 +62,7 @@ def create_ui():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
 
             with gr.Row():
-                gr.HTML(value="Advanced Model-optional")
+                gr.HTML(value="Extra Networks")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
