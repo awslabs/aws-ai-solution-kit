@@ -20,7 +20,6 @@ export class Middleware extends Stack {
     super(scope, id, props);
 
   }
-
 }
 
 /*

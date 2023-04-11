@@ -11,9 +11,14 @@ class CreateModelStatus(Enum):
 
 
 @dataclasses.dataclass
-class Model:
+class TrainingJob:
     id: str
     s3_location: str
     model_type: str
-    status: CreateModelStatus
+    job_status: CreateModelStatus
     sagemaker_job_id: Optional[str] = None
+
+    def __post_init__(self):
+        if type(self.job_status) == str:
+            self.job_status = CreateModelStatus[self.job_status]
+

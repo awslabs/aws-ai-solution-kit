@@ -4,18 +4,22 @@ import {
   aws_apigateway as apigw,
 } from 'aws-cdk-lib';
 import { AccessLogFormat, LogGroupLogDestination } from 'aws-cdk-lib/aws-apigateway';
+import { Resource } from 'aws-cdk-lib/aws-apigateway/lib/resource';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 export class RestApiGateway {
   public readonly apiGateway: apigw.RestApi;
   public readonly apiKey: string;
-
+  public readonly routers: {[key: string]: Resource} = {};
   private readonly scope: Construct;
 
-  constructor(scope: Construct) {
+  constructor(scope: Construct, routes: [string]) {
     this.scope = scope;
     [this.apiGateway, this.apiKey] = this.createApigw();
+    for (let route of routes) {
+      this.routers[route] = this.apiGateway.root.addResource(route);
+    }
   }
 
   private createApigw(): [apigw.RestApi, string] {

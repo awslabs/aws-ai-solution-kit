@@ -15,6 +15,7 @@ import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { CreateModelJobApi } from './create-model-job-api';
 import { RestApiGateway } from './rest-api-gateway';
+import { UpdateModelStatusRestApi } from './update_model_status_api';
 
 
 export class SdTrainDeployStack extends Stack {
@@ -43,8 +44,9 @@ export class SdTrainDeployStack extends Stack {
     //   snsTopic: snsTopic,
     //   trainingTable: trainingTable,
     // });
-
-    this.apiGateway = new RestApiGateway(this).apiGateway;
+    const restApi = new RestApiGateway(this, ['model']);
+    this.apiGateway = restApi.apiGateway;
+    const routers = restApi.routers;
     // POST /train
     // new SagemakerTrainApi(this, {
     //   api: apiGateway.apiGateway,
@@ -54,12 +56,20 @@ export class SdTrainDeployStack extends Stack {
     // });
     const commonLayer = this.commonLayer();
     new CreateModelJobApi(this, {
-      apiGateway: this.apiGateway,
-      apiResource: 'model',
+      router: routers.model,
       s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
       trainingTable: this.trainingTable,
       commonLayer: commonLayer,
+      httpMethod: 'POST',
+    });
+
+    new UpdateModelStatusRestApi(this, {
+      router: routers.model,
+      httpMethod: 'PUT',
+      commonLayer: commonLayer,
+      srcRoot: this.srcRoot,
+      trainingTable: this.trainingTable,
     });
   }
 
