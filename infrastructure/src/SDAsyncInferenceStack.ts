@@ -25,7 +25,6 @@ Note: Sync Inference is put here for reference, we use Async Inference now
 */
 interface SDAsyncInferenceStackProps extends StackProps {
   api_gate_way: apigw.RestApi;
-  // api_id: string;
   s3_bucket: s3.Bucket;
   training_table: dynamodb.Table;
 }
@@ -33,8 +32,6 @@ interface SDAsyncInferenceStackProps extends StackProps {
 export class SDAsyncInferenceStack extends Stack {
   constructor(scope: Construct, id: string, props?: SDAsyncInferenceStackProps) {
     super(scope, id, props);
-    // const restful_api  = props?.api_gate_way
-    // const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'InferenceAPI', props?.api_id ?? "" );
 
     const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'ImportedRestApi', {
       restApiId: props?.api_gate_way.restApiId ?? "" ,
@@ -71,15 +68,14 @@ export class SDAsyncInferenceStack extends Stack {
         timeout: Duration.minutes(15),
         memorySize: 3008,
         environment: {
-          BUCKET_NAME: payloadBucket.bucketName,
-          BUCKET_INPUT_PREFIX: 'prefix/input.jpg',
-          BUCKET_OUTPUT_PREFIX: 'prefix/output.jpg',
-          DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
-          DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
-          // ENDPOINT_NAME: endpointNameParam.valueAsString,
-        },
+        DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+        DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
+        S3_BUCKET: payloadBucket.bucketName,
+        ACCOUNT_ID: Aws.ACCOUNT_ID,
+        REGION_NAME: Aws.REGION,
       },
-    );
+      logRetention: RetentionDays.ONE_WEEK,
+    });
 
     // Grant Lambda permission to read/write from/to the S3 bucket
     payloadBucket.grantReadWrite(inferenceLambda);
@@ -92,13 +88,6 @@ export class SDAsyncInferenceStack extends Stack {
       }),
     );
 
-    // Create an API Gateway
-    // const api = new apigw.RestApi(this, 'txt2img-api', {
-    //   restApiName: 'txt2img/img2img Inference Service',
-    //   description:
-    //     'Inference service for txt2img/img2img based on Stable Diffusion',
-    // });
-
     // Create a POST method for the API Gateway and connect it to the Lambda function
     const txt2imgIntegration = new apigw.LambdaIntegration(inferenceLambda);
 
@@ -108,6 +97,12 @@ export class SDAsyncInferenceStack extends Stack {
     inference?.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
+
+    const run_sagemaker_inference = inference.addResource('run-sagemaker-inference'); 
+    run_sagemaker_inference.addMethod('POST', txt2imgIntegration, {
+      apiKeyRequired: true,
+    });
+
     
 
     // Create an SNS topic to get async inference result
