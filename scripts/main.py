@@ -70,6 +70,7 @@ def on_after_component_callback(component, **_kwargs):
             ],
             outputs=[]
         )
+    # Hook image display logic
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token

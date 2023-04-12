@@ -9,9 +9,12 @@ import gradio as gr
 
 from modules import shared, scripts
 
+global txt2img_inference_flash
+
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
 sd_checkpoints = ['checkpoint1', 'checkpoint2']
+txt2img_inference_job_ids = ['fake1', 'fake2']
 
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
@@ -38,6 +41,7 @@ def update_sd_checkpoints():
     # aesthetic_embeddings = {f.replace(".pt", ""): os.path.join(aesthetic_embeddings_dir, f) for f in os.listdir(aesthetic_embeddings_dir) if f.endswith(".pt")}
     # aesthetic_embeddings = OrderedDict(**{"None": None}, **aesthetic_embeddings)
     # TODO update the checkpoint code here
+
 
 def sagemaker_deploy(instance_type):
     # function code to call sagemaker deploy api
@@ -105,7 +109,7 @@ def generate_on_cloud():
     prediction = predictor.predict_async(data=payload)
     output_path = prediction.output_path
 
-    # stage 3: get result
+    # stage 3: notified by sns and get result, upload to s3 position
     new_predictor = Predictor(endpoint_name)
 
     new_predictor = AsyncPredictor(new_predictor, name=endpoint_name)
@@ -146,6 +150,11 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
                 generate_on_cloud_button.click(generate_on_cloud)
+
+            with gr.Row():
+                txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
+                                            label="Inference Job IDs")
+                sd_checkpoint_refresh_button = modules.ui.create_refresh_button(txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
