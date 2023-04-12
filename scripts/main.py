@@ -39,7 +39,13 @@ class SageMakerUI(scripts.Script):
 
     def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button):
         pass
+        dropdown.init_field = init_field
 
+        dropdown.change(
+            fn=select_script,
+            inputs=[dropdown],
+            outputs=[script.group for script in self.selectable_scripts]
+        )
 
 def on_after_component_callback(component, **_kwargs):
     global db_model_name, db_use_txt2img, db_sagemaker_train
@@ -71,6 +77,28 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[]
         )
     # Hook image display logic
+    # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
+    # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
+    #                 if tabname == 'txt2img' or tabname == 'img2img':
+    global txt2img_gallery, txt2img_generation_info 
+    is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
+    is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
+    if is_txt2img_gallery:
+        print("create txt2img gallery")
+        txt2img_gallery = component
+    if is_txt2img_generation_info:
+        print("create txt2img generation info")
+        txt2img_generation_info = component
+    def test_func():
+        gallery = "http://127.0.0.1:7860/file=/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"
+        test = "just a test"
+        return gallery, test
+    if txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None:
+        print("Create image callback")
+        txt2img_inference_job_id.change(
+            fn=test_func,
+            outputs=[txt2img_gallery, txt2img_generation_info]
+        )
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
