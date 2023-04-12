@@ -9,7 +9,7 @@ import gradio as gr
 
 from modules import shared, scripts
 
-txt2img_inference_job_id = None
+choose_txt2img_inference_job_id = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
@@ -46,6 +46,9 @@ def update_sd_checkpoints():
 def sagemaker_deploy(instance_type):
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type}............")
+
+def update_txt2img_inference_job_ids():
+    global txt2img_inference_job_ids
 
 import json
 import requests
@@ -152,9 +155,9 @@ def create_ui():
                 generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
-                txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
+                choose_txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
-                sd_checkpoint_refresh_button = modules.ui.create_refresh_button(txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                sd_checkpoint_refresh_button = modules.ui.create_refresh_button(choose_txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
