@@ -9,7 +9,7 @@ import gradio as gr
 
 from modules import shared, scripts
 
-global txt2img_inference_job_id = None
+txt2img_inference_job_id = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
