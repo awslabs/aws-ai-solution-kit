@@ -186,6 +186,9 @@ def sagemaker_api(_, app: FastAPI):
                 return response                
             # elif req.task == 'sd-models':
             #     return self.get_sd_models()
+            elif req.task == 'dreambooth-create-model':
+                response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel', json=json.loads(req.db_create_model_payload.json()))
+                return response.json()
             else:
                 raise NotImplementedError
         except Exception as e:
