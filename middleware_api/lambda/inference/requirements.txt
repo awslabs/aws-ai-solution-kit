@@ -1,0 +1,4 @@
+boto3==1.26.12
+fastapi==0.87.0
+mangum==0.16.0
+fastapi-pagination==0.11.0
