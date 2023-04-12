@@ -155,6 +155,7 @@ def create_ui():
                 generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
+                global choose_txt2img_inference_job_id
                 choose_txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
                 sd_checkpoint_refresh_button = modules.ui.create_refresh_button(choose_txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
