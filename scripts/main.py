@@ -23,6 +23,7 @@ import sagemaker_ui
 db_model_name = None
 db_use_txt2img = None
 db_sagemaker_train = None
+txt2img_show_hook = None
 job_link_list = []
 
 class SageMakerUI(scripts.Script):
@@ -80,7 +81,7 @@ def on_after_component_callback(component, **_kwargs):
     # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
     # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
     #                 if tabname == 'txt2img' or tabname == 'img2img':
-    global txt2img_gallery, txt2img_generation_info 
+    global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
     is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
     is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
     if is_txt2img_gallery:
@@ -93,9 +94,9 @@ def on_after_component_callback(component, **_kwargs):
         gallery = "http://127.0.0.1:7860/file=/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"
         test = "just a test"
         return gallery, test
-    if sagemaker_ui.choose_txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None and \
-        (is_txt2img_gallery or is_txt2img_generation_info):
+    if sagemaker_ui.choose_txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None and txt2img_show_hook is not None:
         print("Create image callback")
+        txt2img_show_hook = "finish"
         sagemaker_ui.choose_txt2img_inference_job_id.change(
             fn=test_func,
             outputs=[txt2img_gallery, txt2img_generation_info]
