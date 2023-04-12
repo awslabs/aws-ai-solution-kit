@@ -22,7 +22,7 @@ export class SdTrainDeployStack extends Stack {
 
   public readonly s3Bucket: aws_s3.Bucket;
   public readonly trainingTable: aws_dynamodb.Table;
-  public readonly apiGateway: aws_apigateway.RestApi;
+  public apiGateway: aws_apigateway.RestApi;
 
   private readonly srcRoot='../middleware_api/lambda';
 
