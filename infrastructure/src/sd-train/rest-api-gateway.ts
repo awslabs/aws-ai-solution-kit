@@ -9,7 +9,7 @@ import * as logs from 'aws-cdk-lib/aws-logs';
 import { Construct } from 'constructs';
 
 export class RestApiGateway {
-  public readonly apiGateway: apigw.RestApi;
+  public apiGateway: apigw.RestApi;
   public readonly apiKey: string;
   public readonly routers: {[key: string]: Resource} = {};
   private readonly scope: Construct;

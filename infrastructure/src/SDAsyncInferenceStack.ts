@@ -3,8 +3,6 @@ import {
   Stack,
   StackProps,
   Duration,
-  CfnParameter,
-  CfnOutput,
   Aws,
   RemovalPolicy,
 } from 'aws-cdk-lib';
@@ -27,6 +25,7 @@ Note: Sync Inference is put here for reference, we use Async Inference now
 */
 interface SDAsyncInferenceStackProps extends StackProps {
   api_gate_way: apigw.RestApi;
+  // api_id: string;
   s3_bucket: s3.Bucket;
   training_table: dynamodb.Table;
 }
@@ -34,13 +33,12 @@ interface SDAsyncInferenceStackProps extends StackProps {
 export class SDAsyncInferenceStack extends Stack {
   constructor(scope: Construct, id: string, props?: SDAsyncInferenceStackProps) {
     super(scope, id, props);
+    // const restful_api  = props?.api_gate_way
+    // const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'InferenceAPI', props?.api_id ?? "" );
 
-    // CDK parameters for API Gateway API Key and SageMaker endpoint name
-    const apiKeyParam = new CfnParameter(this, 'txt2img-api-key', {
-      type: 'String',
-      description: 'API Key for txt2img/img2img Inference Service',
-      // API Key value should be at least 20 characters
-      default: '12345678901234567890',
+    const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'ImportedRestApi', {
+      restApiId: props?.api_gate_way.restApiId ?? "" ,
+      rootResourceId: props?.api_gate_way.restApiRootResourceId ?? "",
     });
 
 
@@ -48,6 +46,21 @@ export class SDAsyncInferenceStack extends Stack {
     const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     });
+
+    // create Dynamodb table to save the inference job data
+    const sd_inference_job_table = new dynamodb.Table(
+       this,
+       'SD_Inference_job',
+        {
+          billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+          removalPolicy: RemovalPolicy.DESTROY,
+          partitionKey: {
+            name: 'InferenceJobId',
+            type: dynamodb.AttributeType.STRING,
+          },
+          pointInTimeRecovery: true,
+        },
+      );
 
     // Create a Lambda function for inference
     const inferenceLambda = new lambda.DockerImageFunction(
@@ -61,6 +74,8 @@ export class SDAsyncInferenceStack extends Stack {
           BUCKET_NAME: payloadBucket.bucketName,
           BUCKET_INPUT_PREFIX: 'prefix/input.jpg',
           BUCKET_OUTPUT_PREFIX: 'prefix/output.jpg',
+          DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+          DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
           // ENDPOINT_NAME: endpointNameParam.valueAsString,
         },
       },
@@ -78,26 +93,22 @@ export class SDAsyncInferenceStack extends Stack {
     );
 
     // Create an API Gateway
-    const api = new apigw.RestApi(this, 'txt2img-api', {
-      restApiName: 'txt2img/img2img Inference Service',
-      description:
-        'Inference service for txt2img/img2img based on Stable Diffusion',
-    });
+    // const api = new apigw.RestApi(this, 'txt2img-api', {
+    //   restApiName: 'txt2img/img2img Inference Service',
+    //   description:
+    //     'Inference service for txt2img/img2img based on Stable Diffusion',
+    // });
 
     // Create a POST method for the API Gateway and connect it to the Lambda function
     const txt2imgIntegration = new apigw.LambdaIntegration(inferenceLambda);
 
     // Add a POST method with prefix inference
-    const inference = api.root.addResource('inference');
-    inference.addMethod('POST', txt2imgIntegration, {
+    // const inference = restful_api?.root.addResource('inference');
+    const inference = restful_api?.root.addResource('inference');
+    inference?.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
-
-    // Add API Key to the API Gateway
-    api.addApiKey('txt2img-api-key', {
-      apiKeyName: 'txt2img-api-key',
-      value: apiKeyParam.valueAsString,
-    });
+    
 
     // Create an SNS topic to get async inference result
     const inference_result_topic = new sns.Topic(
@@ -112,20 +123,7 @@ export class SDAsyncInferenceStack extends Stack {
       ),
     });
 
-    // create Dynamodb table to save the inference job data
-    const sd_inference_job_table = new dynamodb.Table(
-      this,
-      'SD_Inference_job',
-      {
-        billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-        removalPolicy: RemovalPolicy.DESTROY,
-        partitionKey: {
-          name: 'InferenceJobId',
-          type: dynamodb.AttributeType.STRING,
-        },
-        pointInTimeRecovery: true,
-      },
-    );
+
     const ddb_rw_policy = new iam.PolicyStatement({
       resources: [sd_inference_job_table.tableArn],
       actions: [
@@ -176,10 +174,12 @@ export class SDAsyncInferenceStack extends Stack {
       ),
       role: lambdaRole,
       environment: {
-        DDB_VERSION_TABLE_NAME: sd_inference_job_table.tableName,
+        DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+        DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
         S3_BUCKET: payloadBucket.bucketName,
         ACCOUNT_ID: Aws.ACCOUNT_ID,
         REGION_NAME: Aws.REGION,
+
       },
       logRetention: RetentionDays.ONE_WEEK,
     });
@@ -189,13 +189,6 @@ export class SDAsyncInferenceStack extends Stack {
     handler.addEventSource(
       new eventSources.SnsEventSource(inference_result_topic),
     );
-
-    // create a lambda function
-
-
-    // Output the API Gateway URL
-    new CfnOutput(this, 'txt2img-api-url', {
-      value: api.url,
-    });
+   
   }
 }
