@@ -94,7 +94,7 @@ def on_after_component_callback(component, **_kwargs):
         gallery = "http://127.0.0.1:7860/file=/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"
         test = "just a test"
         return gallery, test
-    if sagemaker_ui.choose_txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None and txt2img_show_hook is not None:
+    if sagemaker_ui.choose_txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None and txt2img_show_hook is None:
         print("Create image callback")
         txt2img_show_hook = "finish"
         sagemaker_ui.choose_txt2img_inference_job_id.change(
