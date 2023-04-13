@@ -102,7 +102,7 @@ export class SDAsyncInferenceStack extends Stack {
           's3:List*', 
           's3:PutObject',
           's3:GetObject',
-          'sns: *'],
+          'sns:*'],
         resources: ['*'],
       }),
     );
