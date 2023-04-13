@@ -1,19 +1,27 @@
 import { aws_apigateway as apigw, aws_iam as iam } from 'aws-cdk-lib';
 import { AwsIntegrationProps } from 'aws-cdk-lib/aws-apigateway';
+import { Resource } from 'aws-cdk-lib/aws-apigateway/lib/resource';
 import { Construct } from 'constructs';
 
 export interface SagemakerTrainApiProps {
-  api: apigw.RestApi;
   stateMachineArn: string;
-  apiResource: string;
+  router: Resource;
+  httpMethod: string;
 }
 
 export class SagemakerTrainApi {
   private readonly scope: Construct;
+  private readonly stateMachineArn: string;
+  private readonly router: Resource;
+  private readonly httpMethod: string;
 
   constructor(scope: Construct, props: SagemakerTrainApiProps) {
     this.scope = scope;
-    this.trainApi(props.api, props.stateMachineArn, props.apiResource);
+    this.stateMachineArn = props.stateMachineArn;
+    this.router = props.router;
+    this.httpMethod = props.httpMethod;
+
+    this.trainApi();
   }
 
   private credentialsRole(stateMachineArn: string): iam.Role {
@@ -37,20 +45,17 @@ export class SagemakerTrainApi {
   }
 
   // Add a POST method with prefix train-deploy and integration with Step Function
-  private trainApi(api: apigw.RestApi, stateMachineArn: string, apiResource: string) {
-
-    const trainDeploy = api.root.addResource(apiResource);
-
+  private trainApi() {
     const trainDeployIntegration = new apigw.AwsIntegration(<AwsIntegrationProps>{
       service: 'states',
       action: 'StartExecution',
       options: {
-        credentialsRole: this.credentialsRole(stateMachineArn),
+        credentialsRole: this.credentialsRole(this.stateMachineArn),
         passthroughBehavior: apigw.PassthroughBehavior.NEVER,
         requestTemplates: {
           'application/json': `{
             "input": "{\\"actionType\\": \\"create\\", \\"JobName\\": \\"$context.requestId\\", \\"S3Bucket_Train\\": \\"$input.params('S3Bucket_Train')\\", \\"S3Bucket_Output\\": \\"$input.params('S3Bucket_Output')\\", \\"InstanceType\\": \\"$input.params('InstanceType')\\"}",
-            "stateMachineArn": "${stateMachineArn}"
+            "stateMachineArn": "${this.stateMachineArn}"
           }`,
         },
         integrationResponses: [
@@ -64,7 +69,7 @@ export class SagemakerTrainApi {
       },
     });
 
-    trainDeploy.addMethod('POST', trainDeployIntegration, {
+    this.router.addMethod(this.httpMethod, trainDeployIntegration, {
       apiKeyRequired: true,
       methodResponses: [{ statusCode: '200' }],
     });

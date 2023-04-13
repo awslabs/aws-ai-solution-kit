@@ -43,7 +43,7 @@ instance_type = 'ml.g4dn.2xlarge'
 instance_count = 1
 async_config = AsyncInferenceConfig(output_path='s3://{0}/{1}/asyncinvoke/out/'.format(bucket, 'ask-webui-extension/create-model'))
 predictor = model.deploy(
-    instance_type=instance_type, 
+    instance_type=instance_type,
     initial_instance_count=instance_count,
     async_inference_config=async_config
 )
@@ -56,6 +56,8 @@ predictor.deserializer = JSONDeserializer()
 
 inputs = {}
 prediction = predictor.predict_async(inputs)
+
+# inference test:
 
 from sagemaker.async_inference.waiter_config import WaiterConfig
 print(f"Response object: {prediction}")

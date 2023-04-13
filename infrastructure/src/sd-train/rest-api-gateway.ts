@@ -14,7 +14,7 @@ export class RestApiGateway {
   public readonly routers: {[key: string]: Resource} = {};
   private readonly scope: Construct;
 
-  constructor(scope: Construct, routes: [string]) {
+  constructor(scope: Construct, routes: string[]) {
     this.scope = scope;
     [this.apiGateway, this.apiKey] = this.createApigw();
     for (let route of routes) {
