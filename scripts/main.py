@@ -34,9 +34,9 @@ class SageMakerUI(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_txt2img):
-        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button  = sagemaker_ui.create_ui()
+        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button= sagemaker_ui.create_ui()
 
-        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button]
+        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button]
 
     def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button):
         pass
@@ -91,10 +91,16 @@ def on_after_component_callback(component, **_kwargs):
         print("create txt2img generation info")
         txt2img_generation_info = component
     def test_func():
-        gallery = "http://127.0.0.1:7860/file=/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"
+        from PIL import Image
+        gallery = ["/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"]
+        images = []
+        for g in gallery:
+            im = Image.open(g)
+            images.append(im)
+
         test = "just a test"
-        return gallery, test
-    if sagemaker_ui.choose_txt2img_inference_job_id is not None and is_txt2img_gallery is not None and is_txt2img_generation_info is not None and txt2img_show_hook is None:
+        return images, test
+    if sagemaker_ui.choose_txt2img_inference_job_id is not None and txt2img_gallery is not None and txt2img_generation_info is not None:
         print("Create image callback")
         txt2img_show_hook = "finish"
         sagemaker_ui.choose_txt2img_inference_job_id.change(

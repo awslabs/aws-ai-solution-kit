@@ -158,7 +158,7 @@ def create_ui():
                 global choose_txt2img_inference_job_id
                 choose_txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
-                sd_checkpoint_refresh_button = modules.ui.create_refresh_button(choose_txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(choose_txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
@@ -177,4 +177,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button 
