@@ -49,7 +49,7 @@ class SageMakerUI(scripts.Script):
         )
 
 def on_after_component_callback(component, **_kwargs):
-    global db_model_name, db_use_txt2img, db_sagemaker_train
+    global db_model_name, db_use_txt2img, db_sagemaker_train 
     is_dreambooth_train = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'db_train'
     is_dreambooth_model_name = type(component) is gr.Dropdown and \
             (getattr(component, 'elem_id', None) == 'model_name' or \
@@ -77,36 +77,39 @@ def on_after_component_callback(component, **_kwargs):
             ],
             outputs=[]
         )
-    # Hook image display logic
-    # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
-    # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
-    #                 if tabname == 'txt2img' or tabname == 'img2img':
-    global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
-    is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
-    is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
-    if is_txt2img_gallery:
-        print("create txt2img gallery")
-        txt2img_gallery = component
-    if is_txt2img_generation_info:
-        print("create txt2img generation info")
-        txt2img_generation_info = component
-    def test_func():
-        from PIL import Image
-        gallery = ["/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/outputs/txt2img-images/2023-04-12/superman-fly.jpg"]
-        images = []
-        for g in gallery:
-            im = Image.open(g)
-            images.append(im)
+    # # Hook image display logic
+    # # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
+    # # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
+    # #                 if tabname == 'txt2img' or tabname == 'img2img':
+    # global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
+    # is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
+    # is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
+    # # print(f"is_txt2img_gallery is {is_txt2img_gallery}")
+    # # print(f"is_txt2img_generation_info is {is_txt2img_generation_info}")
+    # if is_txt2img_gallery:
+    #     print("create txt2img gallery")
+    #     txt2img_gallery = component
+    # if is_txt2img_generation_info:
+    #     print("create txt2img generation info")
+    #     txt2img_generation_info = component
+    # def test_func():
+    #     # from PIL import Image
+    #     # gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
+    #     # images = []
+    #     # for g in gallery:
+    #     #     im = Image.open(g)
+    #     #     images.append(im)
 
-        test = "just a test"
-        return images, test
-    if sagemaker_ui.choose_txt2img_inference_job_id is not None and txt2img_gallery is not None and txt2img_generation_info is not None:
-        print("Create image callback")
-        txt2img_show_hook = "finish"
-        sagemaker_ui.choose_txt2img_inference_job_id.change(
-            fn=test_func,
-            outputs=[txt2img_gallery, txt2img_generation_info]
-        )
+    #     test = "just a test"
+    #     # return images, test
+    #     return test
+    # if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None:
+    #     print("Create image callback")
+    #     txt2img_show_hook = "finish"
+    #     sagemaker_ui.inference_job_dropdown.change(
+    #         fn=test_func,
+    #         outputs=[txt2img_generation_info]
+    #     )
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
