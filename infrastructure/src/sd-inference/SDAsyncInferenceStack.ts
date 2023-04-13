@@ -180,7 +180,7 @@ export class SDAsyncInferenceStack extends Stack {
       memorySize: 256,
       timeout: Duration.seconds(900),
       code: lambda.Code.fromAsset(
-        path.join(__dirname, '../../middleware_api/lambda/inference_result_notification'),
+        path.join(__dirname, '../../../middleware_api/lambda/inference_result_notification'),
       ),
       role: lambdaRole,
       environment: {
