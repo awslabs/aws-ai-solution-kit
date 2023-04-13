@@ -7,8 +7,8 @@ import sagemaker
 
 import sys
 import os
-sys.path.append('extensions/sd-webui-sagemaker')
 sys.path.append("extensions/sd_dreambooth_extension")
+sys.path.append("extensions/aws-ai-solution-kit")
 from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
 from dreambooth.shared import status
 
