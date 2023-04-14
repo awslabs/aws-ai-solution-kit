@@ -17,6 +17,7 @@ import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
+import { SagemakerInferenceStateMachine } from './sd-sagemaker-inference-state-machine';
 /*
 AWS CDK code to create API Gateway, Lambda and SageMaker inference endpoint for txt2img/img2img inference
 based on Stable Diffusion. S3 is used to store large payloads and passed as object reference in the API Gateway
@@ -69,6 +70,10 @@ export class SDAsyncInferenceStack extends Stack {
         this,
         'SNS-Receive-SageMaker-inference-error',
       );
+
+      const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
+        snsTopic: inference_result_topic,
+      });
       
     // Create a Lambda function for inference
     const inferenceLambda = new lambda.DockerImageFunction(
@@ -85,7 +90,8 @@ export class SDAsyncInferenceStack extends Stack {
         ACCOUNT_ID: Aws.ACCOUNT_ID,
         REGION_NAME: Aws.REGION,
         SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
-        SNS_INFERENCE_ERROR: inference_result_error_topic.topicName
+        SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
+        STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
       },
       logRetention: RetentionDays.ONE_WEEK,
     });
@@ -102,7 +108,8 @@ export class SDAsyncInferenceStack extends Stack {
           's3:List*', 
           's3:PutObject',
           's3:GetObject',
-          'sns:*'],
+          'sns:*',
+          'states:*'],
         resources: ['*'],
       }),
     );
@@ -193,6 +200,7 @@ export class SDAsyncInferenceStack extends Stack {
       },
       logRetention: RetentionDays.ONE_WEEK,
     });
+
 
 
     // Add the SNS topic as an event source for the Lambda function

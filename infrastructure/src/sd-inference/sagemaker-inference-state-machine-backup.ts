@@ -1,13 +1,9 @@
 import {
-  aws_dynamodb as dynamodb,
   aws_sns as sns,
   aws_iam as iam,
   aws_stepfunctions as sfn,
   aws_stepfunctions_tasks as sfn_tasks,
-  aws_lambda as lambda,
   aws_ec2 as ec2,
-  Duration,
-  Size,
 } from 'aws-cdk-lib';
 import { StateMachineProps } from 'aws-cdk-lib/aws-stepfunctions/lib/state-machine';
 import { SnsPublishProps } from 'aws-cdk-lib/aws-stepfunctions-tasks/lib/sns/publish';
@@ -15,86 +11,20 @@ import { Construct } from 'constructs';
 
 export interface SagemakerInferenceProps {
   snsTopic: sns.Topic;
-  trainingTable: dynamodb.Table;
 }
 
-export class SagemakerInferenceStateMachine {
+export class SagemakerInferenceStateMachineBackup {
   public readonly stateMachineArn: string;
   private readonly scope: Construct;
 
   constructor(scope: Construct, props: SagemakerInferenceProps) {
     this.scope = scope;
-    this.stateMachineArn = this.sagemakerStepFunction(props.snsTopic, props.trainingTable).stateMachineArn;
+    this.stateMachineArn = this.sagemakerStepFunction(props.snsTopic).stateMachineArn;
   }
 
-  private createSagemakerTrainingJob() {
-    return new sfn_tasks.SageMakerCreateTrainingJob(
-      this.scope,
-      'TrainModel',
-      {
-        trainingJobName: sfn.JsonPath.stringAt('$.JobName'),
-        algorithmSpecification: {
-          algorithmName: 'stable-diffusion-byoc',
-          trainingImage: sfn_tasks.DockerImage.fromRegistry(
-            '763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-inference:1.8.0-cpu-py3',
-          ),
-          trainingInputMode: sfn_tasks.InputMode.FILE,
-        },
-        inputDataConfig: [
-          {
-            channelName: 'train',
-            dataSource: {
-              s3DataSource: {
-                s3DataType: sfn_tasks.S3DataType.S3_PREFIX,
-                s3Location: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Train'),
-              },
-            },
-          },
-        ],
-        // This should be where the checkpoint is stored
-        outputDataConfig: {
-          s3OutputLocation: sfn_tasks.S3Location.fromJsonExpression('$.S3Bucket_Output'),
-        },
-        resourceConfig: {
-          instanceCount: 1,
-          instanceType: new ec2.InstanceType(
-            sfn.JsonPath.stringAt('$.InstanceType'),
-          ),
-          volumeSize: Size.gibibytes(50),
-        }, // optional: default is 1 instance of EC2 `M4.XLarge` with `10GB` volume
-        stoppingCondition: {
-          maxRuntime: Duration.hours(2),
-        }, // optional: default is 1 hour
-      },
-    );
-  }
-
-  private sagemakerStepFunction(snsTopic: sns.Topic, trainingTable: dynamodb.Table): sfn.StateMachine {
+  private sagemakerStepFunction(snsTopic: sns.Topic): sfn.StateMachine {
     // Step Function Creation initial process
     // Initial step to receive request from API Gateway and start training job
-    const trainingJob = this.createSagemakerTrainingJob();
-
-    // Step to store training id into DynamoDB after training job complete
-    const storeTrainingId = new sfn_tasks.LambdaInvoke(
-      this.scope,
-      'StoreTrainingId',
-      {
-        lambdaFunction: new lambda.DockerImageFunction(
-          this.scope,
-          'StoreTrainingIdFunction',
-          {
-            code: lambda.DockerImageCode.fromImageAsset('lambda/train'),
-            timeout: Duration.minutes(15),
-            memorySize: 3008,
-            environment: {
-              TABLE_NAME: trainingTable.tableName,
-              JOB_NAME: sfn.JsonPath.stringAt('$.JobName'),
-            },
-          },
-        ),
-        outputPath: '$.Payload',
-      },
-    );
 
     // Step to create endpoint configuration
     const createEndpointConfig = new sfn_tasks.SageMakerCreateEndpointConfig(
@@ -136,10 +66,9 @@ export class SagemakerInferenceStateMachine {
     );
 
     // Create Step Function
-    return new sfn.StateMachine(this.scope, 'TrainDeployStateMachine', <StateMachineProps>{
-      definition: trainingJob
-        .next(storeTrainingId)
-        .next(createEndpointConfig)
+    return new sfn.StateMachine(this.scope, 'CreateEndPointStateMachine', <StateMachineProps>{
+      definition: 
+        createEndpointConfig
         .next(createEndpoint)
         .next(sendNotification),
       role: this.sagemakerRole(snsTopic.topicArn),

@@ -6,7 +6,7 @@ import {
 
 import { Construct } from 'constructs';
 import { SdTrainDeployStack } from './sd-train/sd-train-deploy-stack';
-import { SDAsyncInferenceStack } from './sd-inference/SDAsyncInferenceStack';
+import { SDAsyncInferenceStack } from './sd-inference/sd-async-inference-stack';
 
 export class Middleware extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
