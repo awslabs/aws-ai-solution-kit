@@ -23,9 +23,10 @@ from starlette.requests import Request
 
 from modules.api.api import Api
 import sys
-sys.path.append("extensions/sd-webui-sagemaker")
+sys.path.append("extensions/aws-ai-solution-kit")
 from scripts.models import *
 import requests
+from utils import download_file_from_s3, download_folder_from_s3, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
 
 # try:
 #     from dreambooth import shared
@@ -186,8 +187,29 @@ def sagemaker_api(_, app: FastAPI):
                 return response                
             # elif req.task == 'sd-models':
             #     return self.get_sd_models()
-            elif req.task == 'dreambooth-create-model':
-                response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel', json=json.loads(req.db_create_model_payload.json()))
+            elif req.task == 'db-create-model':
+                db_create_model_params = json.loads(req.db_create_model_payload)
+                local_model_dir = f'{db_create_model_params["new_model_src"]}.tar'
+                bucket_name = db_create_model_params['bucket_name']
+                s3_model_tar_path = f'aigc-webui-test-model/{db_create_model_params["new_model_src"]}.tar'
+                print("Check disk usage before download.")
+                os.system("df -h")
+                print("Download src model from s3.")
+                download_folder_from_s3_by_tar(bucket_name, s3_model_tar_path, local_model_dir)
+                response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
+                                         params=db_create_model_params)
+                target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
+                target_s3_model_tar_path = f'aigc-webui-test-model/{db_create_model_params["new_model_name"]}.tar'
+                print("Check disk usage after download.")
+                os.system("df -h")
+                print("Delete src model.")
+                os.system(f"rm -rf models/Stable-diffusion")
+                print("Upload tgt model to s3.")
+                upload_folder_to_s3_by_tar(target_local_model_dir, bucket_name, target_s3_model_tar_path)
+                print("Delete tgt model.")
+                os.system(f"rm -rf models/dreambooth")
+                print("Check disk usage after request.")
+                os.system("df -h")
                 return response.json()
             else:
                 raise NotImplementedError
@@ -203,6 +225,13 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
+    # Move model dir to /tmp
+    print("Move model dir")
+    os.system("mv models /tmp/")
+    print("Link model dir")
+    os.system("ln -s /tmp/models models")
+    print("Check disk usage on app started")
+    os.system("df -h")
     logger.debug("SD-Webui API layer loaded")
 except:
     logger.debug("Unable to import script callbacks.")

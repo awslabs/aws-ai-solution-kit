@@ -59,6 +59,17 @@ export class SDAsyncInferenceStack extends Stack {
         },
       );
 
+      // Create an SNS topic to get async inference result
+      const inference_result_topic = new sns.Topic(
+        this,
+        'SNS-Receive-SageMaker-inference-success',
+      );
+    
+      const inference_result_error_topic = new sns.Topic(
+        this,
+        'SNS-Receive-SageMaker-inference-error',
+      );
+      
     // Create a Lambda function for inference
     const inferenceLambda = new lambda.DockerImageFunction(
       this,
@@ -73,6 +84,8 @@ export class SDAsyncInferenceStack extends Stack {
         S3_BUCKET: payloadBucket.bucketName,
         ACCOUNT_ID: Aws.ACCOUNT_ID,
         REGION_NAME: Aws.REGION,
+        SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
+        SNS_INFERENCE_ERROR: inference_result_error_topic.topicName
       },
       logRetention: RetentionDays.ONE_WEEK,
     });
@@ -83,7 +96,13 @@ export class SDAsyncInferenceStack extends Stack {
     // Grant Lambda permission to invoke SageMaker endpoint
     inferenceLambda.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ['sagemaker:InvokeEndpoint'],
+        actions: [
+          'sagemaker:*',
+          's3:Get*',
+          's3:List*', 
+          's3:PutObject',
+          's3:GetObject',
+          'sns:*'],
         resources: ['*'],
       }),
     );
@@ -105,11 +124,7 @@ export class SDAsyncInferenceStack extends Stack {
 
     
 
-    // Create an SNS topic to get async inference result
-    const inference_result_topic = new sns.Topic(
-      this,
-      'SNS-Receive-SageMaker-inference-result',
-    );
+
 
     // Create a Lambda function
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
@@ -165,7 +180,7 @@ export class SDAsyncInferenceStack extends Stack {
       memorySize: 256,
       timeout: Duration.seconds(900),
       code: lambda.Code.fromAsset(
-        path.join(__dirname, '../../middleware_api/lambda/inference_result_notification'),
+        path.join(__dirname, '../../../middleware_api/lambda/inference_result_notification'),
       ),
       role: lambdaRole,
       environment: {
@@ -184,6 +199,9 @@ export class SDAsyncInferenceStack extends Stack {
     handler.addEventSource(
       new eventSources.SnsEventSource(inference_result_topic),
     );
+    handler.addEventSource(
+      new eventSources.SnsEventSource(inference_result_error_topic),
+    )
    
   }
 }
