@@ -27,7 +27,8 @@ s3_model_tar_path = f'aigc-webui-test-model'
 
 
 # response = requests.post(url=f'{url}/origin-invocations', json=payload)
-response = requests.post(url=f'{url}/invocations', json=payload)
+response = requests.post(url=f'{url}/invocations', json=payload,
+                         headers={'x-api-key', '09876543210987654321'})
 # response = requests.post(url=f'{url}/dreambooth/createModel',
 #                         json=payload,
 #                         params={'new_model_name':'db_test_4', 'new_model_src':'v1-5-pruned-emaonly.safetensors'})

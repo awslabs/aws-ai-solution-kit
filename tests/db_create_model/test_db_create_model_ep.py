@@ -33,7 +33,7 @@ from sagemaker.serializers import JSONSerializer
 from sagemaker.deserializers import JSONDeserializer
 
 # endpoint_name = "aigc-webui-dreambooth-create-model-2023-04-13-09-21-31-981"
-endpoint_name = "db-create-model-1681390303-0350156"
+endpoint_name = "db-create-model-1681437544-456743"
 
 predictor = Predictor(endpoint_name)
 
