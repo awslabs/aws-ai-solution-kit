@@ -13,3 +13,7 @@ update patch for webui (PR 9319)
 
 ```
 accelerate launch --num_cpu_threads_per_process=6 launch.py --api
+
+# How to build docker image for dreambooth training on SageMaker
+
+sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-extension

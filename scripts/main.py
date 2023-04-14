@@ -2,11 +2,12 @@ import sagemaker
 import time
 import json
 import threading
+import requests
 import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
 from modules.ui import create_refresh_button
-from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3
+from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3, upload_to_s3_by_tar_put
 
 import sys
 import pickle
@@ -23,6 +24,7 @@ import sagemaker_ui
 db_model_name = None
 db_use_txt2img = None
 db_sagemaker_train = None
+txt2img_show_hook = None
 job_link_list = []
 
 class SageMakerUI(scripts.Script):
@@ -33,16 +35,22 @@ class SageMakerUI(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_txt2img):
-        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button  = sagemaker_ui.create_ui()
+        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button= sagemaker_ui.create_ui()
 
-        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button]
+        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button]
 
     def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button):
         pass
+        dropdown.init_field = init_field
 
+        dropdown.change(
+            fn=select_script,
+            inputs=[dropdown],
+            outputs=[script.group for script in self.selectable_scripts]
+        )
 
 def on_after_component_callback(component, **_kwargs):
-    global db_model_name, db_use_txt2img, db_sagemaker_train
+    global db_model_name, db_use_txt2img, db_sagemaker_train 
     is_dreambooth_train = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'db_train'
     is_dreambooth_model_name = type(component) is gr.Dropdown and \
             (getattr(component, 'elem_id', None) == 'model_name' or \
@@ -70,8 +78,46 @@ def on_after_component_callback(component, **_kwargs):
             ],
             outputs=[]
         )
+    # # Hook image display logic
+    # # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
+    # # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
+    # #                 if tabname == 'txt2img' or tabname == 'img2img':
+    # global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
+    # is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
+    # is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
+    # # print(f"is_txt2img_gallery is {is_txt2img_gallery}")
+    # # print(f"is_txt2img_generation_info is {is_txt2img_generation_info}")
+    # if is_txt2img_gallery:
+    #     print("create txt2img gallery")
+    #     txt2img_gallery = component
+    # if is_txt2img_generation_info:
+    #     print("create txt2img generation info")
+    #     txt2img_generation_info = component
+    # def test_func():
+    #     # from PIL import Image
+    #     # gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
+    #     # images = []
+    #     # for g in gallery:
+    #     #     im = Image.open(g)
+    #     #     images.append(im)
 
+    #     test = "just a test"
+    #     # return images, test
+    #     return test
+    # if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None:
+    #     print("Create image callback")
+    #     txt2img_show_hook = "finish"
+    #     sagemaker_ui.inference_job_dropdown.change(
+    #         fn=test_func,
+    #         outputs=[txt2img_generation_info]
+    #     )
+
+def update_connect_config(api_url, api_token):
+    # function code to call update the api_url and token
+    print(f"update the api_url:{api_url} and token: {api_token}............")
+    
 def on_ui_tabs():
+    buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
     with gr.Blocks() as sagemaker_interface:
         with gr.Row():
             gr.HTML(value="Select a pipeline to using SageMaker.", elem_id="hint_row")
@@ -82,6 +128,27 @@ def on_ui_tabs():
                         db_model_name = gr.Dropdown(elem_id='pipeline', label='Pipeline', choices=["dreambooth_train"])
                         for job_link in job_link_list:
                             gr.HTML(value=f"<span class='hhh'>{job_link}</span>")
+        with  gr.Row():
+            with gr.Column(variant="panel", scale=1):
+                gr.HTML(value="AWS Connect Setting")
+                api_url_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Url", label="API Url")
+                api_token_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Token", label="API Token")
+                aws_connect_button = gr.Button(value="Update Setting", variant='primary')
+                aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
+            with gr.Column(variant="panel", scale=2):
+                gr.HTML(value="Resource")
+                gr.Dataframe(
+                    headers=["Extension", "Column header", "Column Header"],
+                    datatype=["str", "str", "str"],
+                    row_count=5,
+                    col_count=(3, "fixed"),
+                    value=[['Dreambooth','Cell Value','Cell Value'],
+                           ['LoRA','Cell Value','Cell Value'],
+                           ['ControlNet','Cell Value','Cell Value']])
+            with gr.Column(variant="panel", scale=1):
+                gr.HTML(value="Model")
+                model_select_dropdown = gr.Dropdown(buildin_model_list, label="Select Built-In")
+
     return (sagemaker_interface, "SageMaker", "sagemaker_interface"),
 
 
@@ -241,4 +308,28 @@ def cloud_create_model(
         train_unfrozen=False,
         is_512=True,
 ):
-    raise NotImplemented
+    # Prepare for creating model on cloud.
+    local_model_path = f'models/Stable-diffusion/{ckpt_path}'
+    payload = {
+        "model_type": "dreambooth",
+        "name": "test_upload",
+        "filenames": [local_model_path]
+    }
+    url = "https://u39bu81rgd.execute-api.us-west-1.amazonaws.com/prod/model"
+    response = requests.post(url=url, json=payload,
+                         headers={'x-api-key': 'xxxx'})
+    json_response = response.json()
+    s3_base = json_response["trainJob"]["s3_base"]
+    model_id = json_response["trainJob"]["id"]
+    print(f"Upload to S3 {s3_base}")
+    print(f"Model ID: {model_id}")
+    # Upload src model to S3.
+    for local_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+        upload_to_s3_by_tar_put(local_path, s3_presigned_url)
+    payload = {
+        "model_id": model_id,
+        "status": "Train"
+    }
+    # Start creating model on cloud.
+    response = requests.put(url=url, json=payload,
+                         headers={'x-api-key': 'xxxx'})

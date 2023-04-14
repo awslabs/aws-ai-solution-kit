@@ -16,14 +16,17 @@ import { Construct } from 'constructs';
 export interface SagemakerTrainProps {
   snsTopic: sns.Topic;
   trainingTable: dynamodb.Table;
+  srcRoot: string;
 }
 
 export class SagemakerTrainStateMachine {
   public readonly stateMachineArn: string;
   private readonly scope: Construct;
+  private readonly srcRoot: string;
 
   constructor(scope: Construct, props: SagemakerTrainProps) {
     this.scope = scope;
+    this.srcRoot = props.srcRoot;
     this.stateMachineArn = this.sagemakerStepFunction(props.snsTopic, props.trainingTable).stateMachineArn;
   }
 
@@ -83,7 +86,7 @@ export class SagemakerTrainStateMachine {
           this.scope,
           'StoreTrainingIdFunction',
           {
-            code: lambda.DockerImageCode.fromImageAsset('lambda/train'),
+            code: lambda.DockerImageCode.fromImageAsset(`${this.srcRoot}/train`),
             timeout: Duration.minutes(15),
             memorySize: 3008,
             environment: {
@@ -148,7 +151,7 @@ export class SagemakerTrainStateMachine {
 
 
   private sagemakerRole(snsTopicArn: string): iam.Role {
-    const sagemakerRole = new iam.Role(this.scope, 'SagemakerRole', {
+    const sagemakerRole = new iam.Role(this.scope, 'SagemakerTrainRole', {
       assumedBy: new iam.ServicePrincipal('states.amazonaws.com'),
     });
     // Add SageMaker permissions to the role

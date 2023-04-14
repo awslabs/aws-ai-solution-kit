@@ -9,9 +9,12 @@ import gradio as gr
 
 from modules import shared, scripts
 
+inference_job_dropdown = None
+
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
 sd_checkpoints = ['checkpoint1', 'checkpoint2']
+txt2img_inference_job_ids = ['fake1', 'fake2']
 
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
@@ -39,11 +42,101 @@ def update_sd_checkpoints():
     # aesthetic_embeddings = OrderedDict(**{"None": None}, **aesthetic_embeddings)
     # TODO update the checkpoint code here
 
+
 def sagemaker_deploy(instance_type):
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type}............")
 
+def update_txt2img_inference_job_ids():
+    global txt2img_inference_job_ids
+
+import json
+import requests
+from sagemaker.predictor import Predictor
+from sagemaker.predictor_async import AsyncPredictor
+from sagemaker.serializers import JSONSerializer
+from sagemaker.deserializers import JSONDeserializer
+from sagemaker.async_inference.waiter_config import WaiterConfig
+from sagemaker.async_inference.async_inference_response import AsyncInferenceResponse
+
+def generate_on_cloud():
+    # print(f"Current working directory: {os.getcwd()}")
+    # load json files
+    # stage 1: make payload
+    with open("ui-config.json") as f:
+        params_dict = json.load(f)
+    print(f"Current parameters are {params_dict}")
+    # construct payload
+    payload = {
+    "task": "text-to-image", 
+    "txt2img_payload": {
+        "enable_hr": "False", 
+        "denoising_strength": 0.7, 
+        "firstphase_width": 0, 
+        "firstphase_height": 0, 
+        "prompt": "girl", 
+        "styles": ["None", "None"], 
+        "seed": -1.0, 
+        "subseed": -1.0, 
+        "subseed_strength": 0, 
+        "seed_resize_from_h": 0, 
+        "seed_resize_from_w": 0, 
+        "sampler_index": "Euler a", 
+        "batch_size": 1, 
+        "n_iter": 1, 
+        "steps": 20, 
+        "cfg_scale": 7, 
+        "width": 768, 
+        "height": 768, 
+        "restore_faces": "False", 
+        "tiling": "False", 
+        "negative_prompt": "", 
+        "eta": 1, 
+        "s_churn": 0, 
+        "s_tmax": 1, 
+        "s_tmin": 0, 
+        "s_noise": 1, 
+        "override_settings": {}, 
+        "script_args": [0, "False", "False", "False", "", 1, "", 0, "", "True", "True", "True"]}, 
+        "username": ""
+        }
+    
+    # stage 2: inference using endpoint_name
+    endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
+
+    predictor = Predictor(endpoint_name)
+
+    predictor = AsyncPredictor(predictor, name=endpoint_name)
+    predictor.serializer = JSONSerializer()
+    predictor.deserializer = JSONDeserializer()
+    prediction = predictor.predict_async(data=payload)
+    output_path = prediction.output_path
+
+    # stage 3: notified by sns and get result, upload to s3 position
+    new_predictor = Predictor(endpoint_name)
+
+    new_predictor = AsyncPredictor(new_predictor, name=endpoint_name)
+    new_predictor.serializer = JSONSerializer()
+    new_predictor.deserializer = JSONDeserializer()
+    new_prediction = AsyncInferenceResponse(new_predictor, output_path)
+    config = WaiterConfig(
+    max_attempts=100, #  number of attempts
+    delay=10 #  time in seconds to wait between attempts
+    )
+    new_prediction.get_result(config)
+
+    s3_resource = boto3.resource('s3')
+    def get_bucket_and_key(s3uri):
+        pos = s3uri.find('/', 5)
+        bucket = s3uri[5 : pos]
+        key = s3uri[pos + 1 : ]
+        return bucket, key
+
+
+
+
 def create_ui():
+    global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
     with gr.Group():
@@ -60,9 +153,38 @@ def create_ui():
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
+                generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
-                gr.HTML(value="Advanced Model-optional")
+                # global choose_txt2img_inference_job_id
+                inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
+                                            label="Inference Job IDs")
+                txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                def fake_gan():
+                    images = [
+                        # "https://replicate.delivery/mgxm/e1b194af-e903-4efb-8bb2-8016b0863507/out.png",
+                        "https://upload.wikimedia.org/wikipedia/commons/3/32/A_photograph_of_an_astronaut_riding_a_horse_2022-08-28.png",
+                    #    "/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"
+                       ] 
+                    return images
+                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
+                # def test_func():
+                #     from PIL import Image
+                #     gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
+                #     images = []
+                #     for g in gallery:
+                #         im = Image.open(g)
+                #         images.append(im)
+
+                #     test = "just a test"
+                #     return images, test
+                inference_job_dropdown.change(
+                    fn=fake_gan,
+                    outputs=[gallery]
+                )
+
+            with gr.Row():
+                gr.HTML(value="Extra Networks")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
@@ -78,4 +200,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button 

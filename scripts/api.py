@@ -10,6 +10,7 @@ import traceback
 import zipfile
 from pathlib import Path
 from typing import List, Union
+from urllib.parse import urlparse
 
 import requests
 from PIL import Image
@@ -27,9 +28,10 @@ from modules.hypernetworks import hypernetwork
 from modules.textual_inversion import textual_inversion
 import modules.shared as shared
 import sys
-sys.path.append("extensions/sd-webui-sagemaker")
+sys.path.append("extensions/aws-ai-solution-kit")
 from scripts.models import *
 import requests
+from utils import download_file_from_s3, download_folder_from_s3, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
 
 # try:
 #     from dreambooth import shared
@@ -143,6 +145,15 @@ def file_to_base64(file_path) -> str:
         im_b64 = base64.b64encode(f.read())
         return str(im_b64, 'utf-8')
 
+def get_bucket_name_from_s3_url(s3_path) -> str:
+    o = urlparse(s3_path, allow_fragments=False)
+    return o.netloc
+
+def get_bucket_name_from_s3_path(s3_path) -> str:
+    return s3_path.split("/")[0]
+
+def get_path_from_s3_path(s3_path) -> str:
+    return "/".join(s3_path.split("/")[1:])
 
 script_path = 'stable-diffusion-webui'
 s3_model_path = 'stable-diffusion-webui/models'
@@ -268,6 +279,66 @@ def sagemaker_api(_, app: FastAPI):
                 return response                
             # elif req.task == 'sd-models':
             #     return self.get_sd_models()
+            elif req.task == 'db-create-model':
+                r"""
+                task: db-create-model
+                db_create_model_payload:
+                    :s3_input_path: S3 path for download src model.
+                    :s3_output_path: S3 path for upload generated model.
+                    :job_id: job id.
+                    :param
+                        :new_model_name: generated model name.
+                        :new_model_src: S3 path for download src model.
+                        :from_hub=False,
+                        :new_model_url="",
+                        :new_model_token="",
+                        :extract_ema=False,
+                        :train_unfrozen=False,
+                        :is_512=True,
+                """
+                try:
+                    db_create_model_payload = json.loads(req.db_create_model_payload)
+                    job_id = db_create_model_payload["job_id"]
+                    s3_input_path = db_create_model_payload["s3_input_path"][0]
+                    input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
+                    input_path = get_path_from_s3_path(s3_input_path)
+                    s3_output_path = db_create_model_payload["s3_output_path"][0]
+                    output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
+                    output_path = get_path_from_s3_path(s3_output_path)
+                    db_create_model_params = db_create_model_payload["param"]
+                    local_model_path = f'{db_create_model_params["new_model_src"]}.tar'
+                    print("Check disk usage before download.")
+                    os.system("df -h")
+                    print("Download src model from s3.")
+                    download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
+                    local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
+                                            params=db_create_model_params)
+                    target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
+                    print("Check disk usage after download.")
+                    os.system("df -h")
+                    print("Delete src model.")
+                    os.system(f"rm -rf models/Stable-diffusion")
+                    print("Upload tgt model to s3.")
+                    upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
+                    print("Delete tgt model.")
+                    os.system(f"rm -rf models/dreambooth")
+                    print("Check disk usage after request.")
+                    os.system("df -h")
+                    message = local_response.json()
+                    response = {
+                        "id": job_id,
+                        "statusCode": 200,
+                        "message": message,
+                        "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
+                    }
+                    return response
+                except Exception as e:
+                    response = {
+                        "id": job_id,
+                        "statusCode": 500,
+                        "message": e,
+                    }
+                    return response
             else:
                 raise NotImplementedError
         except Exception as e:
@@ -282,6 +353,13 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
+    # Move model dir to /tmp
+    print("Move model dir")
+    os.system("mv models /tmp/")
+    print("Link model dir")
+    os.system("ln -s /tmp/models models")
+    print("Check disk usage on app started")
+    os.system("df -h")
     logger.debug("SD-Webui API layer loaded")
 except:
     logger.debug("Unable to import script callbacks.")
