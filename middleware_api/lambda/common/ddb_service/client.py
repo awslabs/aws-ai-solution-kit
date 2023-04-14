@@ -137,6 +137,11 @@ class DynamoDbUtilsService:
             return {'S': str(val)}
         elif isinstance(val, enum.Enum):
             return {'S': str(val.value)}
+        elif isinstance(val, dict):
+            res = {}
+            for key, val in val.items():
+                res[key] = DynamoDbUtilsService._convert(val)
+            return {'M': res}
         else:
             raise Exception(f'unknown type {val} at type: {type(val)}')
 

@@ -151,7 +151,7 @@ export class SagemakerTrainStateMachine {
 
 
   private sagemakerRole(snsTopicArn: string): iam.Role {
-    const sagemakerRole = new iam.Role(this.scope, 'SagemakerRole', {
+    const sagemakerRole = new iam.Role(this.scope, 'SagemakerTrainRole', {
       assumedBy: new iam.ServicePrincipal('states.amazonaws.com'),
     });
     // Add SageMaker permissions to the role
