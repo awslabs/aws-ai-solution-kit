@@ -15,6 +15,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { CreateModelJobApi } from './create-model-job-api';
+import { CreateModelStateMachine } from './create-model-state-machine';
 import { RestApiGateway } from './rest-api-gateway';
 import { SagemakerTrainApi } from './sagemaker-train-api.js';
 import { SagemakerTrainStateMachine } from './sagemaker-train-state-machine';
@@ -25,17 +26,24 @@ export class SdTrainDeployStack extends Stack {
 
   public readonly s3Bucket: aws_s3.Bucket;
   public readonly trainingTable: aws_dynamodb.Table;
+  public readonly modelTable: aws_dynamodb.Table;
   public apiGateway: aws_apigateway.RestApi;
 
   private readonly srcRoot='../middleware_api/lambda';
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
-
     const snsTopic = this.createSns();
     this.s3Bucket = this.createS3Bucket();
     const commonLayer = this.commonLayer();
+
+    // Create DynamoDB table to store model job id
+    this.modelTable = new dynamodb.Table(this, 'ModelTable', {
+      tableName: 'ModelTable',
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
 
     // Create DynamoDB table to store training job id
     this.trainingTable = new dynamodb.Table(this, 'TrainingTable', {
@@ -45,7 +53,7 @@ export class SdTrainDeployStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const stateMachine = new SagemakerTrainStateMachine(this, {
+    const trainStateMachine = new SagemakerTrainStateMachine(this, {
       snsTopic: snsTopic,
       trainingTable: this.trainingTable,
       srcRoot: this.srcRoot,
@@ -60,24 +68,34 @@ export class SdTrainDeployStack extends Stack {
     new SagemakerTrainApi(this, {
       router: routers.train,
       httpMethod: 'POST',
-      stateMachineArn: stateMachine.stateMachineArn,
+      stateMachineArn: trainStateMachine.stateMachineArn,
     });
 
     new CreateModelJobApi(this, {
       router: routers.model,
       s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
-      trainingTable: this.trainingTable,
+      modelTable: this.modelTable,
       commonLayer: commonLayer,
       httpMethod: 'POST',
     });
 
     new UpdateModelStatusRestApi(this, {
+      s3Bucket: this.s3Bucket,
       router: routers.model,
       httpMethod: 'PUT',
       commonLayer: commonLayer,
       srcRoot: this.srcRoot,
-      trainingTable: this.trainingTable,
+      modelTable: this.modelTable,
+      stateMachine: new CreateModelStateMachine(
+        this, 'CreateModelSfn', {
+          modelTable: this.modelTable,
+          s3Bucket: this.s3Bucket,
+          snsTopic: snsTopic,
+          srcRoot: this.srcRoot,
+          layer: commonLayer,
+        },
+      ).stateMachine,
     });
   }
 

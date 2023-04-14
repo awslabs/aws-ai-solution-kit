@@ -29,12 +29,13 @@ const app = new App();
 
 // new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
 
+
 const trainStack = new SdTrainDeployStack(app, 'SdDreamBoothTrainStack', { env: devEnv });
 
-new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', { 
-  env: devEnv, 
-  api_gate_way: trainStack.apiGateway, 
-  // api_id: restful_api_id, 
+new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', {
+  env: devEnv,
+  api_gate_way: trainStack.apiGateway,
+  // api_id: restful_api_id,
   s3_bucket: trainStack.s3Bucket,
   training_table: trainStack.trainingTable });
 
