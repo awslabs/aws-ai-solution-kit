@@ -17,11 +17,15 @@ start_time = time.time()
 url = "http://127.0.0.1:8081"
 
 payload = {
-    "task": "db-create-model", 
+    "task": "db-create-model",  # job_id
     "db_create_model_payload": json.dumps({
-        "bucket_name": "aws-gcr-csdc-atl-exp-us-west-2",
+        "bucket_name": "[aws-gcr-csdc-atl-exp-us-west-2/models/{model_type:dreambooth}]/{model_name}.tar",  # output object
         "new_model_name": "db_test_4",
-        "new_model_src": "v1-5-pruned-emaonly.safetensors"})
+        "new_model_src": "v1-5-pruned-emaonly.safetensors",  # s3://{bucket}/.../{model}.tar
+        "param": {
+            # todo: the params
+        },
+    }),
 }
 db_create_model_params = json.loads(payload['db_create_model_payload'])
 local_model_dir = f'models/Stable-diffusion/{db_create_model_params["new_model_src"]}'
