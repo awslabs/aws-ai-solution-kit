@@ -64,8 +64,8 @@ export class SagemakerInferenceStateMachine {
       startDeploymentTask
       .next(checkStatusDeploymentTask)
       .next(checkDeploymentBranch
-        .when(stepfunctions.Condition.stringEquals('$.status', 'Creating'), waitStatusDeploymentTask.next(checkDeploymentBranch))
-        .when(stepfunctions.Condition.stringEquals('$.status', 'InService'), sendNotification)
+        .when(stepfunctions.Condition.stringEquals('$.Payload.status', 'Creating'), waitStatusDeploymentTask.next(checkDeploymentBranch))
+        .when(stepfunctions.Condition.stringEquals('$.Payload.status', 'InService'), sendNotification)
         .afterwards()
       )
 

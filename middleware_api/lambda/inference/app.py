@@ -11,6 +11,7 @@ from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
 import boto3
+import json
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
@@ -39,9 +40,9 @@ async def run_sagemaker_inference(request: Request):
         item_id = data["item_id"]
         q = data.get("q")
 
-        resp = stepf_client.invoke_step_function(
+        resp = stepf_client.start_execution(
                                  stateMachineArn=STEP_FUNCTION_ARN,
-                                 input=data)
+                                 input=json.dumps(data))
         logger.info("trigger step-function with following respoinse")
         return {"item_id": item_id, "q": q}
     except Exception as e:
