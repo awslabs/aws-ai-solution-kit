@@ -14,30 +14,31 @@ from sagemaker.predictor_async import AsyncPredictor
 
 start_time = time.time()
 
-url = "http://127.0.0.1:8081"
-
 payload = {
     "task": "db-create-model",  # job_id
     "db_create_model_payload": json.dumps({
-        "bucket_name": "[aws-gcr-csdc-atl-exp-us-west-2/models/{model_type:dreambooth}]/{model_name}.tar",  # output object
-        "new_model_name": "db_test_4",
-        "new_model_src": "v1-5-pruned-emaonly.safetensors",  # s3://{bucket}/.../{model}.tar
+        "job_id": "xxxxxx",
+        "s3_output_path": ["aws-gcr-csdc-atl-exp-us-west-2/models/dreambooth/"],  # output object
+        "s3_input_path": ["aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-model/v1-5-pruned-emaonly.safetensors.tar"],
         "param": {
+            "new_model_name": "db_test_4",
+            "new_model_src": "v1-5-pruned-emaonly.safetensors",
             # todo: the params
         },
     }),
 }
-db_create_model_params = json.loads(payload['db_create_model_payload'])
-local_model_dir = f'models/Stable-diffusion/{db_create_model_params["new_model_src"]}'
-bucket_name = db_create_model_params['bucket_name']
-s3_model_tar_path = f'aigc-webui-test-model'
+
+# db_create_model_params = json.loads(payload['db_create_model_payload'])
+# local_model_dir = f'models/Stable-diffusion/{db_create_model_params["new_model_src"]}'
+# bucket_name = db_create_model_params['bucket_name']
+# s3_model_tar_path = f'aigc-webui-test-model'
 # upload_folder_to_s3_by_tar(local_model_dir, bucket_name, s3_model_tar_path)
 
 from sagemaker.serializers import JSONSerializer
 from sagemaker.deserializers import JSONDeserializer
 
 # endpoint_name = "aigc-webui-dreambooth-create-model-2023-04-13-09-21-31-981"
-endpoint_name = "db-create-model-1681437544-456743"
+endpoint_name = "db-create-model-1681461639-4197812"
 
 predictor = Predictor(endpoint_name)
 
@@ -62,6 +63,7 @@ config = WaiterConfig(
   delay=10 #  time in seconds to wait between attempts
   )
 
-prediction.get_result(config)
+results = prediction.get_result(config)
+print(results)
 
 print(f"Time taken: {time.time() - start}s")
