@@ -2,11 +2,12 @@ import sagemaker
 import time
 import json
 import threading
+import requests
 import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
 from modules.ui import create_refresh_button
-from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3
+from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3, upload_to_s3_by_tar_put
 
 import sys
 import pickle
@@ -298,4 +299,18 @@ def cloud_create_model(
         train_unfrozen=False,
         is_512=True,
 ):
-    raise NotImplemented
+    local_model_path = f'models/Stable-diffusion/{ckpt_path}'
+    payload = {
+        "model_type": "dreambooth",
+        "name": "test_upload",
+        "filenames": [local_model_path]
+    }
+    url = "https://u39bu81rgd.execute-api.us-west-1.amazonaws.com/prod/model"
+    response = requests.post(url=f'{url}/invocations', json=payload,
+                         headers={'x-api-key', '09876543210987654321'})
+    for local_path, s3_presigned_url in response.s3PresignUrl:
+        upload_to_s3_by_tar_put(local_path, s3_presigned_url)
+    db_create_model_params = json.loads(payload['db_create_model_payload'])
+    bucket_name = db_create_model_params['bucket_name']
+    s3_model_tar_path = f'aigc-webui-test-model'
+    # upload_folder_to_s3_by_tar(local_model_dir, bucket_name, s3_model_tar_path)
