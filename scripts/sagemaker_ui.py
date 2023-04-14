@@ -9,7 +9,7 @@ import gradio as gr
 
 from modules import shared, scripts
 
-choose_txt2img_inference_job_id = None
+inference_job_dropdown = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
@@ -136,6 +136,7 @@ def generate_on_cloud():
 
 
 def create_ui():
+    global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
     with gr.Group():
@@ -155,10 +156,32 @@ def create_ui():
                 generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
-                global choose_txt2img_inference_job_id
-                choose_txt2img_inference_job_id = gr.Dropdown(txt2img_inference_job_ids,
+                # global choose_txt2img_inference_job_id
+                inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
-                sd_checkpoint_refresh_button = modules.ui.create_refresh_button(choose_txt2img_inference_job_id, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                def fake_gan():
+                    images = [
+                        # "https://replicate.delivery/mgxm/e1b194af-e903-4efb-8bb2-8016b0863507/out.png",
+                        "https://upload.wikimedia.org/wikipedia/commons/3/32/A_photograph_of_an_astronaut_riding_a_horse_2022-08-28.png",
+                    #    "/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"
+                       ] 
+                    return images
+                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
+                # def test_func():
+                #     from PIL import Image
+                #     gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
+                #     images = []
+                #     for g in gallery:
+                #         im = Image.open(g)
+                #         images.append(im)
+
+                #     test = "just a test"
+                #     return images, test
+                inference_job_dropdown.change(
+                    fn=fake_gan,
+                    outputs=[gallery]
+                )
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
@@ -177,4 +200,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button 
