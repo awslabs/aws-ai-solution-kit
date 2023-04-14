@@ -308,6 +308,7 @@ def cloud_create_model(
         train_unfrozen=False,
         is_512=True,
 ):
+    # Prepare for creating model on cloud.
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     payload = {
         "model_type": "dreambooth",
@@ -315,11 +316,20 @@ def cloud_create_model(
         "filenames": [local_model_path]
     }
     url = "https://u39bu81rgd.execute-api.us-west-1.amazonaws.com/prod/model"
-    response = requests.post(url=f'{url}/invocations', json=payload,
-                         headers={'x-api-key', '09876543210987654321'})
-    for local_path, s3_presigned_url in response.s3PresignUrl:
+    response = requests.post(url=url, json=payload,
+                         headers={'x-api-key': 'xxxx'})
+    json_response = response.json()
+    s3_base = json_response["trainJob"]["s3_base"]
+    model_id = json_response["trainJob"]["id"]
+    print(f"Upload to S3 {s3_base}")
+    print(f"Model ID: {model_id}")
+    # Upload src model to S3.
+    for local_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
         upload_to_s3_by_tar_put(local_path, s3_presigned_url)
-    db_create_model_params = json.loads(payload['db_create_model_payload'])
-    bucket_name = db_create_model_params['bucket_name']
-    s3_model_tar_path = f'aigc-webui-test-model'
-    # upload_folder_to_s3_by_tar(local_model_dir, bucket_name, s3_model_tar_path)
+    payload = {
+        "model_id": model_id,
+        "status": "Train"
+    }
+    # Start creating model on cloud.
+    response = requests.put(url=url, json=payload,
+                         headers={'x-api-key': 'xxxx'})
