@@ -22,6 +22,10 @@ from starlette import status
 from starlette.requests import Request
 
 from modules.api.api import Api
+from modules import sd_hijack, sd_models, script_loading
+from modules.hypernetworks import hypernetwork
+from modules.textual_inversion import textual_inversion
+import modules.shared as shared
 import sys
 sys.path.append("extensions/sd-webui-sagemaker")
 from scripts.models import *
@@ -140,6 +144,72 @@ def file_to_base64(file_path) -> str:
         return str(im_b64, 'utf-8')
 
 
+script_path = 'stable-diffusion-webui'
+s3_model_path = 'stable-diffusion-webui/models'
+local_model_path = 'models'
+bucket = 'sagemaker-us-west-2-725399406069'
+sd_model_folder = 'Stable-diffusion'
+controlnet_model_folder = 'ControlNet'
+hypernetwork_model_folder = 'hypernetworks'
+lora_model_folder = 'Lora'
+embedding_model_folder = 'embeddings'
+
+def update_models(selected_models):
+    #sd model update
+    selected_sd_model = selected_models['stablediffusion'][0]
+    sd_model_list = os.listdir(os.path.join(local_model_path, sd_model_folder))
+    if selected_sd_model not in sd_model_list:
+    #download from s3
+        config_file = os.path.splitext(selected_sd_model)[0] + '.yaml'
+        config_path = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_model_path, sd_model_folder, config_file)
+        os.system(f'./tools/s5cmd cp {config_path} ./models/Stable-diffusion/')       
+        model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_model_path, sd_model_folder, selected_sd_model)
+        os.system(f'./tools/s5cmd cp {model_data} ./models/Stable-diffusion/')
+        sd_models.list_models()
+    shared.opts.sd_model_checkpoint = selected_sd_model
+    sd_models.reload_model_weights()  
+    
+    #hypernetworks update
+    selected_hypernet_models = selected_models['hypernetwork']
+    hypernet_model_list = os.listdir(os.path.join(local_model_path, hypernetwork_model_folder))
+    for selected_hypernet_model in selected_hypernet_models:
+        if selected_hypernet_model not in hypernet_model_list:
+        #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_model_path, hypernetwork_model_folder, selected_hypernet_model)
+            os.system(f'./tools/s5cmd cp {model_data} ./models/hypernetworks/')
+    #hypernetwork.load_hypernetworks(selected_hypernet_models)
+
+    selected_lora_models = selected_models['lora']
+    lora_model_list = os.listdir(os.path.join(local_model_path, lora_model_folder))
+    for selected_lora_model in selected_lora_models:
+        if selected_lora_model not in lora_model_list:
+        #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_model_path, lora_model_folder, selected_lora_model)
+            os.system(f'./tools/s5cmd cp {model_data} ./models/Lora/')
+    
+    selected_embeddings = selected_models['textualinversion']
+    embedding_list = os.listdir(embedding_model_folder)
+    reload_embedding = False
+    for selected_embedding in selected_embeddings:
+        if selected_embedding not in embedding_list:
+        #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, script_path, embedding_model_folder, selected_embedding)
+            os.system(f'./tools/s5cmd cp {model_data} ./embeddings/')
+            reload_embedding = True
+    if reload_embedding:
+        sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings(force_reload=True)
+        
+    selected_controlnets = selected_models['controlnet']
+    controlnet_model_list = os.listdir(os.path.join(local_model_path, controlnet_model_folder))
+    for selected_controlnet in selected_controlnets:
+        if selected_controlnet not in controlnet_model_list:
+            #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_model_path, controlnet_model_folder, selected_controlnet)
+            os.system(f'./tools/s5cmd cp {model_data} ./models/ControlNet/')
+
+
+
+
 def sagemaker_api(_, app: FastAPI):
     logger.debug("Loading Sagemaker API Endpoints.")
     # @app.exception_handler(RequestValidationError)
@@ -156,15 +226,27 @@ def sagemaker_api(_, app: FastAPI):
         @return:
         """
         print('-------invocation------')
-        print(req)
-
-        print(f"json is {json.loads(req.json())}")
+        #print(req)
+        #print(f"json is {json.loads(req.json())}")
 
         try:
             if req.task == 'text-to-image':
+                selected_sd_model = req.models
+                update_models(selected_sd_model)
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
                 return response.json()
             elif req.task == 'controlnet_txt2img':
+                selected_sd_model = req.models
+                update_models(selected_sd_model)
+                controlnet_script_path = './extensions/sd-webui-controlnet/scripts/controlnet.py'
+                sys.path.append("extensions/sd-webui-controlnet")
+                script_loading.load_module(controlnet_script_path)
+                sys.path.remove("extensions/sd-webui-controlnet")
+                controlnet_config_folder = "./extensions/sd-webui-controlnet/models/"
+                target_folder = './models/'
+                files = os.listdir(controlnet_config_folder)
+                for file_name in files:
+                    shutil.copy(controlnet_config_folder+file_name, target_folder+file_name)
                 response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
                 return response.json()
             elif req.task == 'image-to-image':
