@@ -16,7 +16,7 @@ import { Construct } from 'constructs';
 export interface SagemakerTrainProps {
   snsTopic: sns.Topic;
   trainingTable: dynamodb.Table;
-  srcRoot: string,
+  srcRoot: string;
 }
 
 export class SagemakerTrainStateMachine {

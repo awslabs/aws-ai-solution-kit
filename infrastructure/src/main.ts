@@ -6,7 +6,7 @@ import {
 
 import { Construct } from 'constructs';
 import { SdTrainDeployStack } from './sd-train/sd-train-deploy-stack';
-import { SDAsyncInferenceStack } from './sd-inference/SDAsyncInferenceStack';
+
 
 export class Middleware extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -29,14 +29,15 @@ const app = new App();
 
 // new SdTrainDeployStack(app, 'SdTrainDeployStack-dev', { env: devEnv });
 
-const trainStack = new SdTrainDeployStack(app, 'SdDreamBoothTrainStack', { env: devEnv });
 
-new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', { 
-  env: devEnv, 
-  api_gate_way: trainStack.apiGateway, 
-  // api_id: restful_api_id, 
-  s3_bucket: trainStack.s3Bucket,
-  training_table: trainStack.trainingTable });
+new SdTrainDeployStack(app, 'SdDreamBoothTrainStack', { env: devEnv });
+
+// new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', {
+//   env: devEnv,
+//   api_gate_way: trainStack.apiGateway,
+//   // api_id: restful_api_id,
+//   s3_bucket: trainStack.s3Bucket,
+//   training_table: trainStack.trainingTable });
 
 // inferenceStack.addDependency(trainStack)
 
