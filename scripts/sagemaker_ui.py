@@ -128,7 +128,9 @@ def generate_on_cloud():
     #     "q": "value2"
     # }
     response = requests.post(api_gateway_url, json=payload, headers=headers)
-    print(f"response for rest api {response}")
+    r = response.json()
+    print(f"response for rest api {r}")
+
     # stage 3: notified by sns and get result, upload to s3 position
     # new_predictor = Predictor(endpoint_name)
 
