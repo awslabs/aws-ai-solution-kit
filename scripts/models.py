@@ -73,6 +73,7 @@ class InvocationsRequest(BaseModel):
     img2img_payload: Optional[StableDiffusionImg2ImgProcessingAPI]
     extras_single_payload: Optional[ExtrasSingleImageRequest]
     extras_batch_payload: Optional[ExtrasBatchImagesRequest]
+    db_create_model_payload: Optional[str]
 
 class PingResponse(BaseModel):
     status: str

@@ -3,18 +3,22 @@ import {
   aws_apigateway,
   aws_dynamodb,
   aws_dynamodb as dynamodb,
-  aws_s3,
+  aws_s3, aws_sns,
   CfnParameter,
   RemovalPolicy,
   Stack,
   StackProps,
+  aws_sns_subscriptions as sns_subscriptions,
 } from 'aws-cdk-lib';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { CreateModelJobApi } from './create-model-job-api';
+import { CreateModelStateMachine } from './create-model-state-machine';
 import { RestApiGateway } from './rest-api-gateway';
+import { SagemakerTrainApi } from './sagemaker-train-api.js';
+import { SagemakerTrainStateMachine } from './sagemaker-train-state-machine';
 import { UpdateModelStatusRestApi } from './update_model_status_api';
 
 
@@ -22,16 +26,25 @@ export class SdTrainDeployStack extends Stack {
 
   public readonly s3Bucket: aws_s3.Bucket;
   public readonly trainingTable: aws_dynamodb.Table;
+  public readonly modelTable: aws_dynamodb.Table;
   public apiGateway: aws_apigateway.RestApi;
 
   private readonly srcRoot='../middleware_api/lambda';
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-
-    // const snsTopic = this.createSns();
-
+    const snsTopic = this.createSns();
     this.s3Bucket = this.createS3Bucket();
+    const commonLayer = this.commonLayer();
+
+    // Create DynamoDB table to store model job id
+    this.modelTable = new dynamodb.Table(this, 'ModelTable', {
+      tableName: 'ModelTable',
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
+
     // Create DynamoDB table to store training job id
     this.trainingTable = new dynamodb.Table(this, 'TrainingTable', {
       tableName: 'TrainingTable',
@@ -40,57 +53,70 @@ export class SdTrainDeployStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    // const stateMachine = new SagemakerTrainStateMachine(this, {
-    //   snsTopic: snsTopic,
-    //   trainingTable: trainingTable,
-    // });
-    const restApi = new RestApiGateway(this, ['model']);
+    const trainStateMachine = new SagemakerTrainStateMachine(this, {
+      snsTopic: snsTopic,
+      trainingTable: this.trainingTable,
+      srcRoot: this.srcRoot,
+    });
+
+    // api gateway setup
+    const restApi = new RestApiGateway(this, ['model', 'train']);
     this.apiGateway = restApi.apiGateway;
     const routers = restApi.routers;
+
     // POST /train
-    // new SagemakerTrainApi(this, {
-    //   api: apiGateway.apiGateway,
-    //   apiKey: apiGateway.apiKey,
-    //   stateMachineArn: stateMachine.stateMachineArn,
-    //   apiResource: 'train-deploy',
-    // });
-    const commonLayer = this.commonLayer();
+    new SagemakerTrainApi(this, {
+      router: routers.train,
+      httpMethod: 'POST',
+      stateMachineArn: trainStateMachine.stateMachineArn,
+    });
+
     new CreateModelJobApi(this, {
       router: routers.model,
       s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
-      trainingTable: this.trainingTable,
+      modelTable: this.modelTable,
       commonLayer: commonLayer,
       httpMethod: 'POST',
     });
 
     new UpdateModelStatusRestApi(this, {
+      s3Bucket: this.s3Bucket,
       router: routers.model,
       httpMethod: 'PUT',
       commonLayer: commonLayer,
       srcRoot: this.srcRoot,
-      trainingTable: this.trainingTable,
+      modelTable: this.modelTable,
+      stateMachine: new CreateModelStateMachine(
+        this, 'CreateModelSfn', {
+          modelTable: this.modelTable,
+          s3Bucket: this.s3Bucket,
+          snsTopic: snsTopic,
+          srcRoot: this.srcRoot,
+          layer: commonLayer,
+        },
+      ).stateMachine,
     });
   }
 
-  // private createSns(): sns.Topic {
-  //   // CDK parameters for SNS email address
-  //   const emailParam = new CfnParameter(this, 'email', {
-  //     type: 'String',
-  //     description: 'Email address to receive notifications',
-  //     default: 'example@example.com',
-  //   });
-  //
-  //   // Create SNS topic for notifications
-  //   const snsTopic = new sns.Topic(this, 'StableDiffusionSnsTopic');
-  //
-  //   // Subscribe user to SNS notifications
-  //   snsTopic.addSubscription(
-  //     new sns_subscriptions.EmailSubscription(emailParam.valueAsString),
-  //   );
-  //
-  //   return snsTopic;
-  // }
+  private createSns(): aws_sns.Topic {
+    // CDK parameters for SNS email address
+    const emailParam = new CfnParameter(this, 'email', {
+      type: 'String',
+      description: 'Email address to receive notifications',
+      default: 'example@example.com',
+    });
+
+    // Create SNS topic for notifications
+    const snsTopic = new aws_sns.Topic(this, 'StableDiffusionSnsTopic');
+
+    // Subscribe user to SNS notifications
+    snsTopic.addSubscription(
+      new sns_subscriptions.EmailSubscription(emailParam.valueAsString),
+    );
+
+    return snsTopic;
+  }
 
   private createS3Bucket(): s3.Bucket {
     // CDK parameters for API Gateway API Key and SageMaker endpoint name

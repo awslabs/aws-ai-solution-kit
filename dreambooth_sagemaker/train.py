@@ -82,7 +82,7 @@ def upload_assets(model_dir, use_txt2img, instance_type, job_id):
     upload_file_to_s3(sm_params_conf_file_path, bucket_name, sm_params_conf_file_s3_path)
 
 def start_sagemaker_training(model_dir, use_txt2img, instance_type="ml.g5.16xlarge"):
-# def start_sagemaker_training(model_dir, use_txt2img, instance_type="local"):
+    # def start_sagemaker_training(model_dir, use_txt2img, instance_type="local"):
     job_id = time.time()
     upload_assets(model_dir, use_txt2img, instance_type, job_id)
 

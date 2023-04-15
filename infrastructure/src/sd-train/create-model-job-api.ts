@@ -17,7 +17,7 @@ import { Construct } from 'constructs';
 export interface CreateModelJobApiProps {
   router: aws_apigateway.Resource;
   httpMethod: string;
-  trainingTable: aws_dynamodb.Table;
+  modelTable: aws_dynamodb.Table;
   srcRoot: string;
   s3Bucket: aws_s3.Bucket;
   commonLayer: aws_lambda.LayerVersion;
@@ -28,17 +28,17 @@ export class CreateModelJobApi {
   private readonly router: aws_apigateway.Resource;
   private readonly httpMethod: string;
   private readonly scope: Construct;
-  private readonly trainingTable: aws_dynamodb.Table;
+  private readonly modelTable: aws_dynamodb.Table;
   private readonly s3Bucket: aws_s3.Bucket;
   private readonly layer: aws_lambda.LayerVersion;
 
-  private readonly baseId: string = 'aigc-create-train-job';
+  private readonly baseId: string = 'aigc-create-model-job';
 
   constructor(scope: Construct, props: CreateModelJobApiProps) {
     this.scope = scope;
     this.router = props.router;
     this.httpMethod = props.httpMethod;
-    this.trainingTable = props.trainingTable;
+    this.modelTable = props.modelTable;
     this.src = props.srcRoot;
     this.s3Bucket = props.s3Bucket;
     this.layer = props.commonLayer;
@@ -62,7 +62,7 @@ export class CreateModelJobApi {
         'dynamodb:UpdateItem',
         'dynamodb:DeleteItem',
       ],
-      resources: [this.trainingTable.tableArn],
+      resources: [this.modelTable.tableArn],
     }));
 
     newRole.addToPolicy(new aws_iam.PolicyStatement({
@@ -87,23 +87,24 @@ export class CreateModelJobApi {
   }
 
   private createModelJobApi() {
+    const lambdaFunction = new PythonFunction(this.scope, `${this.baseId}-handler`, <PythonFunctionProps>{
+      functionName: `${this.baseId}-model`,
+      entry: `${this.src}/create_model`,
+      architecture: Architecture.X86_64,
+      runtime: Runtime.PYTHON_3_9,
+      index: 'create_model_job_api.py',
+      handler: 'create_model_api',
+      timeout: Duration.seconds(900),
+      role: this.iamRole(),
+      memorySize: 1024,
+      environment: {
+        DYNAMODB_TABLE: this.modelTable.tableName,
+        S3_BUCKET: this.s3Bucket.bucketName,
+      },
+      layers: [this.layer],
+    });
     const createModelIntegration = new apigw.LambdaIntegration(
-      new PythonFunction(this.scope, `${this.baseId}-handler`, <PythonFunctionProps>{
-        functionName: `${this.baseId}-model`,
-        entry: `${this.src}/create_model`,
-        architecture: Architecture.X86_64,
-        runtime: Runtime.PYTHON_3_9,
-        index: 'create_model_job_api.py',
-        handler: 'create_model_api',
-        timeout: Duration.seconds(900),
-        role: this.iamRole(),
-        memorySize: 1024,
-        environment: {
-          DYNAMODB_TABLE: this.trainingTable.tableName,
-          S3_BUCKET: this.s3Bucket.bucketName,
-        },
-        layers: [this.layer],
-      }),
+      lambdaFunction,
       {
         proxy: false,
         integrationResponses: [{ statusCode: '200' }],
@@ -117,3 +118,4 @@ export class CreateModelJobApi {
     });
   }
 }
+
