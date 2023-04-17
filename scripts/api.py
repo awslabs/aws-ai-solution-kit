@@ -22,11 +22,20 @@ from starlette import status
 from starlette.requests import Request
 
 from modules.api.api import Api
+from modules import sd_hijack, sd_models, sd_vae, script_loading, paths
+import modules.scripts as base_scripts
+from modules.hypernetworks import hypernetwork
+from modules.textual_inversion import textual_inversion
+import modules.shared as shared
 import sys
 sys.path.append("extensions/aws-ai-solution-kit")
 from scripts.models import *
 import requests
-from utils import get_bucket_name_from_s3_path, get_path_from_s3_path, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
+from utils import get_bucket_name_from_s3_path, get_path_from_s3_path
+from utils import download_file_from_s3, download_folder_from_s3, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
+from utils import sd_models_Ref, lora_models_Ref, cn_models_Ref, hyper_models_Ref, embedding_Ref
+import uuid
+import boto3
 
 # try:
 #     from dreambooth import shared
@@ -134,11 +143,126 @@ def base64_to_pil(im_b64) -> Image:
     img = Image.open(im_file)
     return img
 
+def decode_base64_to_image(encoding):
+    if encoding.startswith("data:image/"):
+        encoding = encoding.split(";")[1].split(",")[1]
+    return Image.open(io.BytesIO(base64.b64decode(encoding)))
 
 def file_to_base64(file_path) -> str:
     with open(file_path, "rb") as f:
         im_b64 = base64.b64encode(f.read())
         return str(im_b64, 'utf-8')
+
+def get_bucket_and_key(s3uri):
+        pos = s3uri.find('/', 5)
+        bucket = s3uri[5 : pos]
+        key = s3uri[pos + 1 : ]
+        return bucket, key
+
+#local_model_path = 'models'
+sd_model_folder = 'models/Stable-diffusion'
+controlnet_model_folder = 'models/ControlNet'
+hypernetwork_model_folder = 'models/hypernetworks'
+lora_model_folder = 'models/Lora'
+embedding_model_folder = 'embeddings'
+def update_models(selected_models):
+    bucket = selected_models['bucket']
+    s3_base_dir = selected_models['base_dir']
+    ##sd model update
+    selected_sd_model = selected_models['stablediffusion'][0]
+    sd_models_Ref.add_models_ref(selected_sd_model)
+    sd_model_list = os.listdir(sd_model_folder)
+    if selected_sd_model not in sd_model_list:
+        #download from s3
+        config_file = os.path.splitext(selected_sd_model)[0] + '.yaml'
+        config_path = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, sd_model_folder, config_file)
+        os.system(f'./tools/s5cmd cp {config_path} ./models/Stable-diffusion/')       
+        model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, sd_model_folder, selected_sd_model)
+        os.system(f'./tools/s5cmd cp {model_data} ./models/Stable-diffusion/')
+        sd_models.list_models()
+    shared.opts.sd_model_checkpoint = selected_sd_model
+    sd_models.reload_model_weights()
+    sd_vae.reload_vae_weights()
+    
+    #update hypernetworks
+    selected_hypernet_models = selected_models['hypernetwork']
+    hypernet_model_list = os.listdir(hypernetwork_model_folder)
+    for selected_hypernet_model in selected_hypernet_models:
+        hyper_models_Ref.add_models_ref(selected_hypernet_model)
+        if selected_hypernet_model not in hypernet_model_list:
+            #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, hypernetwork_model_folder, selected_hypernet_model)
+            os.system(f'./tools/s5cmd cp {model_data} ./models/hypernetworks/')
+    #hypernetwork.load_hypernetworks(selected_hypernet_models)
+    ##update lora models
+    selected_lora_models = selected_models['lora']
+    lora_model_list = os.listdir(lora_model_folder)
+    for selected_lora_model in selected_lora_models:
+        lora_models_Ref.add_models_ref(selected_lora_model)
+        if selected_lora_model not in lora_model_list:
+            #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, lora_model_folder, selected_lora_model)
+            os.system(f'./tools/s5cmd cp {model_data} ./models/Lora/')
+    ##update embedding models
+    selected_embeddings = selected_models['textualinversion']
+    embedding_list = os.listdir(embedding_model_folder)
+    reload_embedding = False
+    for selected_embedding in selected_embeddings:
+        embedding_Ref.add_models_ref(selected_embedding)
+        if selected_embedding not in embedding_list:
+            #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, embedding_model_folder, selected_embedding)
+            os.system(f'./tools/s5cmd cp {model_data} ./embeddings/')
+            reload_embedding = True
+    if reload_embedding:
+        sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings(force_reload=True)
+
+    #update controlnet models  
+    selected_controlnets = selected_models['controlnet']
+    controlnet_model_list = os.listdir(controlnet_model_folder)
+    reload_controlnet = False
+    for selected_controlnet in selected_controlnets:
+        cn_models_Ref.add_models_ref(selected_controlnet)
+        if selected_controlnet not in controlnet_model_list:
+            #download from s3
+            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, controlnet_model_folder, selected_controlnet)
+            # os.system('whereis aws')
+            # os.system('debug 1')
+            # os.system('aws configure')
+            # os.system('aws configure list')
+            # os.system('aws s3 ls')
+            os.system(f'./tools/s5cmd cp {model_data} ./models/ControlNet/')
+            reload_controlnet = True
+    if reload_controlnet:
+        controlnet_script_path = './extensions/sd-webui-controlnet/scripts/controlnet.py'
+        sys.path.append("extensions/sd-webui-controlnet")
+        base_scripts.current_basedir = './extensions/sd-webui-controlnet/'
+        script_loading.load_module(controlnet_script_path)
+        sys.path.remove("extensions/sd-webui-controlnet")
+        base_scripts.current_basedir = paths.script_path
+        #controlnet_config_folder = "./extensions/sd-webui-controlnet/models/"
+        #target_folder = './models/'
+        #files = os.listdir(controlnet_config_folder)
+        #for file_name in files:
+        #    shutil.copy(controlnet_config_folder+file_name, target_folder+file_name)
+
+
+def post_invocations(username, b64images):
+        generated_images_s3uri = os.environ.get('generated_images_s3uri', None)
+        s3_client = boto3.client('s3')
+        if generated_images_s3uri:
+            generated_images_s3uri = f'{generated_images_s3uri}{username}/'
+            bucket, key = get_bucket_and_key(generated_images_s3uri)
+            for b64image in b64images:
+                image = decode_base64_to_image(b64image)
+                image.save(output, format='JPEG')
+                output = io.BytesIO()
+                image.save(output, format='JPEG')
+                image_id = str(uuid.uuid4())
+                s3_client.put_object(
+                    Body=output.getvalue(),
+                    Bucket=bucket,
+                    Key=f'{key}/{image_id}.png')
 
 def sagemaker_api(_, app: FastAPI):
     logger.debug("Loading Sagemaker API Endpoints.")
@@ -148,6 +272,7 @@ def sagemaker_api(_, app: FastAPI):
     #         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
     #         content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
     #     )
+            
 
     @app.post("/invocations")
     def invocations(req: InvocationsRequest):
@@ -156,15 +281,18 @@ def sagemaker_api(_, app: FastAPI):
         @return:
         """
         print('-------invocation------')
-        print(req)
+        #print(req)
+        #print(f"json is {json.loads(req.json())}")
 
-        print(f"json is {json.loads(req.json())}")
+        if req.task == 'text-to-image' or req.task == 'controlnet_txt2img':
+            selected_models = req.models
+            update_models(selected_models)
 
         try:
             if req.task == 'text-to-image':
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
                 return response.json()
-            elif req.task == 'controlnet_txt2img':
+            elif req.task == 'controlnet_txt2img':       
                 response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
                 return response.json()
             elif req.task == 'image-to-image':

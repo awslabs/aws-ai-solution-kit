@@ -62,18 +62,20 @@ async def run_sagemaker_inference(request: Request):
 async def deploy_sagemaker_endpoint(request: Request):
     logger.info("entering the deploy_sagemaker_endpoint function!")
     try:
-        data = await request.json()
-        item_id = data["item_id"]
-        q = data.get("q")
+        payload = await request.json()
+        logger.info(f"input in json format {payload}")
+        # item_id = data["item_id"]
+        # q = data.get("q")
 
         resp = stepf_client.start_execution(
             stateMachineArn=STEP_FUNCTION_ARN,
-            input=json.dumps(data)
+            input=json.dumps(payload)
         )
 
         logger.info("trigger step-function with following response")
 
-        return {"item_id": item_id, "q": q}
+        logger.info(f"finish trigger step function for deployment with output {resp}")
+        return 0
     except Exception as e:
         logger.error(f"error calling run-sagemaker-inference with exception: {e}")
         raise e

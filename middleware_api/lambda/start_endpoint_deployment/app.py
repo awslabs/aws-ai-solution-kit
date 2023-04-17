@@ -1,18 +1,17 @@
 import boto3
 import uuid
-import sagemaker
-import json
-
 import os
 
 sagemaker = boto3.client('sagemaker')
+lambda_client = boto3.client("lambda")
 # role = "arn:aws:iam::002224604296:role/service-role/AmazonSageMaker-ExecutionRole-20230319T081280"
-EXECUTION_ROLE = sagemaker.get_excution_role()
-INSTANCE_TYPE = 'ml.m4.xlarge'
+role_response = (lambda_client.get_function_configuration(
+    FunctionName = os.environ['AWS_LAMBDA_FUNCTION_NAME'])
+)
+EXECUTION_ROLE = role_response['Role']
 # async_success_topic = 'arn:aws:sns:us-west-2:002224604296:SdAsyncInferenceStack-dev-SNSReceiveSageMakerinferencesuccess314267EE-OcvPLAvRGaNL'
-ASYNC_SUCCESS_TOPIC = os.environ()
-async_error_topic = 'arn:aws:sns:us-west-2:002224604296:SdAsyncInferenceStack-dev-SNSReceiveSageMakerinferenceerror26AEDEC2-a0IVYn4toIkE'
-ASYNC_ERROR_TOPIC = os.environ()
+ASYNC_SUCCESS_TOPIC = os.environ["SNS_INFERENCE_SUCCESS"]
+ASYNC_ERROR_TOPIC = os.environ["SNS_INFERENCE_ERROR"]
 
 def lambda_handler(event, context):
     # Parse the input data

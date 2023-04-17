@@ -6,7 +6,7 @@ def lambda_handler(event, context):
     # Parse the input data
     print(f"event is {event}")
 
-    stage = event['stage']
+    stage = event["Payload"]['stage']
     if stage == 'Training':
         # name = event['name']
         # training_details = describe_training_job(name)
@@ -23,16 +23,16 @@ def lambda_handler(event, context):
         #     event['message'] = 'Training job failed. {}'.format(failure_reason)
         print("Status check for training not implemented yet!")
     elif stage == 'Deployment':
-        name = event['endpoint_name']
+        name = event["Payload"]['endpoint_name']
         endpoint_details = describe_endpoint(name)
         status = endpoint_details['EndpointStatus']
         if status == 'InService':
-            event['message'] = 'Deployment completed for endpoint "{}".'.format(name)
+            event["Payload"]['message'] = 'Deployment completed for endpoint "{}".'.format(name)
         elif status == 'Failed':
             failure_reason = endpoint_details['FailureReason']
-            event['message'] = 'Deployment failed for endpoint "{}". {}'.format(name, failure_reason)
+            event["Payload"]['message'] = 'Deployment failed for endpoint "{}". {}'.format(name, failure_reason)
         elif status == 'RollingBack':
-            event['message'] = 'Deployment failed for endpoint "{}", rolling back to previously deployed version.'.format(name)
+            event["Payload"]['message'] = 'Deployment failed for endpoint "{}", rolling back to previously deployed version.'.format(name)
     event['status'] = status
     return event
 

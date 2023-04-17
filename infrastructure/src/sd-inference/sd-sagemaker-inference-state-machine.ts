@@ -39,6 +39,10 @@ export class SagemakerInferenceStateMachine {
                     "s3:GetObject",
                     "sns:*",
                     "states:*",
+                    "lambda:*",
+                    "iam:*",
+                    "sts:*",
+                    "ecr:*",
                 ],
                 resources: ["*"],
             });
@@ -57,8 +61,8 @@ export class SagemakerInferenceStateMachine {
                     )
                 ),
                 environment: {
-                    SNS_INFERENCE_SUCCESS: snsTopic.topicName,
-                    SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
+                    SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
+                    SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
                 },
             }
         );
@@ -137,7 +141,7 @@ export class SagemakerInferenceStateMachine {
                             "$.Payload.status",
                             "Creating"
                         ),
-                        waitStatusDeploymentTask.next(checkDeploymentBranch)
+                        waitStatusDeploymentTask.next(checkStatusDeploymentTask)
                     )
                     .when(
                         stepfunctions.Condition.stringEquals(

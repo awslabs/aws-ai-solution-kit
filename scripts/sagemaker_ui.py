@@ -43,10 +43,6 @@ def update_sd_checkpoints():
     # TODO update the checkpoint code here
 
 
-def sagemaker_deploy(instance_type):
-    # function code to call sagemaker deploy api
-    print(f"start deploying instance type: {instance_type}............")
-
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
 
@@ -114,8 +110,7 @@ def generate_on_cloud():
     # prediction = predictor.predict_async(data=payload)
     # output_path = prediction.output_path
 
-    # api_gateway_url = 'https://ca9orkn8pf.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference'
-    api_gateway_url = "https://sbcruuf2fc.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference"
+    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference"
 
     api_key = "09876543210987654321"
 
@@ -150,6 +145,36 @@ def generate_on_cloud():
     #     bucket = s3uri[5 : pos]
     #     key = s3uri[pos + 1 : ]
     #     return bucket, key
+
+def sagemaker_deploy(instance_type, initial_instance_count=1):
+    """ Create SageMaker endpoint for GPU inference.
+    Args:
+        instance_type (string): the ML compute instance type.
+        initial_instance_count (integer): Number of instances to launch initially.
+    Returns:
+        (None)
+    """
+    # function code to call sagemaker deploy api
+    print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
+
+    payload = {
+    "instance_type": instance_type,
+    "initial_instance_count": initial_instance_count
+    }
+
+    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/deploy-sagemaker-endpoint"
+
+    api_key = "09876543210987654321"
+
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(api_gateway_url, json=payload, headers=headers)
+    r = response.json()
+    print(f"response for rest api {r}")
+
 
 
 
