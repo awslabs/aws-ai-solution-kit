@@ -17,12 +17,13 @@ from sagemaker.predictor_async import AsyncPredictor
 
 if __name__ == '__main__':
 
-    os.environ.setdefault('AWS_PROFILE', 'cloudfront_ext')
+    # os.environ.setdefault('AWS_PROFILE', 'cloudfront_ext')
     start_time = time.time()
 
     # url = "http://127.0.0.1:8081"
 
     payload = {
+        "job_id": "xxxxxx",
         "task": "db-create-model",  # job_id
         "db_create_model_payload": json.dumps({
             # "bucket_name": "[/models/{model_type:dreambooth}]/{model_name}.tar",  # output object
@@ -34,6 +35,20 @@ if __name__ == '__main__':
             },
         }),
     }
+    payload = {
+        "task": "db-create-model",  # job_id
+        "db_create_model_payload": json.dumps({
+            "job_id": "xxxxxx",
+            "s3_output_path": ["aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-model-v2/models/dreambooth/"],  # output object
+            "s3_input_path": ["aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-model-v2/models/Stable-diffusion/"],
+            "param": {
+                "new_model_name": "db_test_4",
+                "new_model_src": "v1-5-pruned-emaonly.safetensors",
+                # todo: the params
+            },
+        }),
+    }
+
     # db_create_model_params = json.loads(payload['db_create_model_payload'])
     # local_model_dir = f'models/Stable-diffusion/{db_create_model_params["new_model_src"]}'
     # bucket_name = db_create_model_params['bucket_name']
@@ -45,7 +60,8 @@ if __name__ == '__main__':
 
     # endpoint_name = "aigc-webui-dreambooth-create-model-2023-04-13-09-21-31-981"
     # endpoint_name = "db-create-model-1681437544-456743"
-    endpoint_name = "aigc-createmodel-endpoint"
+    # endpoint_name = "aigc-createmodel-endpoint"
+    endpoint_name = "db-create-model-1681723003-1839077"
 
     predictor = Predictor(endpoint_name)
 
