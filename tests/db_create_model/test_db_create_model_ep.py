@@ -24,8 +24,10 @@ if __name__ == '__main__':
 
     payload = {
         "task": "db-create-model",  # job_id
+        "inferenceId": "c0e66210-22be-4ee9-8876-ece1e0452860",
         "db_create_model_payload": json.dumps({
             # "bucket_name": "[/models/{model_type:dreambooth}]/{model_name}.tar",  # output object
+            "job_id": 'c0e66210-22be-4ee9-8876-ece1e0452860',
             "bucket_name": "aws-gcr-csdc-atl-exp-us-west-2",  # output object
             "new_model_name": "db_test_4",
             "new_model_src": "v1-5-pruned-emaonly.safetensors",  # s3://{bucket}/.../{model}.tar
@@ -45,14 +47,15 @@ if __name__ == '__main__':
 
     # endpoint_name = "aigc-webui-dreambooth-create-model-2023-04-13-09-21-31-981"
     # endpoint_name = "db-create-model-1681437544-456743"
-    endpoint_name = "aigc-createmodel-endpoint"
+    endpoint_name = "aigc-utils-endpoint"
 
     predictor = Predictor(endpoint_name)
 
     predictor = AsyncPredictor(predictor, name='c0e66210-22be-4ee9-8876-ece1e0452860')
     predictor.serializer = JSONSerializer()
     predictor.deserializer = JSONDeserializer()
-    prediction = predictor.predict_async(data=payload)
+
+    prediction = predictor.predict_async(data=payload, inference_id='c0e66210-22be-4ee9-8876-ece1e0452860')
     output_path = prediction.output_path
 
 

@@ -1,52 +1,46 @@
 import { PythonFunction, PythonFunctionProps } from '@aws-cdk/aws-lambda-python-alpha';
 import {
+  aws_apigateway,
   aws_apigateway as apigw,
   aws_dynamodb,
   aws_iam,
-  aws_lambda, aws_s3,
-  aws_stepfunctions as sfn,
+  aws_lambda,
   Duration,
 } from 'aws-cdk-lib';
 import { MethodOptions } from 'aws-cdk-lib/aws-apigateway/lib/method';
-import { Resource } from 'aws-cdk-lib/aws-apigateway/lib/resource';
 import { Effect } from 'aws-cdk-lib/aws-iam';
 import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
-export interface UpdateModelStatusRestApiProps {
+
+export interface ListAllModelJobApiProps {
+  router: aws_apigateway.Resource;
   httpMethod: string;
-  router: Resource;
   modelTable: aws_dynamodb.Table;
   srcRoot: string;
   commonLayer: aws_lambda.LayerVersion;
-  stateMachine: sfn.StateMachine;
-  s3Bucket: aws_s3.Bucket;
 }
 
-export class UpdateModelStatusRestApi {
-
+export class ListAllModelJobApi {
   private readonly src;
+  private readonly router: aws_apigateway.Resource;
+  private readonly httpMethod: string;
   private readonly scope: Construct;
   private readonly modelTable: aws_dynamodb.Table;
   private readonly layer: aws_lambda.LayerVersion;
-  private readonly router: Resource;
-  private readonly httpMethod: string;
-  private readonly stateMachine: sfn.StateMachine;
-  private readonly s3Bucket: aws_s3.Bucket;
 
-  private readonly baseId = 'aigc-update-train-job';
+  private readonly baseId: string;
 
-  constructor(scope: Construct, props: UpdateModelStatusRestApiProps) {
+  constructor(scope: Construct, id: string, props: ListAllModelJobApiProps) {
     this.scope = scope;
+    this.baseId = id;
     this.router = props.router;
-    this.modelTable = props.modelTable;
     this.httpMethod = props.httpMethod;
+    this.modelTable = props.modelTable;
     this.src = props.srcRoot;
     this.layer = props.commonLayer;
-    this.stateMachine = props.stateMachine;
-    this.s3Bucket = props.s3Bucket;
 
-    this.updateModelJobApi();
+    this.listAllModelJobApi();
   }
 
   private iamRole(): aws_iam.Role {
@@ -80,33 +74,30 @@ export class UpdateModelStatusRestApi {
     return newRole;
   }
 
-  private updateModelJobApi() {
-    const updateModelLambda = new PythonFunction(this.scope, `${this.baseId}-handler`, <PythonFunctionProps>{
-      functionName: `${this.baseId}-update-model`,
+  private listAllModelJobApi() {
+    const lambdaFunction = new PythonFunction(this.scope, `${this.baseId}-listall`, <PythonFunctionProps>{
+      functionName: `${this.baseId}-listall-models`,
       entry: `${this.src}/create_model`,
       architecture: Architecture.X86_64,
       runtime: Runtime.PYTHON_3_9,
-      index: 'update_job_api.py',
-      handler: 'update_train_job_api',
+      index: 'create_model_job_api.py',
+      handler: 'list_all_models_api',
       timeout: Duration.seconds(900),
       role: this.iamRole(),
       memorySize: 1024,
       environment: {
         DYNAMODB_TABLE: this.modelTable.tableName,
-        SFN_ARN: this.stateMachine.stateMachineArn,
-        S3_BUCKET: this.s3Bucket.bucketName,
       },
       layers: [this.layer],
     });
-    updateModelLambda.node.addDependency(this.stateMachine);
-    const updateModelLambdaIntegration = new apigw.LambdaIntegration(
-      updateModelLambda,
+    const createModelIntegration = new apigw.LambdaIntegration(
+      lambdaFunction,
       {
         proxy: false,
         integrationResponses: [{ statusCode: '200' }],
       },
     );
-    this.router.addMethod(this.httpMethod, updateModelLambdaIntegration, <MethodOptions>{
+    this.router.addMethod(this.httpMethod, createModelIntegration, <MethodOptions>{
       apiKeyRequired: true,
       methodResponses: [{
         statusCode: '200',
@@ -114,3 +105,4 @@ export class UpdateModelStatusRestApi {
     });
   }
 }
+
