@@ -26,6 +26,10 @@ export class SagemakerInferenceStateMachine {
       runtime: lambda.Runtime.PYTHON_3_9,
       handler: 'app.lambda_handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../../../middleware_api/lambda/start_endpoint_deployment')),
+      environment: {
+        SNS_INFERENCE_SUCCESS: sns.topicName,
+        SNS_INFERENCE_ERROR: sns.topicName,
+      },
     });
 
     const lambdaCheckDeploymentStatus = new lambda.Function(this.scope, 'LambdaModelAwait', {
