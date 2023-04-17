@@ -1,18 +1,24 @@
+import json
 import logging
 import os
 from dataclasses import dataclass
 
+import boto3
 from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
+from common.util import publish_msg
 from create_model._types import ModelJob, CreateModelStatus
+from create_model.create_model_async_job import create_sagemaker_inference
 
 bucket_name = os.environ.get('S3_BUCKET')
 model_table = os.environ.get('DYNAMODB_TABLE')
-stepfunction_arn = os.environ.get('SFN_ARN')
 
-sfn_arn = os.environ.get('')
+
+success_topic_arn = os.environ.get('SUCCESS_TOPIC_ARN')
+error_topic_arn = os.environ.get('ERROR_TOPIC_ARN')
+user_topic_arn = os.environ.get('USER_TOPIC_ARN')
 
 logger = logging.getLogger('boto3')
 ddb_service = DynamoDbUtilsService(logger=logger)
@@ -37,7 +43,7 @@ def update_train_job_api(raw_event, context):
             }
 
         model_job = ModelJob(**raw_training_job)
-        train_job_exec(model_job, CreateModelStatus[event.status])
+        resp = train_job_exec(model_job, CreateModelStatus[event.status])
 
         ddb_service.update_item(
             table=model_table,
@@ -45,7 +51,7 @@ def update_train_job_api(raw_event, context):
             field_name='job_status',
             value=event.status
         )
-
+        return resp
     except ClientError as e:
         logger.error(e)
         return {
@@ -53,15 +59,60 @@ def update_train_job_api(raw_event, context):
             'error': str(e)
         }
 
+
+def process_result(event, context):
+    records = event['Records']
+    for record in records:
+        msg_str = record['Sns']['Message']
+        print(msg_str)
+        msg = json.loads(msg_str)
+        inference_id = msg['inferenceId']
+
+        model_job_raw = ddb_service.get_item(table=model_table, key_values={'id': inference_id})
+        if model_job_raw is None:
+            return {
+                'statusCode': '500',
+                'error': f'id with {inference_id} not found'
+            }
+        job = ModelJob(**model_job_raw)
+
+        if record['Sns']['TopicArn'] == success_topic_arn:
+            ddb_service.update_item(
+                table=model_table,
+                key={'id': inference_id},
+                field_name='job_status',
+                value=CreateModelStatus.Complete.value
+            )
+            params = model_job_raw['params']
+            params['s3_output_location'] = f'{bucket_name}/{job.model_type}/{job.params["new_model_name"]}.tar'
+            ddb_service.update_item(
+                table=model_table,
+                key={'id': inference_id},
+                field_name='params',
+                value=params
+            )
+
+            publish_msg(
+                topic_arn=user_topic_arn,
+                subject=f'Create Model Job {job.params["new_model_name"]} success',
+                msg=f'model {job.params["new_model_name"]} is ready to use'
+            )  # todo: find out msg
+
+        if record['Sns']['TopicArn'] == error_topic_arn:
+            ddb_service.update_item(
+                table=model_table,
+                key={'id': inference_id},
+                field_name='job_status',
+                value=CreateModelStatus.Fail.value
+            )
+            publish_msg(
+                topic_arn=user_topic_arn,
+                subject=f'Create Model Job {job.params["new_model_name"]} failed',
+                msg='to be done'
+            )  # todo: find out msg
     return {
         'statusCode': 200,
-        'trainJob': {
-            'id': model_job.id,
-            'status': model_job.job_status.value,
-            's3_base': model_job.s3_location,
-            'model_type': model_job.model_type,
-            'sagemaker_id': model_job.sagemaker_job_id
-        }
+        'msg': f'finished events {event}'
     }
 
 
@@ -71,11 +122,8 @@ def train_job_exec(model_job: ModelJob, action: CreateModelStatus):
         raise Exception(f'model creation job is currently under progress, so cannot be updated')
 
     if action == CreateModelStatus.Creating:
-        # todo: start train step function
-        stepfunctions_client.invoke_step_function(state_machine_arn=stepfunction_arn, func_input={
-            'job_id': model_job.id
-        })
-        return
+        model_job.job_status = action
+        return create_sagemaker_inference(job=model_job)
     elif action == CreateModelStatus.Initial:
         raise Exception('please create a new model creation job for this,'
                         f' not allowed overwrite old model creation job')

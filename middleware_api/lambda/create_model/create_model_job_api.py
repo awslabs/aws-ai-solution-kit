@@ -70,3 +70,33 @@ def create_model_api(raw_event, context):
         },
         's3PresignUrl':  presign_url_map
     }
+
+
+def list_all_models_api(event, context):
+    resp = ddb_service.scan(table=model_table, filters={
+        'job_status': CreateModelStatus.Complete,
+        'model_type': 'dreambooth'
+    })
+    if resp is None or len(resp) == 0:
+        return {
+            'statusCode': 200,
+            'body': []
+        }
+
+    models = []
+
+    for r in resp:
+        model = ModelJob(**(ddb_service.deserialize(r)))
+        name = model.id
+        if model.params is not None and 'new_model_name' in model.params:
+            name = model.params['new_model_name']
+
+        models.append({
+            'id': model.id,
+            'model_name': name
+        })
+
+    return {
+        'statusCode': 200,
+        'models': models
+    }
