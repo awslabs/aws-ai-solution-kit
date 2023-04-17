@@ -42,6 +42,7 @@ export class SagemakerInferenceStateMachine {
                     "lambda:*",
                     "iam:*",
                     "sts:*",
+                    "ecr:*",
                 ],
                 resources: ["*"],
             });
@@ -60,8 +61,8 @@ export class SagemakerInferenceStateMachine {
                     )
                 ),
                 environment: {
-                    SNS_INFERENCE_SUCCESS: snsTopic.topicName,
-                    SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
+                    SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
+                    SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
                 },
             }
         );
