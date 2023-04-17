@@ -40,6 +40,8 @@ export class SagemakerInferenceStateMachine {
                     "sns:*",
                     "states:*",
                     "lambda:*",
+                    "iam:*",
+                    "sts:*",
                 ],
                 resources: ["*"],
             });

@@ -10,8 +10,8 @@ role_response = (lambda_client.get_function_configuration(
 )
 EXECUTION_ROLE = role_response['Role']
 # async_success_topic = 'arn:aws:sns:us-west-2:002224604296:SdAsyncInferenceStack-dev-SNSReceiveSageMakerinferencesuccess314267EE-OcvPLAvRGaNL'
-ASYNC_SUCCESS_TOPIC = os.environ("SNS_INFERENCE_SUCCESS")
-ASYNC_ERROR_TOPIC = os.environ("SNS_INFERENCE_ERROR")
+ASYNC_SUCCESS_TOPIC = os.environ["SNS_INFERENCE_SUCCESS"]
+ASYNC_ERROR_TOPIC = os.environ["SNS_INFERENCE_ERROR"]
 
 def lambda_handler(event, context):
     # Parse the input data
