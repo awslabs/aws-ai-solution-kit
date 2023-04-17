@@ -141,7 +141,7 @@ export class SagemakerInferenceStateMachine {
                             "$.Payload.status",
                             "Creating"
                         ),
-                        waitStatusDeploymentTask.next(checkDeploymentBranch)
+                        waitStatusDeploymentTask.next(checkStatusDeploymentTask)
                     )
                     .when(
                         stepfunctions.Condition.stringEquals(
