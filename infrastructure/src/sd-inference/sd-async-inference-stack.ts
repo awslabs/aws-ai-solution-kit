@@ -73,6 +73,7 @@ export class SDAsyncInferenceStack extends Stack {
 
     const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
       snsTopic: inference_result_topic,
+      snsErrorTopic: inference_result_error_topic
     });
 
     // Create a Lambda function for inference
