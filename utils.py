@@ -4,11 +4,84 @@ import boto3
 import botocore
 import boto3.s3.transfer as s3transfer
 import sys
+import requests
 
 sys.path.append(os.getcwd())
 # from modules.timer import Timer
 import tarfile
 
+class ModelsRef:
+    def __init__(self):
+        self.models_ref = {}
+
+    def get_models_ref_dict(self):
+        return self.models_ref
+    
+    def add_models_ref(self, model_name):
+        if model_name in self.models_ref:
+            self.models_ref[model_name] += 1
+        else:
+            self.models_ref[model_name] = 0
+
+    def remove_model_ref(self,model_name):
+        if self.models_ref.get(model_name):
+            del self.models_ref[model_name]
+
+    def get_models_ref(self, model_name):
+        return self.models_ref.get(model_name)
+    
+    def get_least_ref_model(self):
+        sorted_models = sorted(self.models_ref.items(), key=lambda item: item[1])
+        if sorted_models:
+            least_ref_model, least_counter = sorted_models[0]
+            return least_ref_model,least_counter
+        else:
+            return None,None
+    
+    def pop_least_ref_model(self):
+        sorted_models = sorted(self.models_ref.items(), key=lambda item: item[1])
+        if sorted_models:
+            least_ref_model, least_counter = sorted_models[0]
+            del self.models_ref[least_ref_model]
+            return least_ref_model,least_counter
+        else:
+            return None,None
+
+sd_models_Ref = ModelsRef()
+cn_models_Ref = ModelsRef()
+lora_models_Ref = ModelsRef()
+hyper_models_Ref = ModelsRef()
+embedding_Ref = ModelsRef()
+
+def de_register_model(model_name,mode):
+    models_Ref = sd_models_Ref
+    if mode == 'sd' :
+        models_Ref = sd_models_Ref
+    elif mode == 'cn':
+        models_Ref = cn_models_Ref
+    elif mode == 'lora':
+        models_Ref = lora_models_Ref
+    elif mode == 'hypernet':
+        models_Ref = hyper_models_Ref
+    elif mode == 'embedding':
+        models_Ref = embedding_Ref
+    
+    models_Ref.remove_model_ref(model_name)
+    print (f'---de_register_{mode}_model({model_name})---models_Ref({models_Ref.get_models_ref_dict()})----')
+    if 'endpoint_name' in os.environ:
+        api_endpoint = os.environ['api_endpoint']
+        endpoint_name = os.environ['endpoint_name']
+        data = {
+            "module":mode,
+            "model_name": model_name,
+            "endpoint_name": endpoint_name
+        }  
+        response = requests.delete(url=f'{api_endpoint}/sd/models', json=data)
+        # Check if the request was successful
+        if response.status_code == requests.codes.ok:
+            print(f"{model_name} deleted successfully!")
+        else:
+            print(f"Error deleting {model_name}: ", response.text)
 
 def upload_folder_to_s3(local_folder_path, bucket_name, s3_folder_path):
     s3_client = boto3.client('s3')
