@@ -39,6 +39,7 @@ export class SagemakerInferenceStateMachine {
                     "s3:GetObject",
                     "sns:*",
                     "states:*",
+                    "lambda:*",
                 ],
                 resources: ["*"],
             });

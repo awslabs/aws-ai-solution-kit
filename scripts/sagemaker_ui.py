@@ -110,8 +110,7 @@ def generate_on_cloud():
     # prediction = predictor.predict_async(data=payload)
     # output_path = prediction.output_path
 
-    # api_gateway_url = 'https://ca9orkn8pf.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference'
-    api_gateway_url = "https://sbcruuf2fc.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference"
+    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference"
 
     api_key = "09876543210987654321"
 
@@ -163,7 +162,7 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     "initial_instance_count": initial_instance_count
     }
 
-    api_gateway_url = "https://sbcruuf2fc.execute-api.us-west-2.amazonaws.com/prod/inference/deploy-sagemaker-endpoint"
+    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/deploy-sagemaker-endpoint"
 
     api_key = "09876543210987654321"
 
