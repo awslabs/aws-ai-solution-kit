@@ -1,4 +1,5 @@
 import os
+import requests
 import boto3
 import botocore
 import boto3.s3.transfer as s3transfer
@@ -103,6 +104,14 @@ def upload_folder_to_s3_by_tar(local_folder_path, bucket_name, s3_folder_path):
     # tar.close()
     s3_client = boto3.client('s3')
     s3_client.upload_file(tar_name, bucket_name, os.path.join(s3_folder_path, tar_name))
+    os.system(f"rm {tar_name}")
+
+def upload_to_s3_by_tar_put(local_path, s3_presign_url):
+    tar_name = f"{os.path.basename(local_path)}.tar"
+    os.system(f'tar cvf {tar_name} {local_path}')
+    response = requests.put(s3_presign_url, open(tar_name, "rb"))
+    os.system(f"rm {tar_name}")
+    response.raise_for_status()
 
 
 def download_folder_from_s3(bucket_name, s3_folder_path, local_folder_path):
@@ -124,6 +133,7 @@ def download_folder_from_s3_by_tar(bucket_name, s3_tar_path, local_tar_path):
     tar = tarfile.open(local_tar_path, "r")
     tar.extractall()
     tar.close()
+    os.system(f"rm {local_tar_path}")
 
 
 def download_file_from_s3(bucket_name, s3_file_path, local_file_path):

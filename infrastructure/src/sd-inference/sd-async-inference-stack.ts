@@ -73,6 +73,7 @@ export class SDAsyncInferenceStack extends Stack {
 
     const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
       snsTopic: inference_result_topic,
+      snsErrorTopic: inference_result_error_topic
     });
 
     // Create a Lambda function for inference
@@ -127,6 +128,11 @@ export class SDAsyncInferenceStack extends Stack {
 
     const run_sagemaker_inference = inference.addResource('run-sagemaker-inference');
     run_sagemaker_inference.addMethod('POST', txt2imgIntegration, {
+      apiKeyRequired: true,
+    });
+
+    const deploy_sagemaker_endpoint = inference.addResource('deploy-sagemaker-endpoint');
+    deploy_sagemaker_endpoint.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
 
