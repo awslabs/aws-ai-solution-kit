@@ -24,7 +24,7 @@ based on Stable Diffusion. S3 is used to store large payloads and passed as obje
 request and Lambda function to avoid request payload limitation
 Note: Sync Inference is put here for reference, we use Async Inference now
 */
-interface SDAsyncInferenceStackProps extends StackProps {
+export interface SDAsyncInferenceStackProps extends StackProps {
   api_gate_way: apigw.RestApi;
   s3_bucket: s3.Bucket;
   training_table: dynamodb.Table;
@@ -35,8 +35,8 @@ export class SDAsyncInferenceStack extends Stack {
     super(scope, id, props);
 
     const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'ImportedRestApi', {
-      restApiId: props?.api_gate_way.restApiId ?? "" ,
-      rootResourceId: props?.api_gate_way.restApiRootResourceId ?? "",
+      restApiId: props?.api_gate_way.restApiId ?? '',
+      rootResourceId: props?.api_gate_way.restApiRootResourceId ?? '',
     });
 
 
@@ -47,34 +47,35 @@ export class SDAsyncInferenceStack extends Stack {
 
     // create Dynamodb table to save the inference job data
     const sd_inference_job_table = new dynamodb.Table(
-       this,
-       'SD_Inference_job',
-        {
-          billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-          removalPolicy: RemovalPolicy.DESTROY,
-          partitionKey: {
-            name: 'InferenceJobId',
-            type: dynamodb.AttributeType.STRING,
-          },
-          pointInTimeRecovery: true,
+      this,
+      'SD_Inference_job',
+      {
+        billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+        removalPolicy: RemovalPolicy.DESTROY,
+        partitionKey: {
+          name: 'InferenceJobId',
+          type: dynamodb.AttributeType.STRING,
         },
-      );
+        pointInTimeRecovery: true,
+      },
+    );
 
-      // Create an SNS topic to get async inference result
-      const inference_result_topic = new sns.Topic(
-        this,
-        'SNS-Receive-SageMaker-inference-success',
-      );
-    
-      const inference_result_error_topic = new sns.Topic(
-        this,
-        'SNS-Receive-SageMaker-inference-error',
-      );
+    // Create an SNS topic to get async inference result
+    const inference_result_topic = new sns.Topic(
+      this,
+      'SNS-Receive-SageMaker-inference-success',
+    );
 
-      const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
-        snsTopic: inference_result_topic,
-      });
-      
+    const inference_result_error_topic = new sns.Topic(
+      this,
+      'SNS-Receive-SageMaker-inference-error',
+    );
+
+    const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
+      snsTopic: inference_result_topic,
+      snsErrorTopic: inference_result_error_topic
+    });
+
     // Create a Lambda function for inference
     const inferenceLambda = new lambda.DockerImageFunction(
       this,
@@ -84,17 +85,17 @@ export class SDAsyncInferenceStack extends Stack {
         timeout: Duration.minutes(15),
         memorySize: 3008,
         environment: {
-        DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
-        DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
-        S3_BUCKET: payloadBucket.bucketName,
-        ACCOUNT_ID: Aws.ACCOUNT_ID,
-        REGION_NAME: Aws.REGION,
-        SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
-        SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
-        STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
-      },
-      logRetention: RetentionDays.ONE_WEEK,
-    });
+          DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+          DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
+          S3_BUCKET: payloadBucket.bucketName,
+          ACCOUNT_ID: Aws.ACCOUNT_ID,
+          REGION_NAME: Aws.REGION,
+          SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
+          SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
+          STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
+        },
+        logRetention: RetentionDays.ONE_WEEK,
+      });
 
     // Grant Lambda permission to read/write from/to the S3 bucket
     payloadBucket.grantReadWrite(inferenceLambda);
@@ -105,11 +106,12 @@ export class SDAsyncInferenceStack extends Stack {
         actions: [
           'sagemaker:*',
           's3:Get*',
-          's3:List*', 
+          's3:List*',
           's3:PutObject',
           's3:GetObject',
           'sns:*',
-          'states:*'],
+          'states:*',
+        ],
         resources: ['*'],
       }),
     );
@@ -124,13 +126,10 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     });
 
-    const run_sagemaker_inference = inference.addResource('run-sagemaker-inference'); 
+    const run_sagemaker_inference = inference.addResource('run-sagemaker-inference');
     run_sagemaker_inference.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
-
-    
-
 
 
     // Create a Lambda function
@@ -192,7 +191,7 @@ export class SDAsyncInferenceStack extends Stack {
       role: lambdaRole,
       environment: {
         DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
-        DDB_TRAINING_TABLE_NAME:  props?.training_table.tableName ?? "",
+        DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
         S3_BUCKET: payloadBucket.bucketName,
         ACCOUNT_ID: Aws.ACCOUNT_ID,
         REGION_NAME: Aws.REGION,
@@ -202,14 +201,13 @@ export class SDAsyncInferenceStack extends Stack {
     });
 
 
-
     // Add the SNS topic as an event source for the Lambda function
     handler.addEventSource(
       new eventSources.SnsEventSource(inference_result_topic),
     );
     handler.addEventSource(
       new eventSources.SnsEventSource(inference_result_error_topic),
-    )
-   
+    );
+
   }
 }

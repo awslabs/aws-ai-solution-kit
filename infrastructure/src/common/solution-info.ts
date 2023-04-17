@@ -17,7 +17,7 @@ limitations under the License.
 export class SolutionInfo {
   static SOLUTION_ID = '######';
   static SOLUTION_NAME = 'Stable Diffusion SageMaker Extension';
-  static SOLUTION_NAME_ABBR = 'AIGC_SAGEMAKER'
+  static SOLUTION_NAME_ABBR = 'AIGC_SAGEMAKER';
   static SOLUTION_VERSION = '<TEMPLATE_BUILD_VERSION>';
   static DESCRIPTION = `(${SolutionInfo.SOLUTION_ID}) ${SolutionInfo.SOLUTION_NAME} (Version ${SolutionInfo.SOLUTION_VERSION})`;
 }

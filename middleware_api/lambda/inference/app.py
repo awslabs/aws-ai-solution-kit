@@ -10,8 +10,14 @@ from common.enum import MessageEnum
 from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
+
 import boto3
 import json
+
+from sagemaker.predictor import Predictor
+from sagemaker.predictor_async import AsyncPredictor
+from sagemaker.serializers import JSONSerializer
+from sagemaker.deserializers import JSONDeserializer
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
@@ -35,18 +41,41 @@ def root():
 @app.post("/inference/run-sagemaker-inference")
 async def run_sagemaker_inference(request: Request):
     logger.info('entering the run_sage_maker_inference function!')
+    payload = await request.json()
+    print(f"input in json format {payload}")
+    endpoint_name = payload["endpoint_name"]
+    # item_id = data["item_id"]
+    # q = data.get("q")
+
+    predictor = Predictor(endpoint_name)
+
+    predictor = AsyncPredictor(predictor, name=endpoint_name)
+    predictor.serializer = JSONSerializer()
+    predictor.deserializer = JSONDeserializer()
+    prediction = predictor.predict_async(data=payload)
+    output_path = prediction.output_path
+    
+    print(f"output_path is {output_path}")
+    return {"endpoint_name": endpoint_name, "output_path": output_path}
+
+@app.post("/inference/deploy-sagemaker-endpoint")
+async def deploy_sagemaker_endpoint(request: Request):
+    logger.info("entering the deploy_sagemaker_endpoint function!")
     try:
         data = await request.json()
         item_id = data["item_id"]
         q = data.get("q")
 
         resp = stepf_client.start_execution(
-                                 stateMachineArn=STEP_FUNCTION_ARN,
-                                 input=json.dumps(data))
-        logger.info("trigger step-function with following respoinse")
+            stateMachineArn=STEP_FUNCTION_ARN,
+            input=json.dumps(data)
+        )
+
+        logger.info("trigger step-function with following response")
+
         return {"item_id": item_id, "q": q}
     except Exception as e:
-        logger.error(f'error calling run-sagemaker-inference with exception: {e}')
+        logger.error(f"error calling run-sagemaker-inference with exception: {e}")
         raise e
 
 #app.include_router(search) TODO: adding sub router for future

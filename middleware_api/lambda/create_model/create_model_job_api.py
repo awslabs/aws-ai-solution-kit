@@ -1,16 +1,18 @@
 import dataclasses
 import logging
 import os
+from typing import Any
+import json
 
 import boto3
 from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
-from create_model._types import TrainingJob, CreateModelStatus
+from create_model._types import ModelJob, CreateModelStatus
 
 bucket_name = os.environ.get('S3_BUCKET')
-train_table = os.environ.get('DYNAMODB_TABLE')
+model_table = os.environ.get('DYNAMODB_TABLE')
 
 logger = logging.getLogger('boto3')
 ddb_service = DynamoDbUtilsService(logger=logger)
@@ -20,6 +22,7 @@ ddb_service = DynamoDbUtilsService(logger=logger)
 class Event:
     model_type: str
     name: str
+    params: dict[str, Any]
     filenames: [str]
 
 
@@ -41,13 +44,14 @@ def create_model_api(raw_event, context):
                                             ExpiresIn=3600 * 24 * 7)
             presign_url_map[filename] = url
 
-        training_job = TrainingJob(
+        model_job = ModelJob(
             id=request_id,
             s3_location=f's3://{bucket_name}/{base_key}',
             model_type=_type,
-            job_status=CreateModelStatus.Initial
+            job_status=CreateModelStatus.Initial,
+            params=event.params
         )
-        ddb_service.put_items(table=train_table, entries=training_job.__dict__)
+        ddb_service.put_items(table=model_table, entries=model_job.__dict__)
     except ClientError as e:
         logger.error(e)
         return {
@@ -57,11 +61,12 @@ def create_model_api(raw_event, context):
 
     return {
         'statusCode': 200,
-        'trainJob': {
-            'id': training_job.id,
-            'status': training_job.job_status.value,
-            's3_base': training_job.s3_location,
-            'model_type': training_job.model_type,
+        'job': {
+            'id': model_job.id,
+            'status': model_job.job_status.value,
+            's3_base': model_job.s3_location,
+            'model_type': model_job.model_type,
+            'params': model_job.params  # not safe if not json serializable type
         },
         's3PresignUrl':  presign_url_map
     }
