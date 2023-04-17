@@ -136,7 +136,11 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     });
 
-
+    // Create a deployment for the API Gateway
+    new apigw.Deployment(this, 'Deployment', {
+        api: restful_api,
+    });
+   
     // Create a Lambda function
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
       assumedBy: new CompositePrincipal(
