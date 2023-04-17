@@ -131,6 +131,11 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     });
 
+    const deploy_sagemaker_endpoint = inference.addResource('deploy-sagemaker-endpoint');
+    deploy_sagemaker_endpoint.addMethod('POST', txt2imgIntegration, {
+      apiKeyRequired: true,
+    });
+
 
     // Create a Lambda function
     const lambdaRole = new iam.Role(this, 'LambdaRole', {
