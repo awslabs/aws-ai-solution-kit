@@ -65,13 +65,6 @@ def create_controlnet_request_model(p_api_class):
 ControlNetTxt2ImgRequest = create_controlnet_request_model(StableDiffusionTxt2ImgProcessingAPI)
 ControlNetImg2ImgRequest = create_controlnet_request_model(StableDiffusionImg2ImgProcessingAPI)
 
-class ModelsRequest():
-    stablediffusion: List[str]
-    controlnet: List[str]
-    hypernetwork: List[str]
-    lora: List[str]
-    textualinversion: List[str]
-
 class InvocationsRequest(BaseModel):
     task: str
     username: Optional[str]
