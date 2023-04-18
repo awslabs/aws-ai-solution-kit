@@ -48,7 +48,7 @@ async def run_sagemaker_inference(request: Request):
     logger.info('entering the run_sage_maker_inference function!')
 
     # TODO: add logic for inference id
-    inference_id = f"fake-inference-id-232f34134"
+    inference_id = get_uuid() 
 
     payload = await request.json()
     print(f"input in json format {payload}")

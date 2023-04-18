@@ -106,7 +106,7 @@ export class SagemakerInferenceStateMachine {
             iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess')
         );
         sagemakerRole.addManagedPolicy(
-            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSNSFullAccess"')
+            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSNSFullAccess')
         )
 
             // Create a custom IAM policy to allow Lambda to pass the SageMaker execution role
