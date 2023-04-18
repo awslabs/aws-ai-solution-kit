@@ -13,6 +13,7 @@ from fastapi_pagination import add_pagination
 
 import boto3
 import json
+import uuid
 
 from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
@@ -27,6 +28,10 @@ app = FastAPI(
     title="API List of SageMaker Inference",
     version="0.9",
 )
+
+def get_uuid():
+    uuid_str = uuid.uuid4.str()
+    return uuid_str
 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
@@ -43,7 +48,7 @@ async def run_sagemaker_inference(request: Request):
     logger.info('entering the run_sage_maker_inference function!')
 
     # TODO: add logic for inference id
-    inference_id = f"fake-inference-id-232f34134"
+    inference_id = get_uuid() 
 
     payload = await request.json()
     print(f"input in json format {payload}")

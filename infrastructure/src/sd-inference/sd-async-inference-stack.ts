@@ -1,4 +1,3 @@
-import * as path from 'path';
 import {
   Stack,
   StackProps,
@@ -60,6 +59,21 @@ export class SDAsyncInferenceStack extends Stack {
       },
     );
 
+    // create Dynamodb table to save the inference job data
+    const sd_endpoint_deployment_job_table = new dynamodb.Table(
+      this,
+      'SD_endpoint_deployment_job',
+      {
+        billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+        removalPolicy: RemovalPolicy.DESTROY,
+        partitionKey: {
+          name: 'EndpointDeploymentJobId',
+          type: dynamodb.AttributeType.STRING,
+        },
+        pointInTimeRecovery: true,
+      },
+    );
+
     // Create an SNS topic to get async inference result
     const inference_result_topic = new sns.Topic(
       this,
@@ -73,7 +87,9 @@ export class SDAsyncInferenceStack extends Stack {
 
     const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
       snsTopic: inference_result_topic,
-      snsErrorTopic: inference_result_error_topic
+      snsErrorTopic: inference_result_error_topic,
+      inferenceJobName: sd_inference_job_table.tableName,
+      endpointDeploymentJobName: sd_endpoint_deployment_job_table.tableName
     });
 
     // Create a Lambda function for inference
@@ -87,6 +103,7 @@ export class SDAsyncInferenceStack extends Stack {
         environment: {
           DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
           DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
+          DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: sd_endpoint_deployment_job_table.tableName,
           S3_BUCKET: payloadBucket.bucketName,
           ACCOUNT_ID: Aws.ACCOUNT_ID,
           REGION_NAME: Aws.REGION,
@@ -189,25 +206,47 @@ export class SDAsyncInferenceStack extends Stack {
     lambdaRole.addToPolicy(s3_rw_policy);
     lambdaRole.addToPolicy(lambdaRunPolicy);
 
-    const handler = new lambda.Function(this, 'InferenceResultNotification', {
-      runtime: lambda.Runtime.PYTHON_3_9,
-      handler: 'app.lambda_handler',
-      memorySize: 256,
-      timeout: Duration.seconds(900),
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, '../../../middleware_api/lambda/inference_result_notification'),
-      ),
-      role: lambdaRole,
-      environment: {
-        DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
-        DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
-        S3_BUCKET: payloadBucket.bucketName,
-        ACCOUNT_ID: Aws.ACCOUNT_ID,
-        REGION_NAME: Aws.REGION,
+    // const handler = new lambda.Function(this, 'InferenceResultNotification', {
+    //   runtime: lambda.Runtime.PYTHON_3_9,
+    //   handler: 'app.lambda_handler',
+    //   memorySize: 256,
+    //   timeout: Duration.seconds(900),
+    //   code: lambda.Code.fromAsset(
+    //     path.join(__dirname, '../../../middleware_api/lambda/inference_result_notification'),
+    //   ),
+    //   role: lambdaRole,
+    //   environment: {
+    //     DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+    //     DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
+    //     S3_BUCKET: payloadBucket.bucketName,
+    //     ACCOUNT_ID: Aws.ACCOUNT_ID,
+    //     REGION_NAME: Aws.REGION,
 
-      },
-      logRetention: RetentionDays.ONE_WEEK,
-    });
+    //   },
+    //   logRetention: RetentionDays.ONE_WEEK,
+    // });
+
+    // Create a Lambda function for inference
+    const handler = new lambda.DockerImageFunction(
+      this,
+      'InferenceResultNotification',
+      {
+        code: lambda.DockerImageCode.fromImageAsset('../middleware_api/lambda/inference_result_notification'),
+        timeout: Duration.minutes(15),
+        memorySize: 1024,
+        environment: {
+          DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
+          DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
+          DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: sd_endpoint_deployment_job_table.tableName,
+          S3_BUCKET: payloadBucket.bucketName,
+          ACCOUNT_ID: Aws.ACCOUNT_ID,
+          REGION_NAME: Aws.REGION,
+          SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
+          SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
+          STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
+        },
+        logRetention: RetentionDays.ONE_WEEK,
+      });
 
 
     // Add the SNS topic as an event source for the Lambda function

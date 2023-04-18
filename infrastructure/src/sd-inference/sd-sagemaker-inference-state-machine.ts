@@ -11,6 +11,8 @@ import * as iam from "aws-cdk-lib/aws-iam";
 export interface SagemakerInferenceProps {
     snsTopic: sns.Topic;
     snsErrorTopic: sns.Topic;
+    inferenceJobName: string;
+    endpointDeploymentJobName: string;
 }
 
 export class SagemakerInferenceStateMachine {
@@ -21,13 +23,17 @@ export class SagemakerInferenceStateMachine {
         this.scope = scope;
         this.stateMachineArn = this.sagemakerStepFunction(
             props.snsTopic,
-            props.snsErrorTopic
+            props.snsErrorTopic,
+            props.inferenceJobName,
+            props.endpointDeploymentJobName,
         ).stateMachineArn;
     }
 
     private sagemakerStepFunction(
         snsTopic: sns.Topic,
-        snsErrorTopic: sns.Topic 
+        snsErrorTopic: sns.Topic,
+        inferenceJobName: string,
+        endpointDeploymentJobName: string 
     ): stepfunctions.StateMachine {
         const lambdaPolicy = // Grant Lambda permission to invoke SageMaker endpoint
             new iam.PolicyStatement({
@@ -63,6 +69,8 @@ export class SagemakerInferenceStateMachine {
                 environment: {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
+                    DDB_INFERENCE_TABLE_NAME: inferenceJobName,
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
                 },
             }
         );
@@ -82,12 +90,35 @@ export class SagemakerInferenceStateMachine {
                 environment: {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicName,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
+                    DDB_INFERENCE_TABLE_NAME: inferenceJobName,
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
                 },
             }
         );
 
+        // Create the SageMaker execution role
+        const sagemakerRole = new iam.Role(this.scope, 'SagemakerExecutionRole', {
+            assumedBy: new iam.ServicePrincipal('sagemaker.amazonaws.com'),
+        });
+  
+        // Attach policies to the SageMaker execution role as needed
+        sagemakerRole.addManagedPolicy(
+            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess')
+        );
+        sagemakerRole.addManagedPolicy(
+            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSNSFullAccess')
+        )
+
+            // Create a custom IAM policy to allow Lambda to pass the SageMaker execution role
+        const sagemakerPassRolePolicy = new iam.PolicyStatement({
+            actions: ['iam:PassRole'],
+            resources: [sagemakerRole.roleArn],
+        });
+
         lambdaStartDeploy.addToRolePolicy(lambdaPolicy);
+        lambdaStartDeploy.addToRolePolicy(sagemakerPassRolePolicy)
         lambdaCheckDeploymentStatus.addToRolePolicy(lambdaPolicy);
+        lambdaCheckDeploymentStatus.addToRolePolicy(sagemakerPassRolePolicy)
 
         // Define the Step Functions tasks
         const startDeploymentTask = new stepfunctionsTasks.LambdaInvoke(
