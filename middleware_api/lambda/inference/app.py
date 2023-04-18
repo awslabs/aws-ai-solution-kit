@@ -10,7 +10,6 @@ from common.enum import MessageEnum
 from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
-from layer.job_service.client import JobInfoUtilsService
 
 import boto3
 import json
@@ -24,7 +23,14 @@ from sagemaker.deserializers import JSONDeserializer
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
 STEP_FUNCTION_ARN = os.environ.get('STEP_FUNCTION_ARN')
-job_info_client = JobInfoUtilsService(logger=logger)
+
+DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
+DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
+DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
+
+ddb_client = boto3.resource('dynamodb')
+inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
+endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
 
 app = FastAPI(
     title="API List of SageMaker Inference",
