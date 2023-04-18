@@ -7,7 +7,7 @@ from sagemaker import Predictor
 from sagemaker.predictor_async import AsyncPredictor
 
 from common.ddb_service.client import DynamoDbUtilsService
-from create_model._types import ModelJob
+from _types import ModelJob, CheckPoint
 
 bucket_name = os.environ.get('S3_BUCKET')
 train_table = os.environ.get('DYNAMODB_TABLE')
@@ -28,12 +28,12 @@ class DecimalEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def create_sagemaker_inference(job: ModelJob):
+def create_sagemaker_inference(job: ModelJob, checkpoint: CheckPoint):
     payload = {
         "task": "db-create-model",  # router
         "db_create_model_payload": json.dumps({
             "s3_output_path": f'{bucket_name}/{job.model_type}/',  # output object
-            "s3_input_path": job.s3_location,
+            "s3_input_path": checkpoint.s3_location,
             "param": job.params,
             "job_id": job.id
         }, cls=DecimalEncoder),
