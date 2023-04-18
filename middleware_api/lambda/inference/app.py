@@ -69,6 +69,15 @@ async def run_sagemaker_inference(request: Request):
     predictor.deserializer = JSONDeserializer()
     prediction = predictor.predict_async(data=payload, inference_id=inference_id)
     output_path = prediction.output_path
+
+    #put the item to inference DDB for later check status
+    current_time = str(datetime.now())
+    response = inference_table.put_item(
+        Item={
+            'InferenceJobId': inference_id),
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
     
     print(f"output_path is {output_path}")
     return {"endpoint_name": endpoint_name, "output_path": output_path}
@@ -86,6 +95,15 @@ async def deploy_sagemaker_endpoint(request: Request):
             stateMachineArn=STEP_FUNCTION_ARN,
             input=json.dumps(payload)
         )
+
+        #put the item to inference DDB for later check status
+        current_time = str(datetime.now())
+        response = endpoint_deployment_table.put_item(
+        Item={
+            'EndpointDeploymentJobId': endpoint_deployment_id),
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
 
         logger.info("trigger step-function with following response")
 
