@@ -5,6 +5,7 @@ from PIL import Image
 import base64
 
 s3_resource = boto3.resource('s3')
+s3_client = boto3.client('s3')
 
 def get_bucket_and_key(s3uri):
     pos = s3uri.find('/', 5)
@@ -34,11 +35,16 @@ def lambda_handler(event, context):
         json_body = json.loads(body)
 
         # save images
-        for b64image in json_body["images"]:
+        for count, b64image in enumerate(json_body["images"]):
             image = decode_base64_to_image(b64image).convert("RGB")
             output = io.BytesIO()
             image.save(output, format="JPEG")
             # TODO put to s3 bucket
+            # s3_client.put_object(
+            #     Body=output.getvalue(),
+            #     Bucket=bucket,
+            #     Key=f"{inference_id}_{count}.jpg"
+            # )
 
         # save parameters
         inference_parameters = {}
