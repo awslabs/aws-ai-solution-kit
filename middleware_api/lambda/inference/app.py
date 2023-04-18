@@ -14,10 +14,6 @@ from fastapi_pagination import add_pagination
 import boto3
 import json
 
-from datetime import datetime
-import pytz
-import uuid
-
 from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
 from sagemaker.serializers import JSONSerializer
@@ -46,9 +42,8 @@ def root():
 async def run_sagemaker_inference(request: Request):
     logger.info('entering the run_sage_maker_inference function!')
 
-    now = datetime.now() # current date and time
-    date_time = now.strftime("%Y-%m-%d-%H-%M-%S")
-    inference_id = f"{date_time}-{uuid.uuid4()}"
+    # TODO: add logic for inference id
+    inference_id = f"fake-inference-id-232f34134"
 
     payload = await request.json()
     print(f"input in json format {payload}")
