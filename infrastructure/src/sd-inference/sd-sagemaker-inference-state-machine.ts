@@ -13,6 +13,7 @@ export interface SagemakerInferenceProps {
     snsErrorTopic: sns.Topic;
     inferenceJobName: string;
     endpointDeploymentJobName: string;
+    userNotifySNS: sns.Topic; 
 }
 
 export class SagemakerInferenceStateMachine {
@@ -26,6 +27,7 @@ export class SagemakerInferenceStateMachine {
             props.snsErrorTopic,
             props.inferenceJobName,
             props.endpointDeploymentJobName,
+            props.userNotifySNS
         ).stateMachineArn;
     }
 
@@ -33,7 +35,8 @@ export class SagemakerInferenceStateMachine {
         snsTopic: sns.Topic,
         snsErrorTopic: sns.Topic,
         inferenceJobName: string,
-        endpointDeploymentJobName: string 
+        endpointDeploymentJobName: string,
+        userNotifySNS: sns.Topic
     ): stepfunctions.StateMachine {
         const lambdaPolicy = // Grant Lambda permission to invoke SageMaker endpoint
             new iam.PolicyStatement({
@@ -86,7 +89,8 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
-                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
                 },
             }
         );
@@ -107,7 +111,8 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicName,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
-                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
                 },
             }
         );
