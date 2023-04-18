@@ -62,7 +62,8 @@ def generate_on_cloud():
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
-    endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
+    # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
+    endpoint_name = "infer-endpoint-d6bf"
     # construct payload
     payload = {
     "endpoint_name": endpoint_name,

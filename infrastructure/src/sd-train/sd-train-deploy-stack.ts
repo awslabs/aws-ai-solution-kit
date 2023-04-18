@@ -15,11 +15,11 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { CreateModelJobApi } from './create-model-job-api';
-import { CreateModelStateMachine } from './create-model-state-machine';
+import { ListAllModelJobApi } from './listall-model-job-api';
 import { RestApiGateway } from './rest-api-gateway';
 import { SagemakerTrainApi } from './sagemaker-train-api.js';
 import { SagemakerTrainStateMachine } from './sagemaker-train-state-machine';
-import { UpdateModelStatusRestApi } from './update_model_status_api';
+import { UpdateModelStatusRestApi } from './update-model-status-api';
 
 
 export class SdTrainDeployStack extends Stack {
@@ -80,6 +80,14 @@ export class SdTrainDeployStack extends Stack {
       httpMethod: 'POST',
     });
 
+    new ListAllModelJobApi(this, 'aigc-listall-model-job', {
+      router: routers.model,
+      srcRoot: this.srcRoot,
+      modelTable: this.modelTable,
+      commonLayer: commonLayer,
+      httpMethod: 'GET',
+    });
+
     new UpdateModelStatusRestApi(this, {
       s3Bucket: this.s3Bucket,
       router: routers.model,
@@ -87,15 +95,7 @@ export class SdTrainDeployStack extends Stack {
       commonLayer: commonLayer,
       srcRoot: this.srcRoot,
       modelTable: this.modelTable,
-      stateMachine: new CreateModelStateMachine(
-        this, 'CreateModelSfn', {
-          modelTable: this.modelTable,
-          s3Bucket: this.s3Bucket,
-          snsTopic: snsTopic,
-          srcRoot: this.srcRoot,
-          layer: commonLayer,
-        },
-      ).stateMachine,
+      snsTopic: snsTopic,
     });
   }
 
