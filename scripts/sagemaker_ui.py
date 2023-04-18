@@ -62,8 +62,7 @@ def generate_on_cloud():
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
-    # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
-    endpoint_name = "infer-endpoint-d6bf"
+    endpoint_name = "infer-endpoint-bcc9"
     # get api_gateway_url
     api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"

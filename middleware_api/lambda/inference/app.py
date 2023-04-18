@@ -30,7 +30,7 @@ app = FastAPI(
 )
 
 def get_uuid():
-    uuid_str = uuid.uuid4.str()
+    uuid_str = str(uuid.uuid4())
     return uuid_str
 
 # Global exception capture
