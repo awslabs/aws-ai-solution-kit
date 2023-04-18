@@ -70,9 +70,9 @@ async def deploy_sagemaker_endpoint(request: Request):
     logger.info("entering the deploy_sagemaker_endpoint function!")
     try:
         payload = await request.json()
+        endpoint_deployment_id = get_uuid()
         logger.info(f"input in json format {payload}")
-        # item_id = data["item_id"]
-        # q = data.get("q")
+        payload['endpoint_deployment_id'] = endpoint_deployment_id
 
         resp = stepf_client.start_execution(
             stateMachineArn=STEP_FUNCTION_ARN,
