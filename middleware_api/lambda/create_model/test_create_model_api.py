@@ -4,9 +4,10 @@ from decimal import Decimal
 from unittest import TestCase
 import requests
 
-os.environ.setdefault('AWS_PROFILE', 'cloudfront_ext')
-os.environ.setdefault('S3_BUCKET', 'alvindaiyan-aigc-testing')
+os.environ.setdefault('AWS_PROFILE', 'playground')
+os.environ.setdefault('S3_BUCKET', 'alvindaiyan-aigc-testing-playground')
 os.environ.setdefault('DYNAMODB_TABLE', 'ModelTable')
+os.environ.setdefault('CHECKPOINT_TABLE', 'CheckpointTable')
 os.environ.setdefault('SAGEMAKER_ENDPOINT_NAME', 'aigc-utils-endpoint')
 
 
@@ -45,7 +46,7 @@ class ModelsApiTest(TestCase):
     def test_model_update(self):
         from update_job_api import update_train_job_api
         update_train_job_api({
-            'model_id': 'model id',
+            'model_id': 'b983afd6-96ac-4481-a105-b5fa7d7dbb24',
             'status': 'Creating'
         }, {})
 
@@ -65,3 +66,17 @@ class ModelsApiTest(TestCase):
         from create_model.create_model_job_api import list_all_models_api
         resp = list_all_models_api({}, {})
         print(resp)
+
+    def test_s3(self):
+        # split s3://alvindaiyan-aigc-testing-playground/models/7a77d369-142c-4091-91e1-9278566a6a4f.out
+        from create_model.update_job_api import split_s3_path
+        bucket, key = split_s3_path('s3://path')
+        from create_model.update_job_api import get_object
+        get_object(bucket=bucket, key=key)
+
+
+    def test_list_checkpoints(self):
+        from create_model.create_model_job_api import list_all_checkpoints_api
+        resp = list_all_checkpoints_api({}, {})
+        print(resp)
+

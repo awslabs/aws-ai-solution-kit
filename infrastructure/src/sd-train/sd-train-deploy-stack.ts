@@ -31,12 +31,13 @@ export class SdTrainDeployStack extends Stack {
   public readonly modelTable: aws_dynamodb.Table;
   public readonly checkPointTable: aws_dynamodb.Table;
   public apiGateway: aws_apigateway.RestApi;
+  public readonly snsTopic: aws_sns.Topic;
 
   private readonly srcRoot='../middleware_api/lambda';
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    const snsTopic = this.createSns();
+    this.snsTopic = this.createSns();
     this.s3Bucket = this.createS3Bucket();
     const commonLayer = this.commonLayer();
 
@@ -67,7 +68,7 @@ export class SdTrainDeployStack extends Stack {
     });
 
     const trainStateMachine = new SagemakerTrainStateMachine(this, {
-      snsTopic: snsTopic,
+      snsTopic: this.snsTopic,
       trainingTable: this.trainingTable,
       srcRoot: this.srcRoot,
     });
@@ -112,7 +113,7 @@ export class SdTrainDeployStack extends Stack {
       commonLayer: commonLayer,
       srcRoot: this.srcRoot,
       modelTable: this.modelTable,
-      snsTopic: snsTopic,
+      snsTopic: this.snsTopic,
       checkpointTable: this.checkPointTable,
     });
 
@@ -130,6 +131,7 @@ export class SdTrainDeployStack extends Stack {
     const emailParam = new CfnParameter(this, 'email', {
       type: 'String',
       description: 'Email address to receive notifications',
+      allowedPattern: '\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}',
       default: 'example@example.com',
     });
 

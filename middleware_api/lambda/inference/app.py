@@ -13,6 +13,7 @@ from fastapi_pagination import add_pagination
 
 import boto3
 import json
+import uuid
 
 from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
@@ -23,10 +24,22 @@ logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
 STEP_FUNCTION_ARN = os.environ.get('STEP_FUNCTION_ARN')
 
+DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
+DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
+DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
+
+ddb_client = boto3.resource('dynamodb')
+inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
+endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
+
 app = FastAPI(
     title="API List of SageMaker Inference",
     version="0.9",
 )
+
+def get_uuid():
+    uuid_str = str(uuid.uuid4())
+    return uuid_str
 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
@@ -41,19 +54,30 @@ def root():
 @app.post("/inference/run-sagemaker-inference")
 async def run_sagemaker_inference(request: Request):
     logger.info('entering the run_sage_maker_inference function!')
+
+    # TODO: add logic for inference id
+    inference_id = get_uuid() 
+
     payload = await request.json()
     print(f"input in json format {payload}")
     endpoint_name = payload["endpoint_name"]
-    # item_id = data["item_id"]
-    # q = data.get("q")
 
     predictor = Predictor(endpoint_name)
 
     predictor = AsyncPredictor(predictor, name=endpoint_name)
     predictor.serializer = JSONSerializer()
     predictor.deserializer = JSONDeserializer()
-    prediction = predictor.predict_async(data=payload)
+    prediction = predictor.predict_async(data=payload, inference_id=inference_id)
     output_path = prediction.output_path
+
+    #put the item to inference DDB for later check status
+    current_time = str(datetime.now())
+    response = inference_table.put_item(
+        Item={
+            'InferenceJobId': inference_id),
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
     
     print(f"output_path is {output_path}")
     return {"endpoint_name": endpoint_name, "output_path": output_path}
@@ -63,14 +87,23 @@ async def deploy_sagemaker_endpoint(request: Request):
     logger.info("entering the deploy_sagemaker_endpoint function!")
     try:
         payload = await request.json()
+        endpoint_deployment_id = get_uuid()
         logger.info(f"input in json format {payload}")
-        # item_id = data["item_id"]
-        # q = data.get("q")
+        payload['endpoint_deployment_id'] = endpoint_deployment_id
 
         resp = stepf_client.start_execution(
             stateMachineArn=STEP_FUNCTION_ARN,
             input=json.dumps(payload)
         )
+
+        #put the item to inference DDB for later check status
+        current_time = str(datetime.now())
+        response = endpoint_deployment_table.put_item(
+        Item={
+            'EndpointDeploymentJobId': endpoint_deployment_id),
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
 
         logger.info("trigger step-function with following response")
 

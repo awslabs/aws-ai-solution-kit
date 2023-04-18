@@ -62,7 +62,11 @@ def generate_on_cloud():
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
-    endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
+    endpoint_name = "infer-endpoint-bcc9"
+    # get api_gateway_url
+    api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    api_key = "09876543210987654321"
+
     # construct payload
     payload = {
     "endpoint_name": endpoint_name,
@@ -100,51 +104,14 @@ def generate_on_cloud():
         }
     
     # stage 2: inference using endpoint_name
-    # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
-
-    # predictor = Predictor(endpoint_name)
-
-    # predictor = AsyncPredictor(predictor, name=endpoint_name)
-    # predictor.serializer = JSONSerializer()
-    # predictor.deserializer = JSONDeserializer()
-    # prediction = predictor.predict_async(data=payload)
-    # output_path = prediction.output_path
-
-    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/run-sagemaker-inference"
-
-    api_key = "09876543210987654321"
-
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
-    # data = {
-    #     "item_id": "value1",
-    #     "q": "value2"
-    # }
-    response = requests.post(api_gateway_url, json=payload, headers=headers)
+    inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"
+    response = requests.post(inference_url, json=payload, headers=headers)
     r = response.json()
     print(f"response for rest api {r}")
-
-    # stage 3: notified by sns and get result, upload to s3 position
-    # new_predictor = Predictor(endpoint_name)
-
-    # new_predictor = AsyncPredictor(new_predictor, name=endpoint_name)
-    # new_predictor.serializer = JSONSerializer()
-    # new_predictor.deserializer = JSONDeserializer()
-    # new_prediction = AsyncInferenceResponse(new_predictor, output_path)
-    # config = WaiterConfig(
-    # max_attempts=100, #  number of attempts
-    # delay=10 #  time in seconds to wait between attempts
-    # )
-    # new_prediction.get_result(config)
-
-    # s3_resource = boto3.resource('s3')
-    # def get_bucket_and_key(s3uri):
-    #     pos = s3uri.find('/', 5)
-    #     bucket = s3uri[5 : pos]
-    #     key = s3uri[pos + 1 : ]
-    #     return bucket, key
 
 def sagemaker_deploy(instance_type, initial_instance_count=1):
     """ Create SageMaker endpoint for GPU inference.
@@ -157,27 +124,25 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
+    # get api_gateway_url
+    api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    api_key = "09876543210987654321"
+
     payload = {
     "instance_type": instance_type,
     "initial_instance_count": initial_instance_count
     }
 
-    api_gateway_url = "https://u9cgx71kt4.execute-api.us-west-2.amazonaws.com/prod/inference/deploy-sagemaker-endpoint"
-
-    api_key = "09876543210987654321"
+    deployment_url = f"{api_gateway_url}inference/deploy-sagemaker-endpoint"
 
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
 
-    response = requests.post(api_gateway_url, json=payload, headers=headers)
+    response = requests.post(deployment_url, json=payload, headers=headers)
     r = response.json()
     print(f"response for rest api {r}")
-
-
-
-
 
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
