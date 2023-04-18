@@ -3,7 +3,6 @@ FROM public.ecr.aws/lambda/python:3.9-x86_64
 
 # Copy function code
 COPY app.py ${LAMBDA_TASK_ROOT}
-COPY client.py ${LAMBDA_TASK_ROOT}
 COPY logging.conf ${LAMBDA_TASK_ROOT}
 COPY requirements.txt .
 RUN mkdir -p ${LAMBDA_TASK_ROOT}/common
