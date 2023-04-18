@@ -13,6 +13,7 @@ export interface SagemakerInferenceProps {
     snsErrorTopic: sns.Topic;
     inferenceJobName: string;
     endpointDeploymentJobName: string;
+    userNotifySNS: sns.Topic; 
 }
 
 export class SagemakerInferenceStateMachine {
@@ -26,6 +27,7 @@ export class SagemakerInferenceStateMachine {
             props.snsErrorTopic,
             props.inferenceJobName,
             props.endpointDeploymentJobName,
+            props.userNotifySNS
         ).stateMachineArn;
     }
 
@@ -33,7 +35,8 @@ export class SagemakerInferenceStateMachine {
         snsTopic: sns.Topic,
         snsErrorTopic: sns.Topic,
         inferenceJobName: string,
-        endpointDeploymentJobName: string 
+        endpointDeploymentJobName: string,
+        userNotifySNS: sns.Topic
     ): stepfunctions.StateMachine {
         const lambdaPolicy = // Grant Lambda permission to invoke SageMaker endpoint
             new iam.PolicyStatement({
@@ -53,6 +56,22 @@ export class SagemakerInferenceStateMachine {
                 resources: ["*"],
             });
 
+    //TODO: need to add logic to let sagemaker service assume lambda role
+    //     // Create a separate role for the SageMaker service
+    //     const lambdaRole = new iam.Role(this.scope, 'SagemakerRole', {
+    //         assumedBy: new iam.CompositePrincipal(
+    //             new iam.ServicePrincipal('lambda.amazonaws.com'),
+    //             new iam.ServicePrincipal('sagemaker.amazonaws.com')
+    //           ),
+    //     });
+
+    //     // Attach the necessary AWS managed policies to the Lambda execution role
+    //     // Example: AWSLambdaBasicExecutionRole
+    //     lambdaRole.addManagedPolicy(
+    //         iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambdaBasicExecutionRole')
+    //   );
+    //     lambdaRole.addToPolicy(lambdaPolicy)
+ 
         // Define the Lambda functions
         const lambdaStartDeploy = new lambda.Function(
             this.scope,
@@ -70,7 +89,8 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
-                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
                 },
             }
         );
@@ -91,34 +111,18 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_SUCCESS: snsTopic.topicName,
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
-                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
                 },
             }
         );
 
-        // Create the SageMaker execution role
-        const sagemakerRole = new iam.Role(this.scope, 'SagemakerExecutionRole', {
-            assumedBy: new iam.ServicePrincipal('sagemaker.amazonaws.com'),
-        });
-  
-        // Attach policies to the SageMaker execution role as needed
-        sagemakerRole.addManagedPolicy(
-            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3FullAccess')
-        );
-        sagemakerRole.addManagedPolicy(
-            iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSNSFullAccess')
-        )
-
-            // Create a custom IAM policy to allow Lambda to pass the SageMaker execution role
-        const sagemakerPassRolePolicy = new iam.PolicyStatement({
-            actions: ['iam:PassRole'],
-            resources: [sagemakerRole.roleArn],
-        });
-
-        lambdaStartDeploy.addToRolePolicy(lambdaPolicy);
-        lambdaStartDeploy.addToRolePolicy(sagemakerPassRolePolicy)
+        //TODO: still not working for assume sagemaker service, need to work it later
+        lambdaStartDeploy.addToRolePolicy(lambdaPolicy)
         lambdaCheckDeploymentStatus.addToRolePolicy(lambdaPolicy);
-        lambdaCheckDeploymentStatus.addToRolePolicy(sagemakerPassRolePolicy)
+        lambdaStartDeploy.role?.grant(new iam.ServicePrincipal("sagemaker.amazonaws.com"));
+        lambdaCheckDeploymentStatus.role?.grant(new iam.ServicePrincipal('sagemaker.amazonaws.com'))
+
 
         // Define the Step Functions tasks
         const startDeploymentTask = new stepfunctionsTasks.LambdaInvoke(

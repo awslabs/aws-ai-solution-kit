@@ -23,10 +23,10 @@ def lambda_handler(event, context):
     sagemaker_endpoint_config = f"infer-config-{str_uuid}"
     sagemaker_endpoint_name = f"infer-endpoint-{str_uuid}"
 
-    image_url = "002224604296.dkr.ecr.us-west-2.amazonaws.com/ask-webui-api-gpu:latest"
-    model_data_url = "s3://sagemaker-us-west-2-002224604296/ask-webui-extension/data/model.tar.gz"
+    image_url = "725399406069.dkr.ecr.us-west-2.amazonaws.com/ask-webui-api-gpu:latest"
+    model_data_url = "s3://sagemaker-us-west-2-725399406069/ask-webui-extension/data/model.tar.gz"
 
-    s3_output_path = "s3://sagemaker-us-west-2-002224604296/ask-webui-extension/asyncinvoke/out/"
+    s3_output_path = "s3://sagemaker-us-west-2-725399406069/ask-webui-extension/asyncinvoke/out/"
     initial_instance_count = 1
     instance_type = 'ml.g4dn.2xlarge'
 

@@ -10,6 +10,7 @@ from common.enum import MessageEnum
 from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
+from layer.job_service.client import JobInfoUtilsService
 
 import boto3
 import json
@@ -23,6 +24,7 @@ from sagemaker.deserializers import JSONDeserializer
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
 STEP_FUNCTION_ARN = os.environ.get('STEP_FUNCTION_ARN')
+job_info_client = JobInfoUtilsService(logger=logger)
 
 app = FastAPI(
     title="API List of SageMaker Inference",
@@ -70,9 +72,9 @@ async def deploy_sagemaker_endpoint(request: Request):
     logger.info("entering the deploy_sagemaker_endpoint function!")
     try:
         payload = await request.json()
+        endpoint_deployment_id = get_uuid()
         logger.info(f"input in json format {payload}")
-        # item_id = data["item_id"]
-        # q = data.get("q")
+        payload['endpoint_deployment_id'] = endpoint_deployment_id
 
         resp = stepf_client.start_execution(
             stateMachineArn=STEP_FUNCTION_ARN,

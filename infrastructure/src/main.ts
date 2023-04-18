@@ -39,6 +39,7 @@ new SDAsyncInferenceStack(app, 'SdAsyncInferenceStack-dev', <SDAsyncInferenceSta
   // api_id: restful_api_id,
   s3_bucket: trainStack.s3Bucket,
   training_table: trainStack.trainingTable,
+  snsTopic: trainStack.snsTopic
 });
 
 // inferenceStack.addDependency(trainStack)
