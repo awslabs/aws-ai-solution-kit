@@ -13,6 +13,7 @@ from fastapi_pagination import add_pagination
 
 import boto3
 import json
+import uuid
 
 from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
@@ -27,6 +28,10 @@ app = FastAPI(
     title="API List of SageMaker Inference",
     version="0.9",
 )
+
+def get_uuid():
+    uuid_str = uuid.uuid4.str()
+    return uuid_str
 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
