@@ -9,7 +9,6 @@ import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { CompositePrincipal, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as eventSources from 'aws-cdk-lib/aws-lambda-event-sources';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -163,55 +162,6 @@ export class SDAsyncInferenceStack extends Stack {
         api: restful_api,
     });
    
-    // Create a Lambda function
-    const lambdaRole = new iam.Role(this, 'LambdaRole', {
-      assumedBy: new CompositePrincipal(
-        new ServicePrincipal('lambda.amazonaws.com'),
-      ),
-    });
-
-
-    const ddb_rw_policy = new iam.PolicyStatement({
-      resources: [sd_inference_job_table.tableArn],
-      actions: [
-        'dynamodb:CreateTable',
-        'dynamodb:DescribeTable',
-        'dynamodb:DeleteItem',
-        'dynamodb:GetItem',
-        'dynamodb:PutItem',
-        'dynamodb:Query',
-        'dynamodb:Scan',
-        'dynamodb:UpdateItem',
-        'dynamodb:UpdateTable',
-      ],
-    });
-
-    const s3_rw_policy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: [
-        's3:Get*',
-        's3:List*',
-        's3-object-lambda:Get*',
-        's3-object-lambda:List*',
-        's3:PutObject',
-        's3:GetObject',
-      ],
-    });
-
-    const lambdaRunPolicy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: [
-        'logs:CreateLogGroup',
-        'logs:CreateLogStream',
-        'logs:PutLogEvents',
-      ],
-    });
-
-    lambdaRole.addToPolicy(ddb_rw_policy);
-    lambdaRole.addToPolicy(s3_rw_policy);
-    lambdaRole.addToPolicy(lambdaRunPolicy);
-
-
     // Create a Lambda function for inference
     const handler = new lambda.DockerImageFunction(
       this,
@@ -234,6 +184,22 @@ export class SDAsyncInferenceStack extends Stack {
         },
         logRetention: RetentionDays.ONE_WEEK,
       });
+
+        // Grant Lambda permission to invoke SageMaker endpoint
+        handler.addToRolePolicy(
+          new iam.PolicyStatement({
+            actions: [
+              'sagemaker:*',
+              's3:Get*',
+              's3:List*',
+              's3:PutObject',
+              's3:GetObject',
+              'sns:*',
+              'states:*',
+            ],
+            resources: ['*'],
+          }),
+        );  
 
 
     // Add the SNS topic as an event source for the Lambda function
