@@ -4,6 +4,7 @@ import boto3
 import botocore
 import boto3.s3.transfer as s3transfer
 import sys
+from urllib.parse import urlparse
 import requests
 
 sys.path.append(os.getcwd())
@@ -106,13 +107,9 @@ def upload_folder_to_s3_by_tar(local_folder_path, bucket_name, s3_folder_path):
     s3_client.upload_file(tar_name, bucket_name, os.path.join(s3_folder_path, tar_name))
     os.system(f"rm {tar_name}")
 
-def upload_to_s3_by_tar_put(local_path, s3_presign_url):
-    tar_name = f"{os.path.basename(local_path)}.tar"
-    os.system(f'tar cvf {tar_name} {local_path}')
-    response = requests.put(s3_presign_url, open(tar_name, "rb"))
-    os.system(f"rm {tar_name}")
+def upload_file_to_s3_by_presign_url(local_path, s3_presign_url):
+    response = requests.put(s3_presign_url, open(local_path, "rb"))
     response.raise_for_status()
-
 
 def download_folder_from_s3(bucket_name, s3_folder_path, local_folder_path):
     s3_resource = boto3.resource('s3')
@@ -140,11 +137,19 @@ def download_file_from_s3(bucket_name, s3_file_path, local_file_path):
     s3_client = boto3.client('s3')
     s3_client.download_file(bucket_name, s3_file_path, local_file_path)
 
-
 def upload_file_to_s3(local_file_path, bucket_name, s3_file_path):
     s3_client = boto3.client('s3')
     s3_client.upload_file(local_file_path, bucket_name, s3_file_path)
 
+def get_bucket_name_from_s3_url(s3_path) -> str:
+    o = urlparse(s3_path, allow_fragments=False)
+    return o.netloc
+
+def get_bucket_name_from_s3_path(s3_path) -> str:
+    return s3_path.split("/")[0]
+
+def get_path_from_s3_path(s3_path) -> str:
+    return "/".join(s3_path.split("/")[1:])
 
 def fast_upload(session, bucketname, s3dir, filelist, progress_func=None, workers=10):
     # timer = Timer()

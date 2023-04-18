@@ -3,11 +3,13 @@ import time
 import json
 import threading
 import requests
+import copy
+import os
 import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
 from modules.ui import create_refresh_button
-from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3, upload_to_s3_by_tar_put
+from utils import upload_file_to_s3_by_presign_url
 
 import sys
 import pickle
@@ -260,6 +262,7 @@ def ui_tabs_callback():
                                 # _js=
                                 inputs=[
                                     cloud_db_new_model_name,
+                                    cloud_db_new_model_src,
                                     cloud_db_create_from_hub,
                                     cloud_db_new_model_url,
                                     cloud_db_new_model_token,
@@ -309,27 +312,35 @@ def cloud_create_model(
         is_512=True,
 ):
     # Prepare for creating model on cloud.
+    params = copy.deepcopy(locals())
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
+    local_tar_path = f'{ckpt_path}.tar'
+    print("Pack the model file.")
+    os.system(f"tar cvf {local_tar_path} {local_model_path}")
     payload = {
         "model_type": "dreambooth",
         "name": "test_upload",
-        "filenames": [local_model_path]
+        "filenames": [local_tar_path],
+        "params": params
     }
-    url = "https://u39bu81rgd.execute-api.us-west-1.amazonaws.com/prod/model"
+    url = "https://oudm9u1088.execute-api.us-east-1.amazonaws.com/prod/model"
+    print("Post request for upload s3 presign url.")
     response = requests.post(url=url, json=payload,
-                         headers={'x-api-key': 'xxxx'})
+                         headers={'x-api-key': '09876543210987654321'})
     json_response = response.json()
-    s3_base = json_response["trainJob"]["s3_base"]
-    model_id = json_response["trainJob"]["id"]
+    s3_base = json_response["job"]["s3_base"]
+    model_id = json_response["job"]["id"]
     print(f"Upload to S3 {s3_base}")
     print(f"Model ID: {model_id}")
     # Upload src model to S3.
-    for local_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
-        upload_to_s3_by_tar_put(local_path, s3_presigned_url)
+    for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
     payload = {
         "model_id": model_id,
         "status": "Train"
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload,
-                         headers={'x-api-key': 'xxxx'})
+                         headers={'x-api-key': '09876543210987654321'})
+    s3_input_path = s3_base
+    print(response)

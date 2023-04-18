@@ -1,6 +1,7 @@
 import enum
 import json
 import logging
+from decimal import Decimal
 from typing import Any, List, Dict
 
 import boto3
@@ -121,6 +122,8 @@ class DynamoDbUtilsService:
         return result
 
     @staticmethod
+    # serializer = boto3.dynamodb.types.TypeSerializer()
+    # low_level_copy = {k: serializer.serialize(v) for k,v in python_data.items()}
     def _convert(val):
         if val is None:
             return None
@@ -131,7 +134,7 @@ class DynamoDbUtilsService:
             for item in val:
                 val_arr.append(DynamoDbUtilsService._convert(item))
             return {'L': val_arr}
-        elif isinstance(val, float) or isinstance(val, int):
+        elif isinstance(val, float) or isinstance(val, int) or isinstance(val, Decimal):
             return {'N': str(val)}
         elif isinstance(val, str):
             return {'S': str(val)}
@@ -147,15 +150,8 @@ class DynamoDbUtilsService:
 
     @staticmethod
     def deserialize(rows: dict[str, dict[str, Any]]) -> dict[str, Any]:
-        result = dict()
-        for key, val in rows.items():
-            for val_key, val_val in val.items():
-                if val_key == 'L':
-                    result[key] = []
-                    for arr_val in val_val:
-                        for _, real_val in arr_val.items():
-                            result[key].append(real_val)
-                else:
-                    result[key] = val[val_key]
-
-        return result
+        boto3.resource('dynamodb')
+        # To go from low-level format to python
+        deserializer = boto3.dynamodb.types.TypeDeserializer()
+        python_data = {k: deserializer.deserialize(v) for k, v in rows.items()}
+        return python_data
