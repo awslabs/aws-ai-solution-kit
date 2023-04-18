@@ -1,8 +1,8 @@
 import json
 import io
 import boto3
-from PIL import Image
 import base64
+from PIL import Image
 
 s3_resource = boto3.resource('s3')
 s3_client = boto3.client('s3')
