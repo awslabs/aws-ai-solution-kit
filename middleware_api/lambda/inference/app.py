@@ -28,8 +28,10 @@ STEP_FUNCTION_ARN = os.environ.get('STEP_FUNCTION_ARN')
 DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
 DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
 DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
 
 ddb_client = boto3.resource('dynamodb')
+s3 = boto3.client('s3')
 inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
 endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
 
@@ -96,6 +98,19 @@ def getEndpointDeployJob(endpoint_deploy_job_id):
     if len(record_list) == 0:
         raise Exception("There is no endpoint deployment job info item for id:" + endpoint_deploy_job_id)
     return record_list[0]
+
+def get_s3_objects(bucket_name, folder_name):
+    # Ensure the folder name ends with a slash
+    if not folder_name.endswith('/'):
+        folder_name += '/'
+
+    # List objects in the specified bucket and folder
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+
+    # Extract object names from the response
+    object_names = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
+
+    return object_names
  
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
@@ -188,6 +203,25 @@ async def get_endpoint_deployment_job(endpoint_deployment_jobId: str):
 async def get_inference_job(inference_jobId: str):
     logger.info(f"entering get_inference_job function with jobId: {inference_jobId}")
     return getInferenceJob(inference_jobId)
+
+@app.get("/inference/get-texual-inversion-list")
+async def get_texual_inversion_list():
+    logger.info(f"entering get_texual_inversion_list()")
+    return get_s3_objects(S3_BUCKET_NAME,'texual_inversion') 
+
+@app.get("/inference/get-lora-list")
+async def get_lora_list():
+    return get_s3_objects(S3_BUCKET_NAME,'lora') 
+
+@app.get("/inference/get-hypernetwork-list")
+async def get_hypernetwork_list():
+    return get_s3_objects(S3_BUCKET_NAME,'hypernetwork')
+
+@app.get("/inference/get-controlnet-model-list")
+async def get_controlnet_model_list():
+    return get_s3_objects(S3_BUCKET_NAME,'controlnet')
+
+
 
 #app.include_router(search) TODO: adding sub router for future
 

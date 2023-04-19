@@ -29,13 +29,8 @@ def get_s3_file_names(bucket, folder):
     names = [obj.key for obj in objects]
     return names
 
-
-def update_sagemaker_endpoints():
-    global sagemaker_endpoints
-    # aesthetic_embeddings = {f.replace(".pt", ""): os.path.join(aesthetic_embeddings_dir, f) for f in os.listdir(aesthetic_embeddings_dir) if f.endswith(".pt")}
-    # aesthetic_embeddings = OrderedDict(**{"None": None}, **aesthetic_embeddings)
-    # TODO update the endpoint code here
-    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
+def server_request(path):
+    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod"
     api_key = "09876543210987654321"
     
     # stage 2: inference using endpoint_name
@@ -43,15 +38,21 @@ def update_sagemaker_endpoints():
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
-    list_endpoint_url = f"{api_gateway_url}inference/list-endpoint-deployment-jobs"
+    # list_endpoint_url = f"{api_gateway_url}inference/list-endpoint-deployment-jobs"
+    list_endpoint_url = f"{api_gateway_url}{path}"
     response = requests.get(list_endpoint_url, headers=headers)
+    print(f"response for rest api {response.json()}")
+    return response
+
+def update_sagemaker_endpoints():
+    global sagemaker_endpoints
+
+    response = server_request('/inference/list-endpoint-deployment-jobs')
     r = response.json()
     sagemaker_endpoints = []
     for obj in r:
         aaa_value = obj["EndpointDeploymentJobId"]
         sagemaker_endpoints.append(aaa_value)
-
-    print(f"response for rest api {r}")
 
 
 def update_sd_checkpoints():
@@ -64,6 +65,45 @@ def update_sd_checkpoints():
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
 
+def get_texual_inversion_list():
+   global textual_inversion_list
+   response = server_request('/inference/get-texual-inversion-list')
+   r = response.json()
+   textual_inversion_list = []
+   for obj in r:
+    aaa_value = str(obj)
+    textual_inversion_list.append(aaa_value)
+
+def get_lora_list():
+   global lora_list 
+   response = server_request('/inference/get-lora-list')
+   r = response.json()
+   lora_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       lora_list.append(aaa_value)
+
+    
+def get_hypernetwork_list():
+   global hyperNetwork_list 
+   response = server_request('/inference/get-hypernetwork-list')
+   r = response.json()
+   hyperNetwork_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       hyperNetwork_list.append(aaa_value)
+
+    
+def get_controlnet_model_list():
+   global ControlNet_model_list 
+   response = server_request('/inference/get-controlnet-model-list')
+   r = response.json()
+   ControlNet_model_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       ControlNet_model_list.append(aaa_value)
+
+            
 import json
 import requests
 from sagemaker.predictor import Predictor
@@ -169,6 +209,13 @@ def create_ui():
     import modules.ui
 
     update_sagemaker_endpoints()
+    get_texual_inversion_list()
+    get_lora_list()
+    get_hypernetwork_list()
+    get_controlnet_model_list()
+    
+    
+    
     with gr.Group():
         with gr.Accordion("Open for SageMaker Inference!", open=False):
             with gr.Column(variant='panel'):
