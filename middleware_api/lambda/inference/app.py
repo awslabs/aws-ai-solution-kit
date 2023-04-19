@@ -10,7 +10,7 @@ from common.enum import MessageEnum
 from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
-from layer.job_service.client import JobInfoUtilsService
+from datetime import datetime
 
 import boto3
 import json
@@ -24,7 +24,16 @@ from sagemaker.deserializers import JSONDeserializer
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
 STEP_FUNCTION_ARN = os.environ.get('STEP_FUNCTION_ARN')
-job_info_client = JobInfoUtilsService(logger=logger)
+
+DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
+DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
+DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
+
+ddb_client = boto3.resource('dynamodb')
+s3 = boto3.client('s3')
+inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
+endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
 
 app = FastAPI(
     title="API List of SageMaker Inference",
@@ -35,6 +44,75 @@ def get_uuid():
     uuid_str = str(uuid.uuid4())
     return uuid_str
 
+def updateInferenceJobTable(inference_id, status):
+    #update the inference DDB for the job status
+    response = inference_table.get_item(
+            Key={
+                "InferenceJobId": inference_id,
+            })
+    inference_resp = response['Item']
+    if not inference_resp:
+        raise Exception(f"Failed to get the inference job item with inference id:{inference_id}")
+
+    response = inference_table.update_item(
+            Key={
+                "InferenceJobId": inference_id,
+            },
+            UpdateExpression="set status = :r",
+            ExpressionAttributeValues={':r': status},
+            ReturnValues="UPDATED_NEW")
+
+def getInferenceJobList():
+    response = inference_table.scan()
+    logger.info(f"inference job list response is {str(response)}")
+    return response['Items']
+
+    
+def getInferenceJob(inference_job_id):
+    try:
+        resp = inference_table.query(
+            KeyConditionExpression=Key('InferenceJobId').eq(inference_job_id)
+        )
+        log.info(resp)
+    except Exception as e:
+        logging.error(e)
+    record_list = resp['Items']
+    if len(record_list) == 0:
+        raise Exception("There is no inference job info item for id:" + inference_job_id)
+    return record_list[0]
+    
+def getEndpointDeploymentJobList():
+    response = endpoint_deployment_table.scan()
+    logger.info(f"endpoint deployment job list response is {str(response)}")
+    return response['Items'] 
+
+def getEndpointDeployJob(endpoint_deploy_job_id):
+    try:
+        resp = endpoint_deployment_table.query(
+            KeyConditionExpression=Key('EndpointDeploymentJobId').eq(endpoint_deploy_job_id)
+        )
+        log.info(resp)
+    except Exception as e:
+        logging.error(e)
+    record_list = resp['Items']
+    if len(record_list) == 0:
+        raise Exception("There is no endpoint deployment job info item for id:" + endpoint_deploy_job_id)
+    return record_list[0]
+
+def get_s3_objects(bucket_name, folder_name):
+    # Ensure the folder name ends with a slash
+    if not folder_name.endswith('/'):
+        folder_name += '/'
+
+    # List objects in the specified bucket and folder
+    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
+
+    # Extract object names from the response
+    # object_names = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
+    object_names = [obj['Key'][len(folder_name):] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
+
+    return object_names
+ 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
 # Among them, code is the business failure code, and message is the content of the failure
@@ -63,6 +141,15 @@ async def run_sagemaker_inference(request: Request):
     predictor.deserializer = JSONDeserializer()
     prediction = predictor.predict_async(data=payload, inference_id=inference_id)
     output_path = prediction.output_path
+
+    #put the item to inference DDB for later check status
+    current_time = str(datetime.now())
+    response = inference_table.put_item(
+        Item={
+            'InferenceJobId': inference_id,
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
     
     print(f"output_path is {output_path}")
     return {"endpoint_name": endpoint_name, "output_path": output_path}
@@ -81,6 +168,15 @@ async def deploy_sagemaker_endpoint(request: Request):
             input=json.dumps(payload)
         )
 
+        #put the item to inference DDB for later check status
+        current_time = str(datetime.now())
+        response = endpoint_deployment_table.put_item(
+        Item={
+            'EndpointDeploymentJobId': endpoint_deployment_id,
+            'dateTime': current_time,
+            'status': 'inprogress'
+        })
+
         logger.info("trigger step-function with following response")
 
         logger.info(f"finish trigger step function for deployment with output {resp}")
@@ -88,6 +184,45 @@ async def deploy_sagemaker_endpoint(request: Request):
     except Exception as e:
         logger.error(f"error calling run-sagemaker-inference with exception: {e}")
         raise e
+
+@app.get("/inference/list-endpoint-deployment-jobs")
+async def list_endpoint_deployment_jobs():
+    logger.info(f"entering list_endpoint_deployment_jobs")
+    return getEndpointDeploymentJobList()
+
+@app.get("/inference/list-inference-jobs")
+async def list_inference_jobs():
+    logger.info(f"entering list_endpoint_deployment_jobs") 
+    return getInferenceJobList()
+
+@app.get("/inference/get-endpoint-deployment-job/{endpoint_deployment_jobId}")
+async def get_endpoint_deployment_job(endpoint_deployment_jobId: str):
+    logger.info(f"entering get_endpoint_deployment_job function with jobId: {endpoint_deployment_jobdId}")
+    return getEndpointDeployJob(endpoint_deployment_jobId) 
+
+@app.get("/inference/get-inference-job/{inference_jobId}")
+async def get_inference_job(inference_jobId: str):
+    logger.info(f"entering get_inference_job function with jobId: {inference_jobId}")
+    return getInferenceJob(inference_jobId)
+
+@app.get("/inference/get-texual-inversion-list")
+async def get_texual_inversion_list():
+    logger.info(f"entering get_texual_inversion_list()")
+    return get_s3_objects(S3_BUCKET_NAME,'texual_inversion') 
+
+@app.get("/inference/get-lora-list")
+async def get_lora_list():
+    return get_s3_objects(S3_BUCKET_NAME,'lora') 
+
+@app.get("/inference/get-hypernetwork-list")
+async def get_hypernetwork_list():
+    return get_s3_objects(S3_BUCKET_NAME,'hypernetwork')
+
+@app.get("/inference/get-controlnet-model-list")
+async def get_controlnet_model_list():
+    return get_s3_objects(S3_BUCKET_NAME,'controlnet')
+
+
 
 #app.include_router(search) TODO: adding sub router for future
 

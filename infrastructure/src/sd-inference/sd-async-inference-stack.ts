@@ -132,6 +132,7 @@ export class SDAsyncInferenceStack extends Stack {
           's3:GetObject',
           'sns:*',
           'states:*',
+          'dynamodb:*'
         ],
         resources: ['*'],
       }),
@@ -147,6 +148,10 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     });
 
+    inference?.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    });
+
     const run_sagemaker_inference = inference.addResource('run-sagemaker-inference');
     run_sagemaker_inference.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
@@ -156,6 +161,46 @@ export class SDAsyncInferenceStack extends Stack {
     deploy_sagemaker_endpoint.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
+
+    const list_endpoint_deployment_jobs = inference.addResource('list-endpoint-deployment-jobs');
+    list_endpoint_deployment_jobs.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const list_inference_jobs = inference.addResource('list-inference-jobs');
+    list_inference_jobs.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_endpoint_deployment_job = inference.addResource('get-endpoint-deployment-job');
+    get_endpoint_deployment_job.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_inference_job = inference.addResource('get-inference-job');
+    get_inference_job.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_texual_inversion_list = inference.addResource('get-texual-inversion-list');
+    get_texual_inversion_list.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_lora_list = inference.addResource('get-lora-list');
+    get_lora_list.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_hypernetwork_list = inference.addResource('get-hypernetwork-list');
+    get_hypernetwork_list.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_controlnet_model_list = inference.addResource('get-controlnet-model-list');
+    get_controlnet_model_list.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
 
     // Create a deployment for the API Gateway
     new apigw.Deployment(this, 'Deployment', {
@@ -196,6 +241,7 @@ export class SDAsyncInferenceStack extends Stack {
               's3:GetObject',
               'sns:*',
               'states:*',
+              'dynamodb:*'
             ],
             resources: ['*'],
           }),

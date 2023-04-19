@@ -13,6 +13,7 @@ from utils import upload_file_to_s3_by_presign_url
 
 import sys
 import pickle
+import html
 
 # TODO: Automaticly append the dependent module path.
 sys.path.append("extensions/sd_dreambooth_extension")
@@ -27,6 +28,8 @@ db_model_name = None
 db_use_txt2img = None
 db_sagemaker_train = None
 txt2img_show_hook = None
+txt2img_gallery = None
+txt2img_generation_info = None
 job_link_list = []
 
 class SageMakerUI(scripts.Script):
@@ -37,11 +40,11 @@ class SageMakerUI(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_txt2img):
-        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button= sagemaker_ui.create_ui()
+        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, origin_choose_txt2img_inference_job_id, origin_txt2img_inference_job_ids_refresh_button= sagemaker_ui.create_ui()
 
-        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button]
+        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, origin_choose_txt2img_inference_job_id, origin_txt2img_inference_job_ids_refresh_button]
 
-    def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button):
+    def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, origin_choose_txt2img_inference_job_id, origin_txt2img_inference_job_ids_refresh_button):
         pass
         dropdown.init_field = init_field
 
@@ -80,39 +83,57 @@ def on_after_component_callback(component, **_kwargs):
             ],
             outputs=[]
         )
-    # # Hook image display logic
-    # # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
-    # # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
-    # #                 if tabname == 'txt2img' or tabname == 'img2img':
-    # global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
-    # is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
-    # is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
-    # # print(f"is_txt2img_gallery is {is_txt2img_gallery}")
-    # # print(f"is_txt2img_generation_info is {is_txt2img_generation_info}")
-    # if is_txt2img_gallery:
-    #     print("create txt2img gallery")
-    #     txt2img_gallery = component
-    # if is_txt2img_generation_info:
-    #     print("create txt2img generation info")
-    #     txt2img_generation_info = component
-    # def test_func():
-    #     # from PIL import Image
-    #     # gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
-    #     # images = []
-    #     # for g in gallery:
-    #     #     im = Image.open(g)
-    #     #     images.append(im)
+    # Hook image display logic
+    # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
+    # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
+    #                 if tabname == 'txt2img' or tabname == 'img2img':
+    global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
+    is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
+    is_txt2img_generation_info = type(component) is gr.HTML and getattr(component, 'elem_id', None) == 'html_info_txt2img'
+    # print(f"is_txt2img_gallery is {is_txt2img_gallery}")
+    # print(f"is_txt2img_generation_info is {is_txt2img_generation_info}")
+    if is_txt2img_gallery:
+        print("create txt2img gallery")
+        txt2img_gallery = component
+    if is_txt2img_generation_info:
+        print("create txt2img generation info")
+        txt2img_generation_info = component
+    def test_func():
+        from PIL import Image
+        gallery = ["/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aigc/aigc-webui/dataset/raw-data/superman-fly.jpg"]
+        images = []
+        for g in gallery:
+            im = Image.open(g)
+            images.append(im)
 
-    #     test = "just a test"
-    #     # return images, test
-    #     return test
-    # if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None:
-    #     print("Create image callback")
-    #     txt2img_show_hook = "finish"
-    #     sagemaker_ui.inference_job_dropdown.change(
-    #         fn=test_func,
-    #         outputs=[txt2img_generation_info]
+        def plaintext_to_html(text):
+            text = "<p>" + "<br>\n".join([f"{html.escape(x)}" for x in text.split('\n')]) + "</p>"
+            return text
+
+        test = "just a test"
+        return images, plaintext_to_html(test)
+        # return test
+    if sagemaker_ui.origin_inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_show_hook is None:
+        print("Create inference job dropdown callback")
+        txt2img_show_hook = "finish"
+        sagemaker_ui.origin_inference_job_dropdown.change(
+            fn=test_func,
+            outputs=[txt2img_gallery, txt2img_generation_info]
+        )
+    # global txt2img_interface, generate_hook
+    # is_txt2img_prompt_image = type(component) is gr.File and getattr(component, 'elem_id', None) == 'txt2img_prompt_image'
+
+    # if is_txt2img_prompt_image:
+    #     txt2img_interface = component.parent
+    
+    # if txt2img_interface is not None and sagemaker_ui.generate_on_cloud_button is not None and generate_hook is None:
+    #     generate_hook = "finish"
+    #     sagemaker_ui.generate_on_cloud_button.click(
+    #         fn=generate_test,
+    #         inputs=[component]
     #     )
+    #     print(f"!!!!!!!!parent component is {type(txt2img_interface)}")
+
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
