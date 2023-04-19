@@ -162,7 +162,12 @@ def create_ui():
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
-                generate_on_cloud_button.click(generate_on_cloud)
+                generate_on_cloud_button.click(
+                    _js="txt2img_config_save",
+                    fn=generate_on_cloud,
+                    inputs=[],
+                    outputs=[]
+                )
 
             with gr.Row():
                 # global choose_txt2img_inference_job_id
