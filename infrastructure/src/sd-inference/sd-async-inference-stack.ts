@@ -132,6 +132,7 @@ export class SDAsyncInferenceStack extends Stack {
           's3:GetObject',
           'sns:*',
           'states:*',
+          'dynamodb:*'
         ],
         resources: ['*'],
       }),
@@ -196,6 +197,7 @@ export class SDAsyncInferenceStack extends Stack {
               's3:GetObject',
               'sns:*',
               'states:*',
+              'dynamodb:*'
             ],
             resources: ['*'],
           }),

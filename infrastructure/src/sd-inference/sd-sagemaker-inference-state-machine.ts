@@ -52,6 +52,7 @@ export class SagemakerInferenceStateMachine {
                     "iam:*",
                     "sts:*",
                     "ecr:*",
+                    "dynamodb:*"
                 ],
                 resources: ["*"],
             });
