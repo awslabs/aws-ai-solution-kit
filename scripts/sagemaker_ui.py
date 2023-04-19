@@ -35,6 +35,24 @@ def update_sagemaker_endpoints():
     # aesthetic_embeddings = {f.replace(".pt", ""): os.path.join(aesthetic_embeddings_dir, f) for f in os.listdir(aesthetic_embeddings_dir) if f.endswith(".pt")}
     # aesthetic_embeddings = OrderedDict(**{"None": None}, **aesthetic_embeddings)
     # TODO update the endpoint code here
+    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
+    api_key = "09876543210987654321"
+    
+    # stage 2: inference using endpoint_name
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    list_endpoint_url = f"{api_gateway_url}inference/list-endpoint-deployment-jobs"
+    response = requests.get(list_endpoint_url, headers=headers)
+    r = response.json()
+    sagemaker_endpoints = []
+    for obj in r:
+        aaa_value = obj["EndpointDeploymentJobId"]
+        sagemaker_endpoints.append(aaa_value)
+
+    print(f"response for rest api {r}")
+
 
 def update_sd_checkpoints():
     global sd_checkpoints
@@ -150,6 +168,7 @@ def create_ui():
     global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
+    update_sagemaker_endpoints()
     with gr.Group():
         with gr.Accordion("Open for SageMaker Inference!", open=False):
             with gr.Column(variant='panel'):
