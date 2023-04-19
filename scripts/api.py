@@ -384,13 +384,13 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    # Move model dir to /tmp
-    print("Move model dir")
-    os.system("mv models /tmp/")
-    print("Link model dir")
-    os.system("ln -s /tmp/models models")
-    print("Check disk usage on app started")
-    os.system("df -h")
+    # # Move model dir to /tmp
+    # print("Move model dir")
+    # os.system("mv models /tmp/")
+    # print("Link model dir")
+    # os.system("ln -s /tmp/models models")
+    # print("Check disk usage on app started")
+    # os.system("df -h")
     logger.debug("SD-Webui API layer loaded")
 except:
     logger.debug("Unable to import script callbacks.")

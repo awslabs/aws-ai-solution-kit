@@ -10,11 +10,13 @@ import gradio as gr
 from modules import shared, scripts
 
 inference_job_dropdown = None
+origin_inference_job_dropdown = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
 sd_checkpoints = ['checkpoint1', 'checkpoint2']
 txt2img_inference_job_ids = ['fake1', 'fake2']
+origin_txt2img_inference_job_ids = ['fake1', 'fake2']
 
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
@@ -45,6 +47,9 @@ def update_sd_checkpoints():
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
+
+def origin_update_txt2img_inference_job_ids():
+    global origin_txt2img_inference_job_ids
 
 import json
 import requests
@@ -167,7 +172,6 @@ def create_ui():
                 generate_on_cloud_button.click(generate_on_cloud)
 
             with gr.Row():
-                # global choose_txt2img_inference_job_id
                 inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
@@ -193,6 +197,11 @@ def create_ui():
                     fn=fake_gan,
                     outputs=[gallery]
                 )
+            with gr.Row():
+                global origin_inference_job_dropdown
+                origin_inference_job_dropdown = gr.Dropdown(origin_txt2img_inference_job_ids,
+                                            label="Origin Inference Job IDs")
+                origin_txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(origin_inference_job_dropdown, origin_update_txt2img_inference_job_ids, lambda: {"choices": origin_txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
@@ -211,4 +220,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, origin_inference_job_dropdown, origin_txt2img_inference_job_ids_refresh_button 
