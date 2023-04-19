@@ -113,6 +113,20 @@ def on_after_component_callback(component, **_kwargs):
     #         fn=test_func,
     #         outputs=[txt2img_generation_info]
     #     )
+    # global txt2img_interface, generate_hook
+    # is_txt2img_prompt_image = type(component) is gr.File and getattr(component, 'elem_id', None) == 'txt2img_prompt_image'
+
+    # if is_txt2img_prompt_image:
+    #     txt2img_interface = component.parent
+    
+    # if txt2img_interface is not None and sagemaker_ui.generate_on_cloud_button is not None and generate_hook is None:
+    #     generate_hook = "finish"
+    #     sagemaker_ui.generate_on_cloud_button.click(
+    #         fn=generate_test,
+    #         inputs=[component]
+    #     )
+    #     print(f"!!!!!!!!parent component is {type(txt2img_interface)}")
+
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
