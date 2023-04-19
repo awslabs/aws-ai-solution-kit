@@ -67,11 +67,9 @@ def update_sd_checkpoints():
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
 
-<<<<<<< HEAD
 def origin_update_txt2img_inference_job_ids():
     global origin_txt2img_inference_job_ids
 
-=======
 def get_texual_inversion_list():
    global textual_inversion_list
    response = server_request('/inference/get-texual-inversion-list')
@@ -110,8 +108,6 @@ def get_controlnet_model_list():
        aaa_value = str(obj)
        ControlNet_model_list.append(aaa_value)
 
-            
->>>>>>> 8a6d08b68b0ca3f9c43f633cfb53b312ac94bdaa
 import json
 import requests
 from sagemaker.predictor import Predictor
@@ -125,8 +121,8 @@ def generate_on_cloud():
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
-    # use txt2imgConfig.json instead of ui_config.json
-    with open("txt2imgConfig.json") as f:
+    # use txt2imgConfig.json instead of ui-config.json
+    with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
     endpoint_name = "infer-endpoint-bcc9"
@@ -193,8 +189,7 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
-    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
+    api_gateway_url = "https://xxxx.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
 
     payload = {
@@ -212,6 +207,10 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     response = requests.post(deployment_url, json=payload, headers=headers)
     r = response.json()
     print(f"response for rest api {r}")
+
+def txt2img_config_save():
+    # placeholder for saving txt2img config
+    pass
 
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
@@ -240,8 +239,14 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
                 generate_on_cloud_button.click(
-                    _js="txt2img_config_save",
                     fn=generate_on_cloud,
+                    inputs=[],
+                    outputs=[]
+                )
+                txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary')
+                txt2img_config_save_button.click(
+                    _js="txt2img_config_save",
+                    fn=txt2img_config_save,
                     inputs=[],
                     outputs=[]
                 )
