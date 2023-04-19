@@ -63,6 +63,7 @@ def generate_on_cloud():
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
+
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
         controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"

@@ -9,7 +9,6 @@ import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import { CompositePrincipal, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as eventSources from 'aws-cdk-lib/aws-lambda-event-sources';
 import { RetentionDays } from 'aws-cdk-lib/aws-logs';
@@ -27,6 +26,7 @@ export interface SDAsyncInferenceStackProps extends StackProps {
   api_gate_way: apigw.RestApi;
   s3_bucket: s3.Bucket;
   training_table: dynamodb.Table;
+  snsTopic: sns.Topic
 }
 
 export class SDAsyncInferenceStack extends Stack {
@@ -89,7 +89,10 @@ export class SDAsyncInferenceStack extends Stack {
       snsTopic: inference_result_topic,
       snsErrorTopic: inference_result_error_topic,
       inferenceJobName: sd_inference_job_table.tableName,
-      endpointDeploymentJobName: sd_endpoint_deployment_job_table.tableName
+      endpointDeploymentJobName: sd_endpoint_deployment_job_table.tableName,
+      userNotifySNS: props?.snsTopic ?? new sns.Topic(this, 'MyTopic', {
+        displayName: 'My SNS Topic',
+      })
     });
 
     // Create a Lambda function for inference
@@ -110,6 +113,7 @@ export class SDAsyncInferenceStack extends Stack {
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
           SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
           STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
+          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? ""
         },
         logRetention: RetentionDays.ONE_WEEK,
       });
@@ -128,6 +132,7 @@ export class SDAsyncInferenceStack extends Stack {
           's3:GetObject',
           'sns:*',
           'states:*',
+          'dynamodb:*'
         ],
         resources: ['*'],
       }),
@@ -158,74 +163,6 @@ export class SDAsyncInferenceStack extends Stack {
         api: restful_api,
     });
    
-    // Create a Lambda function
-    const lambdaRole = new iam.Role(this, 'LambdaRole', {
-      assumedBy: new CompositePrincipal(
-        new ServicePrincipal('lambda.amazonaws.com'),
-      ),
-    });
-
-
-    const ddb_rw_policy = new iam.PolicyStatement({
-      resources: [sd_inference_job_table.tableArn],
-      actions: [
-        'dynamodb:CreateTable',
-        'dynamodb:DescribeTable',
-        'dynamodb:DeleteItem',
-        'dynamodb:GetItem',
-        'dynamodb:PutItem',
-        'dynamodb:Query',
-        'dynamodb:Scan',
-        'dynamodb:UpdateItem',
-        'dynamodb:UpdateTable',
-      ],
-    });
-
-    const s3_rw_policy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: [
-        's3:Get*',
-        's3:List*',
-        's3-object-lambda:Get*',
-        's3-object-lambda:List*',
-        's3:PutObject',
-        's3:GetObject',
-      ],
-    });
-
-    const lambdaRunPolicy = new iam.PolicyStatement({
-      resources: ['*'],
-      actions: [
-        'logs:CreateLogGroup',
-        'logs:CreateLogStream',
-        'logs:PutLogEvents',
-      ],
-    });
-
-    lambdaRole.addToPolicy(ddb_rw_policy);
-    lambdaRole.addToPolicy(s3_rw_policy);
-    lambdaRole.addToPolicy(lambdaRunPolicy);
-
-    // const handler = new lambda.Function(this, 'InferenceResultNotification', {
-    //   runtime: lambda.Runtime.PYTHON_3_9,
-    //   handler: 'app.lambda_handler',
-    //   memorySize: 256,
-    //   timeout: Duration.seconds(900),
-    //   code: lambda.Code.fromAsset(
-    //     path.join(__dirname, '../../../middleware_api/lambda/inference_result_notification'),
-    //   ),
-    //   role: lambdaRole,
-    //   environment: {
-    //     DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
-    //     DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
-    //     S3_BUCKET: payloadBucket.bucketName,
-    //     ACCOUNT_ID: Aws.ACCOUNT_ID,
-    //     REGION_NAME: Aws.REGION,
-
-    //   },
-    //   logRetention: RetentionDays.ONE_WEEK,
-    // });
-
     // Create a Lambda function for inference
     const handler = new lambda.DockerImageFunction(
       this,
@@ -244,9 +181,27 @@ export class SDAsyncInferenceStack extends Stack {
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
           SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
           STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
+          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? ""
         },
         logRetention: RetentionDays.ONE_WEEK,
       });
+
+        // Grant Lambda permission to invoke SageMaker endpoint
+        handler.addToRolePolicy(
+          new iam.PolicyStatement({
+            actions: [
+              'sagemaker:*',
+              's3:Get*',
+              's3:List*',
+              's3:PutObject',
+              's3:GetObject',
+              'sns:*',
+              'states:*',
+              'dynamodb:*'
+            ],
+            resources: ['*'],
+          }),
+        );  
 
 
     // Add the SNS topic as an event source for the Lambda function

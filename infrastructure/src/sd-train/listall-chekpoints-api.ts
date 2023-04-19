@@ -13,34 +13,34 @@ import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
 
-export interface ListAllModelJobApiProps {
+export interface ListAllCheckPointsApiProps {
   router: aws_apigateway.Resource;
   httpMethod: string;
-  modelTable: aws_dynamodb.Table;
+  checkpointTable: aws_dynamodb.Table;
   srcRoot: string;
   commonLayer: aws_lambda.LayerVersion;
 }
 
-export class ListAllModelJobApi {
+export class ListAllCheckPointsApi {
   private readonly src;
   private readonly router: aws_apigateway.Resource;
   private readonly httpMethod: string;
   private readonly scope: Construct;
-  private readonly modelTable: aws_dynamodb.Table;
+  private readonly checkpointTable: aws_dynamodb.Table;
   private readonly layer: aws_lambda.LayerVersion;
 
   private readonly baseId: string;
 
-  constructor(scope: Construct, id: string, props: ListAllModelJobApiProps) {
+  constructor(scope: Construct, id: string, props: ListAllCheckPointsApiProps) {
     this.scope = scope;
     this.baseId = id;
     this.router = props.router;
     this.httpMethod = props.httpMethod;
-    this.modelTable = props.modelTable;
+    this.checkpointTable = props.checkpointTable;
     this.src = props.srcRoot;
     this.layer = props.commonLayer;
 
-    this.listAllModelJobApi();
+    this.listAllCheckpointsApi();
   }
 
   private iamRole(): aws_iam.Role {
@@ -55,7 +55,7 @@ export class ListAllModelJobApi {
         'dynamodb:Scan',
         'dynamodb:Query',
       ],
-      resources: [this.modelTable.tableArn],
+      resources: [this.checkpointTable.tableArn],
     }));
 
     newRole.addToPolicy(new aws_iam.PolicyStatement({
@@ -70,19 +70,19 @@ export class ListAllModelJobApi {
     return newRole;
   }
 
-  private listAllModelJobApi() {
+  private listAllCheckpointsApi() {
     const lambdaFunction = new PythonFunction(this.scope, `${this.baseId}-listall`, <PythonFunctionProps>{
-      functionName: `${this.baseId}-listall-models`,
+      functionName: `${this.baseId}-listall-checkpoints`,
       entry: `${this.src}/create_model`,
       architecture: Architecture.X86_64,
       runtime: Runtime.PYTHON_3_9,
       index: 'create_model_job_api.py',
-      handler: 'list_all_models_api',
+      handler: 'list_all_checkpoints_api',
       timeout: Duration.seconds(900),
       role: this.iamRole(),
       memorySize: 1024,
       environment: {
-        DYNAMODB_TABLE: this.modelTable.tableName,
+        CHECKPOINT_TABLE: this.checkpointTable.tableName,
       },
       layers: [this.layer],
     });

@@ -9,11 +9,12 @@ from botocore.exceptions import ClientError
 from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
-from create_model._types import ModelJob, CreateModelStatus
-from create_model.create_model_async_job import create_sagemaker_inference
+from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
+from create_model_async_job import create_sagemaker_inference
 
 bucket_name = os.environ.get('S3_BUCKET')
 model_table = os.environ.get('DYNAMODB_TABLE')
+checkpoint_table = os.environ.get('CHECKPOINT_TABLE')
 
 
 success_topic_arn = os.environ.get('SUCCESS_TOPIC_ARN')
@@ -31,6 +32,7 @@ class Event:
     status: str
 
 
+# PUT /model
 def update_train_job_api(raw_event, context):
     event = Event(**raw_event)
 
@@ -39,7 +41,7 @@ def update_train_job_api(raw_event, context):
         if raw_training_job is None:
             return {
                 'statusCode': 200,
-                'error': f'training model with id {event.model_id} is not found'
+                'error': f'create model with id {event.model_id} is not found'
             }
 
         model_job = ModelJob(**raw_training_job)
@@ -51,6 +53,7 @@ def update_train_job_api(raw_event, context):
             field_name='job_status',
             value=event.status
         )
+
         return resp
     except ClientError as e:
         logger.error(e)
@@ -60,6 +63,7 @@ def update_train_job_api(raw_event, context):
         }
 
 
+# SNS callback
 def process_result(event, context):
     records = event['Records']
     for record in records:
@@ -77,6 +81,27 @@ def process_result(event, context):
         job = ModelJob(**model_job_raw)
 
         if record['Sns']['TopicArn'] == success_topic_arn:
+            resp_location = msg['responseParameters']['outputLocation']
+            bucket, key = split_s3_path(resp_location)
+            content = get_object(bucket=bucket, key=key)
+            if content['statusCode'] != 200:
+                ddb_service.update_item(
+                    table=model_table,
+                    key={'id': inference_id},
+                    field_name='job_status',
+                    value=CreateModelStatus.Fail.value
+                )
+                publish_msg(
+                    topic_arn=user_topic_arn,
+                    subject=f'Create Model Job {job.params["new_model_name"]} failed',
+                    msg='to be done'
+                )  # todo: find out msg
+                return
+
+            msgs = content['message']
+            for key, val in msgs.items():
+                job.params[key] = val
+
             ddb_service.update_item(
                 table=model_table,
                 key={'id': inference_id},
@@ -116,6 +141,20 @@ def process_result(event, context):
     }
 
 
+def get_object(bucket: str, key: str):
+    s3_client = boto3.client('s3')
+    data = s3_client.get_object(Bucket=bucket, Key=key)
+    content = json.load(data['Body'])
+    return content
+
+
+def split_s3_path(s3_path):
+    path_parts = s3_path.replace("s3://", "").split("/")
+    bucket = path_parts.pop(0)
+    key = "/".join(path_parts)
+    return bucket, key
+
+
 def train_job_exec(model_job: ModelJob, action: CreateModelStatus):
     if model_job.job_status == CreateModelStatus.Creating and \
             (action != CreateModelStatus.Fail or action != CreateModelStatus.Complete):
@@ -123,7 +162,22 @@ def train_job_exec(model_job: ModelJob, action: CreateModelStatus):
 
     if action == CreateModelStatus.Creating:
         model_job.job_status = action
-        return create_sagemaker_inference(job=model_job)
+        raw_chkpt = ddb_service.get_item(table=checkpoint_table, key_values={'id': model_job.checkpoint_id})
+        if raw_chkpt is None:
+            return {
+                'statusCode': 200,
+                'error': f'model related checkpoint with id {model_job.checkpoint_id} is not found'
+            }
+
+        checkpoint = CheckPoint(**raw_chkpt)
+        checkpoint.checkpoint_status = CheckPointStatus.Active
+        ddb_service.update_item(
+            table=checkpoint_table,
+            key={'id': checkpoint.id},
+            field_name='checkpoint_status',
+            value=CheckPointStatus.Active.value
+        )
+        return create_sagemaker_inference(job=model_job, checkpoint=checkpoint)
     elif action == CreateModelStatus.Initial:
         raise Exception('please create a new model creation job for this,'
                         f' not allowed overwrite old model creation job')
