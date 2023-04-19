@@ -148,6 +148,10 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     });
 
+    inference?.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    });
+
     const run_sagemaker_inference = inference.addResource('run-sagemaker-inference');
     run_sagemaker_inference.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
@@ -157,6 +161,26 @@ export class SDAsyncInferenceStack extends Stack {
     deploy_sagemaker_endpoint.addMethod('POST', txt2imgIntegration, {
       apiKeyRequired: true,
     });
+
+    const list_endpoint_deployment_jobs = inference.addResource('list-endpoint-deployment-jobs');
+    list_endpoint_deployment_jobs.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const list_inference_jobs = inference.addResource('list-inference-jobs');
+    list_inference_jobs.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_endpoint_deployment_job = inference.addResource('get-endpoint-deployment-job');
+    get_endpoint_deployment_job.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const get_inference_job = inference.addResource('get-inference-job');
+    get_inference_job.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
 
     // Create a deployment for the API Gateway
     new apigw.Deployment(this, 'Deployment', {

@@ -42,6 +42,61 @@ def get_uuid():
     uuid_str = str(uuid.uuid4())
     return uuid_str
 
+def updateInferenceJobTable(inference_id, status):
+    #update the inference DDB for the job status
+    response = inference_table.get_item(
+            Key={
+                "InferenceJobId": inference_id,
+            })
+    inference_resp = response['Item']
+    if not inference_resp:
+        raise Exception(f"Failed to get the inference job item with inference id:{inference_id}")
+
+    response = inference_table.update_item(
+            Key={
+                "InferenceJobId": inference_id,
+            },
+            UpdateExpression="set status = :r",
+            ExpressionAttributeValues={':r': status},
+            ReturnValues="UPDATED_NEW")
+
+def getInferenceJobList():
+    response = inference_table.scan()
+    logger.info(f"inference job list response is {str(response)}")
+    return response['Items']
+
+    
+def getInferenceJob(inference_job_id):
+    try:
+        resp = inference_table.query(
+            KeyConditionExpression=Key('InferenceJobId').eq(inference_job_id)
+        )
+        log.info(resp)
+    except Exception as e:
+        logging.error(e)
+    record_list = resp['Items']
+    if len(record_list) == 0:
+        raise Exception("There is no inference job info item for id:" + inference_job_id)
+    return record_list[0]
+    
+def getEndpointDeploymentJobList():
+    response = endpoint_deployment_table.scan()
+    logger.info(f"endpoint deployment job list response is {str(response)}")
+    return response['Items'] 
+
+def getEndpointDeployJob(endpoint_deploy_job_id):
+    try:
+        resp = endpoint_deployment_table.query(
+            KeyConditionExpression=Key('EndpointDeploymentJobId').eq(endpoint_deploy_job_id)
+        )
+        log.info(resp)
+    except Exception as e:
+        logging.error(e)
+    record_list = resp['Items']
+    if len(record_list) == 0:
+        raise Exception("There is no endpoint deployment job info item for id:" + endpoint_deploy_job_id)
+    return record_list[0]
+ 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
 # Among them, code is the business failure code, and message is the content of the failure
@@ -114,15 +169,25 @@ async def deploy_sagemaker_endpoint(request: Request):
         logger.error(f"error calling run-sagemaker-inference with exception: {e}")
         raise e
 
-@app.get("/inference/list-endpoint-deployment-jobs/{endpoint_deployment_jobId}")
-async def list_endpoint_deployment_jobs(endpoint_deployment_jobId: str):
-    logger.info(f"entering list_endpoint_deployment_jobs function with jobId: {endpoint_deployment_jobdId}")
-    return 0
+@app.get("/inference/list-endpoint-deployment-jobs")
+async def list_endpoint_deployment_jobs():
+    logger.info(f"entering list_endpoint_deployment_jobs")
+    return getEndpointDeploymentJobList()
 
-@app.get("/inference/list-inference-jobs/{inference_jobId}")
-async def list_inference_jobs(inference_jobId: str):
-    logger.info(f"entering list_endpoint_deployment_jobs function with jobId: {inference_jobId}")
-    return 0
+@app.get("/inference/list-inference-jobs")
+async def list_inference_jobs():
+    logger.info(f"entering list_endpoint_deployment_jobs") 
+    return getInferenceJobList()
+
+@app.get("/inference/get-endpoint-deployment-job/{endpoint_deployment_jobId}")
+async def get_endpoint_deployment_job(endpoint_deployment_jobId: str):
+    logger.info(f"entering get_endpoint_deployment_job function with jobId: {endpoint_deployment_jobdId}")
+    return getEndpointDeployJob(endpoint_deployment_jobId) 
+
+@app.get("/inference/get-inference-job/{inference_jobId}")
+async def get_inference_job(inference_jobId: str):
+    logger.info(f"entering get_inference_job function with jobId: {inference_jobId}")
+    return getInferenceJob(inference_jobId)
 
 #app.include_router(search) TODO: adding sub router for future
 
