@@ -10,6 +10,7 @@ from common.enum import MessageEnum
 from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
+from datetime import datetime
 
 import boto3
 import json
@@ -74,7 +75,7 @@ async def run_sagemaker_inference(request: Request):
     current_time = str(datetime.now())
     response = inference_table.put_item(
         Item={
-            'InferenceJobId': inference_id),
+            'InferenceJobId': inference_id,
             'dateTime': current_time,
             'status': 'inprogress'
         })
@@ -100,7 +101,7 @@ async def deploy_sagemaker_endpoint(request: Request):
         current_time = str(datetime.now())
         response = endpoint_deployment_table.put_item(
         Item={
-            'EndpointDeploymentJobId': endpoint_deployment_id),
+            'EndpointDeploymentJobId': endpoint_deployment_id,
             'dateTime': current_time,
             'status': 'inprogress'
         })
@@ -112,6 +113,16 @@ async def deploy_sagemaker_endpoint(request: Request):
     except Exception as e:
         logger.error(f"error calling run-sagemaker-inference with exception: {e}")
         raise e
+
+@app.get("/inference/list-endpoint-deployment-jobs/{endpoint_deployment_jobId}")
+async def list_endpoint_deployment_jobs(endpoint_deployment_jobId: str):
+    logger.info(f"entering list_endpoint_deployment_jobs function with jobId: {endpoint_deployment_jobdId}")
+    return 0
+
+@app.get("/inference/list-inference-jobs/{inference_jobId}")
+async def list_inference_jobs(inference_jobId: str):
+    logger.info(f"entering list_endpoint_deployment_jobs function with jobId: {inference_jobId}")
+    return 0
 
 #app.include_router(search) TODO: adding sub router for future
 

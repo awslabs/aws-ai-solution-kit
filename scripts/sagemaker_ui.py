@@ -64,7 +64,8 @@ def generate_on_cloud():
     print(f"Current parameters are {params_dict}")
     endpoint_name = "infer-endpoint-bcc9"
     # get api_gateway_url
-    api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
 
     # construct payload
@@ -125,7 +126,8 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
-    api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
+    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
 
     payload = {
