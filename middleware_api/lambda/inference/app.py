@@ -108,7 +108,8 @@ def get_s3_objects(bucket_name, folder_name):
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder_name)
 
     # Extract object names from the response
-    object_names = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
+    # object_names = [obj['Key'] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
+    object_names = [obj['Key'][len(folder_name):] for obj in response.get('Contents', []) if obj['Key'] != folder_name]
 
     return object_names
  
