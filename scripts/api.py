@@ -284,11 +284,13 @@ def sagemaker_api(_, app: FastAPI):
         try:
             if req.task == 'text-to-image':
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
+                response_info = response.json()
+                print(response_info.keys())
                 return response.json()
             elif req.task == 'controlnet_txt2img':  
                 response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
-                #response_info = response.json()
-                #print(response_info.keys())
+                response_info = response.json()
+                print(response_info.keys())
                 #post_invocations(selected_models, response_info['images'])
                 return response.json()
             elif req.task == 'image-to-image':
@@ -385,10 +387,10 @@ try:
 
     script_callbacks.on_app_started(sagemaker_api)
     # Move model dir to /tmp
-    print("Move model dir")
-    os.system("mv models /tmp/")
-    print("Link model dir")
-    os.system("ln -s /tmp/models models")
+    #print("Move model dir")
+    #os.system("mv models /tmp/")
+    #print("Link model dir")
+    #os.system("ln -s /tmp/models models")
     print("Check disk usage on app started")
     os.system("df -h")
     logger.debug("SD-Webui API layer loaded")
