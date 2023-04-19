@@ -125,7 +125,8 @@ def generate_on_cloud():
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
-    with open("ui-config.json") as f:
+    # use txt2imgConfig.json instead of ui_config.json
+    with open("txt2imgConfig.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
     endpoint_name = "infer-endpoint-bcc9"
