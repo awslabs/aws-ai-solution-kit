@@ -8,6 +8,7 @@ import os
 import shutil
 import traceback
 import zipfile
+import time
 from pathlib import Path
 from typing import List, Union
 
@@ -36,6 +37,9 @@ from utils import download_file_from_s3, download_folder_from_s3, download_folde
 from utils import sd_models_Ref, lora_models_Ref, cn_models_Ref, hyper_models_Ref, embedding_Ref
 import uuid
 import boto3
+
+sys.path.append("extensions/sd_dreambooth_extension")
+from dreambooth.ui_functions import create_model 
 
 # try:
 #     from dreambooth import shared
@@ -281,8 +285,8 @@ def sagemaker_api(_, app: FastAPI):
         @return:
         """
         print('-------invocation------')
-        #print(req)
-        #print(f"json is {json.loads(req.json())}")
+        # print(req)
+        print(f"json is {json.loads(req.json())}")
 
         if req.task == 'text-to-image' or req.task == 'controlnet_txt2img':
             selected_models = req.models
@@ -349,24 +353,35 @@ def sagemaker_api(_, app: FastAPI):
                     print("Check disk usage after download.")
                     os.system("df -h")
                     print("Start creating model.")
-                    local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
-                                            params=db_create_model_params)
+                    # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
+                    #                         params=db_create_model_params)
+                    create_model_func_args = copy.deepcopy(db_create_model_params)
+                    ckpt_path = create_model_func_args.pop("new_model_src")
+                    create_model_func_args["ckpt_path"] = ckpt_path
+                    local_response = create_model(**create_model_func_args)
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
                     # print("Delete src model.")
                     # os.system(f"rm -rf models/Stable-diffusion")
                     print("Upload tgt model to s3.")
                     upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
-                    print("Delete tgt model.")
-                    os.system(f"rm -rf models/dreambooth")
-                    print("Check disk usage after request.")
-                    os.system("df -h")
-                    message = local_response.json()
+                    config_file = os.path.join(target_local_model_dir, "db_config.json")
+                    with open(config_file, 'r') as openfile:
+                        config_dict = json.load(openfile)
+                    message = {
+                        "response": local_response,
+                        "config_dict": config_dict
+                    }
                     response = {
                         "id": job_id,
                         "statusCode": 200,
                         "message": message,
                         "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
                     }
+                    # Clean up
+                    print("Delete tgt model.")
+                    os.system(f"rm -rf models/dreambooth")
+                    print("Check disk usage after request.")
+                    os.system("df -h")
                     return response
                 except Exception as e:
                     response = {
@@ -386,18 +401,32 @@ def sagemaker_api(_, app: FastAPI):
         print('-------ping------')
         return {'status': 'Healthy'}
 
+def move_model_to_tmp():
+    # os.system("rm -rf models")
+    # Create model dir
+    # print("Create model dir")
+    # os.system("mkdir models")
+    # Move model dir to /tmp
+    model_tmp_dir = f"models_{time.time()}"
+    os.system(f"mv models /tmp/{model_tmp_dir}")
+    # Delete tmp model dir
+    # print("Delete tmp model dir")
+    # os.system("rm -rf /tmp/models")
+    # Link model dir
+    print("Link model dir")
+    os.system(f"ln -s /tmp/{model_tmp_dir} models")
+    print("Check disk usage on app started")
+    os.system("df -h")
+
 try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    # Move model dir to /tmp
-    print("Move model dir")
-    os.system("mv models /tmp/")
-    print("Link model dir")
-    os.system("ln -s /tmp/models models")
-    print("Check disk usage on app started")
-    os.system("df -h")
+    script_callbacks.on_before_ui(move_model_to_tmp)
+ 
     logger.debug("SD-Webui API layer loaded")
-except:
+
+except Exception as e:
+    print(e)
     logger.debug("Unable to import script callbacks.")
     pass
