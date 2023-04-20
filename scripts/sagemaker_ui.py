@@ -10,11 +10,13 @@ import gradio as gr
 from modules import shared, scripts
 
 inference_job_dropdown = None
+origin_inference_job_dropdown = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
 sd_checkpoints = ['checkpoint1', 'checkpoint2']
 txt2img_inference_job_ids = ['fake1', 'fake2']
+origin_txt2img_inference_job_ids = ['fake1', 'fake2']
 
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
@@ -29,12 +31,31 @@ def get_s3_file_names(bucket, folder):
     names = [obj.key for obj in objects]
     return names
 
+def server_request(path):
+    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod"
+    api_key = "09876543210987654321"
+    
+    # stage 2: inference using endpoint_name
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    # list_endpoint_url = f"{api_gateway_url}inference/list-endpoint-deployment-jobs"
+    list_endpoint_url = f"{api_gateway_url}{path}"
+    response = requests.get(list_endpoint_url, headers=headers)
+    print(f"response for rest api {response.json()}")
+    return response
 
 def update_sagemaker_endpoints():
     global sagemaker_endpoints
-    # aesthetic_embeddings = {f.replace(".pt", ""): os.path.join(aesthetic_embeddings_dir, f) for f in os.listdir(aesthetic_embeddings_dir) if f.endswith(".pt")}
-    # aesthetic_embeddings = OrderedDict(**{"None": None}, **aesthetic_embeddings)
-    # TODO update the endpoint code here
+
+    response = server_request('/inference/list-endpoint-deployment-jobs')
+    r = response.json()
+    sagemaker_endpoints = []
+    for obj in r:
+        aaa_value = obj["EndpointDeploymentJobId"]
+        sagemaker_endpoints.append(aaa_value)
+
 
 def update_sd_checkpoints():
     global sd_checkpoints
@@ -45,6 +66,47 @@ def update_sd_checkpoints():
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
+
+def origin_update_txt2img_inference_job_ids():
+    global origin_txt2img_inference_job_ids
+
+def get_texual_inversion_list():
+   global textual_inversion_list
+   response = server_request('/inference/get-texual-inversion-list')
+   r = response.json()
+   textual_inversion_list = []
+   for obj in r:
+    aaa_value = str(obj)
+    textual_inversion_list.append(aaa_value)
+
+def get_lora_list():
+   global lora_list 
+   response = server_request('/inference/get-lora-list')
+   r = response.json()
+   lora_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       lora_list.append(aaa_value)
+
+    
+def get_hypernetwork_list():
+   global hyperNetwork_list 
+   response = server_request('/inference/get-hypernetwork-list')
+   r = response.json()
+   hyperNetwork_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       hyperNetwork_list.append(aaa_value)
+
+    
+def get_controlnet_model_list():
+   global ControlNet_model_list 
+   response = server_request('/inference/get-controlnet-model-list')
+   r = response.json()
+   ControlNet_model_list = []
+   for obj in r:
+       aaa_value = str(obj)
+       ControlNet_model_list.append(aaa_value)
 
 import json
 import requests
@@ -60,6 +122,7 @@ def generate_on_cloud():
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
+    # use txt2imgConfig.json instead of ui-config.json
     with open("ui-config.json") as f:
         params_dict = json.load(f)
     print(f"Current parameters are {params_dict}")
@@ -228,8 +291,12 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
+<<<<<<< HEAD
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
     api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
+=======
+    api_gateway_url = "https://xxxx.execute-api.us-west-2.amazonaws.com/prod/"
+>>>>>>> 4c20b96c420289d16a0c175eb144e961e35feb9e
     api_key = "09876543210987654321"
 
     payload = {
@@ -248,10 +315,22 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     r = response.json()
     print(f"response for rest api {r}")
 
+def txt2img_config_save():
+    # placeholder for saving txt2img config
+    pass
+
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
+    update_sagemaker_endpoints()
+    get_texual_inversion_list()
+    get_lora_list()
+    get_hypernetwork_list()
+    get_controlnet_model_list()
+    
+    
+    
     with gr.Group():
         with gr.Accordion("Open for SageMaker Inference!", open=False):
             with gr.Column(variant='panel'):
@@ -265,11 +344,21 @@ def create_ui():
                                              label="Stable Diffusion Checkpoint")
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
-                generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
-                generate_on_cloud_button.click(generate_on_cloud)
+                generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
+                generate_on_cloud_button.click(
+                    fn=generate_on_cloud,
+                    inputs=[],
+                    outputs=[]
+                )
+                txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary')
+                txt2img_config_save_button.click(
+                    _js="txt2img_config_save",
+                    fn=txt2img_config_save,
+                    inputs=[],
+                    outputs=[]
+                )
 
             with gr.Row():
-                # global choose_txt2img_inference_job_id
                 inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
@@ -295,6 +384,11 @@ def create_ui():
                     fn=fake_gan,
                     outputs=[gallery]
                 )
+            with gr.Row():
+                global origin_inference_job_dropdown
+                origin_inference_job_dropdown = gr.Dropdown(origin_txt2img_inference_job_ids,
+                                            label="Origin Inference Job IDs")
+                origin_txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(origin_inference_job_dropdown, origin_update_txt2img_inference_job_ids, lambda: {"choices": origin_txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
 
             with gr.Row():
                 gr.HTML(value="Extra Networks")
@@ -313,4 +407,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, origin_inference_job_dropdown, origin_txt2img_inference_job_ids_refresh_button 
