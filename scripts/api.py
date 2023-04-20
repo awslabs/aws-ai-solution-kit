@@ -230,11 +230,6 @@ def update_models(selected_models):
         if selected_controlnet not in controlnet_model_list:
             #download from s3
             model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, controlnet_model_folder, selected_controlnet)
-            # os.system('whereis aws')
-            # os.system('debug 1')
-            # os.system('aws configure')
-            # os.system('aws configure list')
-            # os.system('aws s3 ls')
             os.system(f'./tools/s5cmd cp {model_data} ./models/ControlNet/')
             reload_controlnet = True
     if reload_controlnet:
@@ -244,29 +239,27 @@ def update_models(selected_models):
         script_loading.load_module(controlnet_script_path)
         sys.path.remove("extensions/sd-webui-controlnet")
         base_scripts.current_basedir = paths.script_path
-        #controlnet_config_folder = "./extensions/sd-webui-controlnet/models/"
-        #target_folder = './models/'
-        #files = os.listdir(controlnet_config_folder)
-        #for file_name in files:
-        #    shutil.copy(controlnet_config_folder+file_name, target_folder+file_name)
 
 
-def post_invocations(username, b64images):
-        generated_images_s3uri = os.environ.get('generated_images_s3uri', None)
-        s3_client = boto3.client('s3')
-        if generated_images_s3uri:
-            generated_images_s3uri = f'{generated_images_s3uri}{username}/'
-            bucket, key = get_bucket_and_key(generated_images_s3uri)
-            for b64image in b64images:
-                image = decode_base64_to_image(b64image)
-                image.save(output, format='JPEG')
-                output = io.BytesIO()
-                image.save(output, format='JPEG')
-                image_id = str(uuid.uuid4())
-                s3_client.put_object(
-                    Body=output.getvalue(),
-                    Bucket=bucket,
-                    Key=f'{key}/{image_id}.png')
+def post_invocations(selected_models, b64images):
+    #generated_images_s3uri = os.environ.get('generated_images_s3uri', None)
+    bucket = selected_models['bucket']
+    s3_base_dir = selected_models['base_dir']
+    output_folder = selected_models['output']
+    generated_images_s3uri = os.path.join(bucket,s3_base_dir,output_folder)
+    s3_client = boto3.client('s3')
+    if generated_images_s3uri:
+        #generated_images_s3uri = f'{generated_images_s3uri}{username}/'
+        bucket, key = get_bucket_and_key(generated_images_s3uri)
+        for b64image in b64images:
+            image = decode_base64_to_image(b64image)
+            output = io.BytesIO()
+            image.save(output, format='JPEG')
+            image_id = str(uuid.uuid4())
+            s3_client.put_object(
+                Body=output.getvalue(),
+                Bucket=bucket,
+                Key=f'{key}/{image_id}.png')
 
 def sagemaker_api(_, app: FastAPI):
     logger.debug("Loading Sagemaker API Endpoints.")
@@ -296,12 +289,13 @@ def sagemaker_api(_, app: FastAPI):
             if req.task == 'text-to-image':
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
                 return response.json()
-            elif req.task == 'controlnet_txt2img':       
+            elif req.task == 'controlnet_txt2img':  
                 response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
+                #response_info = response.json()
+                #print(response_info.keys())
+                #post_invocations(selected_models, response_info['images'])
                 return response.json()
             elif req.task == 'image-to-image':
-                # self.download_s3files(embeddings_s3uri, os.path.join(script_path, shared.cmd_opts.embeddings_dir))
-                # sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings()
                 # response = self.img2imgapi(req.img2img_payload)
                 # shared.opts.data = default_options
                 response = None
