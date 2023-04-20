@@ -34,6 +34,7 @@ db_sagemaker_train = None
 txt2img_show_hook = None
 txt2img_gallery = None
 txt2img_generation_info = None
+txt2img_html_info = None
 job_link_list = []
 
 class SageMakerUI(scripts.Script):
@@ -50,13 +51,13 @@ class SageMakerUI(scripts.Script):
 
     def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, origin_choose_txt2img_inference_job_id, origin_txt2img_inference_job_ids_refresh_button):
         pass
-        dropdown.init_field = init_field
+        # # dropdown.init_field = init_field
 
-        dropdown.change(
-            fn=select_script,
-            inputs=[dropdown],
-            outputs=[script.group for script in self.selectable_scripts]
-        )
+        # dropdown.change(
+        #     fn=select_script,
+        #     inputs=[dropdown],
+        #     outputs=[script.group for script in self.selectable_scripts]
+        # )
 
 def on_after_component_callback(component, **_kwargs):
     global db_model_name, db_use_txt2img, db_sagemaker_train 
@@ -88,23 +89,23 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[]
         )
     # Hook image display logic
-    # result_gallery = gr.Gallery(label='Output', show_label=False, elem_id=f"{tabname}_gallery").style(grid=4)
-    # ration_info = gr.Textbox(visible=False, elem_id=f'generation_info_{tabname}')
-    #                 if tabname == 'txt2img' or tabname == 'img2img':
-    global txt2img_gallery, txt2img_generation_info, txt2img_show_hook 
+    global txt2img_gallery, txt2img_generation_info, txt2img_html_info, txt2img_show_hook 
     is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
-    is_txt2img_generation_info = type(component) is gr.HTML and getattr(component, 'elem_id', None) == 'html_info_txt2img'
-    # print(f"is_txt2img_gallery is {is_txt2img_gallery}")
-    # print(f"is_txt2img_generation_info is {is_txt2img_generation_info}")
+    is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
+    is_txt2img_html_info = type(component) is gr.HTML and getattr(component, 'elem_id', None) == 'html_info_txt2img'
     if is_txt2img_gallery:
         print("create txt2img gallery")
         txt2img_gallery = component
     if is_txt2img_generation_info:
         print("create txt2img generation info")
         txt2img_generation_info = component
+    if is_txt2img_html_info:
+        print("create txt2img html info")
+        txt2img_html_info = component
     def test_func():
+        root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
         from PIL import Image
-        gallery = ["/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aigc/aigc-webui/dataset/raw-data/superman-fly.jpg"]
+        gallery = [f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_0.jpg"]
         images = []
         for g in gallery:
             im = Image.open(g)
@@ -113,16 +114,25 @@ def on_after_component_callback(component, **_kwargs):
         def plaintext_to_html(text):
             text = "<p>" + "<br>\n".join([f"{html.escape(x)}" for x in text.split('\n')]) + "</p>"
             return text
+        
+        json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
 
-        test = "just a test"
-        return images, plaintext_to_html(test)
+        f = open(json_file)
+
+        log_file = json.load(f)
+
+        info_text = log_file["info"]
+
+        infotexts = json.loads(info_text)["infotexts"][0]
+
+        return images, info_text, plaintext_to_html(infotexts)
         # return test
-    if sagemaker_ui.origin_inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_show_hook is None:
+    if sagemaker_ui.origin_inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
         print("Create inference job dropdown callback")
         txt2img_show_hook = "finish"
         sagemaker_ui.origin_inference_job_dropdown.change(
             fn=test_func,
-            outputs=[txt2img_gallery, txt2img_generation_info]
+            outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
     # global txt2img_interface, generate_hook
     # is_txt2img_prompt_image = type(component) is gr.File and getattr(component, 'elem_id', None) == 'txt2img_prompt_image'

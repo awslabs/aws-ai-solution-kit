@@ -12,6 +12,7 @@ export interface SagemakerInferenceProps {
     snsTopic: sns.Topic;
     snsErrorTopic: sns.Topic;
     inferenceJobName: string;
+    s3_bucket_name: string;
     endpointDeploymentJobName: string;
     userNotifySNS: sns.Topic; 
 }
@@ -26,6 +27,7 @@ export class SagemakerInferenceStateMachine {
             props.snsTopic,
             props.snsErrorTopic,
             props.inferenceJobName,
+            props.s3_bucket_name,
             props.endpointDeploymentJobName,
             props.userNotifySNS
         ).stateMachineArn;
@@ -35,6 +37,7 @@ export class SagemakerInferenceStateMachine {
         snsTopic: sns.Topic,
         snsErrorTopic: sns.Topic,
         inferenceJobName: string,
+        s3BucketName: string,
         endpointDeploymentJobName: string,
         userNotifySNS: sns.Topic
     ): stepfunctions.StateMachine {
@@ -91,7 +94,8 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
                     DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
-                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
+                    S3_BUCKET_NAME: s3BucketName
                 },
             }
         );
@@ -113,7 +117,8 @@ export class SagemakerInferenceStateMachine {
                     SNS_INFERENCE_ERROR: snsErrorTopic.topicName,
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
                     DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
-                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
+                    S3_BUCKET_NAME: s3BucketName
                 },
             }
         );

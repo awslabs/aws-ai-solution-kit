@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import html
 import boto3
+from urllib.parse import urljoin
 
 import gradio as gr
 
@@ -41,7 +42,8 @@ def server_request(path):
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
-    list_endpoint_url = f"{api_gateway_url}{path}"
+    # list_endpoint_url = f"{api_gateway_url}{path}"
+    list_endpoint_url = urljoin(api_gateway_url, path)
     response = requests.get(list_endpoint_url, headers=headers)
     print(f"response for rest api {response.json()}")
     return response
@@ -52,9 +54,11 @@ def update_sagemaker_endpoints():
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
     sagemaker_endpoints = []
+    
     for obj in r:
-        aaa_value = obj["EndpointDeploymentJobId"]
-        sagemaker_endpoints.append(aaa_value)
+        if "EndpointDeploymentJobId" in obj:
+            aaa_value = obj["EndpointDeploymentJobId"]
+            sagemaker_endpoints.append(aaa_value)
 
 
 def update_sd_checkpoints():
@@ -72,7 +76,7 @@ def origin_update_txt2img_inference_job_ids():
 
 def get_texual_inversion_list():
    global textual_inversion_list
-   response = server_request('/inference/get-texual-inversion-list')
+   response = server_request('inference/get-texual-inversion-list')
    r = response.json()
    textual_inversion_list = []
    for obj in r:
@@ -81,7 +85,7 @@ def get_texual_inversion_list():
 
 def get_lora_list():
    global lora_list 
-   response = server_request('/inference/get-lora-list')
+   response = server_request('inference/get-lora-list')
    r = response.json()
    lora_list = []
    for obj in r:
@@ -91,7 +95,7 @@ def get_lora_list():
     
 def get_hypernetwork_list():
    global hyperNetwork_list 
-   response = server_request('/inference/get-hypernetwork-list')
+   response = server_request('inference/get-hypernetwork-list')
    r = response.json()
    hyperNetwork_list = []
    for obj in r:
@@ -101,7 +105,7 @@ def get_hypernetwork_list():
     
 def get_controlnet_model_list():
    global ControlNet_model_list 
-   response = server_request('/inference/get-controlnet-model-list')
+   response = server_request('inference/get-controlnet-model-list')
    r = response.json()
    ControlNet_model_list = []
    for obj in r:
@@ -215,12 +219,14 @@ def create_ui():
     global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
-    update_sagemaker_endpoints()
-    get_texual_inversion_list()
-    get_lora_list()
-    get_hypernetwork_list()
-    get_controlnet_model_list()
-    
+    if get_variable_from_json('api_gateway_url') is not None:
+        # update_sagemaker_endpoints()
+        get_texual_inversion_list()
+        get_lora_list()
+        get_hypernetwork_list()
+        get_controlnet_model_list()
+    else:
+        print(f"there is no api-gateway url and token in local file,")
     
     
     with gr.Group():
