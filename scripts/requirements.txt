@@ -1,3 +1,4 @@
 sagemaker==2.143.0
 boto3>=1.26.28
 requests
+urllib
