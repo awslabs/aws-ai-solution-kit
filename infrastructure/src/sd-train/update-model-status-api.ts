@@ -33,8 +33,8 @@ export interface UpdateModelStatusRestApiProps {
 }
 
 export class UpdateModelStatusRestApi {
-  // private readonly imageUrl: string = 'public.ecr.aws/v1y2w4o9/aigc-webui-dreambooth-create-model:latest';
-  private readonly imageUrl: string = 'public.ecr.aws/v1y2w4o9/aigc-webui-utils:latest';
+
+  private readonly imageUrl: string = 'public.ecr.aws/e2t2y5y0/aigc-webui-utils:latest';
   private readonly machineType: string = 'ml.g4dn.2xlarge';
 
   private readonly src;
@@ -48,11 +48,12 @@ export class UpdateModelStatusRestApi {
   private readonly dockerRepo: aws_ecr.Repository;
   private readonly sagemakerEndpoint: CreateModelSageMakerEndpoint;
 
-  private readonly baseId = 'aigc-update-train-job';
+  private readonly baseId: string;
 
-  constructor(scope: Construct, props: UpdateModelStatusRestApiProps) {
+  constructor(scope: Construct, id: string, props: UpdateModelStatusRestApiProps) {
     this.scope = scope;
     this.router = props.router;
+    this.baseId = id;
     this.modelTable = props.modelTable;
     this.httpMethod = props.httpMethod;
     this.src = props.srcRoot;

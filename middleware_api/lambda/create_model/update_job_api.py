@@ -93,14 +93,15 @@ def process_result(event, context):
                 )
                 publish_msg(
                     topic_arn=user_topic_arn,
-                    subject=f'Create Model Job {job.params["new_model_name"]} failed',
+                    subject=f'Create Model Job {job.name}: {job.id} failed',
                     msg='to be done'
                 )  # todo: find out msg
                 return
 
             msgs = content['message']
+            job.params['resp'] = {}
             for key, val in msgs.items():
-                job.params[key] = val
+                job.params['resp'][key] = val
 
             ddb_service.update_item(
                 table=model_table,
@@ -109,7 +110,7 @@ def process_result(event, context):
                 value=CreateModelStatus.Complete.value
             )
             params = model_job_raw['params']
-            params['s3_output_location'] = f'{bucket_name}/{job.model_type}/{job.params["new_model_name"]}.tar'
+            params['resp']['s3_output_location'] = f'{bucket_name}/{job.model_type}/{job.name}.tar'
             ddb_service.update_item(
                 table=model_table,
                 key={'id': inference_id},
@@ -119,8 +120,8 @@ def process_result(event, context):
 
             publish_msg(
                 topic_arn=user_topic_arn,
-                subject=f'Create Model Job {job.params["new_model_name"]} success',
-                msg=f'model {job.params["new_model_name"]} is ready to use'
+                subject=f'Create Model Job {job.name}: {job.id} success',
+                msg=f'model {job.name}: {job.id} is ready to use'
             )  # todo: find out msg
 
         if record['Sns']['TopicArn'] == error_topic_arn:
@@ -132,7 +133,7 @@ def process_result(event, context):
             )
             publish_msg(
                 topic_arn=user_topic_arn,
-                subject=f'Create Model Job {job.params["new_model_name"]} failed',
+                subject=f'Create Model Job {job.name}: {job.id} failed',
                 msg='to be done'
             )  # todo: find out msg
     return {
@@ -183,4 +184,4 @@ def train_job_exec(model_job: ModelJob, action: CreateModelStatus):
                         f' not allowed overwrite old model creation job')
     else:
         # todo: other action
-        return
+        raise NotImplemented
