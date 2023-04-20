@@ -59,6 +59,8 @@ from dreambooth.ui_functions import create_model
 
 if os.environ.get("DEBUG_API", False):
     logging.basicConfig(level=logging.DEBUG)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
@@ -321,7 +323,7 @@ def sagemaker_api(_, app: FastAPI):
                     :job_id: job id.
                     :param
                         :new_model_name: generated model name.
-                        :new_model_src: S3 path for download src model.
+                        :ckpt_path: S3 path for download src model.
                         :from_hub=False,
                         :new_model_url="",
                         :new_model_token="",
@@ -332,26 +334,26 @@ def sagemaker_api(_, app: FastAPI):
                 try:
                     db_create_model_payload = json.loads(req.db_create_model_payload)
                     job_id = db_create_model_payload["job_id"]
-                    s3_input_path = db_create_model_payload["s3_input_path"][0]
+                    s3_input_path = db_create_model_payload["s3_input_path"]
                     input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
-                    s3_output_path = db_create_model_payload["s3_output_path"][0]
+                    s3_output_path = db_create_model_payload["s3_output_path"]
                     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
                     output_path = get_path_from_s3_path(s3_output_path)
-                    db_create_model_params = db_create_model_payload["param"]
-                    local_model_path = f'{db_create_model_params["new_model_src"]}.tar'
+                    db_create_model_params = db_create_model_payload["param"]["create_model_params"]
+                    local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
                     input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
                     print("Check disk usage before download.")
                     os.system("df -h")
-                    print("Download src model from s3.")
+                    logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
                     download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
-                    print("Check disk usage after download.")
+                    logger.info("Check disk usage after download.")
                     os.system("df -h")
                     print("Start creating model.")
                     # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
                     #                         params=db_create_model_params)
                     create_model_func_args = copy.deepcopy(db_create_model_params)
-                    ckpt_path = create_model_func_args.pop("new_model_src")
-                    create_model_func_args["ckpt_path"] = ckpt_path
+                    # ckpt_path = create_model_func_args.pop("new_model_src")
+                    # create_model_func_args["ckpt_path"] = ckpt_path
                     local_response = create_model(**create_model_func_args)
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
                     # print("Delete src model.")
@@ -383,7 +385,7 @@ def sagemaker_api(_, app: FastAPI):
                         "statusCode": 500,
                         "message": e,
                     }
-                    print(e)
+                    logger.error(e)
                     return response
             else:
                 raise NotImplementedError
@@ -395,14 +397,15 @@ def sagemaker_api(_, app: FastAPI):
         print('-------ping------')
         return {'status': 'Healthy'}
 
-def move_model_to_tmp():
+def move_model_to_tmp(_, app: FastAPI):
     # os.system("rm -rf models")
     # Create model dir
     # print("Create model dir")
     # os.system("mkdir models")
     # Move model dir to /tmp
     model_tmp_dir = f"models_{time.time()}"
-    os.system(f"mv models /tmp/{model_tmp_dir}")
+    os.system(f"cp -rL models /tmp/{model_tmp_dir}")
+    os.system(f"rm -rf models")
     # Delete tmp model dir
     # print("Delete tmp model dir")
     # os.system("rm -rf /tmp/models")
@@ -416,7 +419,7 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    script_callbacks.on_before_ui(move_model_to_tmp)
+    script_callbacks.on_app_started(move_model_to_tmp)
  
     logger.debug("SD-Webui API layer loaded")
 
