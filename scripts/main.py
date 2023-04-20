@@ -333,9 +333,8 @@ def ui_tabs_callback():
                                         # cloud_db_status,
                                     ]
                                 )
-
-                        break
-
+                    break
+        break
     return res
 
 script_callbacks.ui_tabs_callback = ui_tabs_callback
@@ -347,27 +346,38 @@ def get_cloud_model_snapshots():
     return ["ran", "swam", "slept"]
 
 def get_cloud_db_models():
-    url = "https://euat1ulvyh.execute-api.us-east-1.amazonaws.com/prod/models"
+    url = get_variable_from_json('api_gateway_url') + "models"
     print("Get request for model list.")
-    response = requests.get(url=url, headers={'x-api-key': '09876543210987654321'}).json()
+    response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
     model_name_list = []
     if "models" not in response:
         return []
     for model in response["models"]:
-        model_name_list.append(model['model_name'])
+        params = model['params']
+        if 'resp' in params:
+            model['model_name'] = params['resp']['config_dict']['model_name']
+            model_name_list.append(model['model_name'])
+            db_config = params['resp']['config_dict']
+            # TODO:
+            for k in db_config:
+                if type(db_config[k]) is str:
+                    db_config[k] = db_config[k].replace("/opt/ml/code/", "")
+            model_dir = f"models/dreambooth/{model['model_name']}"
+            if not os.path.exists(model_dir):
+                os.mkdir(model_dir)
+            with open(f"{model_dir}/db_config.json", "w") as db_config_file:
+                json.dump(db_config, db_config_file)
+    print(response)
     return model_name_list
 
 def get_sd_cloud_models():
-    # url = "https://oudm9u1088.execute-api.us-east-1.amazonaws.com/prod/models"
-    # print("Get request for model list.")
-    # response = requests.get(url=url, headers={'x-api-key': '09876543210987654321'}).json()
     # model_name_list = []
     # for model in response["models"]:
     #     model_name_list.append(model['model_name'])
     # return model_name_list
     return get_sd_models()
 
-def cloud_create_model(
+def async_create_model_on_sagemaker(
         new_model_name: str,
         ckpt_path: str,
         from_hub=False,
@@ -377,9 +387,10 @@ def cloud_create_model(
         train_unfrozen=False,
         is_512=True,
 ):
-    # Prepare for creating model on cloud.
     ckpt_path = " ".join(ckpt_path.split(" ")[:-1])
     params = copy.deepcopy(locals())
+    api_key = get_variable_from_json('api_token')
+    # Prepare for creating model on cloud.
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     local_tar_path = f'{ckpt_path}.tar'
     print("Pack the model file.")
@@ -388,12 +399,11 @@ def cloud_create_model(
         "model_type": "dreambooth",
         "name": new_model_name,
         "filenames": [local_tar_path],
-        "params": params
+        "params": {"create_model_params": params}
     }
-    url = "https://euat1ulvyh.execute-api.us-east-1.amazonaws.com/prod/model"
+    url = get_variable_from_json('api_gateway_url') + "model"
     print("Post request for upload s3 presign url.")
-    response = requests.post(url=url, json=payload,
-                         headers={'x-api-key': '09876543210987654321'})
+    response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
     json_response = response.json()
     s3_base = json_response["job"]["s3_base"]
     model_id = json_response["job"]["id"]
@@ -407,7 +417,20 @@ def cloud_create_model(
         "status": "Creating"
     }
     # Start creating model on cloud.
-    response = requests.put(url=url, json=payload,
-                         headers={'x-api-key': '09876543210987654321'})
+    response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
     s3_input_path = s3_base
     print(response)
+
+def cloud_create_model(
+        new_model_name: str,
+        ckpt_path: str,
+        from_hub=False,
+        new_model_url="",
+        new_model_token="",
+        extract_ema=False,
+        train_unfrozen=False,
+        is_512=True,
+):
+    upload_thread = threading.Thread(target=async_create_model_on_sagemaker,
+                                     args=(new_model_name, ckpt_path, from_hub, new_model_url, new_model_token, extract_ema, train_unfrozen, is_512))
+    upload_thread.start()
