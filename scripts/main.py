@@ -49,13 +49,13 @@ class SageMakerUI(scripts.Script):
 
     def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, origin_choose_txt2img_inference_job_id, origin_txt2img_inference_job_ids_refresh_button):
         pass
-        dropdown.init_field = init_field
+        # # dropdown.init_field = init_field
 
-        dropdown.change(
-            fn=select_script,
-            inputs=[dropdown],
-            outputs=[script.group for script in self.selectable_scripts]
-        )
+        # dropdown.change(
+        #     fn=select_script,
+        #     inputs=[dropdown],
+        #     outputs=[script.group for script in self.selectable_scripts]
+        # )
 
 def on_after_component_callback(component, **_kwargs):
     global db_model_name, db_use_txt2img, db_sagemaker_train 

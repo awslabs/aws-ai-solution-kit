@@ -218,7 +218,7 @@ def create_ui():
     import modules.ui
 
     if get_variable_from_json('api_gateway_url') is not None:
-        update_sagemaker_endpoints()
+        # update_sagemaker_endpoints()
         get_texual_inversion_list()
         get_lora_list()
         get_hypernetwork_list()
