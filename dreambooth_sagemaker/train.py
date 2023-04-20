@@ -73,6 +73,7 @@ def upload_assets(model_dir, use_txt2img, instance_type, job_id):
         'use_txt2img': use_txt2img,
         'job_id': job_id,
         'instance_type': instance_type,
+        'class_data_dir': class_data_dir
         }
     sm_params_conf_file_path = 'sagemaker_parameters.json'
     sm_params_conf_file = open(sm_params_conf_file_path, 'w')
@@ -83,11 +84,12 @@ def upload_assets(model_dir, use_txt2img, instance_type, job_id):
 
 def start_sagemaker_training(model_dir, use_txt2img, instance_type="ml.g5.16xlarge"):
     # def start_sagemaker_training(model_dir, use_txt2img, instance_type="local"):
-    job_id = time.time()
+    # job_id = time.time()
+    job_id = "test"
     upload_assets(model_dir, use_txt2img, instance_type, job_id)
 
     role = "arn:aws:iam::683638520402:role/service-role/AmazonSageMaker-ExecutionRole-20221031T120168"
-    image_uri = "683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-sagemaker:latest"
+    image_uri = "683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-dreambooth-training:latest"
 
     # JSON encode hyperparameters
     def json_encode_hyperparameters(hyperparameters):
@@ -107,20 +109,20 @@ def start_sagemaker_training(model_dir, use_txt2img, instance_type="ml.g5.16xlar
     )
     status.textinfo = "Starting SageMaker training"
     print(status.textinfo)
-    est.fit(wait=True)
+    est.fit(wait=False)
     while not est._current_job_name:
         time.sleep(1)
     job_url_prefix = 'https://us-west-2.console.aws.amazon.com/sagemaker/home?region=us-west-2#/jobs/'
     job_url = f'{job_url_prefix}{est._current_job_name}'
     status.textinfo = f'SageMaker job link <a href={job_url}>{job_url}</a><br>'
-    bucket_name = "aws-gcr-csdc-atl-exp-us-west-2"
-    download_thread = threading.Thread(target=check_and_download, args=(bucket_name, f'aigc-webui-test-samples/{job_id}/samples.tar', 'samples.tar'))
-    download_thread.start()
-    # download_folder_from_s3_by_tar('aws-gcr-csdc-atl-exp-us-west-2', 'aigc-webui-test-samples/samples.tar', 'samples.tar')
-    sync_status_thread = threading.Thread(target=sync_status_from_s3_in_webui,
-                                        args=(bucket_name, f'aigc-webui-test-status/{job_id}/sagemaker_status.pickle',
-                                              f'aigc-webui-test-status/{job_id}/webui_status.pickle'))
-    sync_status_thread.start()
+    # bucket_name = "aws-gcr-csdc-atl-exp-us-west-2"
+    # download_thread = threading.Thread(target=check_and_download, args=(bucket_name, f'aigc-webui-test-samples/{job_id}/samples.tar', 'samples.tar'))
+    # download_thread.start()
+    # # download_folder_from_s3_by_tar('aws-gcr-csdc-atl-exp-us-west-2', 'aigc-webui-test-samples/samples.tar', 'samples.tar')
+    # sync_status_thread = threading.Thread(target=sync_status_from_s3_in_webui,
+    #                                     args=(bucket_name, f'aigc-webui-test-status/{job_id}/sagemaker_status.pickle',
+    #                                           f'aigc-webui-test-status/{job_id}/webui_status.pickle'))
+    # sync_status_thread.start()
     from sagemaker.estimator import Estimator
     attached_estimator = Estimator.attach(est._current_job_name)
     attached_estimator.logs()
