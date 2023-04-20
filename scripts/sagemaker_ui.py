@@ -54,9 +54,11 @@ def update_sagemaker_endpoints():
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
     sagemaker_endpoints = []
+    
     for obj in r:
-        aaa_value = obj["EndpointDeploymentJobId"]
-        sagemaker_endpoints.append(aaa_value)
+        if "EndpointDeploymentJobId" in obj:
+            aaa_value = obj["EndpointDeploymentJobId"]
+            sagemaker_endpoints.append(aaa_value)
 
 
 def update_sd_checkpoints():

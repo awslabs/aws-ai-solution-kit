@@ -40,9 +40,9 @@ export class SDAsyncInferenceStack extends Stack {
 
 
     // Create an S3 bucket to store input and output payloads with public access blocked
-    const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
-      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    });
+    // const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
+    //   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+    // });
 
     // create Dynamodb table to save the inference job data
     const sd_inference_job_table = new dynamodb.Table(
@@ -89,6 +89,7 @@ export class SDAsyncInferenceStack extends Stack {
       snsTopic: inference_result_topic,
       snsErrorTopic: inference_result_error_topic,
       inferenceJobName: sd_inference_job_table.tableName,
+      s3_bucket_name: props?.s3_bucket.bucketName ?? '',
       endpointDeploymentJobName: sd_endpoint_deployment_job_table.tableName,
       userNotifySNS: props?.snsTopic ?? new sns.Topic(this, 'MyTopic', {
         displayName: 'My SNS Topic',
@@ -107,7 +108,7 @@ export class SDAsyncInferenceStack extends Stack {
           DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
           DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
           DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: sd_endpoint_deployment_job_table.tableName,
-          S3_BUCKET: payloadBucket.bucketName,
+          S3_BUCKET: props?.s3_bucket.bucketName ?? '',
           ACCOUNT_ID: Aws.ACCOUNT_ID,
           REGION_NAME: Aws.REGION,
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
@@ -119,7 +120,7 @@ export class SDAsyncInferenceStack extends Stack {
       });
 
     // Grant Lambda permission to read/write from/to the S3 bucket
-    payloadBucket.grantReadWrite(inferenceLambda);
+    props?.s3_bucket.grantReadWrite(inferenceLambda);
 
     // Grant Lambda permission to invoke SageMaker endpoint
     inferenceLambda.addToRolePolicy(
@@ -219,7 +220,7 @@ export class SDAsyncInferenceStack extends Stack {
           DDB_INFERENCE_TABLE_NAME: sd_inference_job_table.tableName,
           DDB_TRAINING_TABLE_NAME: props?.training_table.tableName ?? '',
           DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: sd_endpoint_deployment_job_table.tableName,
-          S3_BUCKET: payloadBucket.bucketName,
+          S3_BUCKET: props?.s3_bucket.bucketName ?? '',
           ACCOUNT_ID: Aws.ACCOUNT_ID,
           REGION_NAME: Aws.REGION,
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
