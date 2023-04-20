@@ -12,7 +12,7 @@ EXECUTION_ROLE = role_response['Role']
 # async_success_topic = 'arn:aws:sns:us-west-2:002224604296:SdAsyncInferenceStack-dev-SNSReceiveSageMakerinferencesuccess314267EE-OcvPLAvRGaNL'
 ASYNC_SUCCESS_TOPIC = os.environ["SNS_INFERENCE_SUCCESS"]
 ASYNC_ERROR_TOPIC = os.environ["SNS_INFERENCE_ERROR"]
-S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 
 def lambda_handler(event, context):
     # Parse the input data
@@ -29,7 +29,7 @@ def lambda_handler(event, context):
 
     s3_output_path = f"s3://{S3_BUCKET_NAME}/out/"
     initial_instance_count = 1
-    instance_type = 'ml.g4dn.2xlarge'
+    instance_type = 'ml.g4dn.1xlarge'
 
     print('Creating model resource ...')
     create_model(sagemaker_model_name, image_url, model_data_url)
