@@ -291,12 +291,8 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
-<<<<<<< HEAD
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
     api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
-=======
-    api_gateway_url = "https://xxxx.execute-api.us-west-2.amazonaws.com/prod/"
->>>>>>> 4c20b96c420289d16a0c175eb144e961e35feb9e
     api_key = "09876543210987654321"
 
     payload = {

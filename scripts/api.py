@@ -193,7 +193,7 @@ def update_models(selected_models):
             #download from s3
             model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, hypernetwork_model_folder, selected_hypernet_model)
             os.system(f'./tools/s5cmd cp {model_data} ./models/hypernetworks/')
-    #hypernetwork.load_hypernetworks(selected_hypernet_models)
+    shared.reload_hypernetworks()
     ##update lora models
     selected_lora_models = selected_models['lora']
     lora_model_list = os.listdir(lora_model_folder)
@@ -285,7 +285,7 @@ def sagemaker_api(_, app: FastAPI):
             if req.task == 'text-to-image':
                 response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/txt2img', json=json.loads(req.txt2img_payload.json()))
                 response_info = response.json()
-                print(response_info.keys())
+                #print(response_info.keys())
                 return response.json()
             elif req.task == 'controlnet_txt2img':  
                 response = requests.post(url=f'http://0.0.0.0:8080/controlnet/txt2img', json=json.loads(req.controlnet_txt2img_payload.json()))
