@@ -10,6 +10,8 @@ import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
 from modules.ui import create_refresh_button
 from utils import upload_file_to_s3_by_presign_url
+from utils import get_variable_from_json
+from utils import save_variable_to_json
 
 import sys
 import pickle
@@ -137,6 +139,13 @@ def on_after_component_callback(component, **_kwargs):
 
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
+    # Example usage
+    save_variable_to_json('api_gateway_url', api_url)
+    save_variable_to_json('api_token', api_token)
+    value1 = get_variable_from_json('api_gateway_url')
+    value2 = get_variable_from_json('api_token')
+    print(f"Variable 1: {value1}")
+    print(f"Variable 2: {value2}")
     print(f"update the api_url:{api_url} and token: {api_token}............")
     
 def on_ui_tabs():
@@ -154,8 +163,8 @@ def on_ui_tabs():
         with  gr.Row():
             with gr.Column(variant="panel", scale=1):
                 gr.HTML(value="AWS Connect Setting")
-                api_url_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Url", label="API Url")
-                api_token_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter API Token", label="API Token")
+                api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url")
+                api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token")
                 aws_connect_button = gr.Button(value="Update Setting", variant='primary')
                 aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
             with gr.Column(variant="panel", scale=2):
