@@ -237,7 +237,7 @@ def create_ui():
                                              label="Stable Diffusion Checkpoint")
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sd_checkpoints}, "refresh_sd_checkpoints")
             with gr.Column():
-                generate_on_cloud_button = gr.Button(value="Generate on Cloud", variant='primary')
+                generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
                 generate_on_cloud_button.click(
                     fn=generate_on_cloud,
                     inputs=[],
