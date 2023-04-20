@@ -70,7 +70,6 @@ def generate_on_cloud():
         controlnet_module = params_dict['txt2img/Preprocessor/value']#'openpose'
         selected_cn_model = params_dict['txt2img/Model/value']#['control_openpose-fp16.safetensors']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
-        print('!!!!!!!!!', controlnet_model)
 
         with open(controlnet_image_path, "rb") as img:
             image = base64.b64encode(img.read())
@@ -94,7 +93,7 @@ def generate_on_cloud():
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
     # get api_gateway_url
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://db3f0bp2ab.execute-api.us-west-2.amazonaws.com/prod/"
+    api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
 
     if contronet_enable:
@@ -166,6 +165,15 @@ def generate_on_cloud():
         payload = {
         "endpoint_name": endpoint_name,
         "task": "text-to-image", 
+        "models":{
+            "bucket": "sagemaker-us-west-2-725399406069",
+            "base_dir": "stable-diffusion-webui",
+            "stablediffusion": selected_sd_model,
+            "controlnet": selected_cn_model,
+            "hypernetwork": selected_hypernets,
+            "lora": selected_loras,
+            "textualinversion": selected_embeddings
+        },
         "txt2img_payload": {
             "enable_hr": "False", 
             "denoising_strength": 0.7, 
@@ -221,7 +229,7 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
 
     # get api_gateway_url
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://db3f0bp2ab.execute-api.us-west-2.amazonaws.com/prod/"
+    api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
 
     payload = {
