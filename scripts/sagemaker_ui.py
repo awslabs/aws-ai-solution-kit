@@ -8,6 +8,7 @@ import boto3
 import gradio as gr
 
 from modules import shared, scripts
+from utils import get_variable_from_json
 
 inference_job_dropdown = None
 origin_inference_job_dropdown = None
@@ -32,15 +33,14 @@ def get_s3_file_names(bucket, folder):
     return names
 
 def server_request(path):
-    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod"
-    api_key = "09876543210987654321"
+    api_gateway_url = get_variable_from_json('api_gateway_url');
+    api_key = get_variable_from_json('api_token') 
     
     # stage 2: inference using endpoint_name
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
-    # list_endpoint_url = f"{api_gateway_url}inference/list-endpoint-deployment-jobs"
     list_endpoint_url = f"{api_gateway_url}{path}"
     response = requests.get(list_endpoint_url, headers=headers)
     print(f"response for rest api {response.json()}")
@@ -49,7 +49,7 @@ def server_request(path):
 def update_sagemaker_endpoints():
     global sagemaker_endpoints
 
-    response = server_request('/inference/list-endpoint-deployment-jobs')
+    response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
     sagemaker_endpoints = []
     for obj in r:
@@ -127,9 +127,8 @@ def generate_on_cloud():
     print(f"Current parameters are {params_dict}")
     endpoint_name = "infer-endpoint-bcc9"
     # get api_gateway_url
-    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://62k5sne6qi.execute-api.us-west-2.amazonaws.com/prod/"
-    api_key = "09876543210987654321"
+    api_gateway_url = get_variable_from_json('api_gateway_url');
+    api_key = get_variable_from_json('api_token') 
 
     # construct payload
     payload = {
@@ -189,8 +188,8 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
-    api_gateway_url = "https://xxxx.execute-api.us-west-2.amazonaws.com/prod/"
-    api_key = "09876543210987654321"
+    api_gateway_url = get_variable_from_json('api_gateway_url');
+    api_key = get_variable_from_json('api_token') 
 
     payload = {
     "instance_type": instance_type,

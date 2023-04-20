@@ -6,6 +6,7 @@ import boto3.s3.transfer as s3transfer
 import sys
 from urllib.parse import urlparse
 import requests
+import json
 
 sys.path.append(os.getcwd())
 # from modules.timer import Timer
@@ -173,6 +174,29 @@ def fast_upload(session, bucketname, s3dir, filelist, progress_func=None, worker
     # timer.record("upload")
     # print(timer.summary())
 
+def save_variable_to_json(variable_name, variable_value, filename='sagemaker_ui.json'):
+    data = {}
+    
+    if os.path.exists(filename):
+        with open(filename, 'r') as json_file:
+            data = json.load(json_file)
+    
+    data[variable_name] = variable_value
+    
+    with open(filename, 'w') as json_file:
+        json.dump(data, json_file)
+
+def get_variable_from_json(variable_name, filename='sagemaker_ui.json'):
+    if not os.path.exists(filename):
+        with open(filename, 'w') as json_file:
+            json.dump({}, json_file)
+
+    with open(filename, 'r') as json_file:
+        data = json.load(json_file)
+    
+    variable_value = data.get(variable_name)
+    
+    return variable_value
 
 if __name__ == '__main__':
     import sys
