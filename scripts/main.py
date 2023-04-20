@@ -20,7 +20,9 @@ sys.path.append("extensions/aws-ai-solution-kit")
 sys.path.append("extensions/aws-ai-solution-kit/scripts")
 # TODO: Do not use the dreambooth status module.
 from dreambooth.shared import status
+from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
 from dreambooth_sagemaker.train import start_sagemaker_training
+from dreambooth.ui_functions import load_model_params
 import sagemaker_ui
 
 db_model_name = None
@@ -167,56 +169,22 @@ def ui_tabs_callback():
             for key in list(extension_ui[0].blocks):
                 val = extension_ui[0].blocks[key]
                 if type(val) is gr.Tab:
-                    if val.label == 'Create':
+                    if val.label == 'Select':
                         with extension_ui[0]:
                             with val.parent:
-                                with gr.Tab('Create From Cloud'):
-                                    with gr.Column():
-                                        cloud_db_create_model = gr.Button(
-                                            value="Create Model From Cloud", variant="primary"
-                                        )
-                                    cloud_db_new_model_name = gr.Textbox(label="Name")
-                                    with gr.Row():
-                                        cloud_db_create_from_hub = gr.Checkbox(
-                                            label="Create From Hub", value=False
-                                        )
-                                        cloud_db_512_model = gr.Checkbox(label="512x Model", value=True)
-                                    with gr.Column(visible=False) as hub_row:
-                                        cloud_db_new_model_url = gr.Textbox(
-                                            label="Model Path",
-                                            placeholder="runwayml/stable-diffusion-v1-5",
-                                        )
-                                        cloud_db_new_model_token = gr.Textbox(
-                                            label="HuggingFace Token", value=""
-                                        )
+                                with gr.Tab('Select From Cloud'):
                                     with gr.Column(visible=True) as local_row:
-                                        with gr.Row():
-                                            cloud_db_new_model_src = gr.Dropdown(
-                                                label="Source Checkpoint",
-                                                choices=sorted(get_sd_cloud_models()),
+                                        with gr.Row(visible=True):
+                                            cloud_db_model_name = gr.Dropdown(
+                                                label="Model", choices=sorted(get_cloud_db_models())
                                             )
                                             create_refresh_button(
-                                                cloud_db_new_model_src,
-                                                get_sd_cloud_models,
-                                                lambda: {"choices": sorted(get_sd_cloud_models())},
-                                                "refresh_sd_models",
+                                                cloud_db_model_name,
+                                                get_cloud_db_models,
+                                                lambda: {"choices": sorted(get_cloud_db_models())},
+                                                "refresh_db_models",
                                             )
-                                    cloud_db_new_model_extract_ema = gr.Checkbox(
-                                        label="Extract EMA Weights", value=False
-                                    )
-                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
-                                with gr.Tab('Select From Cloud'):
-                                    with gr.Row():
-                                        cloud_db_model_name = gr.Dropdown(
-                                            label="Model", choices=sorted(get_cloud_db_models())
-                                        )
-                                        create_refresh_button(
-                                            cloud_db_model_name,
-                                            get_cloud_db_models,
-                                            lambda: {"choices": sorted(get_cloud_db_models())},
-                                            "refresh_db_models",
-                                        )
-                                    with gr.Row():
+                                    with gr.Row(visible=True):
                                         cloud_db_snapshot = gr.Dropdown(
                                             label="Cloud Snapshot to Resume",
                                             choices=sorted(get_cloud_model_snapshots()),
@@ -255,33 +223,86 @@ def ui_tabs_callback():
                                     with gr.Row():
                                         gr.HTML(value="Source Checkpoint From Cloud:")
                                         cloud_db_src = gr.HTML()
+                                    with gr.Row():
+                                        gr.HTML(value="Cloud DB Status:")
+                                        cloud_db_status = gr.HTML(elem_id="db_status", value="")
+                                with gr.Tab('Create From Cloud'):
+                                    with gr.Column():
+                                        cloud_db_create_model = gr.Button(
+                                            value="Create Model From Cloud", variant="primary"
+                                        )
+                                    cloud_db_new_model_name = gr.Textbox(label="Name")
+                                    with gr.Row():
+                                        cloud_db_create_from_hub = gr.Checkbox(
+                                            label="Create From Hub", value=False
+                                        )
+                                        cloud_db_512_model = gr.Checkbox(label="512x Model", value=True)
+                                    with gr.Column(visible=False) as hub_row:
+                                        cloud_db_new_model_url = gr.Textbox(
+                                            label="Model Path",
+                                            placeholder="runwayml/stable-diffusion-v1-5",
+                                        )
+                                        cloud_db_new_model_token = gr.Textbox(
+                                            label="HuggingFace Token", value=""
+                                        )
+                                    with gr.Column(visible=True) as local_row:
+                                        with gr.Row():
+                                            cloud_db_new_model_src = gr.Dropdown(
+                                                label="Source Checkpoint",
+                                                choices=sorted(get_sd_cloud_models()),
+                                            )
+                                            create_refresh_button(
+                                                cloud_db_new_model_src,
+                                                get_sd_cloud_models,
+                                                lambda: {"choices": sorted(get_sd_cloud_models())},
+                                                "refresh_sd_models",
+                                            )
+                                    cloud_db_new_model_extract_ema = gr.Checkbox(
+                                        label="Extract EMA Weights", value=False
+                                    )
+                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
 
-
-                            cloud_db_create_model.click(
-                                fn=cloud_create_model,
-                                # _js=
-                                inputs=[
-                                    cloud_db_new_model_name,
-                                    cloud_db_new_model_src,
-                                    cloud_db_create_from_hub,
-                                    cloud_db_new_model_url,
-                                    cloud_db_new_model_token,
-                                    cloud_db_new_model_extract_ema,
-                                    cloud_db_train_unfrozen,
-                                    cloud_db_512_model,
-                                ],
-                                outputs=[
-                                    cloud_db_model_name,
-                                    cloud_db_model_path,
-                                    cloud_db_revision,
-                                    cloud_db_epochs,
-                                    cloud_db_src,
-                                    cloud_db_has_ema,
-                                    cloud_db_v2,
-                                    # cloud_db_resolution,
-                                    # cloud_db_status,
-                                ]
-                            )
+                                cloud_db_model_name.change(
+                                    # _js="clear_loaded",
+                                    fn=load_model_params,
+                                    inputs=[cloud_db_model_name],
+                                    outputs=[
+                                        cloud_db_model_path,
+                                        cloud_db_revision,
+                                        cloud_db_epochs,
+                                        cloud_db_v2,
+                                        cloud_db_has_ema,
+                                        cloud_db_src,
+                                        cloud_db_snapshot,
+                                        cloud_db_lora_model_name,
+                                        cloud_db_status,
+                                    ],
+                                )
+                                cloud_db_create_model.click(
+                                    fn=cloud_create_model,
+                                    # _js="db_start_create",
+                                    inputs=[
+                                        cloud_db_new_model_name,
+                                        cloud_db_new_model_src,
+                                        cloud_db_create_from_hub,
+                                        cloud_db_new_model_url,
+                                        cloud_db_new_model_token,
+                                        cloud_db_new_model_extract_ema,
+                                        cloud_db_train_unfrozen,
+                                        cloud_db_512_model,
+                                    ],
+                                    outputs=[
+                                        cloud_db_model_name,
+                                        cloud_db_model_path,
+                                        cloud_db_revision,
+                                        cloud_db_epochs,
+                                        cloud_db_src,
+                                        cloud_db_has_ema,
+                                        cloud_db_v2,
+                                        # cloud_db_resolution,
+                                        # cloud_db_status,
+                                    ]
+                                )
 
                         break
 
@@ -290,16 +311,31 @@ def ui_tabs_callback():
 script_callbacks.ui_tabs_callback = ui_tabs_callback
 
 def get_sorted_lora_cloud_models():
-    return []
+    return ["ran", "ate", "slept"]
 
 def get_cloud_model_snapshots():
-    return []
+    return ["ran", "swam", "slept"]
 
 def get_cloud_db_models():
-    return []
+    url = "https://euat1ulvyh.execute-api.us-east-1.amazonaws.com/prod/models"
+    print("Get request for model list.")
+    response = requests.get(url=url, headers={'x-api-key': '09876543210987654321'}).json()
+    model_name_list = []
+    if "models" not in response:
+        return []
+    for model in response["models"]:
+        model_name_list.append(model['model_name'])
+    return model_name_list
 
 def get_sd_cloud_models():
-    return []
+    # url = "https://oudm9u1088.execute-api.us-east-1.amazonaws.com/prod/models"
+    # print("Get request for model list.")
+    # response = requests.get(url=url, headers={'x-api-key': '09876543210987654321'}).json()
+    # model_name_list = []
+    # for model in response["models"]:
+    #     model_name_list.append(model['model_name'])
+    # return model_name_list
+    return get_sd_models()
 
 def cloud_create_model(
         new_model_name: str,
@@ -312,6 +348,7 @@ def cloud_create_model(
         is_512=True,
 ):
     # Prepare for creating model on cloud.
+    ckpt_path = " ".join(ckpt_path.split(" ")[:-1])
     params = copy.deepcopy(locals())
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     local_tar_path = f'{ckpt_path}.tar'
@@ -319,11 +356,11 @@ def cloud_create_model(
     os.system(f"tar cvf {local_tar_path} {local_model_path}")
     payload = {
         "model_type": "dreambooth",
-        "name": "test_upload",
+        "name": new_model_name,
         "filenames": [local_tar_path],
         "params": params
     }
-    url = "https://oudm9u1088.execute-api.us-east-1.amazonaws.com/prod/model"
+    url = "https://euat1ulvyh.execute-api.us-east-1.amazonaws.com/prod/model"
     print("Post request for upload s3 presign url.")
     response = requests.post(url=url, json=payload,
                          headers={'x-api-key': '09876543210987654321'})
@@ -337,7 +374,7 @@ def cloud_create_model(
         upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
     payload = {
         "model_id": model_id,
-        "status": "Train"
+        "status": "Creating"
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload,
