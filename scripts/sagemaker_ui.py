@@ -10,20 +10,23 @@ import gradio as gr
 
 from modules import shared, scripts
 from utils import get_variable_from_json
+from utils import upload_file_to_s3_by_presign_url
 
 inference_job_dropdown = None
-origin_inference_job_dropdown = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = ['endpoint1', 'endpoint2']
 sd_checkpoints = ['checkpoint1', 'checkpoint2']
 txt2img_inference_job_ids = ['fake1', 'fake2']
-origin_txt2img_inference_job_ids = ['fake1', 'fake2']
 
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
 hyperNetwork_list = ['hyperNetwork1', 'hyperNetwork2', 'hyperNetwork3']
 ControlNet_model_list = ['controlNet_model1', 'controlNet_model2', 'controlNet_model3']
+
+def plaintext_to_html(text):
+    text = "<p>" + "<br>\n".join([f"{html.escape(x)}" for x in text.split('\n')]) + "</p>"
+    return text
 
 def get_s3_file_names(bucket, folder):
     """Get a list of file names from an S3 bucket and folder."""
@@ -111,6 +114,86 @@ def get_controlnet_model_list():
    for obj in r:
        aaa_value = str(obj)
        ControlNet_model_list.append(aaa_value)
+
+def inference_update_func():
+    root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
+    from PIL import Image
+    gallery = [f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_0.jpg"]
+    images = []
+    for g in gallery:
+        im = Image.open(g)
+        images.append(im)
+    
+    json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
+
+    f = open(json_file)
+
+    log_file = json.load(f)
+
+    info_text = log_file["info"]
+
+    infotexts = json.loads(info_text)["infotexts"][0]
+
+    return images, info_text, plaintext_to_html(infotexts)
+
+def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path):
+    log = "start upload model to s3..."
+    print(f"Not implemented yet!")
+
+    local_paths = [sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path]
+    relative_paths = ["models/Stable-diffusion", "embeddings", "models/Lora", "models/hypernetworks", "models/ControlNet"]
+    
+    api_key = get_variable_from_json('api_token')
+
+    for lp, rp in zip(local_paths, relative_paths):
+        if lp == "":
+            continue
+        print(f"lp is {lp}")
+        model_name = lp.split("/")[-1]
+        local_model_path_in_repo = f'{rp}{model_name}'
+        local_tar_path = f'{model_name}.tar'
+        print("Pack the model file.")
+        os.system(f"cp -f {lp} {local_model_path_in_repo}")
+        os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
+
+        payload = {
+            "model_type": rp,
+            "name": model_name,
+            "filenames": [local_tar_path],
+            "params": {"message": "placeholder for chkpts upload test"}
+        }
+
+        url = get_variable_from_json('api_gateway_url') + "model"
+
+        print("Post request for upload s3 presign url.")
+
+        response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
+
+        print(f"Response is {response}")
+        json_response = response.json()
+        print(f"Json Response is {json_response}")
+        s3_base = json_response["job"]["s3_base"]
+        model_id = json_response["job"]["id"]
+        print(f"Upload to S3 {s3_base}")
+        print(f"Model ID: {model_id}")
+        # Upload src model to S3.
+        for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+
+        payload = {
+            "model_id": model_id,
+            "status": "Complete"
+        }
+        # Start creating model on cloud.
+        response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
+        s3_input_path = s3_base
+        print(response)
+
+        log = f"\n finish upload {local_tar_path} to {s3_base}"
+
+        os.system(f"rm {local_tar_path}")
+
+    return plaintext_to_html(log)
 
 import json
 import requests
@@ -231,6 +314,7 @@ def create_ui():
     
     with gr.Group():
         with gr.Accordion("Open for SageMaker Inference!", open=False):
+            sagemaker_html_log = gr.HTML(elem_id=f'html_log_sagemaker')
             with gr.Column(variant='panel'):
                 with gr.Row():
                     sagemaker_endpoint = gr.Dropdown(sagemaker_endpoints,
@@ -255,41 +339,13 @@ def create_ui():
                     inputs=[],
                     outputs=[]
                 )
-
             with gr.Row():
+                global inference_job_dropdown
                 inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
                                             label="Inference Job IDs")
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
-                def fake_gan():
-                    images = [
-                        # "https://replicate.delivery/mgxm/e1b194af-e903-4efb-8bb2-8016b0863507/out.png",
-                        "https://upload.wikimedia.org/wikipedia/commons/3/32/A_photograph_of_an_astronaut_riding_a_horse_2022-08-28.png",
-                    #    "/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"
-                       ] 
-                    return images
-                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
-                # def test_func():
-                #     from PIL import Image
-                #     gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
-                #     images = []
-                #     for g in gallery:
-                #         im = Image.open(g)
-                #         images.append(im)
-
-                #     test = "just a test"
-                #     return images, test
-                inference_job_dropdown.change(
-                    fn=fake_gan,
-                    outputs=[gallery]
-                )
             with gr.Row():
-                global origin_inference_job_dropdown
-                origin_inference_job_dropdown = gr.Dropdown(origin_txt2img_inference_job_ids,
-                                            label="Origin Inference Job IDs")
-                origin_txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(origin_inference_job_dropdown, origin_update_txt2img_inference_job_ids, lambda: {"choices": origin_txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
-
-            with gr.Row():
-                gr.HTML(value="Extra Networks")
+                gr.HTML(value="Extra Networks for Sagemaker Endpoint")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
@@ -298,6 +354,21 @@ def create_ui():
             with gr.Row():
                 hyperNetwork_dropdown = gr.Dropdown(hyperNetwork_list, multiselect=True, label="HyperNetwork")
                 controlnet_dropdown = gr.Dropdown(ControlNet_model_list, multiselect=True, label="ControlNet-Model")
+
+            with gr.Row():
+                sd_checkpoints_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="Stable Diffusion Checkpoints")
+                textual_inversion_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="Textual Inversion")
+                lora_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="LoRA")
+                hypernetwork_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="HyperNetwork")
+                controlnet_model_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="ControlNet-Model")
+                model_update_button = gr.Button(value="Upload Models to S3", variant="primary")
+                model_update_button.click(sagemaker_upload_model_s3, \
+                                          inputs = [sd_checkpoints_path, \
+                                                    textual_inversion_path, \
+                                                    lora_path, \
+                                                    hypernetwork_path, \
+                                                    controlnet_model_path], \
+                                           outputs = [sagemaker_html_log])
             
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
@@ -305,4 +376,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, origin_inference_job_dropdown, origin_txt2img_inference_job_ids_refresh_button 
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
