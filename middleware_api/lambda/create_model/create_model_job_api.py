@@ -3,14 +3,12 @@ import datetime
 import logging
 import os
 from typing import Any
-import json
 
-import boto3
-from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
 from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
+from common_tools import get_s3_presign_urls
 
 bucket_name = os.environ.get('S3_BUCKET')
 model_table = os.environ.get('DYNAMODB_TABLE')
@@ -26,7 +24,7 @@ class Event:
     name: str
     params: dict[str, Any]
     filenames: [str]
-
+    # todo: checkpoint_id (if checkpoint id, then using checkpoint id to do instead of filenames)
 
 # POST /model
 def create_model_api(raw_event, context):
@@ -37,21 +35,13 @@ def create_model_api(raw_event, context):
     try:
         # todo: check if duplicated name and new_model_name
 
-        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
-        presign_url_map = {}
-        base_key = f'{_type}/{request_id}/{event.name}'
-        for filename in event.filenames:
-            key = f'{base_key}/{filename}'
-            url = s3.generate_presigned_url('put_object',
-                                            Params={'Bucket': bucket_name,
-                                                    'Key': key,
-                                                    },
-                                            ExpiresIn=3600 * 24 * 7)
-            presign_url_map[filename] = url
+        base_key = f'{_type}/model/{event.name}/{request_id}'
+        presign_url_map = get_s3_presign_urls(bucket_name=bucket_name, base_key=base_key, filenames=event.filenames)
 
         checkpoint = CheckPoint(
             id=request_id,
-            s3_location=f's3://{bucket_name}/{base_key}',
+            s3_location=f's3://{bucket_name}/{base_key}/checkpoint',  # e.g. s3://bucket/dreambooth/123-123-123
+            checkpoint_names=event.filenames,
             checkpoint_status=CheckPointStatus.Initial,
             params={
                 'created': str(datetime.datetime.now())
@@ -61,6 +51,8 @@ def create_model_api(raw_event, context):
 
         model_job = ModelJob(
             id=request_id,
+            name=event.name,
+            output_s3_location=f's3://{bucket_name}/{base_key}/output',
             checkpoint_id=checkpoint.id,
             model_type=_type,
             job_status=CreateModelStatus.Initial,
@@ -97,17 +89,14 @@ def list_all_models_api(event, context):
     if resp is None or len(resp) == 0:
         return {
             'statusCode': 200,
-            'body': []
+            'models': []
         }
 
     models = []
 
     for r in resp:
         model = ModelJob(**(ddb_service.deserialize(r)))
-        name = model.id
-        if model.params is not None and 'new_model_name' in model.params:
-            name = model.params['new_model_name']
-
+        name = model.name
         models.append({
             'id': model.id,
             'model_name': name,
@@ -137,6 +126,7 @@ def list_all_checkpoints_api(event, context):
         ckpts.append({
             'id': ckpt.id,
             'name': ckpt.s3_location,
+            'checkpoints': ckpt.checkpoint_names
         })
 
     return {

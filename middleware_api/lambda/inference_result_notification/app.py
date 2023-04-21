@@ -27,24 +27,43 @@ def decode_base64_to_image(encoding):
     return Image.open(io.BytesIO(base64.b64decode(encoding)))
 
 
-def updateInferenceJobTable(inference_id, status):
-    #update the inference DDB for the job status
-        response = inference_table.get_item(
-            Key={
-                "InferenceJobId": inference_id,
-            })
-        inference_resp = response['Item']
-        if not inference_resp:
-            raise Exception(f"Failed to get the inference job item with inference id:{inference_id}")
+# def updateInferenceJobTable(inference_id, status):
+#     #update the inference DDB for the job status
+#         response = inference_table.get_item(
+#             Key={
+#                 "InferenceJobId": inference_id,
+#             })
+#         inference_resp = response['Item']
+#         if not inference_resp:
+#             raise Exception(f"Failed to get the inference job item with inference id:{inference_id}")
 
-        response = inference_table.update_item(
-            Key={
-                "InferenceJobId": inference_id,
-            },
-            UpdateExpression="set status = :r",
-            ExpressionAttributeValues={':r': status},
-            ReturnValues="UPDATED_NEW"
-        )    
+#         response = inference_table.update_item(
+#             Key={
+#                 "InferenceJobId": inference_id,
+#             },
+#             UpdateExpression="set status = :r",
+#             ExpressionAttributeValues={':r': status},
+#             ReturnValues="UPDATED_NEW"
+#         )    
+
+def update_inference_job_table(inference_id, key, value):
+    # Update the inference DDB for the job status
+    response = inference_table.get_item(
+        Key={
+            "InferenceJobId": inference_id,
+        })
+    inference_resp = response['Item']
+    if not inference_resp:
+        raise Exception(f"Failed to get the inference job item with inference id: {inference_id}")
+
+    response = inference_table.update_item(
+        Key={
+            "InferenceJobId": inference_id,
+        },
+        UpdateExpression=f"set {key} = :r",
+        ExpressionAttributeValues={':r': value},
+        ReturnValues="UPDATED_NEW"
+    )
 
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
@@ -56,8 +75,7 @@ def lambda_handler(event, context):
     if invocation_status == "Completed":
         print(f"Complete invocation!")
         endpoint_name = message["requestParameters"]["endpointName"]
-        
-        updateInferenceJobTable(inference_id, 'succeed')
+        updateInferenceJobTable(inference_id, 'status', 'succeed')
         
         output_location = message["responseParameters"]["outputLocation"]
 
@@ -71,12 +89,12 @@ def lambda_handler(event, context):
             image = decode_base64_to_image(b64image).convert("RGB")
             output = io.BytesIO()
             image.save(output, format="JPEG")
-            # TODO put to s3 bucket
-            # s3_client.put_object(
-            #     Body=output.getvalue(),
-            #     Bucket=bucket,
-            #     Key=f"{inference_id}_{count}.jpg"
-            # )
+            # Upload the image to the S3 bucket
+            s3_client.put_object(
+                Body=output.getvalue(),
+                Bucket=bucket,
+                Key=f"{key}/{inference_id}_{count}.jpg"
+            )
 
         # save parameters
         inference_parameters = {}
@@ -91,6 +109,6 @@ def lambda_handler(event, context):
         
         print(f"Complete inference parameters {inference_parameters}")
     else:
-        updateInferenceJobTable(inference_id, 'failed')
+        updateInferenceJobTable(inference_id, 'status', 'failed')
         print(f"Not complete invocation!")
     return message

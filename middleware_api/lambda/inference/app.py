@@ -195,9 +195,11 @@ async def list_inference_jobs():
     logger.info(f"entering list_endpoint_deployment_jobs") 
     return getInferenceJobList()
 
-@app.get("/inference/get-endpoint-deployment-job/{endpoint_deployment_jobId}")
-async def get_endpoint_deployment_job(endpoint_deployment_jobId: str):
-    logger.info(f"entering get_endpoint_deployment_job function with jobId: {endpoint_deployment_jobdId}")
+@app.get("/inference/get-endpoint-deployment-job")
+async def get_endpoint_deployment_job(request: Request):
+    logger.info(f"entering get_endpoint_deployment_job function ")
+    endpoint_deployment_jobId = request.query_params 
+    logger.inf(f"endpoint_deployment_jobId is {str(endpoint_deployment_jobId)}")
     return getEndpointDeployJob(endpoint_deployment_jobId) 
 
 @app.get("/inference/get-inference-job/{inference_jobId}")

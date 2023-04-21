@@ -16,14 +16,15 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
 import { CreateModelJobApi } from './create-model-job-api';
+import { CreateTrainJobApi } from './create-train-job-api';
 import { ListAllCheckPointsApi } from './listall-chekpoints-api';
 import { ListAllModelJobApi } from './listall-model-job-api';
 import { RestApiGateway } from './rest-api-gateway';
-import { SagemakerTrainApi } from './sagemaker-train-api.js';
-import { SagemakerTrainStateMachine } from './sagemaker-train-state-machine';
+
 import { UpdateModelStatusRestApi } from './update-model-status-api';
+import { UpdateTrainJobApi } from './update-train-job-api';
 
-
+// ckpt -> create_model -> model -> training -> ckpt -> inference
 export class SdTrainDeployStack extends Stack {
 
   public readonly s3Bucket: aws_s3.Bucket;
@@ -67,26 +68,38 @@ export class SdTrainDeployStack extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
-    const trainStateMachine = new SagemakerTrainStateMachine(this, {
-      snsTopic: this.snsTopic,
-      trainingTable: this.trainingTable,
-      srcRoot: this.srcRoot,
-    });
-
     // api gateway setup
     const restApi = new RestApiGateway(this, ['model', 'models', 'checkpoints', 'train']);
     this.apiGateway = restApi.apiGateway;
     const routers = restApi.routers;
 
     // POST /train
-    new SagemakerTrainApi(this, {
-      router: routers.train,
+    new CreateTrainJobApi(this, 'aigc-create-train-api', {
+      checkpointTable: this.checkPointTable,
+      commonLayer: commonLayer,
       httpMethod: 'POST',
-      stateMachineArn: trainStateMachine.stateMachineArn,
+      modelTable: this.modelTable,
+      router: routers.train,
+      s3Bucket: this.s3Bucket,
+      srcRoot: this.srcRoot,
+      trainTable: this.trainingTable,
+    });
+
+    // PUT /train
+    new UpdateTrainJobApi(this, 'aigc-put-train-api', {
+      checkpointTable: this.checkPointTable,
+      commonLayer: commonLayer,
+      httpMethod: 'PUT',
+      modelTable: this.modelTable,
+      router: routers.train,
+      s3Bucket: this.s3Bucket,
+      srcRoot: this.srcRoot,
+      trainTable: this.trainingTable,
+      userTopic: this.snsTopic,
     });
 
     // POST /model
-    new CreateModelJobApi(this, {
+    new CreateModelJobApi(this, 'aigc-create-model-api', {
       router: routers.model,
       s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
@@ -97,7 +110,7 @@ export class SdTrainDeployStack extends Stack {
     });
 
     // GET /models
-    new ListAllModelJobApi(this, 'aigc-listall-model-job', {
+    new ListAllModelJobApi(this, 'aigc-listall-model-api', {
       router: routers.models,
       srcRoot: this.srcRoot,
       modelTable: this.modelTable,
@@ -106,7 +119,7 @@ export class SdTrainDeployStack extends Stack {
     });
 
     // PUT /model
-    new UpdateModelStatusRestApi(this, {
+    new UpdateModelStatusRestApi(this, 'aigc-update-model-api', {
       s3Bucket: this.s3Bucket,
       router: routers.model,
       httpMethod: 'PUT',

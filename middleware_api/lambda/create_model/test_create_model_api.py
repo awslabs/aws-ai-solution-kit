@@ -7,6 +7,8 @@ import requests
 os.environ.setdefault('AWS_PROFILE', 'playground')
 os.environ.setdefault('S3_BUCKET', 'alvindaiyan-aigc-testing-playground')
 os.environ.setdefault('DYNAMODB_TABLE', 'ModelTable')
+os.environ.setdefault('MODEL_TABLE', 'ModelTable')
+os.environ.setdefault('TRAIN_TABLE', 'TrainingTable')
 os.environ.setdefault('CHECKPOINT_TABLE', 'CheckpointTable')
 os.environ.setdefault('SAGEMAKER_ENDPOINT_NAME', 'aigc-utils-endpoint')
 
@@ -79,4 +81,11 @@ class ModelsApiTest(TestCase):
         from create_model.create_model_job_api import list_all_checkpoints_api
         resp = list_all_checkpoints_api({}, {})
         print(resp)
+
+    def test_update_train_job_api(self):
+        from create_model.train_api import update_train_job_api
+        update_train_job_api({
+            "train_job_id": "0e78f0b0-1617-40eb-961c-dca5374b34ea",
+            "status": "Training"
+        }, {})
 

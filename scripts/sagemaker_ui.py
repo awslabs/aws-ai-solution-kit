@@ -54,9 +54,11 @@ def update_sagemaker_endpoints():
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
     sagemaker_endpoints = []
+    
     for obj in r:
-        aaa_value = obj["EndpointDeploymentJobId"]
-        sagemaker_endpoints.append(aaa_value)
+        if "EndpointDeploymentJobId" in obj:
+            aaa_value = obj["EndpointDeploymentJobId"]
+            sagemaker_endpoints.append(aaa_value)
 
 
 def update_sd_checkpoints():
@@ -218,7 +220,7 @@ def create_ui():
     import modules.ui
 
     if get_variable_from_json('api_gateway_url') is not None:
-        update_sagemaker_endpoints()
+        # update_sagemaker_endpoints()
         get_texual_inversion_list()
         get_lora_list()
         get_hypernetwork_list()

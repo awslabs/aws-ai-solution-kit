@@ -147,9 +147,11 @@ def get_bucket_name_from_s3_url(s3_path) -> str:
     return o.netloc
 
 def get_bucket_name_from_s3_path(s3_path) -> str:
+    s3_path = s3_path.lstrip("s3://")
     return s3_path.split("/")[0]
 
 def get_path_from_s3_path(s3_path) -> str:
+    s3_path = s3_path.lstrip("s3://")
     return "/".join(s3_path.split("/")[1:])
 
 def fast_upload(session, bucketname, s3dir, filelist, progress_func=None, workers=10):
