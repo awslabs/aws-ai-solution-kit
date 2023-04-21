@@ -11,6 +11,7 @@ from common.constant import const
 from common.exception_handler import biz_exception
 from fastapi_pagination import add_pagination
 from datetime import datetime
+from typing import List
 
 import boto3
 import json
@@ -20,6 +21,7 @@ from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
 from sagemaker.serializers import JSONSerializer
 from sagemaker.deserializers import JSONDeserializer
+from boto3.dynamodb.conditions import Attr, Key
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
@@ -73,9 +75,9 @@ def getInferenceJob(inference_job_id):
         resp = inference_table.query(
             KeyConditionExpression=Key('InferenceJobId').eq(inference_job_id)
         )
-        log.info(resp)
+        logger.info(resp)
     except Exception as e:
-        logging.error(e)
+        logger.error(e)
     record_list = resp['Items']
     if len(record_list) == 0:
         raise Exception("There is no inference job info item for id:" + inference_job_id)
@@ -196,16 +198,56 @@ async def list_inference_jobs():
     return getInferenceJobList()
 
 @app.get("/inference/get-endpoint-deployment-job")
-async def get_endpoint_deployment_job(request: Request):
+async def get_endpoint_deployment_job(jobID: str = None):
     logger.info(f"entering get_endpoint_deployment_job function ")
-    endpoint_deployment_jobId = request.query_params 
-    logger.inf(f"endpoint_deployment_jobId is {str(endpoint_deployment_jobId)}")
+    # endpoint_deployment_jobId = request.query_params 
+    endpoint_deployment_jobId = jobID 
+    logger.info(f"endpoint_deployment_jobId is {str(endpoint_deployment_jobId)}")
     return getEndpointDeployJob(endpoint_deployment_jobId) 
 
-@app.get("/inference/get-inference-job/{inference_jobId}")
-async def get_inference_job(inference_jobId: str):
+@app.get("/inference/get-inference-job")
+async def get_inference_job(jobID: str = None):
+    inference_jobId = jobID
     logger.info(f"entering get_inference_job function with jobId: {inference_jobId}")
     return getInferenceJob(inference_jobId)
+
+@app.get("/inference/get-inference-job-image-output")
+async def get_inference_job_image_output(jobID: str = None) -> List[str]:
+    inference_jobId = jobID
+
+    if inference_jobId is None or inference_jobId.strip() == "":
+        logger.info(f"jobId is empty string or None, just return empty string list")
+        return []
+
+    logger.info(f"Entering get_inference_job_image_output function with jobId: {inference_jobId}")
+
+    job_record = getInferenceJob(inference_jobId)
+
+    # Assuming the job_record contains a list of image names
+    image_names = job_record["image_names"]
+
+    presigned_urls = []
+
+    for image_name in image_names:
+        image_key = f"out/{inference_jobId}/result/{image_name}"
+        presigned_url = generate_presigned_url(S3_BUCKET_NAME, image_key)
+        presigned_urls.append(presigned_url)
+
+    return presigned_urls
+
+def generate_presigned_url(bucket_name: str, key: str, expiration=3600) -> str:
+    try:
+        response = s3.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': bucket_name, 'Key': key},
+            ExpiresIn=expiration
+        )
+    except Exception as e:
+        logger.error(f"Error generating presigned URL: {e}")
+        raise
+
+    return response
+
 
 @app.get("/inference/get-texual-inversion-list")
 async def get_texual_inversion_list():
