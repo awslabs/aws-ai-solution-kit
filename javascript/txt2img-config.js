@@ -100,7 +100,7 @@ function txt2img_config_save(){
         config[element] = element_val;
     }
 
-    // now it's all special case
+    // now it's all special case under txt2img_settings div element
     config['script_txt2txt_xyz_plot_x_values'] = document.querySelector("#script_txt2txt_xyz_plot_x_values > label > textarea").value
     config['script_txt2txt_xyz_plot_y_values'] = document.querySelector("#script_txt2txt_xyz_plot_y_values > label > textarea").value
     config['script_txt2txt_xyz_plot_z_values'] = document.querySelector("#script_txt2txt_xyz_plot_z_values > label > textarea").value
@@ -144,12 +144,25 @@ function txt2img_config_save(){
     config['txt2img_hr_upscaler'] = document.querySelector("#txt2img_hr_upscaler > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
     config['txt2img_sampling'] = document.querySelector("#txt2img_sampling > label > div > div > span").textContent
 
+    // config for prompt area
+    config['txt2img_prompt'] = document.querySelector("#txt2img_prompt > label > textarea").value
+    config['txt2img_neg_prompt'] = document.querySelector("#txt2img_neg_prompt > label > textarea").value
+    config['txt2img_styles'] = document.querySelector("#txt2img_styles > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
+
     // store config in local storage for debugging
     localStorage.setItem("txt2imgConfig", JSON.stringify(config));
     
-    // create a new config file and store in local directory
-    var config_file = "txt2imgConfig.json";
+    // upload configure json file to s3 bucket with pre-signed url
     var config_data = JSON.stringify(config);
+    var config_url = "this should be the pre-signed url allocated by middleware api with fixed bucket and file name (txt2imgConfig.json)";
+    put_with_xmlhttprequest(config_url, config_data).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.log(error);
+    });
+
+    // store as config file in local directory
+    var config_file = "txt2imgConfig.json";
     var a = document.createElement('a');
     a.download = config_file;
     a.style.display = 'none';
@@ -160,3 +173,17 @@ function txt2img_config_save(){
     document.body.removeChild(a);
 }
 
+function put_with_xmlhttprequest(url, data) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", url);
+        xhr.setRequestHeader("Content-Length", new Blob([data]).size);
+        xhr.onload = () => {
+        resolve(xhr.responseText);
+        };
+        xhr.onerror = () => {
+        reject(xhr.statusText);
+        };
+        xhr.send(data);
+    });
+}
