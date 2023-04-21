@@ -20,6 +20,7 @@ from sagemaker.predictor import Predictor
 from sagemaker.predictor_async import AsyncPredictor
 from sagemaker.serializers import JSONSerializer
 from sagemaker.deserializers import JSONDeserializer
+from boto3.dynamodb.conditions import Attr, Key
 
 logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(const.LOGGER_API)
@@ -196,14 +197,16 @@ async def list_inference_jobs():
     return getInferenceJobList()
 
 @app.get("/inference/get-endpoint-deployment-job")
-async def get_endpoint_deployment_job(request: Request):
+async def get_endpoint_deployment_job(jobID: str = None):
     logger.info(f"entering get_endpoint_deployment_job function ")
-    endpoint_deployment_jobId = request.query_params 
-    logger.inf(f"endpoint_deployment_jobId is {str(endpoint_deployment_jobId)}")
+    # endpoint_deployment_jobId = request.query_params 
+    endpoint_deployment_jobId = jobID 
+    logger.info(f"endpoint_deployment_jobId is {str(endpoint_deployment_jobId)}")
     return getEndpointDeployJob(endpoint_deployment_jobId) 
 
-@app.get("/inference/get-inference-job/{inference_jobId}")
-async def get_inference_job(inference_jobId: str):
+@app.get("/inference/get-inference-job")
+async def get_inference_job(jobID: str = None):
+    inference_jobId = jobID
     logger.info(f"entering get_inference_job function with jobId: {inference_jobId}")
     return getInferenceJob(inference_jobId)
 
