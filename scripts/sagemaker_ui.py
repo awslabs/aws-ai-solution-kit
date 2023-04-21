@@ -74,6 +74,24 @@ def update_txt2img_inference_job_ids():
 def origin_update_txt2img_inference_job_ids():
     global origin_txt2img_inference_job_ids
 
+def get_inference_job_list():
+    global txt2img_inference_job_ids
+    response = server_request('inference/list-inference-jobs')
+    r = response.json()
+    txt2img_inference_job_ids = []
+    for obj in r:
+        aaa_value = str(obj)
+        txt2img_inference_job_ids.append(aaa_value)
+
+def get_inference_job_image_output(inference_job_id):
+    response = server_request(f'inference/get-inference-job-image-output?jobID={inference_job_id}')
+    r = response.json()
+    txt2img_inference_job_image_list = []
+    for obj in r:
+        aaa_value = str(obj)
+        txt2img_inference_job_image_list.append(aaa_value)
+    return txt2img_inference_job_image_list
+    
 def get_texual_inversion_list():
    global textual_inversion_list
    response = server_request('inference/get-texual-inversion-list')
@@ -333,6 +351,7 @@ def create_ui():
         get_lora_list()
         get_hypernetwork_list()
         get_controlnet_model_list()
+        get_inference_job_list()
     else:
         print(f"there is no api-gateway url and token in local file,")
     
@@ -365,29 +384,45 @@ def create_ui():
                 )
 
             with gr.Row():
+                global txt2img_inference_job_ids
                 inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
-                                            label="Inference Job IDs")
+                                            label="Inference Job IDs",
+                                            default=txt2img_inference_job_ids[0])
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
-                def fake_gan():
-                    images = [
-                        # "https://replicate.delivery/mgxm/e1b194af-e903-4efb-8bb2-8016b0863507/out.png",
-                        "https://upload.wikimedia.org/wikipedia/commons/3/32/A_photograph_of_an_astronaut_riding_a_horse_2022-08-28.png",
-                    #    "/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"
-                       ] 
-                    return images
-                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
-                # def test_func():
-                #     from PIL import Image
-                #     gallery = ["/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"]
-                #     images = []
-                #     for g in gallery:
-                #         im = Image.open(g)
-                #         images.append(im)
+                # def fake_gan(selected_value:str):
+                #     print(f"Selected value: {selected_value}")
+                #     selected_value_json = json.loads(selected_value)
+    
+                #     # Extract the InferenceJobId value
+                #     inference_job_id = selected_value_json['InferenceJobId']
+                #     images = get_inference_job_image_output(inference_job_id)
+                #     # images = [
+                #     #     # "https://replicate.delivery/mgxm/e1b194af-e903-4efb-8bb2-8016b0863507/out.png",
+                #     #     "https://upload.wikimedia.org/wikipedia/commons/3/32/A_photograph_of_an_astronaut_riding_a_horse_2022-08-28.png",
+                #     # #    "/home/ubuntu/stable-diffusion-webui/outputs/txt2img-images/2023-04-08/00000-2949334608.png"
+                #     #    ] 
+                #     return images
+                def fake_gan(selected_value: str = txt2img_inference_job_ids[0]):
+                    print(f"selected value is {selected_value}")
+                    selected_value="{\"InferenceJobId\":\"a110716e-939a-48d4-83ce-faf5f03741d9\"}"
+                    if selected_value is not None:
+                        print(f"Selected value: {selected_value}")
+                        selected_value_json = json.loads(selected_value)
 
-                #     test = "just a test"
-                #     return images, test
+                        # Extract the InferenceJobId value
+                        inference_job_id = selected_value_json['InferenceJobId']
+                        images = get_inference_job_image_output(inference_job_id)
+                        print(f"{str(images)}")
+                        
+                    else:
+                        images = []  # Return an empty list if selected_value is None
+
+                    return images
+
+                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
+
                 inference_job_dropdown.change(
-                    fn=fake_gan,
+                    fn=lambda selected_value: fake_gan(selected_value),
                     outputs=[gallery]
                 )
             with gr.Row():
