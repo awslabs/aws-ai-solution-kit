@@ -37,6 +37,9 @@ from utils import ModelsRef
 import uuid
 import boto3
 
+sys.path.append("extensions/sd_dreambooth_extension")
+from dreambooth.ui_functions import create_model
+
 # try:
 #     from dreambooth import shared
 #     from dreambooth.dataclasses.db_concept import Concept
@@ -55,7 +58,8 @@ import boto3
 
 if os.environ.get("DEBUG_API", False):
     logging.basicConfig(level=logging.DEBUG)
-
+else:
+    logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -193,6 +197,8 @@ def checkspace_and_update_models(selected_models):
                         type_check = models_type_list[type_id_check]
                         selected_models_name_check = selected_models[type_check]
                         local_models_check = os.listdir(models_path[type_check])
+                        if len(local_models_check) == 0:
+                            continue
                         sorted_local_modles, sorted_count = models_used_count[type_check].get_sorted_models(local_models_check)
                         for local_model in sorted_local_modles:
                             if local_model in selected_models_name_check:
