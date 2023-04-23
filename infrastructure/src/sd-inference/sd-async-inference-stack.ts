@@ -202,6 +202,11 @@ export class SDAsyncInferenceStack extends Stack {
     get_controlnet_model_list.addMethod('GET', txt2imgIntegration, {
       apiKeyRequired: true,
     })
+    
+    const get_inference_job_image_output = inference.addResource('get-inference-job-image-output');
+    get_inference_job_image_output.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
 
     // Create a deployment for the API Gateway
     new apigw.Deployment(this, 'Deployment', {
