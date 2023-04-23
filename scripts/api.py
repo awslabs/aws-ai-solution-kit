@@ -161,14 +161,14 @@ def get_bucket_and_key(s3uri):
 
 
 models_type_list = ['sd', 'hypernetwork', 'lora', 'controlnet', 'embedding']
-models_used_count = {key: ModelsRef for key in models_type_list}
+models_used_count = {key: ModelsRef() for key in models_type_list}
 models_path = {key: None for key in models_type_list}
 models_path['sd'] = 'models/Stable-diffusion'
 models_path['controlnet'] = 'models/ControlNet'
 models_path['hypernetwork'] = 'models/hypernetworks'
 models_path['lora'] = 'models/Lora'
 models_path['embedding'] = 'embeddings'
-disk_path = '/tmps'
+disk_path = '/dev/root'
 
 def checkspace_and_update_models(selected_models):
     bucket = selected_models['bucket']
@@ -184,6 +184,7 @@ def checkspace_and_update_models(selected_models):
                 continue
             else:
                 total, used, free = shutil.disk_usage(disk_path)
+                print('!!!!!!!!!!!!current free space is', free)
                 if free < 2e10:
                     #### delete least used model to get more space ########
                     space_check_succese = False
@@ -209,73 +210,14 @@ def checkspace_and_update_models(selected_models):
                         print('can not get enough space to download models!!!!!!')
                         return
                 ####down load models######
-                down_and_update(model_type, selected_model_name, bucket, s3_base_dir)
+                download_and_update(model_type, selected_model_name, bucket, s3_base_dir)
     
-    shared.opts.sd_model_checkpoint = selected_models['sd']
+    shared.opts.sd_model_checkpoint = selected_models['sd'][0]
     sd_models.reload_model_weights()
     sd_vae.reload_vae_weights()
-<<<<<<< HEAD
-=======
-    
-    #update hypernetworks
-    selected_hypernet_models = selected_models['hypernetwork']
-    hypernet_model_list = os.listdir(hypernetwork_model_folder)
-    reload_hypernet = False
-    for selected_hypernet_model in selected_hypernet_models:
-        hyper_models_Ref.add_models_ref(selected_hypernet_model)
-        if selected_hypernet_model not in hypernet_model_list:
-            #download from s3
-            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, hypernetwork_model_folder, selected_hypernet_model)
-            os.system(f'./tools/s5cmd cp {model_data} ./models/hypernetworks/')
-            reload_hypernet = True
-    if reload_hypernet:
-        shared.reload_hypernetworks()
-    ##update lora models
-    selected_lora_models = selected_models['lora']
-    lora_model_list = os.listdir(lora_model_folder)
-    for selected_lora_model in selected_lora_models:
-        lora_models_Ref.add_models_ref(selected_lora_model)
-        if selected_lora_model not in lora_model_list:
-            #download from s3
-            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, lora_model_folder, selected_lora_model)
-            os.system(f'./tools/s5cmd cp {model_data} ./models/Lora/')
-            
-    ##update embedding models
-    selected_embeddings = selected_models['textualinversion']
-    embedding_list = os.listdir(embedding_model_folder)
-    reload_embedding = False
-    for selected_embedding in selected_embeddings:
-        embedding_Ref.add_models_ref(selected_embedding)
-        if selected_embedding not in embedding_list:
-            #download from s3
-            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, embedding_model_folder, selected_embedding)
-            os.system(f'./tools/s5cmd cp {model_data} ./embeddings/')
-            reload_embedding = True
-    if reload_embedding:
-        sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings(force_reload=True)
-
-    #update controlnet models  
-    selected_controlnets = selected_models['controlnet']
-    controlnet_model_list = os.listdir(controlnet_model_folder)
-    reload_controlnet = False
-    for selected_controlnet in selected_controlnets:
-        cn_models_Ref.add_models_ref(selected_controlnet)
-        if selected_controlnet not in controlnet_model_list:
-            #download from s3
-            model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, controlnet_model_folder, selected_controlnet)
-            os.system(f'./tools/s5cmd cp {model_data} ./models/ControlNet/')
-            reload_controlnet = True
-    if reload_controlnet:
-        controlnet_script_path = './extensions/sd-webui-controlnet/scripts/controlnet.py'
-        sys.path.append("extensions/sd-webui-controlnet")
-        base_scripts.current_basedir = './extensions/sd-webui-controlnet/'
-        script_loading.load_module(controlnet_script_path)
-        sys.path.remove("extensions/sd-webui-controlnet")
-        base_scripts.current_basedir = paths.script_path
->>>>>>> 1a4b116db75d3cd56340a3215a849bee9e793e31
 
 
-def down_and_update(model_type, model_name, bucket,s3_base_dir):
+def download_and_update(model_type, model_name, bucket,s3_base_dir):
     if model_type == 'sd':
         #download from s3
         config_file = os.path.splitext(model_name)[0] + '.yaml'
