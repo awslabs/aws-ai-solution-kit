@@ -5,6 +5,7 @@ import threading
 import requests
 import copy
 import os
+import logging
 import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images
@@ -399,36 +400,40 @@ def async_create_model_on_sagemaker(
 ):
     ckpt_path = " ".join(ckpt_path.split(" ")[:-1])
     params = copy.deepcopy(locals())
+    url = get_variable_from_json('api_gateway_url')
     api_key = get_variable_from_json('api_token')
+    if url is None or api_key is None:
+        logging.error("Url or API-Key is not setting.")
+        return
+    url += "model"
     # Prepare for creating model on cloud.
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     local_tar_path = f'{ckpt_path}.tar'
-    print("Pack the model file.")
-    os.system(f"tar cvf {local_tar_path} {local_model_path}")
     payload = {
         "model_type": "dreambooth",
         "name": new_model_name,
         "filenames": [local_tar_path],
         "params": {"create_model_params": params}
     }
-    url = get_variable_from_json('api_gateway_url') + "model"
     print("Post request for upload s3 presign url.")
     response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
     json_response = response.json()
-    s3_base = json_response["job"]["s3_base"]
     model_id = json_response["job"]["id"]
-    print(f"Upload to S3 {s3_base}")
-    print(f"Model ID: {model_id}")
-    # Upload src model to S3.
-    for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
-        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+    if not from_hub:
+        print("Pack the model file.")
+        os.system(f"tar cvf {local_tar_path} {local_model_path}")
+        s3_base = json_response["job"]["s3_base"]
+        print(f"Upload to S3 {s3_base}")
+        print(f"Model ID: {model_id}")
+        # Upload src model to S3.
+        for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
     payload = {
         "model_id": model_id,
         "status": "Creating"
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
-    s3_input_path = s3_base
     print(response)
 
 def cloud_create_model(
