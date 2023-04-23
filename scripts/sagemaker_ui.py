@@ -334,6 +334,7 @@ from sagemaker.async_inference.async_inference_response import AsyncInferenceRes
 import base64
 
 def generate_on_cloud():
+    print(f"ccheckpiont_info {checkpoint_info}")
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
