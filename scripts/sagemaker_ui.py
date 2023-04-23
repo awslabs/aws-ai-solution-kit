@@ -379,6 +379,7 @@ def generate_on_cloud():
         "task": "controlnet_txt2img", 
         "username": "test",
         "models":{
+           "space_free_size": 2e10,
             "bucket": "sagemaker-us-west-2-725399406069",
             "base_dir": "stable-diffusion-webui",
             "sd": selected_sd_model,
@@ -444,6 +445,7 @@ def generate_on_cloud():
         "endpoint_name": endpoint_name,
         "task": "text-to-image", 
         "models":{
+            "space_free_size": 2e10,
             "bucket": "sagemaker-us-west-2-725399406069",
             "base_dir": "stable-diffusion-webui",
             "sd": selected_sd_model,
