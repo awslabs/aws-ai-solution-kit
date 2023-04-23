@@ -62,6 +62,7 @@ def create_train_job_api(raw_event, context):
 
         checkpoint = CheckPoint(
             id=request_id,
+            checkpoint_type=event.train_type,
             s3_location=f's3://{bucket_name}/{base_key}/output',
             checkpoint_status=CheckPointStatus.Initial
         )
@@ -154,7 +155,8 @@ def _start_train_job(train_job_id: str):
         hyperparameters = json_encode_hyperparameters({
             "sagemaker_program": "extensions/sd-webui-sagemaker/sagemaker_entrypoint_json.py",
             "params": train_job.params,
-            "base_s3": checkpoint.s3_location,
+            "s3_input_path": train_job.input_s3_location,
+            "s3_output_path": checkpoint.s3_location,
         })
 
         est = sagemaker.estimator.Estimator(

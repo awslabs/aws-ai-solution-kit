@@ -1,5 +1,4 @@
 import dataclasses
-from decimal import Decimal
 from enum import Enum
 from typing import Optional, Any
 
@@ -40,14 +39,16 @@ class ModelJob:
 @dataclasses.dataclass
 class CheckPoint:
     id: str
+    checkpoint_type: str
     s3_location: str
     checkpoint_status: CheckPointStatus
-    checkpoint_names: Optional[list[str]] = None
+    version: str = 'v1.0'  # todo: this is for the future
+    checkpoint_names: Optional[list[str]] = None  # the actual checkpoint file names
     params: Optional[dict[str, Any]] = None
 
     def __post_init__(self):
         if type(self.checkpoint_status) == str:
-            self.job_status = CheckPointStatus[self.checkpoint_status]
+            self.checkpoint_status = CheckPointStatus[self.checkpoint_status]
 
 
 class TrainJobStatus(Enum):

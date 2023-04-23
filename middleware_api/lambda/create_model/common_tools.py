@@ -17,3 +17,11 @@ def get_s3_presign_urls(bucket_name, base_key, filenames) -> Dict[str, str]:
         presign_url_map[filename] = url
 
     return presign_url_map
+
+
+def get_base_model_s3_key(_type: str, name: str, request_id: str) -> str:
+    return f'{_type}/model/{name}/{request_id}'
+
+
+def get_base_checkpoint_s3_key(_type: str, name: str, request_id: str) -> str:
+    return f'{_type}/checkpoint/{name}/{request_id}'

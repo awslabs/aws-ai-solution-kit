@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
 from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
-from common_tools import get_s3_presign_urls
+from common_tools import get_s3_presign_urls, get_base_model_s3_key, get_base_checkpoint_s3_key
 
 bucket_name = os.environ.get('S3_BUCKET')
 model_table = os.environ.get('DYNAMODB_TABLE')
@@ -24,7 +24,7 @@ class Event:
     name: str
     params: dict[str, Any]
     filenames: [str]
-    # todo: checkpoint_id (if checkpoint id, then using checkpoint id to do instead of filenames)
+
 
 # POST /model
 def create_model_api(raw_event, context):
@@ -35,12 +35,15 @@ def create_model_api(raw_event, context):
     try:
         # todo: check if duplicated name and new_model_name
 
-        base_key = f'{_type}/model/{event.name}/{request_id}'
-        presign_url_map = get_s3_presign_urls(bucket_name=bucket_name, base_key=base_key, filenames=event.filenames)
+        base_key = get_base_model_s3_key(_type, event.name, request_id)
+        checkpoint_base_key = get_base_checkpoint_s3_key(_type, event.name, request_id)
+        presign_url_map = get_s3_presign_urls(bucket_name=bucket_name, base_key=checkpoint_base_key, filenames=event.filenames)
 
         checkpoint = CheckPoint(
             id=request_id,
-            s3_location=f's3://{bucket_name}/{base_key}/checkpoint',  # e.g. s3://bucket/dreambooth/123-123-123
+            checkpoint_type=event.model_type,
+            # e.g. s3://bucket/dreambooth/123-123-123
+            s3_location=f's3://{bucket_name}/{get_base_checkpoint_s3_key(_type, event.name, request_id)}',
             checkpoint_names=event.filenames,
             checkpoint_status=CheckPointStatus.Initial,
             params={
@@ -82,10 +85,20 @@ def create_model_api(raw_event, context):
 
 # GET /models
 def list_all_models_api(event, context):
-    resp = ddb_service.scan(table=model_table, filters={
-        'job_status': CreateModelStatus.Complete,
-        'model_type': 'dreambooth'
-    })
+    _filter = {}
+    if 'queryStringParameters' not in event:
+        return {
+            'statusCode': '500',
+            'error': 'query parameter status and types are needed'
+        }
+    parameters = event['queryStringParameters']
+    if 'types' in parameters and len(parameters['types']) > 0:
+        _filter['model_type'] = parameters['types']
+
+    if 'status' in parameters and len(parameters['status']) > 0:
+        _filter['job_status'] = parameters['status']
+    resp = ddb_service.scan(table=model_table, filters=_filter)
+
     if resp is None or len(resp) == 0:
         return {
             'statusCode': 200,
@@ -100,7 +113,8 @@ def list_all_models_api(event, context):
         models.append({
             'id': model.id,
             'model_name': name,
-            'params': model.params
+            'params': model.params,
+            'output_s3_location': model.output_s3_location
         })
     return {
         'statusCode': 200,
@@ -108,28 +122,3 @@ def list_all_models_api(event, context):
     }
 
 
-# GET /checkpoints
-def list_all_checkpoints_api(event, context):
-    raw_ckpts = ddb_service.scan(table=checkpoint_table, filters={
-        'checkpoint_status': CheckPointStatus.Active
-    })
-    if raw_ckpts is None or len(raw_ckpts) == 0:
-        return {
-            'statusCode': 200,
-            'body': []
-        }
-
-    ckpts = []
-
-    for r in raw_ckpts:
-        ckpt = CheckPoint(**(ddb_service.deserialize(r)))
-        ckpts.append({
-            'id': ckpt.id,
-            'name': ckpt.s3_location,
-            'checkpoints': ckpt.checkpoint_names
-        })
-
-    return {
-        'statusCode': 200,
-        'checkpoints': ckpts
-    }

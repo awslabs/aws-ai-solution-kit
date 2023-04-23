@@ -4,6 +4,8 @@ from decimal import Decimal
 from unittest import TestCase
 import requests
 
+
+
 os.environ.setdefault('AWS_PROFILE', 'playground')
 os.environ.setdefault('S3_BUCKET', 'alvindaiyan-aigc-testing-playground')
 os.environ.setdefault('DYNAMODB_TABLE', 'ModelTable')
@@ -78,7 +80,7 @@ class ModelsApiTest(TestCase):
 
 
     def test_list_checkpoints(self):
-        from create_model.create_model_job_api import list_all_checkpoints_api
+        from create_model.checkpoint_api import list_all_checkpoints_api
         resp = list_all_checkpoints_api({}, {})
         print(resp)
 
@@ -88,4 +90,17 @@ class ModelsApiTest(TestCase):
             "train_job_id": "0e78f0b0-1617-40eb-961c-dca5374b34ea",
             "status": "Training"
         }, {})
+
+    def test_scan(self):
+        import logging
+        from common.ddb_service.client import DynamoDbUtilsService
+        logger = logging.getLogger('boto3')
+        ddb_service = DynamoDbUtilsService(logger=logger)
+        resp = ddb_service.scan(table='ModelTable', filters={
+            'model_type': 'dreambooth',
+            # 'job_status': ['Initial', 'Creating', 'Complete']
+        })
+        print(resp)
+
+
 
