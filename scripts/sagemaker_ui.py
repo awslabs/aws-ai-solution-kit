@@ -25,6 +25,12 @@ lora_list = ['lora1', 'lora2', 'lora3']
 hyperNetwork_list = ['hyperNetwork1', 'hyperNetwork2', 'hyperNetwork3']
 ControlNet_model_list = ['controlNet_model1', 'controlNet_model2', 'controlNet_model3']
 
+# Initial checkpoints information
+checkpoint_info = {}
+checkpoint_type = ["Stable-diffusion", "embeddings", "Lora", "hypernetworks", "ControlNet"]
+for ckpt_type in checkpoint_type:
+    checkpoint_info[ckpt_type] = {}
+
 # get api_gateway_url
 api_gateway_url = get_variable_from_json('api_gateway_url')
 api_key = get_variable_from_json('api_token') 
@@ -143,12 +149,13 @@ def get_lora_list():
     
 def get_hypernetwork_list():
    global hyperNetwork_list 
-   response = server_request('inference/get-hypernetwork-list')
-   r = response.json()
-   hyperNetwork_list = []
-   for obj in r:
-       aaa_value = str(obj)
-       hyperNetwork_list.append(aaa_value)
+   hyperNetwork_list = list(checkpoint_info["hypernetworks"].keys())
+#    response = server_request('inference/get-hypernetwork-list')
+#    r = response.json()
+#    hyperNetwork_list = []
+#    for obj in r:
+#        aaa_value = str(obj)
+#        hyperNetwork_list.append(aaa_value)
 
     
 def get_controlnet_model_list():
@@ -186,9 +193,8 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
     print(f"Not implemented yet!")
 
     local_paths = [sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path]
-    relative_paths = ["Stable-diffusion", "embeddings", "Lora", "hypernetworks", "ControlNet"]
 
-    for lp, rp in zip(local_paths, relative_paths):
+    for lp, rp in zip(local_paths, checkpoint_type):
         if lp == "":
             continue
         print(f"lp is {lp}")
@@ -239,11 +245,18 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         os.system(f"rm {local_tar_path}")
     
     print("Refresh checkpoints")
-    for rp in relative_paths:
-        url = api_gateway_url + f"checkpoint?status=Active&types={rp}"
+    for rp in checkpoint_type:
+        url = api_gateway_url + f"checkpoints?status=Active&types={rp}"
         response = requests.get(url=url, headers={'x-api-key': api_key})
         json_response = response.json()
-        print(f"response json for model {rp} is {json_response}")
+        print(f"response url json for model {rp} is {json_response}")
+        for ckpt in json_response["checkpoints"]:
+            ckpt_type = ckpt["type"]
+            for ckpt_name in ckpt["name"]:
+                ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
+                checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+    
+    print(f"current checkpoint information {checkpoint_info}")
 
 # sd_checkpoints = ['checkpoint1', 'checkpoint2']
 # txt2img_inference_job_ids = ['fake1', 'fake2']
@@ -479,6 +492,7 @@ def create_ui():
 
     if get_variable_from_json('api_gateway_url') is not None:
         # update_sagemaker_endpoints()
+        sagemaker_upload_model_s3("", "", "", "", "")
         get_texual_inversion_list()
         get_lora_list()
         get_hypernetwork_list()
@@ -540,7 +554,7 @@ def create_ui():
                 lora_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="LoRA")
                 hypernetwork_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="HyperNetwork")
                 controlnet_model_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="ControlNet-Model")
-                model_update_button = gr.Button(value="Upload Models to S3", variant="primary")
+                model_update_button = gr.Button(value="Upload models to S3 and refresh list", variant="primary")
                 model_update_button.click(sagemaker_upload_model_s3, \
                                           inputs = [sd_checkpoints_path, \
                                                     textual_inversion_path, \
