@@ -36,7 +36,8 @@ def create_model_api(raw_event, context):
         # todo: check if duplicated name and new_model_name
 
         base_key = get_base_model_s3_key(_type, event.name, request_id)
-        presign_url_map = get_s3_presign_urls(bucket_name=bucket_name, base_key=base_key, filenames=event.filenames)
+        checkpoint_base_key = get_base_checkpoint_s3_key(_type, event.name, request_id)
+        presign_url_map = get_s3_presign_urls(bucket_name=bucket_name, base_key=checkpoint_base_key, filenames=event.filenames)
 
         checkpoint = CheckPoint(
             id=request_id,
