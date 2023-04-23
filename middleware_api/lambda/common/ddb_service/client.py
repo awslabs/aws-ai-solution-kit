@@ -77,10 +77,25 @@ class DynamoDbUtilsService:
     def scan(self, table: str, filters: Dict[str, Any]) -> List[Dict[str, Dict[str, Any]]]:
         prepare_filter_expressions = []
         prefix = ':'
-        for key, _ in filters.items():
-            prepare_filter_expressions.append('{} = {}'.format(key, prefix+key))
+        expression_values = {}
+        for key, val in filters.items():
+            if isinstance(val, list):
+                print(key)
+                val_keys = ''
+                i = 0
+                for v in val:
+                    k = f'{prefix}{key}{str(i)}'
+                    i += 1
+                    val_keys += f'{k}, '
+                    expression_values[k] = self._convert(v)
+
+                prepare_filter_expressions.append('{} in ({})'.format(key, val_keys[:len(val_keys) - 2]))
+            else:
+                prepare_filter_expressions.append('{} = {}'.format(key, prefix+key))
+                expression_values[prefix+key] = self._convert(val)
         filter_expressions = ' AND '.join(prepare_filter_expressions)
-        expression_values = self._serialize(filters, prefix)
+        # expression_values = self._serialize(filters, prefix)
+
         resp = self.client.scan(
             TableName=table,
             FilterExpression=filter_expressions,

@@ -62,6 +62,7 @@ def create_train_job_api(raw_event, context):
 
         checkpoint = CheckPoint(
             id=request_id,
+            checkpoint_type=event.train_type,
             s3_location=f's3://{bucket_name}/{base_key}/output',
             checkpoint_status=CheckPointStatus.Initial
         )

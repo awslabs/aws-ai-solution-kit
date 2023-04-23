@@ -11,6 +11,7 @@ import gradio as gr
 from modules import shared, scripts
 from utils import get_variable_from_json
 from utils import upload_file_to_s3_by_presign_url
+from datetime import datetime
 
 inference_job_dropdown = None
 
@@ -39,6 +40,11 @@ def get_s3_file_names(bucket, folder):
     objects = bucket.objects.filter(Prefix=folder)
     names = [obj.key for obj in objects]
     return names
+
+def get_current_date():
+    today = datetime.today()
+    formatted_date = today.strftime('%Y-%m-%d')
+    return formatted_date
 
 def server_request(path):
     
@@ -81,9 +87,13 @@ def get_inference_job_list():
     global txt2img_inference_job_ids
     response = server_request('inference/list-inference-jobs')
     r = response.json()
-    for obj in r:
-        json_string = json.dumps(obj)
-        txt2img_inference_job_ids.append(json_string)
+    if r:
+        txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
+        for obj in r:
+            json_string = json.dumps(obj)
+            txt2img_inference_job_ids.append(json_string)
+    else:
+        print("The API response is empty.")
 
 def get_inference_job_image_output(inference_job_id):
     response = server_request(f'inference/get-inference-job-image-output?jobID={inference_job_id}')
@@ -431,6 +441,23 @@ def txt2img_config_save():
     # placeholder for saving txt2img config
     pass
 
+def fake_gan(selected_value: str ):
+    print(f"selected value is {selected_value}")
+    if selected_value is not None:
+        selected_value_json = json.loads(selected_value)
+
+        # Extract the InferenceJobId value
+        inference_job_id = selected_value_json['InferenceJobId']
+        images = get_inference_job_image_output(inference_job_id)
+        image_list = []
+        image_list = download_images(images,f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
+        print(f"{str(images)}")
+                        
+    else:
+        image_list = []  # Return an empty list if selected_value is None
+
+    return image_list
+
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
     import modules.ui
@@ -480,33 +507,7 @@ def create_ui():
                                             label="Inference Job IDs"
                                             )
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
-                def fake_gan(selected_value: str ):
-                    print(f"selected value is {selected_value}")
-                    # selected_value="{\"InferenceJobId\":\"a110716e-939a-48d4-83ce-faf5f03741d9\"}"
-                    print(f"selected value is {selected_value}")
-                    if selected_value is not None:
-                       print(f"Selected value: {selected_value}")
-                       selected_value_json = json.loads(selected_value)
-
-                       # Extract the InferenceJobId value
-                       inference_job_id = selected_value_json['InferenceJobId']
-                       images = get_inference_job_image_output(inference_job_id)
-                       image_list = []
-                       image_list = download_images(images,f"extensions/output/{inference_job_id}/")
-                       print(f"{str(images)}")
-                        
-                    else:
-                       image_list = []  # Return an empty list if selected_value is None
-
-                    return image_list
  
-                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
- 
-                inference_job_dropdown.change(
-                    fn=lambda selected_value: fake_gan(selected_value),
-                    inputs=[inference_job_dropdown],
-                    outputs=[gallery]
-                )
             with gr.Row():
                 gr.HTML(value="Extra Networks for Sagemaker Endpoint")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")

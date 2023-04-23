@@ -15,14 +15,16 @@ import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { BlockPublicAccess } from 'aws-cdk-lib/aws-s3';
 import { Construct } from 'constructs';
-import { CreateModelJobApi } from './create-model-job-api';
-import { CreateTrainJobApi } from './create-train-job-api';
-import { ListAllCheckPointsApi } from './listall-chekpoints-api';
-import { ListAllModelJobApi } from './listall-model-job-api';
+import { CreateCheckPointApi } from './chekpoint-create-api';
+import { UpdateCheckPointApi } from './chekpoint-update-api';
+import { ListAllCheckPointsApi } from './chekpoints-listall-api';
+import { CreateModelJobApi } from './model-job-create-api';
+import { ListAllModelJobApi } from './model-job-listall-api';
+import { UpdateModelStatusRestApi } from './model-update-status-api';
 import { RestApiGateway } from './rest-api-gateway';
 
-import { UpdateModelStatusRestApi } from './update-model-status-api';
-import { UpdateTrainJobApi } from './update-train-job-api';
+import { CreateTrainJobApi } from './train-job-create-api';
+import { UpdateTrainJobApi } from './train-job-update-api';
 
 // ckpt -> create_model -> model -> training -> ckpt -> inference
 export class SdTrainDeployStack extends Stack {
@@ -69,7 +71,7 @@ export class SdTrainDeployStack extends Stack {
     });
 
     // api gateway setup
-    const restApi = new RestApiGateway(this, ['model', 'models', 'checkpoints', 'train']);
+    const restApi = new RestApiGateway(this, ['model', 'models', 'checkpoint', 'checkpoints', 'train']);
     this.apiGateway = restApi.apiGateway;
     const routers = restApi.routers;
 
@@ -130,11 +132,33 @@ export class SdTrainDeployStack extends Stack {
       checkpointTable: this.checkPointTable,
     });
 
+    // GET /checkpoints
     new ListAllCheckPointsApi(this, 'list-all-ckpts-api', {
+      s3Bucket: this.s3Bucket,
       checkpointTable: this.checkPointTable,
       commonLayer: commonLayer,
       httpMethod: 'GET',
       router: routers.checkpoints,
+      srcRoot: this.srcRoot,
+    });
+
+    // POST /checkpoint
+    new CreateCheckPointApi(this, 'create-ckpt-api', {
+      checkpointTable: this.checkPointTable,
+      commonLayer: commonLayer,
+      httpMethod: 'POST',
+      router: routers.checkpoint,
+      s3Bucket: this.s3Bucket,
+      srcRoot: this.srcRoot,
+    });
+
+    // PUT /checkpoint
+    new UpdateCheckPointApi(this, 'update-ckpt-api', {
+      checkpointTable: this.checkPointTable,
+      commonLayer: commonLayer,
+      httpMethod: 'PUT',
+      router: routers.checkpoint,
+      s3Bucket: this.s3Bucket,
       srcRoot: this.srcRoot,
     });
   }
