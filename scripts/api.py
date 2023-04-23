@@ -27,6 +27,7 @@ import modules.scripts as base_scripts
 from modules.hypernetworks import hypernetwork
 from modules.textual_inversion import textual_inversion
 import modules.shared as shared
+import modules.extras
 import sys
 sys.path.append("extensions/aws-ai-solution-kit")
 from scripts.models import *
@@ -376,6 +377,62 @@ def sagemaker_api(_, app: FastAPI):
                     }
                     print(e)
                     return response
+        #     elif req.task == 'merge-checkpoint':
+        #         r"""
+        #         task: merge checkpoint
+        #         db_create_model_payload:
+        #             :s3_input_path: S3 path for download src model.
+        #             :s3_output_path: S3 path for upload generated model.
+        #             :job_id: job id.
+        #             :param
+        #                 :new_model_name: generated model name.
+        #                 :new_model_src: S3 path for download src model.
+        #                 :from_hub=False,
+        #                 :new_model_url="",
+        #                 :new_model_token="",
+        #                 :extract_ema=False,
+        #                 :train_unfrozen=False,
+        #                 :is_512=True,
+        #         """
+        #         try:
+        #             merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
+        #             def modelmerger(*args):
+        #                 try:
+        #                     results = modules.extras.run_modelmerger(*args)
+        #                 except Exception as e:
+        #                     print("Error loading/saving model file:", file=sys.stderr)
+        #                     print(traceback.format_exc(), file=sys.stderr)
+        #                     modules.sd_models.list_models()  # to remove the potentially missing models from the list
+        #                     return [*[gr.Dropdown.update(choices=modules.sd_models.checkpoint_tiles()) for _ in range(4)], f"Error merging checkpoints: {e}"]
+        #                 return results
+        #         primary_model_name, secondary_model_name, tertiary_model_name,
+        #         component_dict['sd_model_checkpoint'],
+        #         modelmerger_result,
+        # modelmerger_merge.click(
+        #     fn=wrap_gradio_gpu_call(modelmerger, extra_outputs=lambda: [gr.update() for _ in range(4)]),
+        #     _js='modelmerger',
+        #     inputs=[
+        #         dummy_component,
+        #         primary_model_name,
+        #         secondary_model_name,
+        #         tertiary_model_name,
+        #         interp_method,
+        #         interp_amount,
+        #         save_as_half,
+        #         custom_name,
+        #         checkpoint_format,
+        #         config_source,
+        #         bake_in_vae,
+        #         discard_weights,
+        #     ],
+        #     outputs=[
+        #         primary_model_name,
+        #         secondary_model_name,
+        #         tertiary_model_name,
+        #         component_dict['sd_model_checkpoint'],
+        #         modelmerger_result,
+        #     ]
+        # )
             else:
                 raise NotImplementedError
         except Exception as e:
