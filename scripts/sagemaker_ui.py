@@ -24,6 +24,10 @@ lora_list = ['lora1', 'lora2', 'lora3']
 hyperNetwork_list = ['hyperNetwork1', 'hyperNetwork2', 'hyperNetwork3']
 ControlNet_model_list = ['controlNet_model1', 'controlNet_model2', 'controlNet_model3']
 
+# get api_gateway_url
+api_gateway_url = get_variable_from_json('api_gateway_url')
+api_key = get_variable_from_json('api_token') 
+
 def plaintext_to_html(text):
     text = "<p>" + "<br>\n".join([f"{html.escape(x)}" for x in text.split('\n')]) + "</p>"
     return text
@@ -37,15 +41,11 @@ def get_s3_file_names(bucket, folder):
     return names
 
 def server_request(path):
-    api_gateway_url = get_variable_from_json('api_gateway_url');
-    api_key = get_variable_from_json('api_token') 
     
-    # stage 2: inference using endpoint_name
     headers = {
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
-    # list_endpoint_url = f"{api_gateway_url}{path}"
     list_endpoint_url = urljoin(api_gateway_url, path)
     response = requests.get(list_endpoint_url, headers=headers)
     print(f"response for rest api {response.json()}")
@@ -181,7 +181,7 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             "params": {"message": "placeholder for chkpts upload test"}
         }
 
-        url = get_variable_from_json('api_gateway_url') + "model"
+        url = api_gateway_url + "model"
 
         print("Post request for upload s3 presign url.")
 
@@ -259,11 +259,6 @@ def generate_on_cloud():
 
     # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
-    # get api_gateway_url
-    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
-    api_key = "09876543210987654321"
-
     
     
     if contronet_enable:
@@ -398,11 +393,6 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     """
     # function code to call sagemaker deploy api
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
-
-    # get api_gateway_url
-    # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
-    api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
-    api_key = "09876543210987654321"
 
     payload = {
     "instance_type": instance_type,
