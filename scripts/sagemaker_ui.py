@@ -129,13 +129,13 @@ def generate_on_cloud():
     # use txt2imgConfig.json instead of ui-config.json
     with open("ui-config.json") as f:
         params_dict = json.load(f)
-    print(f"Current parameters are {params_dict}")
+    #print(f"Current parameters are {params_dict}")
 
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
         controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
         controlnet_module = params_dict['txt2img/Preprocessor/value']#'openpose'
-        selected_cn_model = params_dict['txt2img/Model/value']#['control_openpose-fp16.safetensors']
+        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']#['control_openpose-fp16.safetensors']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
 
         with open(controlnet_image_path, "rb") as img:
@@ -159,16 +159,14 @@ def generate_on_cloud():
     # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
     # get api_gateway_url
-<<<<<<< HEAD
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
     api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
-=======
-    api_gateway_url = get_variable_from_json('api_gateway_url');
-    api_key = get_variable_from_json('api_token') 
->>>>>>> c6c6e7ceb784d3152ad76999beb24e44f172d138
 
+    
+    
     if contronet_enable:
+       print('txt2img with controlnet!!!!!!!!!!')
        payload = {
         "endpoint_name": endpoint_name,
         "task": "controlnet_txt2img", 
@@ -199,8 +197,8 @@ def generate_on_cloud():
             "n_iter": 1, 
             "steps": 20, 
             "cfg_scale": 7, 
-            "width": 768, 
-            "height": 768, 
+            "width": 512, 
+            "height": 512, 
             "restore_faces": "False", 
             "tiling": "False", 
             "negative_prompt": "", 
@@ -233,6 +231,7 @@ def generate_on_cloud():
         }, 
         }
     else:
+        print('txt2img ##########')
         # construct payload
         payload = {
         "endpoint_name": endpoint_name,
@@ -241,7 +240,7 @@ def generate_on_cloud():
             "bucket": "sagemaker-us-west-2-725399406069",
             "base_dir": "stable-diffusion-webui",
             "stablediffusion": selected_sd_model,
-            "controlnet": selected_cn_model,
+            "controlnet": [],
             "hypernetwork": selected_hypernets,
             "lora": selected_loras,
             "textualinversion": selected_embeddings
@@ -263,8 +262,8 @@ def generate_on_cloud():
             "n_iter": 1, 
             "steps": 20, 
             "cfg_scale": 7, 
-            "width": 768, 
-            "height": 768, 
+            "width": 512, 
+            "height": 512, 
             "restore_faces": "False", 
             "tiling": "False", 
             "negative_prompt": "", 
@@ -300,14 +299,9 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     print(f"start deploying instance type: {instance_type} with count {initial_instance_count}............")
 
     # get api_gateway_url
-<<<<<<< HEAD
     # api_gateway_url = "https://lnfc7yeia4.execute-api.us-west-2.amazonaws.com/prod/"
     api_gateway_url = "https://mvebuwszv0.execute-api.us-west-2.amazonaws.com/prod/"
     api_key = "09876543210987654321"
-=======
-    api_gateway_url = get_variable_from_json('api_gateway_url');
-    api_key = get_variable_from_json('api_token') 
->>>>>>> c6c6e7ceb784d3152ad76999beb24e44f172d138
 
     payload = {
     "instance_type": instance_type,

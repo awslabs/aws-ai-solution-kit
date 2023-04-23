@@ -48,42 +48,19 @@ class ModelsRef:
             return least_ref_model,least_counter
         else:
             return None,None
-
-sd_models_Ref = ModelsRef()
-cn_models_Ref = ModelsRef()
-lora_models_Ref = ModelsRef()
-hyper_models_Ref = ModelsRef()
-embedding_Ref = ModelsRef()
-
-def de_register_model(model_name,mode):
-    models_Ref = sd_models_Ref
-    if mode == 'sd' :
-        models_Ref = sd_models_Ref
-    elif mode == 'cn':
-        models_Ref = cn_models_Ref
-    elif mode == 'lora':
-        models_Ref = lora_models_Ref
-    elif mode == 'hypernet':
-        models_Ref = hyper_models_Ref
-    elif mode == 'embedding':
-        models_Ref = embedding_Ref
     
-    models_Ref.remove_model_ref(model_name)
-    print (f'---de_register_{mode}_model({model_name})---models_Ref({models_Ref.get_models_ref_dict()})----')
-    if 'endpoint_name' in os.environ:
-        api_endpoint = os.environ['api_endpoint']
-        endpoint_name = os.environ['endpoint_name']
-        data = {
-            "module":mode,
-            "model_name": model_name,
-            "endpoint_name": endpoint_name
-        }  
-        response = requests.delete(url=f'{api_endpoint}/sd/models', json=data)
-        # Check if the request was successful
-        if response.status_code == requests.codes.ok:
-            print(f"{model_name} deleted successfully!")
+    def get_sorted_models(self, keys=None):
+        if keys is None:
+            return sorted(self.models_ref.items(), key=lambda item: item[1])
         else:
-            print(f"Error deleting {model_name}: ", response.text)
+            models_ref_tmp = self.models_ref[keys]
+            return sorted(models_ref_tmp.items(), key=lambda item: item[1])
+
+# sd_models_Ref = ModelsRef()
+# cn_models_Ref = ModelsRef()
+# lora_models_Ref = ModelsRef()
+# hyper_models_Ref = ModelsRef()
+# embedding_Ref = ModelsRef()
 
 def upload_folder_to_s3(local_folder_path, bucket_name, s3_folder_path):
     s3_client = boto3.client('s3')
