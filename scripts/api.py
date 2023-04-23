@@ -8,6 +8,7 @@ import os
 import shutil
 import traceback
 import zipfile
+import time
 from pathlib import Path
 from typing import List, Union
 
@@ -329,7 +330,7 @@ def sagemaker_api(_, app: FastAPI):
                     :job_id: job id.
                     :param
                         :new_model_name: generated model name.
-                        :new_model_src: S3 path for download src model.
+                        :ckpt_path: S3 path for download src model.
                         :from_hub=False,
                         :new_model_url="",
                         :new_model_token="",
@@ -340,39 +341,48 @@ def sagemaker_api(_, app: FastAPI):
                 try:
                     db_create_model_payload = json.loads(req.db_create_model_payload)
                     job_id = db_create_model_payload["job_id"]
-                    s3_input_path = db_create_model_payload["s3_input_path"][0]
+                    s3_input_path = db_create_model_payload["s3_input_path"]
                     input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
-                    s3_output_path = db_create_model_payload["s3_output_path"][0]
+                    s3_output_path = db_create_model_payload["s3_output_path"]
                     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
                     output_path = get_path_from_s3_path(s3_output_path)
-                    db_create_model_params = db_create_model_payload["param"]
-                    local_model_path = f'{db_create_model_params["new_model_src"]}.tar'
+                    db_create_model_params = db_create_model_payload["param"]["create_model_params"]
+                    local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
                     input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
                     print("Check disk usage before download.")
                     os.system("df -h")
-                    print("Download src model from s3.")
+                    logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
                     download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
-                    print("Check disk usage after download.")
+                    logger.info("Check disk usage after download.")
                     os.system("df -h")
                     print("Start creating model.")
-                    local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
-                                            params=db_create_model_params)
+                    # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
+                    #                         params=db_create_model_params)
+                    create_model_func_args = copy.deepcopy(db_create_model_params)
+                    # ckpt_path = create_model_func_args.pop("new_model_src")
+                    # create_model_func_args["ckpt_path"] = ckpt_path
+                    local_response = create_model(**create_model_func_args)
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
-                    # print("Delete src model.")
-                    # os.system(f"rm -rf models/Stable-diffusion")
                     print("Upload tgt model to s3.")
                     upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
-                    print("Delete tgt model.")
-                    os.system(f"rm -rf models/dreambooth")
-                    print("Check disk usage after request.")
-                    os.system("df -h")
-                    message = local_response.json()
+                    config_file = os.path.join(target_local_model_dir, "db_config.json")
+                    with open(config_file, 'r') as openfile:
+                        config_dict = json.load(openfile)
+                    message = {
+                        "response": local_response,
+                        "config_dict": config_dict
+                    }
                     response = {
                         "id": job_id,
                         "statusCode": 200,
                         "message": message,
                         "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
                     }
+                    # Clean up
+                    print("Delete tgt model.")
+                    os.system(f"rm -rf models/dreambooth")
+                    print("Check disk usage after request.")
+                    os.system("df -h")
                     return response
                 except Exception as e:
                     response = {
@@ -380,7 +390,7 @@ def sagemaker_api(_, app: FastAPI):
                         "statusCode": 500,
                         "message": e,
                     }
-                    print(e)
+                    logger.error(e)
                     return response
             else:
                 raise NotImplementedError
@@ -392,18 +402,26 @@ def sagemaker_api(_, app: FastAPI):
         print('-------ping------')
         return {'status': 'Healthy'}
 
+def move_model_to_tmp(_, app: FastAPI):
+    # os.system("rm -rf models")
+    # Create model dir
+    # print("Create model dir")
+    # os.system("mkdir models")
+    # Move model dir to /tmp
+    model_tmp_dir = f"models_{time.time()}"
+    os.system(f"cp -rL models /tmp/{model_tmp_dir}")
+    os.system(f"rm -rf models")
+    # Delete tmp model dir
+    # print("Delete tmp model dir")
+    # os.system("rm -rf /tmp/models")
+
 try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    # # Move model dir to /tmp
-    # print("Move model dir")
-    # os.system("mv models /tmp/")
-    # print("Link model dir")
-    # os.system("ln -s /tmp/models models")
-    # print("Check disk usage on app started")
-    # os.system("df -h")
+    script_callbacks.on_app_started(move_model_to_tmp)
     logger.debug("SD-Webui API layer loaded")
-except:
+except Exception as e:
+    print(e)
     logger.debug("Unable to import script callbacks.")
     pass
