@@ -28,25 +28,6 @@ def decode_base64_to_image(encoding):
     return Image.open(io.BytesIO(base64.b64decode(encoding)))
 
 
-# def updateInferenceJobTable(inference_id, status):
-#     #update the inference DDB for the job status
-#         response = inference_table.get_item(
-#             Key={
-#                 "InferenceJobId": inference_id,
-#             })
-#         inference_resp = response['Item']
-#         if not inference_resp:
-#             raise Exception(f"Failed to get the inference job item with inference id:{inference_id}")
-
-#         response = inference_table.update_item(
-#             Key={
-#                 "InferenceJobId": inference_id,
-#             },
-#             UpdateExpression="set status = :r",
-#             ExpressionAttributeValues={':r': status},
-#             ReturnValues="UPDATED_NEW"
-#         )    
-
 def update_inference_job_table(inference_id, key, value):
     # Update the inference DDB for the job status
     response = inference_table.get_item(
@@ -94,7 +75,7 @@ def lambda_handler(event, context):
     if invocation_status == "Completed":
         print(f"Complete invocation!")
         endpoint_name = message["requestParameters"]["endpointName"]
-        updateInferenceJobTable(inference_id, 'status', 'succeed')
+        update_inference_job_table(inference_id, 'status', 'succeed')
         
         output_location = message["responseParameters"]["outputLocation"]
 
@@ -114,6 +95,17 @@ def lambda_handler(event, context):
                 Bucket=S3_BUCKET_NAME,
                 Key=f"out/{inference_id}/result/image_{count}.jpg"
             )
+            # Update the DynamoDB table
+            inference_table.update_item(
+                Key={
+                    'InferenceJobId': inference_id
+                    },
+                UpdateExpression='SET image_names = list_append(if_not_exists(image_names, :empty_list), :new_image)',
+                ExpressionAttributeValues={
+                    ':new_image': [f"image_{count}.jpg"],
+                    ':empty_list': []
+                }
+            )
 
         # save parameters
         inference_parameters = {}
@@ -129,9 +121,10 @@ def lambda_handler(event, context):
             json.dump(inference_parameters, outfile)
 
         upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result")
+        update_inference_job_table(inference_id, 'inference_info_name', json_file_name)
         
         print(f"Complete inference parameters {inference_parameters}")
     else:
-        updateInferenceJobTable(inference_id, 'status', 'failed')
+        update_inference_job_table(inference_id, 'status', 'failed')
         print(f"Not complete invocation!")
     return message
