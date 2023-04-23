@@ -36,6 +36,7 @@ input_path = get_path_from_s3_path(s3_input_path)
 # upload_folder_to_s3_by_tar(local_model_dir, input_bucket_name, input_path)
 
 
+print(payload)
 response = requests.post(url=f'{url}/invocations', json=payload)
 # response = requests.post(url=f'{url}/dreambooth/createModel', json=payload)
 # response = requests.post(url=f'{url}/sdapi/v1/txt2img', json=payload)

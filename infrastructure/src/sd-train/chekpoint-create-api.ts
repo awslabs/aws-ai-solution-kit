@@ -4,8 +4,7 @@ import {
   aws_apigateway as apigw,
   aws_dynamodb,
   aws_iam,
-  aws_lambda,
-  aws_s3,
+  aws_lambda, aws_s3,
   Duration,
 } from 'aws-cdk-lib';
 import { MethodOptions } from 'aws-cdk-lib/aws-apigateway/lib/method';
@@ -14,39 +13,37 @@ import { Architecture, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 
 
-export interface CreateModelJobApiProps {
+export interface CreateCheckPointApiProps {
   router: aws_apigateway.Resource;
   httpMethod: string;
-  modelTable: aws_dynamodb.Table;
   checkpointTable: aws_dynamodb.Table;
   srcRoot: string;
-  s3Bucket: aws_s3.Bucket;
   commonLayer: aws_lambda.LayerVersion;
+  s3Bucket: aws_s3.Bucket;
 }
 
-export class CreateModelJobApi {
+export class CreateCheckPointApi {
   private readonly src;
   private readonly router: aws_apigateway.Resource;
   private readonly httpMethod: string;
   private readonly scope: Construct;
-  private readonly modelTable: aws_dynamodb.Table;
   private readonly checkpointTable: aws_dynamodb.Table;
-  private readonly s3Bucket: aws_s3.Bucket;
   private readonly layer: aws_lambda.LayerVersion;
+  private readonly s3Bucket: aws_s3.Bucket;
 
-  private readonly baseId: string = 'aigc-create-model-job';
+  private readonly baseId: string;
 
-  constructor(scope: Construct, props: CreateModelJobApiProps) {
+  constructor(scope: Construct, id: string, props: CreateCheckPointApiProps) {
     this.scope = scope;
-    this.router = props.router;
     this.httpMethod = props.httpMethod;
-    this.modelTable = props.modelTable;
-    this.src = props.srcRoot;
-    this.s3Bucket = props.s3Bucket;
-    this.layer = props.commonLayer;
     this.checkpointTable = props.checkpointTable;
+    this.baseId = id;
+    this.router = props.router;
+    this.src = props.srcRoot;
+    this.layer = props.commonLayer;
+    this.s3Bucket = props.s3Bucket;
 
-    this.createModelJobApi();
+    this.createCheckpointApi();
   }
 
   private iamRole(): aws_iam.Role {
@@ -65,7 +62,7 @@ export class CreateModelJobApi {
         'dynamodb:UpdateItem',
         'dynamodb:DeleteItem',
       ],
-      resources: [this.modelTable.tableArn, this.checkpointTable.tableArn],
+      resources: [this.checkpointTable.tableArn],
     }));
 
     newRole.addToPolicy(new aws_iam.PolicyStatement({
@@ -73,8 +70,15 @@ export class CreateModelJobApi {
       actions: [
         's3:GetObject',
         's3:PutObject',
+        's3:DeleteObject',
+        's3:ListBucket',
       ],
-      resources: [`${this.s3Bucket.bucketArn}/*`],
+      resources: [
+        `${this.s3Bucket.bucketArn}/*`,
+        'arn:aws:s3:::*SageMaker*',
+        'arn:aws:s3:::*Sagemaker*',
+        'arn:aws:s3:::*sagemaker*',
+      ],
     }));
 
     newRole.addToPolicy(new aws_iam.PolicyStatement({
@@ -89,38 +93,36 @@ export class CreateModelJobApi {
     return newRole;
   }
 
-  private createModelJobApi() {
-    const lambdaFunction = new PythonFunction(this.scope, `${this.baseId}-handler`, <PythonFunctionProps>{
-      functionName: `${this.baseId}-model`,
+  private createCheckpointApi() {
+    const lambdaFunction = new PythonFunction(this.scope, `${this.baseId}-create`, <PythonFunctionProps>{
+      functionName: `${this.baseId}-create-checkpoint`,
       entry: `${this.src}/create_model`,
       architecture: Architecture.X86_64,
       runtime: Runtime.PYTHON_3_9,
-      index: 'create_model_job_api.py',
-      handler: 'create_model_api',
+      index: 'checkpoint_api.py',
+      handler: 'create_checkpoint_api',
       timeout: Duration.seconds(900),
       role: this.iamRole(),
       memorySize: 1024,
       environment: {
-        DYNAMODB_TABLE: this.modelTable.tableName,
-        S3_BUCKET: this.s3Bucket.bucketName,
         CHECKPOINT_TABLE: this.checkpointTable.tableName,
+        S3_BUCKET: this.s3Bucket.bucketName,
       },
       layers: [this.layer],
     });
-    const createModelIntegration = new apigw.LambdaIntegration(
+    const createCheckpointIntegration = new apigw.LambdaIntegration(
       lambdaFunction,
       {
         proxy: false,
         integrationResponses: [{ statusCode: '200' }],
       },
     );
-    this.router.addMethod(this.httpMethod, createModelIntegration, <MethodOptions>{
+    this.router.addMethod(this.httpMethod, createCheckpointIntegration, <MethodOptions>{
       apiKeyRequired: true,
       methodResponses: [{
         statusCode: '200',
       }],
     });
   }
-
 }
 

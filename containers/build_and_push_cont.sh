@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set +x
 
 # This script shows how to build the Docker image and push it to ECR to be ready for use
 # by Braket.
@@ -26,6 +27,8 @@ fi
 region=$(aws configure get region)
 # region=${region:-us-west-2}
 
+
+echo "guming debug>>aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com"
 
 fullname="${account}.dkr.ecr.${region}.amazonaws.com/${image}:latest"
 

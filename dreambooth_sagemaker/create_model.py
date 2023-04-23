@@ -13,13 +13,16 @@ import sagemaker
 sagemaker_session = sagemaker.Session()
 bucket = sagemaker_session.default_bucket()
 
-EXECUTION_ROLE = "arn:aws:iam::683638520402:role/service-role/AmazonSageMaker-ExecutionRole-20221031T120168"
-INSTANCE_TYPE = "ml.g5.xlarge"
+# EXECUTION_ROLE = "arn:aws:iam::683638520402:role/service-role/AmazonSageMaker-ExecutionRole-20221031T120168"
+EXECUTION_ROLE = "arn:aws:iam::648149843064:role/SdDreamBoothTrainStack-aigcutilsendpointrole0A8729-8OSFWEAGUTCU"
+INSTANCE_TYPE = "ml.g4dn.xlarge"
+# INSTANCE_TYPE = "ml.c6g.8xlarge"
 
 import boto3
 account_id = boto3.client('sts').get_caller_identity().get('Account')
 region_name = boto3.session.Session().region_name
-image_uri = '{0}.dkr.ecr.{1}.amazonaws.com/aigc-webui-dreambooth-create-model:latest'.format(account_id, region_name)
+# image_uri = '{0}.dkr.ecr.{1}.amazonaws.com/aigc-webui-dreambooth-create-model:latest'.format(account_id, region_name)
+image_uri = '{0}.dkr.ecr.{1}.amazonaws.com/aigc-webui-utils:latest'.format(account_id, region_name)
 base_name = sagemaker.utils.base_name_from_image(image_uri)
 sagemaker = boto3.client('sagemaker')
 
@@ -68,8 +71,13 @@ def create_endpoint_config(name):
             AsyncInferenceConfig=
                 {
                     "OutputConfig": {
-                        "S3OutputPath": 's3://{0}/{1}/asyncinvoke/out/'.format(bucket, 'ask-webui-extension/create-model')
+                        "S3OutputPath": 's3://{0}/{1}/asyncinvoke/out/'.format(bucket, 'ask-webui-extension/create-model'),
+                        "NotificationConfig": {
+                            "SuccessTopic": "arn:aws:sns:us-east-1:648149843064:successCreateModel",
+                            "ErrorTopic": "arn:aws:sns:us-east-1:648149843064:failureCreateModel"
+                        }
                     }
+
                 },
 
         )
@@ -98,6 +106,7 @@ def create_endpoint(endpoint_name, config_name):
 
 # The name of the endpoint. The name must be unique within an AWS Region in your AWS account.
 model_name = f'db-create-model-{str(time.time()).replace(".", "-")}'
+# model_name = f'aigc-utils-endpoint'
 endpoint_name = model_name
 
 # Create an endpoint config name.
