@@ -60,22 +60,32 @@ export class SagemakerInferenceStateMachine {
                 resources: ["*"],
             });
 
-    //TODO: need to add logic to let sagemaker service assume lambda role
-    //     // Create a separate role for the SageMaker service
-    //     const lambdaRole = new iam.Role(this.scope, 'SagemakerRole', {
-    //         assumedBy: new iam.CompositePrincipal(
-    //             new iam.ServicePrincipal('lambda.amazonaws.com'),
-    //             new iam.ServicePrincipal('sagemaker.amazonaws.com')
-    //           ),
-    //     });
-
-    //     // Attach the necessary AWS managed policies to the Lambda execution role
-    //     // Example: AWSLambdaBasicExecutionRole
-    //     lambdaRole.addManagedPolicy(
-    //         iam.ManagedPolicy.fromAwsManagedPolicyName('AWSLambdaBasicExecutionRole')
-    //   );
-    //     lambdaRole.addToPolicy(lambdaPolicy)
- 
+        const lambdaErrorHandler = new lambda.Function(
+            this.scope,
+            "InferenceWorkflowErrorHandler",
+            {
+                runtime: lambda.Runtime.PYTHON_3_9,
+                handler: "app.lambda_handler",
+                code: lambda.Code.fromAsset(
+                    path.join(
+                        __dirname,
+                        "../../../middleware_api/lambda/endpoint_creation_workflow_error_handler"
+                    )
+                ),
+                // Add any environment variables needed for the error handler Lambda
+                environment: {
+                    SNS_INFERENCE_SUCCESS: snsTopic.topicArn,
+                    SNS_INFERENCE_ERROR: snsErrorTopic.topicArn,
+                    DDB_INFERENCE_TABLE_NAME: inferenceJobName,
+                    DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
+                    SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
+                    S3_BUCKET_NAME: s3BucketName
+                },
+            }
+        );
+            
+        lambdaErrorHandler.addToRolePolicy(lambdaPolicy);
+            
         // Define the Lambda functions
         const lambdaStartDeploy = new lambda.Function(
             this.scope,
@@ -131,13 +141,24 @@ export class SagemakerInferenceStateMachine {
 
 
         // Define the Step Functions tasks
+        const errorHandlerTask = new stepfunctionsTasks.LambdaInvoke(
+            this.scope,
+            "ErrorHandlerTask",
+            {
+                lambdaFunction: lambdaErrorHandler,
+            }
+        );
+
         const startDeploymentTask = new stepfunctionsTasks.LambdaInvoke(
             this.scope,
             "StartDeployment",
             {
                 lambdaFunction: lambdaStartDeploy,
             }
-        );
+        ).addCatch(errorHandlerTask, {
+            errors: ["States.ALL"],
+            resultPath: "$.error",
+        });
 
         const checkStatusDeploymentTask = new stepfunctionsTasks.LambdaInvoke(
             this.scope,
@@ -145,7 +166,10 @@ export class SagemakerInferenceStateMachine {
             {
                 lambdaFunction: lambdaCheckDeploymentStatus,
             }
-        );
+        ).addCatch(errorHandlerTask, {
+            errors: ["States.ALL"],
+            resultPath: "$.error",
+        });
 
         const checkDeploymentBranch = new stepfunctions.Choice(
             this.scope,

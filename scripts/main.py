@@ -7,7 +7,7 @@ import copy
 import os
 import gradio as gr
 import modules.scripts as scripts
-from modules import shared, devices, script_callbacks, processing, masking, images
+from modules import shared, devices, script_callbacks, processing, masking, images, sd_models
 from modules.ui import create_refresh_button
 from utils import upload_file_to_s3_by_presign_url
 from utils import get_variable_from_json
@@ -23,7 +23,6 @@ sys.path.append("extensions/aws-ai-solution-kit")
 sys.path.append("extensions/aws-ai-solution-kit/scripts")
 # TODO: Do not use the dreambooth status module.
 from dreambooth.shared import status
-from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
 from dreambooth_sagemaker.train import start_sagemaker_training
 from dreambooth.ui_functions import load_model_params
 import sagemaker_ui
@@ -60,11 +59,11 @@ class SageMakerUI(scripts.Script):
         # )
 
 def on_after_component_callback(component, **_kwargs):
-    global db_model_name, db_use_txt2img, db_sagemaker_train 
+    global db_model_name, db_use_txt2img, db_sagemaker_train
     is_dreambooth_train = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'db_train'
     is_dreambooth_model_name = type(component) is gr.Dropdown and \
-            (getattr(component, 'elem_id', None) == 'model_name' or \
-            (getattr(component, 'label', None) == 'Model' and getattr(component.parent.parent.parent.parent, 'elem_id', None) == 'ModelPanel'))
+                               (getattr(component, 'elem_id', None) == 'model_name' or \
+                                (getattr(component, 'label', None) == 'Model' and getattr(component.parent.parent.parent.parent, 'elem_id', None) == 'ModelPanel'))
     is_dreambooth_use_txt2img = type(component) is gr.Checkbox and getattr(component, 'label', None) == 'Use txt2img'
     if is_dreambooth_train:
         print('Add SageMaker button')
@@ -89,7 +88,7 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[]
         )
     # Hook image display logic
-    global txt2img_gallery, txt2img_generation_info, txt2img_html_info, txt2img_show_hook 
+    global txt2img_gallery, txt2img_generation_info, txt2img_html_info, txt2img_show_hook
     is_txt2img_gallery = type(component) is gr.Gallery and getattr(component, 'elem_id', None) == 'txt2img_gallery'
     is_txt2img_generation_info = type(component) is gr.Textbox and getattr(component, 'elem_id', None) == 'generation_info_txt2img'
     is_txt2img_html_info = type(component) is gr.HTML and getattr(component, 'elem_id', None) == 'html_info_txt2img'
@@ -121,7 +120,7 @@ def on_after_component_callback(component, **_kwargs):
 
     # if is_txt2img_prompt_image:
     #     txt2img_interface = component.parent
-    
+
     # if txt2img_interface is not None and sagemaker_ui.generate_on_cloud_button is not None and generate_hook is None:
     #     generate_hook = "finish"
     #     sagemaker_ui.generate_on_cloud_button.click(
@@ -141,7 +140,7 @@ def update_connect_config(api_url, api_token):
     print(f"Variable 1: {value1}")
     print(f"Variable 2: {value2}")
     print(f"update the api_url:{api_url} and token: {api_token}............")
-    
+
 def on_ui_tabs():
     buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
     with gr.Blocks() as sagemaker_interface:
@@ -326,7 +325,6 @@ def ui_tabs_callback():
                                     ]
                                 )
                     break
-        break
     return res
 
 script_callbacks.ui_tabs_callback = ui_tabs_callback
@@ -363,11 +361,12 @@ def get_cloud_db_models():
     return model_name_list
 
 def get_sd_cloud_models():
-    # model_name_list = []
-    # for model in response["models"]:
-    #     model_name_list.append(model['model_name'])
-    # return model_name_list
-    return get_sd_models()
+    sd_models.list_models()
+    sd_list = sd_models.checkpoints_list
+    names = []
+    for key in sd_list:
+        names.append(key)
+    return names
 
 def async_create_model_on_sagemaker(
         new_model_name: str,
