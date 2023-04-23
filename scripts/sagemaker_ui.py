@@ -325,11 +325,11 @@ def generate_on_cloud():
         "models":{
             "bucket": "sagemaker-us-west-2-725399406069",
             "base_dir": "stable-diffusion-webui",
-            "stablediffusion": selected_sd_model,
+            "sd": selected_sd_model,
             "controlnet": selected_cn_model,
             "hypernetwork": selected_hypernets,
             "lora": selected_loras,
-            "textualinversion": selected_embeddings
+            "embedding": selected_embeddings
         },
         "controlnet_txt2img_payload":{ 
             "enable_hr": "False", 
@@ -390,11 +390,11 @@ def generate_on_cloud():
         "models":{
             "bucket": "sagemaker-us-west-2-725399406069",
             "base_dir": "stable-diffusion-webui",
-            "stablediffusion": selected_sd_model,
+            "sd": selected_sd_model,
             "controlnet": [],
             "hypernetwork": selected_hypernets,
             "lora": selected_loras,
-            "textualinversion": selected_embeddings
+            "embedding": selected_embeddings
         },
         "txt2img_payload": {
             "enable_hr": "False", 

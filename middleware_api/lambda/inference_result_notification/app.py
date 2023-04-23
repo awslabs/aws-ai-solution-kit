@@ -2,6 +2,7 @@ import json
 import io
 import boto3
 import base64
+import os
 from PIL import Image
 
 s3_resource = boto3.resource('s3')
@@ -42,7 +43,8 @@ def update_inference_job_table(inference_id, key, value):
         Key={
             "InferenceJobId": inference_id,
         },
-        UpdateExpression=f"set {key} = :r",
+        UpdateExpression=f"set #k = :r",
+        ExpressionAttributeNames={'#k': key},
         ExpressionAttributeValues={':r': value},
         ReturnValues="UPDATED_NEW"
     )
@@ -68,8 +70,8 @@ def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
     message = event['Records'][0]['Sns']['Message']
-    print("From SNS: " + message)
-    message = json.loads(message)
+    print("From SNS: " + str(message))
+    # message = json.loads(message)
     invocation_status = message["invocationStatus"]
     inference_id = message["inferenceId"]
     if invocation_status == "Completed":
