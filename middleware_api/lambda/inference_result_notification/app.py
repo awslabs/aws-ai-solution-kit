@@ -10,6 +10,7 @@ s3_client = boto3.client('s3')
 DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
 DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
 DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
+S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
 
 ddb_client = boto3.resource('dynamodb')
 inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
@@ -65,6 +66,24 @@ def update_inference_job_table(inference_id, key, value):
         ReturnValues="UPDATED_NEW"
     )
 
+def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
+    # If S3 object_name was not specified, use file_name
+    if object_name is None:
+        object_name = file_name
+    
+    # Add the directory to the object_name
+    if directory:
+        object_name = f"{directory}/{object_name}"
+
+    # Upload the file
+    try:
+        s3_client.upload_file(file_name, bucket, object_name)
+        print(f"File {file_name} uploaded to {bucket}/{object_name}")
+    except Exception as e:
+        print(f"Error occurred while uploading {file_name} to {bucket}/{object_name}: {e}")
+        return False
+    return True
+
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
     message = event['Records'][0]['Sns']['Message']
@@ -92,8 +111,8 @@ def lambda_handler(event, context):
             # Upload the image to the S3 bucket
             s3_client.put_object(
                 Body=output.getvalue(),
-                Bucket=bucket,
-                Key=f"{key}/{inference_id}_{count}.jpg"
+                Bucket=S3_BUCKET_NAME,
+                Key=f"out/{inference_id}/result/image_{count}.jpg"
             )
 
         # save parameters
@@ -103,9 +122,13 @@ def lambda_handler(event, context):
         inference_parameters["endpont_name"] = endpoint_name
         inference_parameters["inference_id"] = inference_id
         inference_parameters["sns_info"] = message
-        with open(f"{inference_id}_param.json", "w") as outfile:
+
+        json_file_name = f"{inference_id}_param.json"
+
+        with open(json_file_name, "w") as outfile:
             json.dump(inference_parameters, outfile)
-        # TODO put to s3 bucket
+
+        upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result")
         
         print(f"Complete inference parameters {inference_parameters}")
     else:
