@@ -334,21 +334,22 @@ def sagemaker_api(_, app: FastAPI):
                 try:
                     db_create_model_payload = json.loads(req.db_create_model_payload)
                     job_id = db_create_model_payload["job_id"]
-                    s3_input_path = db_create_model_payload["s3_input_path"]
-                    input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
                     s3_output_path = db_create_model_payload["s3_output_path"]
                     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
                     output_path = get_path_from_s3_path(s3_output_path)
                     db_create_model_params = db_create_model_payload["param"]["create_model_params"]
-                    local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
-                    input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
-                    print("Check disk usage before download.")
-                    os.system("df -h")
-                    logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
-                    download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
-                    logger.info("Check disk usage after download.")
-                    os.system("df -h")
-                    print("Start creating model.")
+                    if not db_create_model_params['from_hub']:
+                        s3_input_path = db_create_model_payload["s3_input_path"]
+                        input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
+                        local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
+                        input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
+                        logging.info("Check disk usage before download.")
+                        os.system("df -h")
+                        logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
+                        download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
+                        logger.info("Check disk usage after download.")
+                        os.system("df -h")
+                    logging.info("Start creating model.")
                     # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
                     #                         params=db_create_model_params)
                     create_model_func_args = copy.deepcopy(db_create_model_params)
@@ -358,7 +359,7 @@ def sagemaker_api(_, app: FastAPI):
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
                     # print("Delete src model.")
                     # os.system(f"rm -rf models/Stable-diffusion")
-                    print("Upload tgt model to s3.")
+                    logging.info("Upload tgt model to s3.")
                     upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
                     config_file = os.path.join(target_local_model_dir, "db_config.json")
                     with open(config_file, 'r') as openfile:
@@ -374,9 +375,9 @@ def sagemaker_api(_, app: FastAPI):
                         "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
                     }
                     # Clean up
-                    print("Delete tgt model.")
+                    logging.info("Delete tgt model.")
                     os.system(f"rm -rf models/dreambooth")
-                    print("Check disk usage after request.")
+                    logging.info("Check disk usage after request.")
                     os.system("df -h")
                     return response
                 except Exception as e:
@@ -394,7 +395,6 @@ def sagemaker_api(_, app: FastAPI):
 
     @app.get("/ping")
     def ping():
-        print('-------ping------')
         return {'status': 'Healthy'}
 
 def move_model_to_tmp(_, app: FastAPI):
@@ -403,6 +403,7 @@ def move_model_to_tmp(_, app: FastAPI):
     # print("Create model dir")
     # os.system("mkdir models")
     # Move model dir to /tmp
+    logging.info("Copy model dir to tmp")
     model_tmp_dir = f"models_{time.time()}"
     os.system(f"cp -rL models /tmp/{model_tmp_dir}")
     os.system(f"rm -rf models")
@@ -410,9 +411,9 @@ def move_model_to_tmp(_, app: FastAPI):
     # print("Delete tmp model dir")
     # os.system("rm -rf /tmp/models")
     # Link model dir
-    print("Link model dir")
+    logging.info("Link model dir")
     os.system(f"ln -s /tmp/{model_tmp_dir} models")
-    print("Check disk usage on app started")
+    logging.info("Check disk usage on app started")
     os.system("df -h")
 
 try:
