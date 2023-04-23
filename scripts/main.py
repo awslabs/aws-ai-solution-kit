@@ -325,7 +325,6 @@ def ui_tabs_callback():
                                     ]
                                 )
                     break
-        break
     return res
 
 script_callbacks.ui_tabs_callback = ui_tabs_callback
