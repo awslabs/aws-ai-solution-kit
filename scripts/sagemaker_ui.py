@@ -81,10 +81,9 @@ def get_inference_job_list():
     global txt2img_inference_job_ids
     response = server_request('inference/list-inference-jobs')
     r = response.json()
-    txt2img_inference_job_ids = []
     for obj in r:
-        aaa_value = str(obj)
-        txt2img_inference_job_ids.append(aaa_value)
+        json_string = json.dumps(obj)
+        txt2img_inference_job_ids.append(json_string)
 
 def get_inference_job_image_output(inference_job_id):
     response = server_request(f'inference/get-inference-job-image-output?jobID={inference_job_id}')
@@ -94,6 +93,24 @@ def get_inference_job_image_output(inference_job_id):
         aaa_value = str(obj)
         txt2img_inference_job_image_list.append(aaa_value)
     return txt2img_inference_job_image_list
+
+def download_images(image_urls: list, local_directory: str):
+    if not os.path.exists(local_directory):
+        os.makedirs(local_directory)
+
+    image_list = []
+    for url in image_urls:
+        response = requests.get(url)
+        if response.status_code == 200:
+            image_name = os.path.basename(url).split('?')[0]
+            local_path = os.path.join(local_directory, image_name)
+            
+            with open(local_path, 'wb') as f:
+                f.write(response.content)
+            image_list.append(local_path)
+        else:
+            print(f"Error downloading image {url}: {response.status_code}")
+    return image_list
     
 def get_texual_inversion_list():
    global textual_inversion_list
@@ -457,11 +474,39 @@ def create_ui():
                     outputs=[]
                 )
             with gr.Row():
-                global inference_job_dropdown
+                global inference_job_dropdown 
+                global txt2img_inference_job_ids
                 inference_job_dropdown = gr.Dropdown(txt2img_inference_job_ids,
-                                            label="Inference Job IDs",
-                                            default=txt2img_inference_job_ids[0])
+                                            label="Inference Job IDs"
+                                            )
                 txt2img_inference_job_ids_refresh_button = modules.ui.create_refresh_button(inference_job_dropdown, update_txt2img_inference_job_ids, lambda: {"choices": txt2img_inference_job_ids}, "refresh_txt2img_inference_job_ids")
+                def fake_gan(selected_value: str ):
+                    print(f"selected value is {selected_value}")
+                    # selected_value="{\"InferenceJobId\":\"a110716e-939a-48d4-83ce-faf5f03741d9\"}"
+                    print(f"selected value is {selected_value}")
+                    if selected_value is not None:
+                       print(f"Selected value: {selected_value}")
+                       selected_value_json = json.loads(selected_value)
+
+                       # Extract the InferenceJobId value
+                       inference_job_id = selected_value_json['InferenceJobId']
+                       images = get_inference_job_image_output(inference_job_id)
+                       image_list = []
+                       image_list = download_images(images,f"extensions/output/{inference_job_id}/")
+                       print(f"{str(images)}")
+                        
+                    else:
+                       image_list = []  # Return an empty list if selected_value is None
+
+                    return image_list
+ 
+                gallery = gr.Gallery(label="Generated images", show_label=False, elem_id="gallery").style(grid=[2], height="auto")
+ 
+                inference_job_dropdown.change(
+                    fn=lambda selected_value: fake_gan(selected_value),
+                    inputs=[inference_job_dropdown],
+                    outputs=[gallery]
+                )
             with gr.Row():
                 gr.HTML(value="Extra Networks for Sagemaker Endpoint")
                 advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")

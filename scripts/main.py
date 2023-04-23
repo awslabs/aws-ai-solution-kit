@@ -104,12 +104,13 @@ def on_after_component_callback(component, **_kwargs):
         txt2img_html_info = component
         # return test
     if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
-        print("Create inference job dropdown callback")
-        txt2img_show_hook = "finish"
-        sagemaker_ui.inference_job_dropdown.change(
-            fn=sagemaker_ui.inference_update_func,
-            outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
-        )
+        pass
+        # print("Create inference job dropdown callback")
+        # txt2img_show_hook = "finish"
+        # sagemaker_ui.inference_job_dropdown.change(
+        #     fn=sagemaker_ui.inference_update_func,
+        #     outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
+        # )
     # global txt2img_interface, generate_hook
     # is_txt2img_prompt_image = type(component) is gr.File and getattr(component, 'elem_id', None) == 'txt2img_prompt_image'
 
