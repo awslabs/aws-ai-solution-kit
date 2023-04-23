@@ -43,7 +43,6 @@ def list_all_checkpoints_api(event, context):
         ckpt = CheckPoint(**(ddb_service.deserialize(r)))
         ckpts.append({
             'id': ckpt.id,
-            'name': ckpt.checkpoint_names,
             's3Location': ckpt.s3_location,
             'type': ckpt.checkpoint_type,
             'status': ckpt.checkpoint_status.value,
