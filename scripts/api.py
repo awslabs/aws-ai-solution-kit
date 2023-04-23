@@ -179,6 +179,7 @@ def checkspace_and_update_models(selected_models):
     bucket = selected_models['bucket']
     s3_base_dir = selected_models['base_dir']
     models_num = len(models_type_list)
+    space_free_size = selected_models['space_free_size']
     for type_id in range(models_num):
         model_type = models_type_list[type_id]
         selected_models_name = selected_models[model_type]
@@ -190,7 +191,7 @@ def checkspace_and_update_models(selected_models):
             else:
                 total, used, free = shutil.disk_usage(disk_path)
                 print('!!!!!!!!!!!!current free space is', free)
-                if free < 2e10:
+                if free < space_free_size:
                     #### delete least used model to get more space ########
                     space_check_succese = False
                     for i in range(models_num):
@@ -208,7 +209,7 @@ def checkspace_and_update_models(selected_models):
                                 os.remove(os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
                                 total, used, free = shutil.disk_usage(disk_path)
-                                if free > 2e10:
+                                if free > space_free_size:
                                     space_check_succese = True
                                     break
                         if space_check_succese:
