@@ -231,12 +231,12 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
 
         url = api_gateway_url + "checkpoint"
 
-        print("Post request for upload s3 presign url.")
+        print(f"Post request for upload s3 presign url: {url}")
 
         response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
 
         json_response = response.json()
-        # print(f"Response json {json_response}")
+        #print(f"Response json {json_response}")
         s3_base = json_response["checkpoint"]["s3_location"]
         checkpoint_id = json_response["checkpoint"]["id"]
         print(f"Upload to S3 {s3_base}")
@@ -295,8 +295,8 @@ def generate_on_cloud():
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
         controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
-        controlnet_module = params_dict['txt2img/Preprocessor/value']#'openpose'
-        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']#['control_openpose-fp16.safetensors']
+        controlnet_module = params_dict['txt2img/Preprocessor/value']
+        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
 
         with open(controlnet_image_path, "rb") as img:
@@ -327,15 +327,14 @@ def generate_on_cloud():
         "endpoint_name": endpoint_name,
         "task": "controlnet_txt2img", 
         "username": "test",
+        "checkpoint_info":checkpoint_info,
         "models":{
-           "space_free_size": 2e10,
-            "bucket": "sagemaker-us-west-2-725399406069",
-            "base_dir": "stable-diffusion-webui",
-            "sd": selected_sd_model,
-            "controlnet": selected_cn_model,
-            "hypernetwork": selected_hypernets,
-            "lora": selected_loras,
-            "embedding": selected_embeddings
+            "space_free_size": 2e10,
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": selected_cn_model,
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
         },
         "controlnet_txt2img_payload":{ 
             "enable_hr": "False", 
@@ -393,15 +392,14 @@ def generate_on_cloud():
         payload = {
         "endpoint_name": endpoint_name,
         "task": "text-to-image", 
+        "checkpoint_info":checkpoint_info,
         "models":{
             "space_free_size": 2e10,
-            "bucket": "sagemaker-us-west-2-725399406069",
-            "base_dir": "stable-diffusion-webui",
-            "sd": selected_sd_model,
-            "controlnet": [],
-            "hypernetwork": selected_hypernets,
-            "lora": selected_loras,
-            "embedding": selected_embeddings
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": selected_cn_model,
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
         },
         "txt2img_payload": {
             "enable_hr": "False", 
