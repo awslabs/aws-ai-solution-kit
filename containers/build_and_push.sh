@@ -47,29 +47,8 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 aws ecr get-login-password --region us-west-2 | docker login -u AWS --password-stdin 292282985366.dkr.ecr.us-west-2.amazonaws.com
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
-# mkdir -p /tmp/temp_context
-
-cp ../../sagemaker_dreambooth_train.py .
-# cp Dockerfile ../../
-# cp .dockerignore ../../
-
-# cd ../../
-
-# cd /home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aigc/
-
-# tar --exclude='aigc-webui/venv' --exclude='aigc-webui/models' -czf webui.tar.gz aigc-webui/
-
-# cd -
-
-# mv /home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aigc/webui.tar.gz .
-
-# Build the docker image locally with the image name and then push it to ECR
-# with the full name.
-
 docker build  -t ${image} -f Dockerfile .
 docker tag ${image} ${fullname}
 
 docker push ${fullname}
 echo $fullname
-
-# rm webui.tar.gz

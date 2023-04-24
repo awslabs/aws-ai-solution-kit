@@ -64,7 +64,7 @@ aws ecr-public get-login-password --region us-east-1 | docker login --username A
 
 public_repo="initial"
 
-desc_output=$(aws ecr-public describe-repositories --repository-name ${image} 2>&1)
+desc_output=$(aws ecr-public describe-repositories --repository-name ${image} --region us-east-1 2>&1)
 
 if [ $? -ne 0 ]
 then

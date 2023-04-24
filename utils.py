@@ -49,11 +49,17 @@ class ModelsRef:
         else:
             return None,None
     
-    def get_sorted_models(self, keys=None):
-        if keys is None:
+    def get_sorted_models(self, key_list=None):
+        print('!!!!!!!!!!!', key_list)
+        if key_list is None:
             return sorted(self.models_ref.items(), key=lambda item: item[1])
         else:
-            models_ref_tmp = self.models_ref[keys]
+            models_ref_tmp = {}
+            for key_value in key_list:
+                if key_value not in self.models_ref.keys():
+                    models_ref_tmp[key_value] = -1
+                else:
+                    models_ref_tmp[key_value] = self.models_ref[key_value]
             return sorted(models_ref_tmp.items(), key=lambda item: item[1])
 
 # sd_models_Ref = ModelsRef()

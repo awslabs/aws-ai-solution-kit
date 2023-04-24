@@ -349,7 +349,7 @@ def generate_on_cloud():
         "username": "test",
         "checkpoint_info":checkpoint_info,
         "models":{
-            "space_free_size": 2e10,
+            "space_free_size": 4e10,
             "Stable-diffusion": selected_sd_model,
             "ControlNet": selected_cn_model,
             "hypernetworks": selected_hypernets,
@@ -414,7 +414,7 @@ def generate_on_cloud():
         "task": "text-to-image", 
         "checkpoint_info":checkpoint_info,
         "models":{
-            "space_free_size": 2e10,
+            "space_free_size": 4e10,
             "Stable-diffusion": selected_sd_model,
             "ControlNet": [],
             "hypernetworks": selected_hypernets,

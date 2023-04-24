@@ -165,16 +165,16 @@ def get_bucket_and_key(s3uri):
         return bucket, key
 
 
-models_type_list = ['Stable-diffusion', 'Hypernetworks', 'Lora', 'ControlNet', 'embeddings']
+models_type_list = ['Stable-diffusion', 'hypernetworks', 'Lora', 'ControlNet', 'embeddings']
 models_used_count = {key: ModelsRef() for key in models_type_list}
 models_path = {key: None for key in models_type_list}
 models_path['Stable-diffusion'] = 'models/Stable-diffusion'
 models_path['ControlNet'] = 'models/ControlNet'
-models_path['Hypernetworks'] = 'models/hypernetworks'
+models_path['hypernetworks'] = 'models/hypernetworks'
 models_path['Lora'] = 'models/Lora'
 models_path['embeddings'] = 'embeddings'
-disk_path = '/tmp'
-
+#disk_path = '/tmp'
+disk_path = '/'
 def checkspace_and_update_models(selected_models, checkpoint_info):
     models_num = len(models_type_list)
     space_free_size = selected_models['space_free_size']
