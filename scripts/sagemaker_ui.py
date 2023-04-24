@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 import html
 import boto3
+
+import json
+import requests
+import base64
 from urllib.parse import urljoin
 
 import gradio as gr
@@ -297,16 +301,6 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
     refresh_all_models()
 
     return plaintext_to_html(log)
-
-import json
-import requests
-from sagemaker.predictor import Predictor
-from sagemaker.predictor_async import AsyncPredictor
-from sagemaker.serializers import JSONSerializer
-from sagemaker.deserializers import JSONDeserializer
-from sagemaker.async_inference.waiter_config import WaiterConfig
-from sagemaker.async_inference.async_inference_response import AsyncInferenceResponse
-import base64
 
 def generate_on_cloud():
     print(f"ccheckpiont_info {checkpoint_info}")
