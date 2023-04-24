@@ -5,8 +5,15 @@ COPY stable-diffusion-webui /opt/ml/code/
 COPY inference/serve /opt/ml/code
 RUN mkdir -p /root/.cache/huggingface/accelerate
 COPY inference/default_config.yaml /root/.cache/huggingface/accelerate/
+RUN mkdir -p /opt/ml/code/tools
+RUN wget https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -O /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz
+RUN tar xzvf /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz -C /opt/ml/code/tools/
+RUN pip install shutil
 # RUN pip install --upgrade pip
 # RUN pip install sagemaker==2.143.0
+
+#RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt \
+#    && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 
 # RUN pip install -r /opt/ml/code/requirements.txt
 # RUN pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt
@@ -14,8 +21,6 @@ COPY inference/default_config.yaml /root/.cache/huggingface/accelerate/
 # ENV PYTHONPATH="/opt/ml/code:${PYTHONPATH}"
 # RUN python /opt/ml/code/prepare_env.py
 RUN echo "/opt/ml/code" > "/opt/conda/lib/python3.9/site-packages/packages.pth"
-RUN pip install --upgrade pip
-RUN pip install fastapi
 # RUN python /opt/ml/code/prepare_env.py
 # RUN python /opt/ml/code/extensions/sd-webui-controlnet/install.py
 
@@ -24,6 +29,9 @@ WORKDIR /opt/ml/code
 # ENV PATH="$PATH:/opt/ml/code"
 
 # ENV SAGEMAKER_PROGRAM sagemaker_dreambooth_train.py
+
+RUN mkdir /opt/ml/code/models
+RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
 
 # test for api mode
 # RUN python /opt/ml/code/launch.py --nowebui --skip-torch-cuda-test --port 8080  --listen --xformers
