@@ -149,7 +149,7 @@ async def run_sagemaker_inference(request: Request):
     response = inference_table.put_item(
         Item={
             'InferenceJobId': inference_id,
-            'dateTime': current_time,
+            'startTime': current_time,
             'status': 'inprogress'
         })
     

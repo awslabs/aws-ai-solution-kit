@@ -5,7 +5,6 @@ import io
 import json
 import logging
 import os
-import shutil
 import traceback
 import zipfile
 import time
@@ -166,19 +165,17 @@ def get_bucket_and_key(s3uri):
         return bucket, key
 
 
-models_type_list = ['sd', 'hypernetwork', 'lora', 'controlnet', 'embedding']
+models_type_list = ['Stable-diffusion', 'Hypernetworks', 'Lora', 'ControlNet', 'embeddings']
 models_used_count = {key: ModelsRef() for key in models_type_list}
 models_path = {key: None for key in models_type_list}
-models_path['sd'] = 'models/Stable-diffusion'
-models_path['controlnet'] = 'models/ControlNet'
-models_path['hypernetwork'] = 'models/hypernetworks'
-models_path['lora'] = 'models/Lora'
-models_path['embedding'] = 'embeddings'
+models_path['Stable-diffusion'] = 'models/Stable-diffusion'
+models_path['ControlNet'] = 'models/ControlNet'
+models_path['Hypernetworks'] = 'models/hypernetworks'
+models_path['Lora'] = 'models/Lora'
+models_path['embeddings'] = 'embeddings'
 disk_path = '/dev/root'
 
-def checkspace_and_update_models(selected_models):
-    bucket = selected_models['bucket']
-    s3_base_dir = selected_models['base_dir']
+def checkspace_and_update_models(selected_models, checkpoint_info):
     models_num = len(models_type_list)
     space_free_size = selected_models['space_free_size']
     for type_id in range(models_num):
@@ -190,7 +187,8 @@ def checkspace_and_update_models(selected_models):
             if selected_model_name in local_models:
                 continue
             else:
-                total, used, free = shutil.disk_usage(disk_path)
+                st = os.statvfs('/')
+                free = (st.f_bavail * st.f_frsize)
                 print('!!!!!!!!!!!!current free space is', free)
                 if free < space_free_size:
                     #### delete least used model to get more space ########
@@ -209,7 +207,8 @@ def checkspace_and_update_models(selected_models):
                             else:
                                 os.remove(os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
-                                total, used, free = shutil.disk_usage(disk_path)
+                                st = os.statvfs('/')
+                                free = (st.f_bavail * st.f_frsize)
                                 if free > space_free_size:
                                     space_check_succese = True
                                     break
@@ -219,36 +218,31 @@ def checkspace_and_update_models(selected_models):
                         print('can not get enough space to download models!!!!!!')
                         return
                 ####down load models######
-                download_and_update(model_type, selected_model_name, bucket, s3_base_dir)
+                selected_model_s3_pos = checkpoint_info[model_type][selected_model_name] 
+                download_and_update(model_type, selected_model_name, selected_model_s3_pos)
     
-    shared.opts.sd_model_checkpoint = selected_models['sd'][0]
+    shared.opts.sd_model_checkpoint = selected_models['Stable-diffusion'][0]
     sd_models.reload_model_weights()
     sd_vae.reload_vae_weights()
 
 
-def download_and_update(model_type, model_name, bucket,s3_base_dir):
-    if model_type == 'sd':
-        #download from s3
-        config_file = os.path.splitext(model_name)[0] + '.yaml'
-        config_path = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, models_path[model_type], config_file)
-        os.system(f'./tools/s5cmd cp {config_path} {models_path[model_type]}')       
-        model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, models_path[model_type], model_name)
-        os.system(f'./tools/s5cmd cp {model_data} {models_path[model_type]}')
+def download_and_update(model_type, model_name, model_s3_pos):
+    #download from s3
+    os.system(f'./tools/s5cmd cp {model_s3_pos} ./')
+    os.system(f"tar xvf {model_name}")
+    if model_type == 'Stable-diffusion':
         sd_models.list_models()
-    else:
-        model_data = "s3://{0}/{1}/{2}/{3}".format(bucket, s3_base_dir, models_path[model_type], model_name)
-        os.system(f'./tools/s5cmd cp {model_data} {models_path[model_type]}')
-        if model_type == 'hypernetwork':
-            shared.reload_hypernetworks()
-        if model_type == 'embedding':
-            sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings(force_reload=True)
-        if model_type == 'controlnet':
-            controlnet_script_path = './extensions/sd-webui-controlnet/scripts/controlnet.py'
-            sys.path.append("extensions/sd-webui-controlnet")
-            base_scripts.current_basedir = './extensions/sd-webui-controlnet/'
-            script_loading.load_module(controlnet_script_path)
-            sys.path.remove("extensions/sd-webui-controlnet")
-            base_scripts.current_basedir = paths.script_path
+    if model_type == 'hypernetworks':
+        shared.reload_hypernetworks()
+    if model_type == 'embeddings':
+        sd_hijack.model_hijack.embedding_db.load_textual_inversion_embeddings(force_reload=True)
+    if model_type == 'ControlNet':
+        controlnet_script_path = './extensions/sd-webui-controlnet/scripts/controlnet.py'
+        sys.path.append("extensions/sd-webui-controlnet")
+        base_scripts.current_basedir = './extensions/sd-webui-controlnet/'
+        script_loading.load_module(controlnet_script_path)
+        sys.path.remove("extensions/sd-webui-controlnet")
+        base_scripts.current_basedir = paths.script_path
 
 def post_invocations(selected_models, b64images):
     #generated_images_s3uri = os.environ.get('generated_images_s3uri', None)
@@ -292,7 +286,8 @@ def sagemaker_api(_, app: FastAPI):
 
         if req.task == 'text-to-image' or req.task == 'controlnet_txt2img':
             selected_models = req.models
-            checkspace_and_update_models(selected_models)
+            checkpoint_info = req.checkpoint_info
+            checkspace_and_update_models(selected_models, checkpoint_info)
 
         try:
             if req.task == 'text-to-image':

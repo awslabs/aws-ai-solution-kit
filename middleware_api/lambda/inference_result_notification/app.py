@@ -4,6 +4,7 @@ import boto3
 import base64
 import os
 from PIL import Image
+from datetime import datetime
 
 s3_resource = boto3.resource('s3')
 s3_client = boto3.client('s3')
@@ -49,6 +50,12 @@ def update_inference_job_table(inference_id, key, value):
         ReturnValues="UPDATED_NEW"
     )
 
+def get_curent_time():
+    # Get the current time
+    now = datetime.now()
+    formatted_time = now.strftime("%Y-%m-%d-%H-%M-%S")
+    return formatted_time
+
 def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
     # If S3 object_name was not specified, use file_name
     if object_name is None:
@@ -78,6 +85,7 @@ def lambda_handler(event, context):
         print(f"Complete invocation!")
         endpoint_name = message["requestParameters"]["endpointName"]
         update_inference_job_table(inference_id, 'status', 'succeed')
+        update_inference_job_table(inference_id, 'completeTime', get_curent_time())
         
         output_location = message["responseParameters"]["outputLocation"]
 
