@@ -5,7 +5,6 @@ import io
 import json
 import logging
 import os
-import shutil
 import traceback
 import zipfile
 import time
@@ -188,7 +187,8 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
             if selected_model_name in local_models:
                 continue
             else:
-                total, used, free = shutil.disk_usage(disk_path)
+                st = os.statvfs('/')
+                free = (st.f_bavail * st.f_frsize)
                 print('!!!!!!!!!!!!current free space is', free)
                 if free < space_free_size:
                     #### delete least used model to get more space ########
@@ -207,7 +207,8 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
                             else:
                                 os.remove(os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
-                                total, used, free = shutil.disk_usage(disk_path)
+                                st = os.statvfs('/')
+                                free = (st.f_bavail * st.f_frsize)
                                 if free > space_free_size:
                                     space_check_succese = True
                                     break
