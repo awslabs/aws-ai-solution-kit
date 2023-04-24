@@ -82,24 +82,6 @@ def update_sagemaker_endpoints():
             aaa_value = obj["EndpointDeploymentJobId"]
             sagemaker_endpoints.append(aaa_value)
 
-
-def update_sd_checkpoints():
-    model_type = "Stable-diffusion"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-
-
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
 
@@ -144,80 +126,45 @@ def download_images(image_urls: list, local_directory: str):
         else:
             print(f"Error downloading image {url}: {response.status_code}")
     return image_list
+
+def get_model_list_by_type(model_type):
+    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
+    response = requests.get(url=url, headers={'x-api-key': api_key})
+    json_response = response.json()
+    # print(f"response url json for model {model_type} is {json_response}")
+
+    if "checkpoints" not in json_response.keys():
+        return []
+
+    checkpoint_list = []
+    for ckpt in json_response["checkpoints"]:
+        ckpt_type = ckpt["type"]
+        for ckpt_name in ckpt["name"]:
+            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
+            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+            checkpoint_list.append(ckpt_name)
+
+    return checkpoint_list
+
+def update_sd_checkpoints():
+    model_type = "Stable-diffusion"
+    return get_model_list_by_type(model_type)
     
 def get_texual_inversion_list():
     model_type = "embeddings"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
+    return get_model_list_by_type(model_type)
 
 def get_lora_list():
     model_type = "Lora"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-
+    return get_model_list_by_type(model_type)
     
 def get_hypernetwork_list():
-#    global hyperNetwork_list 
-#    hyperNetwork_list = list(checkpoint_info["hypernetworks"].keys())
     model_type = "hypernetworks"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-#    response = server_request('inference/get-hypernetwork-list')
-#    r = response.json()
-#    hyperNetwork_list = []
-#    for obj in r:
-#        aaa_value = str(obj)
-#        hyperNetwork_list.append(aaa_value)
-
+    return get_model_list_by_type(model_type)
     
 def get_controlnet_model_list():
     model_type = "ControlNet"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
+    return get_model_list_by_type(model_type)
 
 def inference_update_func():
     root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
@@ -248,6 +195,8 @@ def refresh_all_models():
         response = requests.get(url=url, headers={'x-api-key': api_key})
         json_response = response.json()
         # print(f"response url json for model {rp} is {json_response}")
+        if "checkpoints" not in json_response.keys():
+            continue
         for ckpt in json_response["checkpoints"]:
             ckpt_type = ckpt["type"]
             for ckpt_name in ckpt["name"]:
