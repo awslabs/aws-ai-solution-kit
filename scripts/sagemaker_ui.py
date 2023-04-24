@@ -70,6 +70,11 @@ def server_request(path):
     print(f"response for rest api {response.json()}")
     return response
 
+def datetime_to_short_form(datetime_str):
+    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S.%f")
+    short_form = dt.strftime("%Y-%m-%d-%H-%M-%S")
+    return short_form
+
 def update_sagemaker_endpoints():
     global sagemaker_endpoints
 
@@ -78,8 +83,10 @@ def update_sagemaker_endpoints():
     sagemaker_endpoints = []
     
     for obj in r:
-        if "EndpointDeploymentJobId" in obj:
+        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success':
             aaa_value = obj["EndpointDeploymentJobId"]
+            datetime_string = datetime_to_short_form(obj['dateTime'])
+            aaa_value = f"{datetime_string}-{aaa_value}"
             sagemaker_endpoints.append(aaa_value)
 
 def update_txt2img_inference_job_ids():
@@ -220,11 +227,11 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         print(f"lp is {lp}")
         model_name = lp.split("/")[-1]
 
-        # exist_model_list = list(checkpoint_info[rp].keys())
+        exist_model_list = list(checkpoint_info[rp].keys())
 
-        # if model_name in exist_model_list:
-        #     print(f"!!!skip to upload duplicate model {model_name}")
-        #     continue
+        if model_name in exist_model_list:
+            print(f"!!!skip to upload duplicate model {model_name}")
+            continue
 
         payload = {
             "checkpoint_type": rp,
