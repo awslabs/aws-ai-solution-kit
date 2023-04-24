@@ -173,7 +173,7 @@ models_path['ControlNet'] = 'models/ControlNet'
 models_path['Hypernetworks'] = 'models/hypernetworks'
 models_path['Lora'] = 'models/Lora'
 models_path['embeddings'] = 'embeddings'
-disk_path = '/dev/root'
+disk_path = '/tmp'
 
 def checkspace_and_update_models(selected_models, checkpoint_info):
     models_num = len(models_type_list)
@@ -187,7 +187,7 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
             if selected_model_name in local_models:
                 continue
             else:
-                st = os.statvfs('/')
+                st = os.statvfs(disk_path)
                 free = (st.f_bavail * st.f_frsize)
                 print('!!!!!!!!!!!!current free space is', free)
                 if free < space_free_size:
@@ -207,7 +207,7 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
                             else:
                                 os.remove(os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
-                                st = os.statvfs('/')
+                                st = os.statvfs(disk_path)
                                 free = (st.f_bavail * st.f_frsize)
                                 if free > space_free_size:
                                     space_check_succese = True

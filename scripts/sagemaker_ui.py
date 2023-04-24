@@ -416,7 +416,7 @@ def generate_on_cloud():
         "models":{
             "space_free_size": 2e10,
             "Stable-diffusion": selected_sd_model,
-            "ControlNet": selected_cn_model,
+            "ControlNet": [],
             "hypernetworks": selected_hypernets,
             "Lora": selected_loras,
             "embeddings": selected_embeddings
