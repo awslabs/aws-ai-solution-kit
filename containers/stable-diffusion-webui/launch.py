@@ -19,7 +19,7 @@ python = sys.executable
 git = os.environ.get('GIT', "git")
 index_url = os.environ.get('INDEX_URL', "")
 stored_commit_hash = None
-skip_install = True
+skip_install = False
 dir_repos = "repositories"
 
 if 'GRADIO_ANALYTICS_ENABLED' not in os.environ:
