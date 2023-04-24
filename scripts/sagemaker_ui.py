@@ -212,6 +212,7 @@ def refresh_all_models():
         json_response = response.json()
         # print(f"response url json for model {rp} is {json_response}")
         if "checkpoints" not in json_response.keys():
+            checkpoint_info[rp] = {} 
             continue
         for ckpt in json_response["checkpoints"]:
             ckpt_type = ckpt["type"]
@@ -294,8 +295,8 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             log = f"\n finish upload {local_tar_path} to {s3_base}"
 
             os.system(f"rm {local_tar_path}")
-        except:
-            print(f"fail to upload model {lp}")
+        except Exception as e:
+            print(f"fail to upload model {lp}, error: {e}")
     
     print(f"Refresh checkpionts after upload...")
     refresh_all_models()
