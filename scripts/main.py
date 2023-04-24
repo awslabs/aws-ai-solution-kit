@@ -337,8 +337,13 @@ def get_cloud_model_snapshots():
     return ["ran", "swam", "slept"]
 
 def get_cloud_db_models():
-    url = get_variable_from_json('api_gateway_url') + "models"
+    api_gateway_url = get_variable_from_json('api_gateway_url')
     print("Get request for model list.")
+    if api_gateway_url is None:
+        print(f"failed to get the api_gateway_url, can not fetch date from remote")
+    return []
+
+    url = api_gateway_url + "models"
     response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
     model_name_list = []
     if "models" not in response:

@@ -135,6 +135,9 @@ def download_images(image_urls: list, local_directory: str):
     return image_list
 
 def get_model_list_by_type(model_type):
+    if api_gateway_url is None:
+        print(f"failed to get the api-gateway url, can not fetch remote data")
+        return []
     url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
     response = requests.get(url=url, headers={'x-api-key': api_key})
     json_response = response.json()
@@ -519,7 +522,7 @@ def create_ui():
     import modules.ui
 
     if get_variable_from_json('api_gateway_url') is not None:
-        # update_sagemaker_endpoints()
+        update_sagemaker_endpoints()
         refresh_all_models()
         get_texual_inversion_list()
         get_lora_list()
