@@ -289,7 +289,7 @@ def ui_tabs_callback():
                                     cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
 
                                 cloud_db_model_name.change(
-                                    # _js="clear_loaded",
+                                    _js="clear_loaded",
                                     fn=wrap_load_model_params,
                                     inputs=[cloud_db_model_name],
                                     outputs=[
@@ -306,7 +306,7 @@ def ui_tabs_callback():
                                 )
                                 cloud_db_create_model.click(
                                     fn=cloud_create_model,
-                                    # _js="db_start_create",
+                                    _js="db_start_create",
                                     inputs=[
                                         cloud_db_new_model_name,
                                         cloud_db_new_model_src,
