@@ -14,6 +14,27 @@ update patch for webui (PR 9319)
 ```
 accelerate launch --num_cpu_threads_per_process=6 launch.py --api
 
-# How to build docker image for dreambooth training on SageMaker
+```
 
-sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-extension
+# How to build images
+
+### Build public images for aigc-webui-utils which is used for light-weight CPU operations, like create_model in Dreambooth, merge_checkpoint.
+
+```
+sh build_and_push_utils_from_scratch.sh Dockerfile.utils.from_scratch aigc-webui-utils
+
+```
+
+### Build public images for aigc-webui-inference which is used for GPU operations, like txt2img inference.
+
+```
+sh build_and_push_inference_from_scratch.sh Dockerfile.inference.from_scratch aigc-webui-inference
+
+```
+
+### Build public images for aigc-webui-dreambooth-train which is used for training model in Dreambooth.
+
+```
+sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-dreambooth-train
+
+```

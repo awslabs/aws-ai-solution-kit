@@ -78,6 +78,21 @@ export class CreateTrainJobApi {
     newRole.addToPolicy(new aws_iam.PolicyStatement({
       effect: Effect.ALLOW,
       actions: [
+        's3:GetObject',
+        's3:PutObject',
+        's3:DeleteObject',
+        's3:ListBucket',
+      ],
+      // resources: ['arn:aws:s3:::*'],
+      resources: [`${this.s3Bucket.bucketArn}/*`,
+        'arn:aws:s3:::*SageMaker*',
+        'arn:aws:s3:::*Sagemaker*',
+        'arn:aws:s3:::*sagemaker*'],
+    }));
+
+    newRole.addToPolicy(new aws_iam.PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
         'logs:CreateLogGroup',
         'logs:CreateLogStream',
         'logs:PutLogEvents',

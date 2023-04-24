@@ -190,6 +190,8 @@ def inference_update_func():
 
 def refresh_all_models():
     print("Refresh checkpoints")
+    api_gateway_url = get_variable_from_json('api_gateway_url')
+    api_key = get_variable_from_json('api_token') 
     for rp, name in zip(checkpoint_type, checkpoint_name):
         url = api_gateway_url + f"checkpoints?status=Active&types={rp}"
         response = requests.get(url=url, headers={'x-api-key': api_key})
@@ -199,6 +201,7 @@ def refresh_all_models():
             continue
         for ckpt in json_response["checkpoints"]:
             ckpt_type = ckpt["type"]
+            checkpoint_info[ckpt_type] = {} 
             for ckpt_name in ckpt["name"]:
                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
                 checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
@@ -217,11 +220,11 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         print(f"lp is {lp}")
         model_name = lp.split("/")[-1]
 
-        exist_model_list = list(checkpoint_info[rp].keys())
+        # exist_model_list = list(checkpoint_info[rp].keys())
 
-        if model_name in exist_model_list:
-            print(f"!!!skip to upload duplicate model {model_name}")
-            continue
+        # if model_name in exist_model_list:
+        #     print(f"!!!skip to upload duplicate model {model_name}")
+        #     continue
 
         payload = {
             "checkpoint_type": rp,
@@ -235,37 +238,50 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
 
         response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
 
-        json_response = response.json()
-        #print(f"Response json {json_response}")
-        s3_base = json_response["checkpoint"]["s3_location"]
-        checkpoint_id = json_response["checkpoint"]["id"]
-        print(f"Upload to S3 {s3_base}")
-        print(f"Checkpoint ID: {checkpoint_id}")
+        try: 
+            json_response = response.json()
+            print(f"Response json {json_response}")
+            s3_base = json_response["checkpoint"]["s3_location"]
+            checkpoint_id = json_response["checkpoint"]["id"]
+            print(f"Upload to S3 {s3_base}")
+            print(f"Checkpoint ID: {checkpoint_id}")
 
-        s3_presigned_url = json_response["s3PresignUrl"][model_name]
-        # Upload src model to S3.
-        if rp != "embeddings" :
-            local_model_path_in_repo = f'models/{rp}/{model_name}'
-        else:
-            local_model_path_in_repo = f'{rp}/{model_name}'
-        local_tar_path = f'{model_name}.tar'
-        print("Pack the model file.")
-        os.system(f"cp -f {lp} {local_model_path_in_repo}")
-        os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
-        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            # Upload src model to S3.
+            if rp != "embeddings" :
+                local_model_path_in_repo = f'models/{rp}/{model_name}'
+            else:
+                local_model_path_in_repo = f'{rp}/{model_name}'
+            local_tar_path = f'{model_name}.tar'
+            print("Pack the model file.")
+            os.system(f"cp -f {lp} {local_model_path_in_repo}")
+            if rp == "Stable-diffusion":
+                model_yaml_name = model_name.split('.')[0] + ".yaml"
+                local_model_yaml_path = "/".join(lp.split("/")[:-1]) + f"/{model_yaml_name}"
+                local_model_yaml_path_in_repo = f"models/{rp}/{model_yaml_name}"
+                if os.path.isfile(local_model_yaml_path):
+                    os.system(f"cp -f {local_model_yaml_path} {local_model_yaml_path_in_repo}")
+                    os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo} {local_model_yaml_path_in_repo}")
+                else:
+                    os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
+            else:
+                os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
+            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
 
-        payload = {
-            "checkpoint_id": checkpoint_id,
-            "status": "Active"
-        }
-        # Start creating model on cloud.
-        response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
-        s3_input_path = s3_base
-        print(response)
+            payload = {
+                "checkpoint_id": checkpoint_id,
+                "status": "Active"
+            }
+            # Start creating model on cloud.
+            response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
+            s3_input_path = s3_base
+            print(response)
 
-        log = f"\n finish upload {local_tar_path} to {s3_base}"
+            log = f"\n finish upload {local_tar_path} to {s3_base}"
 
-        os.system(f"rm {local_tar_path}")
+            os.system(f"rm {local_tar_path}")
+        except:
+            print(f"fail to upload model {lp}")
     
     print(f"Refresh checkpionts after upload...")
     refresh_all_models()
@@ -543,7 +559,7 @@ def create_ui():
  
             with gr.Row():
                 gr.HTML(value="Extra Networks for Sagemaker Endpoint")
-                advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
+            #     advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
                 textual_inversion_dropdown = gr.Dropdown(multiselect=True, label="Textual Inversion", choices=sorted(get_texual_inversion_list()))
@@ -597,4 +613,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
