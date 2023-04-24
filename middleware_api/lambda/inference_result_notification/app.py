@@ -86,6 +86,7 @@ def lambda_handler(event, context):
         endpoint_name = message["requestParameters"]["endpointName"]
         update_inference_job_table(inference_id, 'status', 'succeed')
         update_inference_job_table(inference_id, 'completeTime', get_curent_time())
+        update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         
         output_location = message["responseParameters"]["outputLocation"]
 
@@ -136,5 +137,6 @@ def lambda_handler(event, context):
         print(f"Complete inference parameters {inference_parameters}")
     else:
         update_inference_job_table(inference_id, 'status', 'failed')
+        update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         print(f"Not complete invocation!")
     return message
