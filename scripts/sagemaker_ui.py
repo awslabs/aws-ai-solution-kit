@@ -220,11 +220,11 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         print(f"lp is {lp}")
         model_name = lp.split("/")[-1]
 
-        # exist_model_list = list(checkpoint_info[rp].keys())
+        exist_model_list = list(checkpoint_info[rp].keys())
 
-        # if model_name in exist_model_list:
-        #     print(f"!!!skip to upload duplicate model {model_name}")
-        #     continue
+        if model_name in exist_model_list:
+            print(f"!!!skip to upload duplicate model {model_name}")
+            continue
 
         payload = {
             "checkpoint_type": rp,
