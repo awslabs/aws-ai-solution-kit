@@ -60,7 +60,11 @@ class ModelsRef:
                     models_ref_tmp[key_value] = -1
                 else:
                     models_ref_tmp[key_value] = self.models_ref[key_value]
-            return sorted(models_ref_tmp.items(), key=lambda item: item[1])
+            models_sorted_info = sorted(models_ref_tmp.items(), key=lambda item: item[1])
+            models_sorted = []
+            for model_info in models_sorted_info:
+                models_sorted.append(model_info[0])
+            return models_sorted
 
 # sd_models_Ref = ModelsRef()
 # cn_models_Ref = ModelsRef()

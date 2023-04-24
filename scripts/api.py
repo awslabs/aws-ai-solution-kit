@@ -164,7 +164,7 @@ def get_bucket_and_key(s3uri):
         key = s3uri[pos + 1 : ]
         return bucket, key
 
-
+CN_MODEL_EXTS = [".pt", ".pth", ".ckpt", ".safetensors"]
 models_type_list = ['Stable-diffusion', 'hypernetworks', 'Lora', 'ControlNet', 'embeddings']
 models_used_count = {key: ModelsRef() for key in models_type_list}
 models_path = {key: None for key in models_type_list}
@@ -197,18 +197,21 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
                         type_id_check = (type_id + i)%models_num
                         type_check = models_type_list[type_id_check]
                         selected_models_name_check = selected_models[type_check]
-                        local_models_check = os.listdir(models_path[type_check])
+                        print(os.listdir(models_path[type_check]))
+                        local_models_check = [f for f in os.listdir(models_path[type_check]) if os.path.splitext(f)[1] in CN_MODEL_EXTS]
                         if len(local_models_check) == 0:
                             continue
-                        sorted_local_modles, sorted_count = models_used_count[type_check].get_sorted_models(local_models_check)
+                        sorted_local_modles = models_used_count[type_check].get_sorted_models(local_models_check)
                         for local_model in sorted_local_modles:
                             if local_model in selected_models_name_check:
                                 continue
                             else:
                                 os.remove(os.path.join(models_path[type_check], local_model))
+                                print('remove models', os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
                                 st = os.statvfs(disk_path)
                                 free = (st.f_bavail * st.f_frsize)
+                                print('!!!!!!!!!!!!current free space is', free)
                                 if free > space_free_size:
                                     space_check_succese = True
                                     break
