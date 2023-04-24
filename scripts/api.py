@@ -28,6 +28,7 @@ import modules.scripts as base_scripts
 from modules.hypernetworks import hypernetwork
 from modules.textual_inversion import textual_inversion
 import modules.shared as shared
+import modules.extras
 import sys
 sys.path.append("extensions/aws-ai-solution-kit")
 from scripts.models import *
@@ -179,6 +180,7 @@ def checkspace_and_update_models(selected_models):
     bucket = selected_models['bucket']
     s3_base_dir = selected_models['base_dir']
     models_num = len(models_type_list)
+    space_free_size = selected_models['space_free_size']
     for type_id in range(models_num):
         model_type = models_type_list[type_id]
         selected_models_name = selected_models[model_type]
@@ -190,7 +192,7 @@ def checkspace_and_update_models(selected_models):
             else:
                 total, used, free = shutil.disk_usage(disk_path)
                 print('!!!!!!!!!!!!current free space is', free)
-                if free < 2e10:
+                if free < space_free_size:
                     #### delete least used model to get more space ########
                     space_check_succese = False
                     for i in range(models_num):
@@ -208,7 +210,7 @@ def checkspace_and_update_models(selected_models):
                                 os.remove(os.path.join(models_path[type_check], local_model))
                                 models_used_count[type_check].remove_model_ref(local_model)
                                 total, used, free = shutil.disk_usage(disk_path)
-                                if free > 2e10:
+                                if free > space_free_size:
                                     space_check_succese = True
                                     break
                         if space_check_succese:
@@ -341,21 +343,22 @@ def sagemaker_api(_, app: FastAPI):
                 try:
                     db_create_model_payload = json.loads(req.db_create_model_payload)
                     job_id = db_create_model_payload["job_id"]
-                    s3_input_path = db_create_model_payload["s3_input_path"]
-                    input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
                     s3_output_path = db_create_model_payload["s3_output_path"]
                     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
                     output_path = get_path_from_s3_path(s3_output_path)
                     db_create_model_params = db_create_model_payload["param"]["create_model_params"]
-                    local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
-                    input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
-                    print("Check disk usage before download.")
-                    os.system("df -h")
-                    logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
-                    download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
-                    logger.info("Check disk usage after download.")
-                    os.system("df -h")
-                    print("Start creating model.")
+                    if not db_create_model_params['from_hub']:
+                        s3_input_path = db_create_model_payload["s3_input_path"]
+                        input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
+                        local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
+                        input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
+                        logging.info("Check disk usage before download.")
+                        os.system("df -h")
+                        logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
+                        download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
+                        logger.info("Check disk usage after download.")
+                        os.system("df -h")
+                    logging.info("Start creating model.")
                     # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
                     #                         params=db_create_model_params)
                     create_model_func_args = copy.deepcopy(db_create_model_params)
@@ -363,7 +366,9 @@ def sagemaker_api(_, app: FastAPI):
                     # create_model_func_args["ckpt_path"] = ckpt_path
                     local_response = create_model(**create_model_func_args)
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
-                    print("Upload tgt model to s3.")
+                    # print("Delete src model.")
+                    # os.system(f"rm -rf models/Stable-diffusion")
+                    logging.info("Upload tgt model to s3.")
                     upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
                     config_file = os.path.join(target_local_model_dir, "db_config.json")
                     with open(config_file, 'r') as openfile:
@@ -379,9 +384,9 @@ def sagemaker_api(_, app: FastAPI):
                         "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
                     }
                     # Clean up
-                    print("Delete tgt model.")
+                    logging.info("Delete tgt model.")
                     os.system(f"rm -rf models/dreambooth")
-                    print("Check disk usage after request.")
+                    logging.info("Check disk usage after request.")
                     os.system("df -h")
                     return response
                 except Exception as e:
@@ -392,6 +397,62 @@ def sagemaker_api(_, app: FastAPI):
                     }
                     logger.error(e)
                     return response
+        #     elif req.task == 'merge-checkpoint':
+        #         r"""
+        #         task: merge checkpoint
+        #         db_create_model_payload:
+        #             :s3_input_path: S3 path for download src model.
+        #             :s3_output_path: S3 path for upload generated model.
+        #             :job_id: job id.
+        #             :param
+        #                 :new_model_name: generated model name.
+        #                 :new_model_src: S3 path for download src model.
+        #                 :from_hub=False,
+        #                 :new_model_url="",
+        #                 :new_model_token="",
+        #                 :extract_ema=False,
+        #                 :train_unfrozen=False,
+        #                 :is_512=True,
+        #         """
+        #         try:
+        #             merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
+        #             def modelmerger(*args):
+        #                 try:
+        #                     results = modules.extras.run_modelmerger(*args)
+        #                 except Exception as e:
+        #                     print("Error loading/saving model file:", file=sys.stderr)
+        #                     print(traceback.format_exc(), file=sys.stderr)
+        #                     modules.sd_models.list_models()  # to remove the potentially missing models from the list
+        #                     return [*[gr.Dropdown.update(choices=modules.sd_models.checkpoint_tiles()) for _ in range(4)], f"Error merging checkpoints: {e}"]
+        #                 return results
+        #         primary_model_name, secondary_model_name, tertiary_model_name,
+        #         component_dict['sd_model_checkpoint'],
+        #         modelmerger_result,
+        # modelmerger_merge.click(
+        #     fn=wrap_gradio_gpu_call(modelmerger, extra_outputs=lambda: [gr.update() for _ in range(4)]),
+        #     _js='modelmerger',
+        #     inputs=[
+        #         dummy_component,
+        #         primary_model_name,
+        #         secondary_model_name,
+        #         tertiary_model_name,
+        #         interp_method,
+        #         interp_amount,
+        #         save_as_half,
+        #         custom_name,
+        #         checkpoint_format,
+        #         config_source,
+        #         bake_in_vae,
+        #         discard_weights,
+        #     ],
+        #     outputs=[
+        #         primary_model_name,
+        #         secondary_model_name,
+        #         tertiary_model_name,
+        #         component_dict['sd_model_checkpoint'],
+        #         modelmerger_result,
+        #     ]
+        # )
             else:
                 raise NotImplementedError
         except Exception as e:
@@ -399,7 +460,6 @@ def sagemaker_api(_, app: FastAPI):
 
     @app.get("/ping")
     def ping():
-        print('-------ping------')
         return {'status': 'Healthy'}
 
 def move_model_to_tmp(_, app: FastAPI):
@@ -408,18 +468,24 @@ def move_model_to_tmp(_, app: FastAPI):
     # print("Create model dir")
     # os.system("mkdir models")
     # Move model dir to /tmp
+    logging.info("Copy model dir to tmp")
     model_tmp_dir = f"models_{time.time()}"
     os.system(f"cp -rL models /tmp/{model_tmp_dir}")
     os.system(f"rm -rf models")
     # Delete tmp model dir
     # print("Delete tmp model dir")
     # os.system("rm -rf /tmp/models")
+    # Link model dir
+    logging.info("Link model dir")
+    os.system(f"ln -s /tmp/{model_tmp_dir} models")
+    logging.info("Check disk usage on app started")
+    os.system("df -h")
 
 try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    script_callbacks.on_app_started(move_model_to_tmp)
+    # script_callbacks.on_app_started(move_model_to_tmp)
     logger.debug("SD-Webui API layer loaded")
 except Exception as e:
     print(e)

@@ -46,8 +46,8 @@ fi
 
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
 #aws ecr get-login-password --region us-west-2 | docker login -u AWS --password-stdin 292282985366.dkr.ecr.us-west-2.amazonaws.com
-#aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
+#aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin 648149843064.dkr.ecr.us-east-1.amazonaws.com
 
 cp ${dockerfile} .
 
@@ -61,3 +61,9 @@ docker push ${fullname}
 echo $fullname
 
 # rm webui.tar.gz
+
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+# fullname="public.ecr.aws/v1y2w4o9/${image}:latest"
+fullname="public.ecr.aws/e2t2y5y0/${image}:latest"
+docker tag ${image} ${fullname}
+docker push ${fullname}
