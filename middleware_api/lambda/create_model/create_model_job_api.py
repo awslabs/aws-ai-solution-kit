@@ -114,6 +114,7 @@ def list_all_models_api(event, context):
             'id': model.id,
             'model_name': name,
             'params': model.params,
+            'status': model.job_status.value,
             'output_s3_location': model.output_s3_location
         })
     return {

@@ -158,7 +158,9 @@ class DynamoDbUtilsService:
         elif isinstance(val, dict):
             res = {}
             for key, val in val.items():
-                res[key] = DynamoDbUtilsService._convert(val)
+                if val is not None:
+                    res[key] = DynamoDbUtilsService._convert(val)
+
             return {'M': res}
         else:
             raise Exception(f'unknown type {val} at type: {type(val)}')

@@ -24,6 +24,8 @@ sys.path.append("extensions/aws-ai-solution-kit")
 sys.path.append("extensions/aws-ai-solution-kit/scripts")
 # TODO: Do not use the dreambooth status module.
 from dreambooth.shared import status
+from dreambooth import shared as dreambooth_shared
+# from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
 from dreambooth_sagemaker.train import start_sagemaker_training
 from dreambooth.ui_functions import load_model_params
 import sagemaker_ui
@@ -36,6 +38,8 @@ txt2img_gallery = None
 txt2img_generation_info = None
 txt2img_html_info = None
 job_link_list = []
+
+base_model_folder = "models/sagemaker_dreambooth/"
 
 class SageMakerUI(scripts.Script):
     def title(self):
@@ -106,10 +110,10 @@ def on_after_component_callback(component, **_kwargs):
     if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
         txt2img_show_hook = "finish"
         sagemaker_ui.inference_job_dropdown.change(
-                    fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
-                    inputs=[sagemaker_ui.inference_job_dropdown],
-                    outputs=[txt2img_gallery]
-                )
+            fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
+            inputs=[sagemaker_ui.inference_job_dropdown],
+            outputs=[txt2img_gallery]
+        )
         # print("Create inference job dropdown callback")
         # txt2img_show_hook = "finish"
         # sagemaker_ui.inference_job_dropdown.change(
@@ -286,7 +290,7 @@ def ui_tabs_callback():
 
                                 cloud_db_model_name.change(
                                     # _js="clear_loaded",
-                                    fn=load_model_params,
+                                    fn=wrap_load_model_params,
                                     inputs=[cloud_db_model_name],
                                     outputs=[
                                         cloud_db_model_path,
@@ -341,9 +345,9 @@ def get_cloud_db_models():
     print("Get request for model list.")
     if api_gateway_url is None:
         print(f"failed to get the api_gateway_url, can not fetch date from remote")
-    return []
+        return []
 
-    url = api_gateway_url + "models"
+    url = api_gateway_url + "models?types=dreambooth&status=Complete"
     response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
     model_name_list = []
     if "models" not in response:
@@ -355,12 +359,15 @@ def get_cloud_db_models():
             model_name_list.append(model['model_name'])
             db_config = params['resp']['config_dict']
             # TODO:
+            model_dir = f"{base_model_folder}/{model['model_name']}"
+
             for k in db_config:
                 if type(db_config[k]) is str:
                     db_config[k] = db_config[k].replace("/opt/ml/code/", "")
-            model_dir = f"models/dreambooth/{model['model_name']}"
+                    db_config[k] = db_config[k].replace("models/dreambooth/", base_model_folder)
+
             if not os.path.exists(model_dir):
-                os.mkdir(model_dir)
+                os.makedirs(model_dir, exist_ok=True)
             with open(f"{model_dir}/db_config.json", "w") as db_config_file:
                 json.dump(db_config, db_config_file)
     print(response)
@@ -373,6 +380,14 @@ def get_sd_cloud_models():
     for key in sd_list:
         names.append(key)
     return names
+
+def wrap_load_model_params(modelname):
+    origin_model_path = dreambooth_shared.dreambooth_models_path
+    setattr(dreambooth_shared, 'dreambooth_models_path', base_model_folder)
+    resp = load_model_params(modelname)
+    setattr(dreambooth_shared, 'dreambooth_models_path', origin_model_path)
+    return resp
+
 
 def async_create_model_on_sagemaker(
         new_model_name: str,
