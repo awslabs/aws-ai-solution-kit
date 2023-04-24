@@ -13,6 +13,7 @@ EXECUTION_ROLE = role_response['Role']
 ASYNC_SUCCESS_TOPIC = os.environ["SNS_INFERENCE_SUCCESS"]
 ASYNC_ERROR_TOPIC = os.environ["SNS_INFERENCE_ERROR"]
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+INFERENCE_ECR_IMAGE_URL = os.environ.get("INFERENCE_ECR_IMAGE_URL")
 
 def lambda_handler(event, context):
     # Parse the input data
@@ -24,12 +25,12 @@ def lambda_handler(event, context):
     sagemaker_endpoint_config = f"infer-config-{str_uuid}"
     sagemaker_endpoint_name = f"infer-endpoint-{str_uuid}"
 
-    image_url = "489670441870.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-extension:latest"
+    image_url = INFERENCE_ECR_IMAGE_URL 
     model_data_url = f"s3://{S3_BUCKET_NAME}/data/model.tar.gz"
 
-    s3_output_path = f"s3://{S3_BUCKET_NAME}/out/"
+    s3_output_path = f"s3://{S3_BUCKET_NAME}/sagemaker_output/"
     initial_instance_count = 1
-    instance_type = 'ml.g4dn.1xlarge'
+    instance_type = 'ml.g4dn.xlarge'
 
     print('Creating model resource ...')
     create_model(sagemaker_model_name, image_url, model_data_url)

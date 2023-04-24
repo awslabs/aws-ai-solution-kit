@@ -15,6 +15,7 @@ export interface SagemakerInferenceProps {
     s3_bucket_name: string;
     endpointDeploymentJobName: string;
     userNotifySNS: sns.Topic; 
+    inference_ecr_url: string;
 }
 
 export class SagemakerInferenceStateMachine {
@@ -29,7 +30,8 @@ export class SagemakerInferenceStateMachine {
             props.inferenceJobName,
             props.s3_bucket_name,
             props.endpointDeploymentJobName,
-            props.userNotifySNS
+            props.userNotifySNS,
+            props.inference_ecr_url
         ).stateMachineArn;
     }
 
@@ -39,7 +41,8 @@ export class SagemakerInferenceStateMachine {
         inferenceJobName: string,
         s3BucketName: string,
         endpointDeploymentJobName: string,
-        userNotifySNS: sns.Topic
+        userNotifySNS: sns.Topic,
+        inference_ecr_url: string,
     ): stepfunctions.StateMachine {
         const lambdaPolicy = // Grant Lambda permission to invoke SageMaker endpoint
             new iam.PolicyStatement({
@@ -79,7 +82,8 @@ export class SagemakerInferenceStateMachine {
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
                     DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
                     SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
-                    S3_BUCKET_NAME: s3BucketName
+                    S3_BUCKET_NAME: s3BucketName,
+                    INFERENCE_ECR_IMAGE_URL: inference_ecr_url
                 },
             }
         );
@@ -105,7 +109,8 @@ export class SagemakerInferenceStateMachine {
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
                     DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
                     SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
-                    S3_BUCKET_NAME: s3BucketName
+                    S3_BUCKET_NAME: s3BucketName,
+                    INFERENCE_ECR_IMAGE_URL: inference_ecr_url
                 },
             }
         );
@@ -128,7 +133,8 @@ export class SagemakerInferenceStateMachine {
                     DDB_INFERENCE_TABLE_NAME: inferenceJobName,
                     DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME: endpointDeploymentJobName,
                     SNS_NOTIFY_TOPIC_ARN: userNotifySNS.topicArn,
-                    S3_BUCKET_NAME: s3BucketName
+                    S3_BUCKET_NAME: s3BucketName,
+                    INFERENCE_ECR_IMAGE_URL: inference_ecr_url
                 },
             }
         );

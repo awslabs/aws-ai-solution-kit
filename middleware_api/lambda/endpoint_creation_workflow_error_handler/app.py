@@ -22,7 +22,7 @@ def lambda_handler(event, context):
     print(f"Received event: {event}")
 
     # Extract the 'endpoint_creation_job_id' from the event
-    endpoint_creation_job_id = event['endpoint_creation_job_id']
+    endpoint_creation_job_id = event['endpoint_deployment_id']
 
     # Extract the error information
     error_info = event.get('error_info', 'Unknown error')
