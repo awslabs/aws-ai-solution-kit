@@ -43,19 +43,25 @@ then
     fi
 fi
 
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 763104351884.dkr.ecr.us-east-1.amazonaws.com
-aws ecr get-login-password --region us-west-2 | docker login -u AWS --password-stdin 292282985366.dkr.ecr.us-west-2.amazonaws.com
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
-public_ecr="public.ecr.aws/l7s6x2w8/aigc-webui-inference"
-public_ecr=2
+if [ "$image" == "aigc-webui-utils" ]; then
+    repo_id="l7s6x2w8"
+elif [ "$image" == "aigc-webui-inference" ]; then
+    repo_id="123"
+elif [ "$image" == "aigc-webui-dreambooth-train" ]; then
+    repo_id="321"
+fi
 
-echo $public_ecr | sed 's/PUBLIC_WEBUI_ECR/cat -/e' Dockerfile.update_private_ecr > Dockerfile
+repo_name=${image}
+complete_command="FROM public.ecr.aws/${repo_id}/${repo_name}"
 
-# docker build  -t ${image} -f Dockerfile .
-# docker tag ${image} ${fullname}
+echo $complete_command
 
-# docker push ${fullname}
-# echo $fullname
+echo $complete_command > Dockerfile
 
-# rm Dockerfile
+docker build  -t ${image} -f Dockerfile .
+docker tag ${image} ${fullname}
+
+docker push ${fullname}
+echo $fullname

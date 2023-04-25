@@ -66,15 +66,25 @@ public_repo="initial"
 
 desc_output=$(aws ecr-public describe-repositories --repository-name ${image} --region us-east-1 2>&1)
 
-if [ $? -ne 0 ]
+if echo ${desc_output} | grep -q RepositoryNotFoundException
 then
-    if echo ${desc_output} | grep -q RepositoryNotFoundException
-    then
-            public_repo=$(aws ecr-public create-repository --repository-name ${image} --region us-east-1 | jq --raw-output '.repository.repositoryUri')
-    else
-            public_repo=$(aws ecr-public describe-repositories --repository-name ${image} --region us-east-1 | jq --raw-output '.repositories[].repositoryUri')
-    fi
+        public_repo=$(aws ecr-public create-repository --repository-name ${image} --region us-east-1 | jq --raw-output '.repository.repositoryUri')
+else
+        public_repo=$(aws ecr-public describe-repositories --repository-name ${image} --region us-east-1 | jq --raw-output '.repositories[].repositoryUri')
 fi
+
+# if [ $? -ne 0 ]
+# then
+#     echo "debug!!"
+#     if echo ${desc_output} | grep -q RepositoryNotFoundException
+#     then
+#             public_repo=$(aws ecr-public create-repository --repository-name ${image} --region us-east-1 | jq --raw-output '.repository.repositoryUri')
+#     else
+#             public_repo=$(aws ecr-public describe-repositories --repository-name ${image} --region us-east-1 | jq --raw-output '.repositories[].repositoryUri')
+#     fi
+# else
+#     echo "-ne"
+# fi
 
 echo $public_repo
 
