@@ -47,8 +47,15 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 aws ecr get-login-password --region us-west-2 | docker login -u AWS --password-stdin 292282985366.dkr.ecr.us-west-2.amazonaws.com
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
-docker build  -t ${image} -f Dockerfile .
-docker tag ${image} ${fullname}
+public_ecr="public.ecr.aws/l7s6x2w8/aigc-webui-inference"
+public_ecr=2
 
-docker push ${fullname}
-echo $fullname
+echo $public_ecr | sed 's/PUBLIC_WEBUI_ECR/cat -/e' Dockerfile.update_private_ecr > Dockerfile
+
+# docker build  -t ${image} -f Dockerfile .
+# docker tag ${image} ${fullname}
+
+# docker push ${fullname}
+# echo $fullname
+
+# rm Dockerfile

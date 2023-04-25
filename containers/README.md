@@ -38,3 +38,10 @@ sh build_and_push_inference_from_scratch.sh Dockerfile.inference.from_scratch ai
 sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-dreambooth-train
 
 ```
+
+### Update public ecr to your private ecr
+
+```
+sh build_and_push.sh aigc-webui-utils|aigc-webui-inference|aigc-webui-dreambooth-train
+
+```
