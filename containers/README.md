@@ -42,6 +42,6 @@ sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch 
 ### Update public ecr to your private ecr
 
 ```
-sh build_and_push.sh aigc-webui-utils|aigc-webui-inference|aigc-webui-dreambooth-train
+sh update_private_ecr.sh aigc-webui-utils|aigc-webui-inference|aigc-webui-dreambooth-train
 
 ```
