@@ -395,62 +395,72 @@ def sagemaker_api(_, app: FastAPI):
                     }
                     logger.error(e)
                     return response
-        #     elif req.task == 'merge-checkpoint':
-        #         r"""
-        #         task: merge checkpoint
-        #         db_create_model_payload:
-        #             :s3_input_path: S3 path for download src model.
-        #             :s3_output_path: S3 path for upload generated model.
-        #             :job_id: job id.
-        #             :param
-        #                 :new_model_name: generated model name.
-        #                 :new_model_src: S3 path for download src model.
-        #                 :from_hub=False,
-        #                 :new_model_url="",
-        #                 :new_model_token="",
-        #                 :extract_ema=False,
-        #                 :train_unfrozen=False,
-        #                 :is_512=True,
-        #         """
-        #         try:
-        #             merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
-        #             def modelmerger(*args):
-        #                 try:
-        #                     results = modules.extras.run_modelmerger(*args)
-        #                 except Exception as e:
-        #                     print("Error loading/saving model file:", file=sys.stderr)
-        #                     print(traceback.format_exc(), file=sys.stderr)
-        #                     modules.sd_models.list_models()  # to remove the potentially missing models from the list
-        #                     return [*[gr.Dropdown.update(choices=modules.sd_models.checkpoint_tiles()) for _ in range(4)], f"Error merging checkpoints: {e}"]
-        #                 return results
-        #         primary_model_name, secondary_model_name, tertiary_model_name,
-        #         component_dict['sd_model_checkpoint'],
-        #         modelmerger_result,
-        # modelmerger_merge.click(
-        #     fn=wrap_gradio_gpu_call(modelmerger, extra_outputs=lambda: [gr.update() for _ in range(4)]),
-        #     _js='modelmerger',
-        #     inputs=[
-        #         dummy_component,
-        #         primary_model_name,
-        #         secondary_model_name,
-        #         tertiary_model_name,
-        #         interp_method,
-        #         interp_amount,
-        #         save_as_half,
-        #         custom_name,
-        #         checkpoint_format,
-        #         config_source,
-        #         bake_in_vae,
-        #         discard_weights,
-        #     ],
-        #     outputs=[
-        #         primary_model_name,
-        #         secondary_model_name,
-        #         tertiary_model_name,
-        #         component_dict['sd_model_checkpoint'],
-        #         modelmerger_result,
-        #     ]
-        # )
+            elif req.task == 'merge-checkpoint':
+                r"""
+                task: merge checkpoint
+                db_create_model_payload:
+                    :s3_input_path: S3 path for download src model.
+                    :s3_output_path: S3 path for upload generated model.
+                    :job_id: job id.
+                    :param
+                        :new_model_name: generated model name.
+                        :new_model_src: S3 path for download src model.
+                        :from_hub=False,
+                        :new_model_url="",
+                        :new_model_token="",
+                        :extract_ema=False,
+                        :train_unfrozen=False,
+                        :is_512=True,
+                """
+                try:
+                    def modelmerger(*args):
+                        try:
+                            results = modules.extras.run_modelmerger(*args)
+                        except Exception as e:
+                            print(f"Error loading/saving model file: {e}")
+                            # print(traceback.format_exc(), file=sys.stderr)
+                            # modules.sd_models.list_models()  # to remove the potentially missing models from the list
+                            return [None, None, None, f"Error merging checkpoints: {e}"]
+                        return results
+
+                    merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
+                    primary_model_name = merge_checkpoint_payload["primary_model_name"]
+                    secondary_model_name = merge_checkpoint_payload["secondary_model_name"]
+                    tertiary_model_name = merge_checkpoint_payload["teritary_model_name"]
+                    interp_method = merge_checkpoint_payload["interp_method"]
+                    interp_amount = merge_checkpoint_payload["interp_amount"]
+                    save_as_half = merge_checkpoint_payload["save_as_half"]
+                    custom_name = merge_checkpoint_payload["custom_name"]
+                    checkpoint_format = merge_checkpoint_payload["checkpoint_format"]
+                    config_source = merge_checkpoint_payload["config_source"]
+                    bake_in_vae = merge_checkpoint_payload["bake_in_vae"]
+                    discard_weights = merge_checkpoint_payload["discard_weights"]
+
+                    # upload checkpoints from cloud to local variable
+                    
+                    checkpoint_info = req.checkpoint_info
+                    sd_models.list_models()
+
+                    [primary_model_name, secondary_model_name, tertiary_model_name, component_dict_sd_model_checkpoints, modelmerger_result] = \
+                        modelmerger("fake_id_task", primary_model_name, secondary_model_name, tertiary_model_name, \
+                        interp_method, interp_amount, save_as_half, custom_name, checkpoint_format, config_source, \
+                        bake_in_vae, discard_weights)
+                    
+                    output_model_position = modelmerger_result[21:] 
+
+                    print(f"output model path is {output_model_position}")
+                    
+                    # upload merge results , merge task info to s3
+
+                    response = {
+                        "id": job_id,
+                        "statusCode": 200,
+                        "message": output_model_position,
+                    }
+                    return response
+
+                except Exception as e:
+                    traceback.print_exc()
             else:
                 raise NotImplementedError
         except Exception as e:
