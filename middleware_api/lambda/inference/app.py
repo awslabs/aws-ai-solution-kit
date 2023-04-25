@@ -235,6 +235,25 @@ async def get_inference_job_image_output(jobID: str = None) -> List[str]:
 
     return presigned_urls
 
+@app.get("/inference/get-inference-job-param-output")
+async def get_inference_job_param_output(jobID: str = None) -> List[str]:
+    inference_jobId = jobID
+
+    if inference_jobId is None or inference_jobId.strip() == "":
+        logger.info(f"jobId is empty string or None, just return empty string list")
+        return [] 
+
+    logger.info(f"Entering get_inference_job_param_output function with jobId: {inference_jobId}")
+
+    job_record = getInferenceJob(inference_jobId)
+
+    presigned_url = ""
+
+    json_key = f"out/{inference_jobId}/result/{inference_jobId}_param.json"
+    presigned_url = generate_presigned_url(S3_BUCKET_NAME, json_key)
+
+    return [presigned_url]
+
 def generate_presigned_url(bucket_name: str, key: str, expiration=3600) -> str:
     try:
         response = s3.generate_presigned_url(

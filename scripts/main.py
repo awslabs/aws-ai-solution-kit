@@ -113,7 +113,7 @@ def on_after_component_callback(component, **_kwargs):
         sagemaker_ui.inference_job_dropdown.change(
             fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
             inputs=[sagemaker_ui.inference_job_dropdown],
-            outputs=[txt2img_gallery]
+            outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
         # print("Create inference job dropdown callback")
         # txt2img_show_hook = "finish"
