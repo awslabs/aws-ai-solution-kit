@@ -46,11 +46,11 @@ fi
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
 if [ "$image" == "aigc-webui-utils" ]; then
-    repo_id="l7s6x2w8"
+    repo_id="xxx"
 elif [ "$image" == "aigc-webui-inference" ]; then
-    repo_id="123"
+    repo_id="l7s6x2w8"
 elif [ "$image" == "aigc-webui-dreambooth-train" ]; then
-    repo_id="321"
+    repo_id="xxx"
 fi
 
 repo_name=${image}

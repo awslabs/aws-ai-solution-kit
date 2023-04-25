@@ -1,1 +1,1 @@
-FROM public.ecr.aws/321/aigc-webui-dreambooth-train
+FROM public.ecr.aws/l7s6x2w8/aigc-webui-inference
