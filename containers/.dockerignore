@@ -1,10 +1,9 @@
 stable-diffusion-webui/dataset
 stable-diffusion-webui/repositories
 stable-diffusion-webui/outputs
+stable-diffusion-webui/models
 stable-diffusion-webui/venv
 stable-diffusion-webui/.git
-stable-diffusion-webui/embeddings
-stable-diffusion-webui/models
 stable-diffusion-webui/tmp
 stable-diffusion-webui/cache.json
 stable-diffusion-webui/config.json

@@ -1,8 +1,13 @@
 FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-cpu-py39-ubuntu20.04-sagemaker
 
 COPY stable-diffusion-webui /opt/ml/code/
+COPY utils/serve /opt/ml/code
+RUN mkdir -p /root/.cache/huggingface/accelerate
+COPY utils/default_config.yaml /root/.cache/huggingface/accelerate/
 
 RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt \
     && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 
 WORKDIR /opt/ml/code
+
+ENTRYPOINT ["python", "/opt/ml/code/serve"]

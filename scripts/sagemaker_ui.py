@@ -4,6 +4,10 @@ import os
 from pathlib import Path
 import html
 import boto3
+
+import json
+import requests
+import base64
 from urllib.parse import urljoin
 
 import gradio as gr
@@ -70,6 +74,11 @@ def server_request(path):
     print(f"response for rest api {response.json()}")
     return response
 
+def datetime_to_short_form(datetime_str):
+    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S.%f")
+    short_form = dt.strftime("%Y-%m-%d-%H-%M-%S")
+    return short_form
+
 def update_sagemaker_endpoints():
     global sagemaker_endpoints
 
@@ -78,27 +87,11 @@ def update_sagemaker_endpoints():
     sagemaker_endpoints = []
     
     for obj in r:
-        if "EndpointDeploymentJobId" in obj:
+        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success':
             aaa_value = obj["EndpointDeploymentJobId"]
+            datetime_string = datetime_to_short_form(obj['startTime'])
+            aaa_value = f"{datetime_string}-{aaa_value}"
             sagemaker_endpoints.append(aaa_value)
-
-
-def update_sd_checkpoints():
-    model_type = "Stable-diffusion"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
@@ -127,6 +120,25 @@ def get_inference_job_image_output(inference_job_id):
         txt2img_inference_job_image_list.append(aaa_value)
     return txt2img_inference_job_image_list
 
+def get_inference_job_param_output(inference_job_id):
+    response = server_request(f'inference/get-inference-job-param-output?jobID={inference_job_id}')
+    r = response.json()
+    txt2img_inference_job_param_list = []
+    for obj in r:
+        aaa_value = str(obj)
+        txt2img_inference_job_param_list.append(aaa_value)
+    return txt2img_inference_job_param_list 
+
+    # json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
+
+    # f = open(json_file)
+
+    # log_file = json.load(f)
+
+    # info_text = log_file["info"]
+
+    # infotexts = json.loads(info_text)["infotexts"][0]
+
 def download_images(image_urls: list, local_directory: str):
     if not os.path.exists(local_directory):
         os.makedirs(local_directory)
@@ -144,80 +156,48 @@ def download_images(image_urls: list, local_directory: str):
         else:
             print(f"Error downloading image {url}: {response.status_code}")
     return image_list
+
+def get_model_list_by_type(model_type):
+    if api_gateway_url is None:
+        print(f"failed to get the api-gateway url, can not fetch remote data")
+        return []
+    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
+    response = requests.get(url=url, headers={'x-api-key': api_key})
+    json_response = response.json()
+    # print(f"response url json for model {model_type} is {json_response}")
+
+    if "checkpoints" not in json_response.keys():
+        return []
+
+    checkpoint_list = []
+    for ckpt in json_response["checkpoints"]:
+        ckpt_type = ckpt["type"]
+        for ckpt_name in ckpt["name"]:
+            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
+            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+            checkpoint_list.append(ckpt_name)
+
+    return checkpoint_list
+
+def update_sd_checkpoints():
+    model_type = "Stable-diffusion"
+    return get_model_list_by_type(model_type)
     
 def get_texual_inversion_list():
     model_type = "embeddings"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
+    return get_model_list_by_type(model_type)
 
 def get_lora_list():
     model_type = "Lora"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-
+    return get_model_list_by_type(model_type)
     
 def get_hypernetwork_list():
-#    global hyperNetwork_list 
-#    hyperNetwork_list = list(checkpoint_info["hypernetworks"].keys())
     model_type = "hypernetworks"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
-#    response = server_request('inference/get-hypernetwork-list')
-#    r = response.json()
-#    hyperNetwork_list = []
-#    for obj in r:
-#        aaa_value = str(obj)
-#        hyperNetwork_list.append(aaa_value)
-
+    return get_model_list_by_type(model_type)
     
 def get_controlnet_model_list():
     model_type = "ControlNet"
-    url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-    response = requests.get(url=url, headers={'x-api-key': api_key})
-    json_response = response.json()
-    # print(f"response url json for model {model_type} is {json_response}")
-    checkpoint_list = []
-    for ckpt in json_response["checkpoints"]:
-        ckpt_type = ckpt["type"]
-        for ckpt_name in ckpt["name"]:
-            ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name)
-
-    return checkpoint_list
+    return get_model_list_by_type(model_type)
 
 def inference_update_func():
     root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
@@ -243,13 +223,19 @@ def inference_update_func():
 
 def refresh_all_models():
     print("Refresh checkpoints")
+    api_gateway_url = get_variable_from_json('api_gateway_url')
+    api_key = get_variable_from_json('api_token') 
     for rp, name in zip(checkpoint_type, checkpoint_name):
         url = api_gateway_url + f"checkpoints?status=Active&types={rp}"
         response = requests.get(url=url, headers={'x-api-key': api_key})
         json_response = response.json()
         # print(f"response url json for model {rp} is {json_response}")
+        if "checkpoints" not in json_response.keys():
+            checkpoint_info[rp] = {} 
+            continue
         for ckpt in json_response["checkpoints"]:
             ckpt_type = ckpt["type"]
+            checkpoint_info[ckpt_type] = {} 
             for ckpt_name in ckpt["name"]:
                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
                 checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
@@ -282,56 +268,59 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
 
         url = api_gateway_url + "checkpoint"
 
-        print("Post request for upload s3 presign url.")
+        print(f"Post request for upload s3 presign url: {url}")
 
         response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
 
-        json_response = response.json()
-        # print(f"Response json {json_response}")
-        s3_base = json_response["checkpoint"]["s3_location"]
-        checkpoint_id = json_response["checkpoint"]["id"]
-        print(f"Upload to S3 {s3_base}")
-        print(f"Checkpoint ID: {checkpoint_id}")
+        try: 
+            json_response = response.json()
+            print(f"Response json {json_response}")
+            s3_base = json_response["checkpoint"]["s3_location"]
+            checkpoint_id = json_response["checkpoint"]["id"]
+            print(f"Upload to S3 {s3_base}")
+            print(f"Checkpoint ID: {checkpoint_id}")
 
-        s3_presigned_url = json_response["s3PresignUrl"][model_name]
-        # Upload src model to S3.
-        if rp != "embeddings" :
-            local_model_path_in_repo = f'models/{rp}/{model_name}'
-        else:
-            local_model_path_in_repo = f'{rp}/{model_name}'
-        local_tar_path = f'{model_name}.tar'
-        print("Pack the model file.")
-        os.system(f"cp -f {lp} {local_model_path_in_repo}")
-        os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
-        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            # Upload src model to S3.
+            if rp != "embeddings" :
+                local_model_path_in_repo = f'models/{rp}/{model_name}'
+            else:
+                local_model_path_in_repo = f'{rp}/{model_name}'
+            local_tar_path = f'{model_name}.tar'
+            print("Pack the model file.")
+            os.system(f"cp -f {lp} {local_model_path_in_repo}")
+            if rp == "Stable-diffusion":
+                model_yaml_name = model_name.split('.')[0] + ".yaml"
+                local_model_yaml_path = "/".join(lp.split("/")[:-1]) + f"/{model_yaml_name}"
+                local_model_yaml_path_in_repo = f"models/{rp}/{model_yaml_name}"
+                if os.path.isfile(local_model_yaml_path):
+                    os.system(f"cp -f {local_model_yaml_path} {local_model_yaml_path_in_repo}")
+                    os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo} {local_model_yaml_path_in_repo}")
+                else:
+                    os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
+            else:
+                os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
+            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
 
-        payload = {
-            "checkpoint_id": checkpoint_id,
-            "status": "Active"
-        }
-        # Start creating model on cloud.
-        response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
-        s3_input_path = s3_base
-        print(response)
+            payload = {
+                "checkpoint_id": checkpoint_id,
+                "status": "Active"
+            }
+            # Start creating model on cloud.
+            response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
+            s3_input_path = s3_base
+            print(response)
 
-        log = f"\n finish upload {local_tar_path} to {s3_base}"
+            log = f"\n finish upload {local_tar_path} to {s3_base}"
 
-        os.system(f"rm {local_tar_path}")
+            os.system(f"rm {local_tar_path}")
+        except Exception as e:
+            print(f"fail to upload model {lp}, error: {e}")
     
     print(f"Refresh checkpionts after upload...")
     refresh_all_models()
 
     return plaintext_to_html(log)
-
-import json
-import requests
-from sagemaker.predictor import Predictor
-from sagemaker.predictor_async import AsyncPredictor
-from sagemaker.serializers import JSONSerializer
-from sagemaker.deserializers import JSONDeserializer
-from sagemaker.async_inference.waiter_config import WaiterConfig
-from sagemaker.async_inference.async_inference_response import AsyncInferenceResponse
-import base64
 
 def generate_on_cloud():
     print(f"ccheckpiont_info {checkpoint_info}")
@@ -341,13 +330,13 @@ def generate_on_cloud():
     # use txt2imgConfig.json instead of ui-config.json
     with open("ui-config.json") as f:
         params_dict = json.load(f)
-    #print(f"Current parameters are {params_dict}")
+    # print(f"Current parameters are {params_dict}")
 
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
         controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
-        controlnet_module = params_dict['txt2img/Preprocessor/value']#'openpose'
-        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']#['control_openpose-fp16.safetensors']
+        controlnet_module = params_dict['txt2img/Preprocessor/value']
+        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
 
         with open(controlnet_image_path, "rb") as img:
@@ -357,6 +346,7 @@ def generate_on_cloud():
     selected_hypernets = params_dict['customscript/main.py/txt2img/HyperNetwork/value']#['mjv4Hypernetwork_v1.pt']
     selected_loras = params_dict['customscript/main.py/txt2img/LoRA/value'] #['cuteGirlMix4_v10.safetensors']
     selected_embeddings = params_dict['customscript/main.py/txt2img/Textual Inversion/value'] #['pureerosface_v1.pt']
+    print(str(selected_embeddings))
     prompt = params_dict['txt2img/Prompt/value']
     for embedding in selected_embeddings:
         prompt = prompt + embedding
@@ -378,15 +368,14 @@ def generate_on_cloud():
         "endpoint_name": endpoint_name,
         "task": "controlnet_txt2img", 
         "username": "test",
+        "checkpoint_info":checkpoint_info,
         "models":{
-           "space_free_size": 2e10,
-            "bucket": "sagemaker-us-west-2-725399406069",
-            "base_dir": "stable-diffusion-webui",
-            "sd": selected_sd_model,
-            "controlnet": selected_cn_model,
-            "hypernetwork": selected_hypernets,
-            "lora": selected_loras,
-            "embedding": selected_embeddings
+            "space_free_size": 4e10,
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": selected_cn_model,
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
         },
         "controlnet_txt2img_payload":{ 
             "enable_hr": "False", 
@@ -444,15 +433,14 @@ def generate_on_cloud():
         payload = {
         "endpoint_name": endpoint_name,
         "task": "text-to-image", 
+        "checkpoint_info":checkpoint_info,
         "models":{
-            "space_free_size": 2e10,
-            "bucket": "sagemaker-us-west-2-725399406069",
-            "base_dir": "stable-diffusion-webui",
-            "sd": selected_sd_model,
-            "controlnet": [],
-            "hypernetwork": selected_hypernets,
-            "lora": selected_loras,
-            "embedding": selected_embeddings
+            "space_free_size": 2e9,
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": [],
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
         },
         "txt2img_payload": {
             "enable_hr": "False", 
@@ -537,19 +525,37 @@ def fake_gan(selected_value: str ):
         images = get_inference_job_image_output(inference_job_id)
         image_list = []
         image_list = download_images(images,f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
+
+        inference_pram_json_list = get_inference_job_param_output(inference_job_id)
+        json_list = []
+        json_list = download_images(inference_pram_json_list, f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
+
         print(f"{str(images)}")
-                        
+        print(f"{str(inference_pram_json_list)}")
+
+        json_file = f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/{inference_job_id}_param.json"
+
+        f = open(json_file)
+
+        log_file = json.load(f)
+
+        info_text = log_file["info"]
+
+        infotexts = json.loads(info_text)["infotexts"][0]
     else:
         image_list = []  # Return an empty list if selected_value is None
+        json_list = []
+        info_text = ''
 
-    return image_list
+    return image_list, info_text, plaintext_to_html(infotexts)
+    # return image_list
 
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
     import modules.ui
 
     if get_variable_from_json('api_gateway_url') is not None:
-        # update_sagemaker_endpoints()
+        update_sagemaker_endpoints()
         refresh_all_models()
         get_texual_inversion_list()
         get_lora_list()
@@ -596,7 +602,7 @@ def create_ui():
  
             with gr.Row():
                 gr.HTML(value="Extra Networks for Sagemaker Endpoint")
-                advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
+            #     advanced_model_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(sd_checkpoints)}, "refresh_sd_checkpoints")
             
             with gr.Row():
                 textual_inversion_dropdown = gr.Dropdown(multiselect=True, label="Textual Inversion", choices=sorted(get_texual_inversion_list()))
@@ -650,4 +656,4 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, advanced_model_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
