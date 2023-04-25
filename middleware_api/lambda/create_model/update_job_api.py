@@ -2,8 +2,10 @@ import json
 import logging
 import os
 from dataclasses import dataclass
+from typing import Any
 
 import boto3
+from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
@@ -30,10 +32,11 @@ stepfunctions_client = StepFunctionUtilsService(logger=logger)
 class Event:
     model_id: str
     status: str
+    multi_parts_tags: Any
 
 
 # PUT /model
-def update_train_job_api(raw_event, context):
+def update_model_job_api(raw_event, context):
     event = Event(**raw_event)
 
     try:
@@ -53,6 +56,26 @@ def update_train_job_api(raw_event, context):
             field_name='job_status',
             value=event.status
         )
+        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+        if 'multipart_upload' in model_job.params:
+            multipart = model_job.params['multipart_upload']
+            for filename, val in multipart.items():
+                # todo: can add s3 MD5 check here to see if file is upload properly
+                event.multi_parts_tags.sort(key=lambda x: x['PartNumber'])
+                response = s3.complete_multipart_upload(
+                    Bucket=val['bucket'],
+                    Key=val['key'],
+                    MultipartUpload={'Parts': event.multi_parts_tags},
+                    UploadId=val['upload_id']
+                )
+                print(f'complete upload multipart response {response}')
+                response = s3.abort_multipart_upload(
+                    Bucket=val['bucket'],
+                    Key=val['key'],
+                    UploadId=val['upload_id']
+                )
+                print(f'abort upload multipart response {response}')
+
 
         return resp
     except ClientError as e:

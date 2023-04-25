@@ -120,6 +120,25 @@ def get_inference_job_image_output(inference_job_id):
         txt2img_inference_job_image_list.append(aaa_value)
     return txt2img_inference_job_image_list
 
+def get_inference_job_param_output(inference_job_id):
+    response = server_request(f'inference/get-inference-job-param-output?jobID={inference_job_id}')
+    r = response.json()
+    txt2img_inference_job_param_list = []
+    for obj in r:
+        aaa_value = str(obj)
+        txt2img_inference_job_param_list.append(aaa_value)
+    return txt2img_inference_job_param_list 
+
+    # json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
+
+    # f = open(json_file)
+
+    # log_file = json.load(f)
+
+    # info_text = log_file["info"]
+
+    # infotexts = json.loads(info_text)["infotexts"][0]
+
 def download_images(image_urls: list, local_directory: str):
     if not os.path.exists(local_directory):
         os.makedirs(local_directory)
@@ -506,12 +525,30 @@ def fake_gan(selected_value: str ):
         images = get_inference_job_image_output(inference_job_id)
         image_list = []
         image_list = download_images(images,f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
+
+        inference_pram_json_list = get_inference_job_param_output(inference_job_id)
+        json_list = []
+        json_list = download_images(inference_pram_json_list, f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
+
         print(f"{str(images)}")
-                        
+        print(f"{str(inference_pram_json_list)}")
+
+        json_file = f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/{inference_job_id}_param.json"
+
+        f = open(json_file)
+
+        log_file = json.load(f)
+
+        info_text = log_file["info"]
+
+        infotexts = json.loads(info_text)["infotexts"][0]
     else:
         image_list = []  # Return an empty list if selected_value is None
+        json_list = []
+        info_text = ''
 
-    return image_list
+    return image_list, info_text, plaintext_to_html(infotexts)
+    # return image_list
 
 def create_ui():
     global txt2img_gallery, txt2img_generation_info
@@ -544,6 +581,7 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
                 generate_on_cloud_button.click(
+                    _js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[],
                     outputs=[]

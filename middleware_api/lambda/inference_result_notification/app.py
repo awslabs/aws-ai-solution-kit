@@ -126,12 +126,12 @@ def lambda_handler(event, context):
         inference_parameters["inference_id"] = inference_id
         inference_parameters["sns_info"] = message
 
-        json_file_name = f"{inference_id}_param.json"
+        json_file_name = f"/tmp/{inference_id}_param.json"
 
         with open(json_file_name, "w") as outfile:
             json.dump(inference_parameters, outfile)
 
-        upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result")
+        upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result",f"{inference_id}_param.json")
         update_inference_job_table(inference_id, 'inference_info_name', json_file_name)
         
         print(f"Complete inference parameters {inference_parameters}")

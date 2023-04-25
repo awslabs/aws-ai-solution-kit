@@ -219,6 +219,11 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
+    const get_inference_job_param_output = inference.addResource('get-inference-job-param-output');
+    get_inference_job_param_output.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
     // Create a deployment for the API Gateway
     new apigw.Deployment(this, 'Deployment', {
         api: restful_api,

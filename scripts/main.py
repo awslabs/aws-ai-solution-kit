@@ -1,5 +1,6 @@
 import sagemaker
 import time
+import math
 import json
 import threading
 import requests
@@ -10,7 +11,7 @@ import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images, sd_models
 from modules.ui import create_refresh_button
-from utils import upload_file_to_s3_by_presign_url
+from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
 from utils import get_variable_from_json
 from utils import save_variable_to_json
 
@@ -113,7 +114,7 @@ def on_after_component_callback(component, **_kwargs):
         sagemaker_ui.inference_job_dropdown.change(
             fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
             inputs=[sagemaker_ui.inference_job_dropdown],
-            outputs=[txt2img_gallery]
+            outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
         # print("Create inference job dropdown callback")
         # txt2img_show_hook = "finish"
@@ -203,12 +204,12 @@ def ui_tabs_callback():
                                     with gr.Column(visible=True) as local_row:
                                         with gr.Row(visible=True):
                                             cloud_db_model_name = gr.Dropdown(
-                                                label="Model", choices=sorted(get_cloud_db_models())
+                                                label="Model", choices=sorted(get_cloud_db_model_name_list())
                                             )
                                             create_refresh_button(
                                                 cloud_db_model_name,
-                                                get_cloud_db_models,
-                                                lambda: {"choices": sorted(get_cloud_db_models())},
+                                                get_cloud_db_model_name_list,
+                                                lambda: {"choices": sorted(get_cloud_db_model_name_list())},
                                                 "refresh_db_models",
                                             )
                                     with gr.Row(visible=True):
@@ -350,14 +351,14 @@ def get_cloud_db_models():
 
     url = api_gateway_url + "models?types=dreambooth&status=Complete"
     response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
-    model_name_list = []
+    model_list = []
     if "models" not in response:
         return []
     for model in response["models"]:
         params = model['params']
         if 'resp' in params:
             model['model_name'] = params['resp']['config_dict']['model_name']
-            model_name_list.append(model['model_name'])
+            model_list.append(model)
             db_config = params['resp']['config_dict']
             # TODO:
             model_dir = f"{base_model_folder}/{model['model_name']}"
@@ -372,6 +373,11 @@ def get_cloud_db_models():
             with open(f"{model_dir}/db_config.json", "w") as db_config_file:
                 json.dump(db_config, db_config_file)
     print(response)
+    return model_list
+
+def get_cloud_db_model_name_list():
+    model_list = get_cloud_db_models()
+    model_name_list = [model['model_name'] for model in model_list]
     return model_name_list
 
 def get_sd_cloud_models():
@@ -382,13 +388,60 @@ def get_sd_cloud_models():
         names.append(key)
     return names
 
+def async_prepare_for_training_on_sagemaker(
+        model_id: str,
+        model_name: str,
+        s3_model_path: str,
+        data_path: str,
+        class_data_path: str,
+):
+    url = get_variable_from_json('api_gateway_url')
+    api_key = get_variable_from_json('api_token')
+    if url is None or api_key is None:
+        logging.error("Url or API-Key is not setting.")
+        return
+    url += "train"
+    upload_files = []
+    data_tar = f'data_{os.path.basename(data_path)}.tar'
+    print("Pack the data file.")
+    os.system(f"tar cvf {data_tar} {data_path}")
+    upload_files.append(data_tar)
+    if class_data_path:
+        class_data_tar = f'class_data_{os.path.basename(data_path)}.tar'
+        upload_files.append(class_data_tar)
+        print("Pack the class data file.")
+        os.system(f"tar cvf {class_data_tar} {data_path}")
+    db_config_path = f"models/dreambooth/{model_name}/db_config.json"
+    db_config_tar = f"db_config.tar"
+    os.system(f"tar cvf {db_config_tar} {db_config_path}")
+    upload_files.append(db_config_tar)
+    payload = {
+        "train_type": "dreambooth",
+        "model_id": model_id,
+        "filenames": upload_files,
+        "params": {
+            "training_params": {
+                "s3_model_path": s3_model_path,
+                "model_name": model_name,
+                "data_tar": data_tar,
+                "class_data_tar": class_data_tar,
+            }
+        }
+    }
+    print("Post request for upload s3 presign url.")
+    response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
+    json_response = response.json()
+    print(json_response)
+    for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+    return json_response
+
 def wrap_load_model_params(modelname):
     origin_model_path = dreambooth_shared.dreambooth_models_path
     setattr(dreambooth_shared, 'dreambooth_models_path', base_model_folder)
     resp = load_model_params(modelname)
     setattr(dreambooth_shared, 'dreambooth_models_path', origin_model_path)
     return resp
-
 
 def async_create_model_on_sagemaker(
         new_model_name: str,
@@ -411,16 +464,25 @@ def async_create_model_on_sagemaker(
     # Prepare for creating model on cloud.
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     local_tar_path = f'{ckpt_path}.tar'
+
+    part_size = 1000 * 1024 * 1024
+    file_size = os.stat(local_tar_path)
+    parts_number = math.ceil(file_size.st_size/part_size)
+
     payload = {
         "model_type": "dreambooth",
         "name": new_model_name,
-        "filenames": [local_tar_path],
+        "filenames": [{
+            "filename": local_tar_path,
+            "parts_number": parts_number
+        }],
         "params": {"create_model_params": params}
     }
     print("Post request for upload s3 presign url.")
     response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
     json_response = response.json()
     model_id = json_response["job"]["id"]
+    multiparts_tags=[]
     if not from_hub:
         print("Pack the model file.")
         os.system(f"tar cvf {local_tar_path} {local_model_path}")
@@ -428,11 +490,16 @@ def async_create_model_on_sagemaker(
         print(f"Upload to S3 {s3_base}")
         print(f"Model ID: {model_id}")
         # Upload src model to S3.
-        for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
-            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+        s3_signed_urls_resp = response.json()["s3PresignUrl"][local_tar_path]
+        multiparts_tags = upload_multipart_files_to_s3_by_signed_url(
+            local_tar_path,
+            s3_signed_urls_resp,
+            part_size
+        )
     payload = {
         "model_id": model_id,
-        "status": "Creating"
+        "status": "Creating",
+        "multi_parts_tags": multiparts_tags
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})

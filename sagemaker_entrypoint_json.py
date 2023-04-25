@@ -4,10 +4,16 @@ import threading
 import sys
 import time
 import pickle
+import logging
+import base64
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 import boto3
 from utils import download_file_from_s3, download_folder_from_s3, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
+from utils import get_bucket_name_from_s3_path, get_path_from_s3_path
 
+os.environ['IGNORE_CMD_ARGS_ERRORS'] = ""
 sys.path.append(os.path.join(os.getcwd(), "extensions/sd_dreambooth_extension"))
 from dreambooth.ui_functions import start_training
 from dreambooth.shared import status
@@ -64,60 +70,37 @@ def check_and_upload(local_path, bucket, s3_path):
         else:
             print(f'{local_path} is not exist')
 
-def prepare_for_training(bucket_name):
-    s3 = boto3.client('s3')
+def upload_model_to_s3(model_name, s3_output_path):
+    output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
+    local_path = os.path.join("Stable-diffusion", model_name)
+    upload_folder_to_s3_by_tar(local_path, output_bucket_name, s3_output_path)
+    return os.path.join(s3_output_path, f"{model_name}.tar")
 
-    # # Do this in the webui.
-    # model_dir = 'sagemaker_test'
-    # local_model_dir = f'models/dreambooth/{model_dir}'
-    # s3_model_dir = f'aigc-webui-test-model'
-    # upload_folder_to_s3(local_model_dir, bucket_name, s3_model_dir)
-    # model_config_file = open(f'{local_model_dir}/db_config.json')
-    # model_parameters = json.load(model_config_file)
-    # # Get data dir from the config file in the model dir.
-    # data_dir = model_parameters['concepts_list'][0]['instance_data_dir']
-    # local_data_dir = data_dir
-    # s3_data_dir = f'aigc-webui-test-data'
-    # upload_folder_to_s3(local_data_dir, bucket_name, s3_data_dir)
-    # parameters = {
-    #     'model_dir': model_dir,
-    #     'data_dir': data_dir,
-    #     'use_txt2img': True
-    #     }
-    # sm_params_conf_file_path = 'sagemaker_parameters.json'
-    # sm_params_conf_file = open(sm_params_conf_file_path, 'w')
-    # json.dump(parameters, sm_params_conf_file)
-    # sm_params_conf_file.close()
-    # sm_params_conf_file_s3_path = f'aigc-webui-test-config/{sm_params_conf_file_path}'
-    # upload_file_to_s3(sm_params_conf_file_path, bucket_name, sm_params_conf_file_s3_path)
+def hack_db_config(db_config, db_config_file_path):
+    for k in db_config:
+        if type(db_config[k]) is str:
+            db_config[k] = db_config[k].replace("/opt/ml/code/", "")
+    with open(db_config_file_path, "w") as db_config_file_w:
+        json.dump(db_config, db_config_file_w)
 
-    # Download config file.
-    print('Download config file from s3.')
-    download_file_from_s3(bucket_name, 'aigc-webui-test-config/sagemaker_parameters.json', 'sagemaker_parameters.json')
-    sm_params_conf_file = open("sagemaker_parameters.json")
-    parameters = json.load(sm_params_conf_file)
-    print(f'parameters: {parameters}')
-    job_id = parameters['job_id']
+def prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, class_data_tar):
+    model_bucket_name = get_bucket_name_from_s3_path(s3_model_path)
+    s3_model_path = os.path.join(get_path_from_s3_path(s3_model_path), f'{model_name}.tar')
+    logger.info(f"Download src model from s3 {model_bucket_name} {s3_model_path} {model_name}.tar")
+    print(f"Download src model from s3 {model_bucket_name} {s3_model_path} {model_name}.tar")
+    download_folder_from_s3_by_tar(model_bucket_name, s3_model_path, f'{model_name}.tar')
 
-    model_dir = parameters['model_dir']
-    s3_model_tar_path = f'aigc-webui-test-model/{job_id}/{model_dir}.tar'
-    local_model_dir = f'{model_dir}.tar'
-    print('Download model file from s3.')
-    download_folder_from_s3_by_tar(bucket_name, s3_model_tar_path, local_model_dir)
-    data_dir = parameters['data_dir']
-    s3_data_tar_path = f'aigc-webui-test-data/{job_id}/{data_dir}.tar'
-    local_data_dir = f'{data_dir}.tar'
-    print('Download data file from s3.')
-    download_folder_from_s3_by_tar(bucket_name, s3_data_tar_path, local_data_dir)
-    class_data_dir = parameters['class_data_dir']
-    if class_data_dir:
-        s3_data_tar_path = f'aigc-webui-test-data/{job_id}/{class_data_dir}.tar'
-        local_data_dir = f'{class_data_dir}.tar'
-        print('Download class data file from s3.')
-        download_folder_from_s3_by_tar(bucket_name, s3_data_tar_path, local_data_dir)
-    model_dir = parameters["model_dir"]
-    use_txt2img = parameters["use_txt2img"]
-    return job_id, model_dir, use_txt2img
+    input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
+    input_path = os.path.join(get_path_from_s3_path(s3_input_path), "db_config.tar")
+    logger.info(f"Download db_config from s3 {input_bucket_name} {input_path} db_config.tar")
+    download_folder_from_s3_by_tar(input_bucket_name, input_path, "db_config.tar")
+    input_path = os.path.join(get_path_from_s3_path(s3_input_path), data_tar)
+    logger.info(f"Download data from s3 {input_bucket_name} {input_path} {data_tar}")
+    download_folder_from_s3_by_tar(input_bucket_name, input_path, data_tar)
+    if class_data_tar:
+        input_path = os.path.join(get_path_from_s3_path(s3_input_path), class_data_tar)
+        logger.info(f"Download class data from s3 {input_bucket_name} {input_path} {class_data_tar}")
+        download_folder_from_s3_by_tar(input_bucket_name, input_path, class_data_tar)
 
 def sync_status(job_id, bucket_name, model_dir):
     local_samples_dir = f'models/dreambooth/{model_dir}/samples'
@@ -128,13 +111,53 @@ def sync_status(job_id, bucket_name, model_dir):
                                               f'aigc-webui-test-status/{job_id}/sagemaker_status.pickle'))
     sync_status_thread.start()
 
-def main():
-    bucket_name = "aws-gcr-csdc-atl-exp-us-west-2"
-    job_id, model_dir, use_txt2img = prepare_for_training(bucket_name)
-    sync_status(job_id, bucket_name, model_dir)
-    train(model_dir)
+def main(s3_input_path, s3_output_path, params):
+    params = params["training_params"]
+    model_name = params["model_name"]
+    s3_model_path = params["s3_model_path"]
+    data_tar = params["data_tar"]
+    if "class_data_tar" in params:
+        class_data_tar = params["class_data_tar"]
+    else:
+        class_data_tar = None
+    prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, class_data_tar)
+    # sync_status(job_id, bucket_name, model_dir)
+    train(model_name)
+
+def test():
+    model_name = "dreambooth_sagemaker_test"
+    s3_model_path = "s3://aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-model/db_test_4.tar"
+    s3_input_path = "s3://aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-data/dataset/"
+    s3_output_path = "s3://aws-gcr-csdc-atl-exp-us-west-2/aigc-webui-test-output/"
+    training_params = {
+        "training_params": {
+            "model_name": model_name,
+            "s3_model_path": s3_model_path,
+            "data_tar": "data_images.tar",
+            "class_data_tar": "class_data_images.tar" 
+        }
+    }
+    main(s3_input_path, s3_output_path, training_params)
+
+def parse_params(args):
+    def decode_base64(base64_message):
+        base64_bytes = base64_message.encode('ascii')
+        message_bytes = base64.b64decode(base64_bytes)
+        message = message_bytes.decode('ascii')
+        return message
+    s3_input_path = json.loads(decode_base64(args.s3_input_path))
+    s3_output_path = json.loads(decode_base64(args.s3_output_path))
+    params = json.loads(decode_base64(args.params))
+    return s3_input_path, s3_output_path, params
 
 if __name__ == "__main__":
-    main()
-    # local test
-    # train("dreambooth_sagemaker_test")
+    # test()
+    print(sys.argv)
+    import argparse
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--params", type=str)
+    parser.add_argument("--s3-input-path", type=str)
+    parser.add_argument("--s3-output-path", type=str)
+    args, _ = parser.parse_known_args()
+    s3_input_path, s3_output_path, training_params = parse_params(args)
+    main(s3_input_path, s3_output_path, training_params)
