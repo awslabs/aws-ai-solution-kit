@@ -198,12 +198,12 @@ def ui_tabs_callback():
                                     with gr.Column(visible=True) as local_row:
                                         with gr.Row(visible=True):
                                             cloud_db_model_name = gr.Dropdown(
-                                                label="Model", choices=sorted(get_cloud_db_models())
+                                                label="Model", choices=sorted(get_cloud_db_model_name_list())
                                             )
                                             create_refresh_button(
                                                 cloud_db_model_name,
-                                                get_cloud_db_models,
-                                                lambda: {"choices": sorted(get_cloud_db_models())},
+                                                get_cloud_db_model_name_list,
+                                                lambda: {"choices": sorted(get_cloud_db_model_name_list())},
                                                 "refresh_db_models",
                                             )
                                     with gr.Row(visible=True):
@@ -337,17 +337,17 @@ def get_cloud_model_snapshots():
     return ["ran", "swam", "slept"]
 
 def get_cloud_db_models():
-    url = get_variable_from_json('api_gateway_url') + "models"
+    url = get_variable_from_json('api_gateway_url') + "models?types=dreambooth&status=Complete"
     print("Get request for model list.")
     response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
-    model_name_list = []
+    model_list = []
     if "models" not in response:
         return []
     for model in response["models"]:
         params = model['params']
         if 'resp' in params:
             model['model_name'] = params['resp']['config_dict']['model_name']
-            model_name_list.append(model['model_name'])
+            model_list.append(model)
             db_config = params['resp']['config_dict']
             # TODO:
             for k in db_config:
@@ -359,6 +359,11 @@ def get_cloud_db_models():
             with open(f"{model_dir}/db_config.json", "w") as db_config_file:
                 json.dump(db_config, db_config_file)
     print(response)
+    return model_list
+
+def get_cloud_db_model_name_list():
+    model_list = get_cloud_db_models()
+    model_name_list = [model['model_name'] for model in model_list]
     return model_name_list
 
 def get_sd_cloud_models():
@@ -368,6 +373,49 @@ def get_sd_cloud_models():
     for key in sd_list:
         names.append(key)
     return names
+
+def async_prepare_for_training_on_sagemaker(
+        model_id: str,
+        model_name: str,
+        model_s3_path: str,
+        data_path: str,
+        class_data_path: str,
+):
+    url = get_variable_from_json('api_gateway_url')
+    api_key = get_variable_from_json('api_token')
+    if url is None or api_key is None:
+        logging.error("Url or API-Key is not setting.")
+        return
+    url += "train"
+    upload_files = []
+    data_tar = f'data_{os.path.basename(data_path)}.tar'
+    print("Pack the data file.")
+    os.system(f"tar cvf {data_tar} {data_path}")
+    upload_files.append(data_tar)
+    if class_data_path:
+        class_data_tar = f'class_data_{os.path.basename(data_path)}.tar'
+        upload_files.append(class_data_tar)
+        print("Pack the class data file.")
+        os.system(f"tar cvf {class_data_tar} {data_path}")
+    payload = {
+        "train_type": "dreambooth",
+        "model_id": model_id,
+        "filenames": upload_files,
+        "params": {
+            "training_params": {
+                "model_name": model_name,
+                "data_tar": data_tar,
+                "class_data_tar": class_data_tar
+            }
+        }
+    }
+    print("Post request for upload s3 presign url.")
+    response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
+    json_response = response.json()
+    print(json_response)
+    for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
+        upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+    return json_response
 
 def async_create_model_on_sagemaker(
         new_model_name: str,
