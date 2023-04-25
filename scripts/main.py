@@ -390,7 +390,7 @@ def get_sd_cloud_models():
 def async_prepare_for_training_on_sagemaker(
         model_id: str,
         model_name: str,
-        model_s3_path: str,
+        s3_model_path: str,
         data_path: str,
         class_data_path: str,
 ):
@@ -410,15 +410,20 @@ def async_prepare_for_training_on_sagemaker(
         upload_files.append(class_data_tar)
         print("Pack the class data file.")
         os.system(f"tar cvf {class_data_tar} {data_path}")
+    db_config_path = f"models/dreambooth/{model_name}/db_config.json"
+    db_config_tar = f"db_config.tar"
+    os.system(f"tar cvf {db_config_tar} {db_config_path}")
+    upload_files.append(db_config_tar)
     payload = {
         "train_type": "dreambooth",
         "model_id": model_id,
         "filenames": upload_files,
         "params": {
             "training_params": {
+                "s3_model_path": s3_model_path,
                 "model_name": model_name,
                 "data_tar": data_tar,
-                "class_data_tar": class_data_tar
+                "class_data_tar": class_data_tar,
             }
         }
     }
