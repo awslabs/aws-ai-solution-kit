@@ -1,5 +1,6 @@
 import sagemaker
 import time
+import math
 import json
 import threading
 import requests
@@ -10,7 +11,7 @@ import gradio as gr
 import modules.scripts as scripts
 from modules import shared, devices, script_callbacks, processing, masking, images, sd_models
 from modules.ui import create_refresh_button
-from utils import upload_file_to_s3_by_presign_url
+from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
 from utils import get_variable_from_json
 from utils import save_variable_to_json
 
@@ -458,16 +459,25 @@ def async_create_model_on_sagemaker(
     # Prepare for creating model on cloud.
     local_model_path = f'models/Stable-diffusion/{ckpt_path}'
     local_tar_path = f'{ckpt_path}.tar'
+
+    part_size = 1000 * 1024 * 1024
+    file_size = os.stat(local_tar_path)
+    parts_number = math.ceil(file_size.st_size/part_size)
+
     payload = {
         "model_type": "dreambooth",
         "name": new_model_name,
-        "filenames": [local_tar_path],
+        "filenames": [{
+            "filename": local_tar_path,
+            "parts_number": parts_number
+        }],
         "params": {"create_model_params": params}
     }
     print("Post request for upload s3 presign url.")
     response = requests.post(url=url, json=payload, headers={'x-api-key': api_key})
     json_response = response.json()
     model_id = json_response["job"]["id"]
+    multiparts_tags=[]
     if not from_hub:
         print("Pack the model file.")
         os.system(f"tar cvf {local_tar_path} {local_model_path}")
@@ -475,11 +485,16 @@ def async_create_model_on_sagemaker(
         print(f"Upload to S3 {s3_base}")
         print(f"Model ID: {model_id}")
         # Upload src model to S3.
-        for local_tar_path, s3_presigned_url in response.json()["s3PresignUrl"].items():
-            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+        s3_signed_urls_resp = response.json()["s3PresignUrl"][local_tar_path]
+        multiparts_tags = upload_multipart_files_to_s3_by_signed_url(
+            local_tar_path,
+            s3_signed_urls_resp,
+            part_size
+        )
     payload = {
         "model_id": model_id,
-        "status": "Creating"
+        "status": "Creating",
+        "multi_parts_tags": multiparts_tags
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})

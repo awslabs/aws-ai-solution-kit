@@ -18,7 +18,7 @@ class ModelsRef:
 
     def get_models_ref_dict(self):
         return self.models_ref
-    
+
     def add_models_ref(self, model_name):
         if model_name in self.models_ref:
             self.models_ref[model_name] += 1
@@ -31,7 +31,7 @@ class ModelsRef:
 
     def get_models_ref(self, model_name):
         return self.models_ref.get(model_name)
-    
+
     def get_least_ref_model(self):
         sorted_models = sorted(self.models_ref.items(), key=lambda item: item[1])
         if sorted_models:
@@ -39,7 +39,7 @@ class ModelsRef:
             return least_ref_model,least_counter
         else:
             return None,None
-    
+
     def pop_least_ref_model(self):
         sorted_models = sorted(self.models_ref.items(), key=lambda item: item[1])
         if sorted_models:
@@ -48,7 +48,7 @@ class ModelsRef:
             return least_ref_model,least_counter
         else:
             return None,None
-    
+
     def get_sorted_models(self, key_list=None):
         print('!!!!!!!!!!!', key_list)
         if key_list is None:
@@ -98,6 +98,28 @@ def upload_folder_to_s3_by_tar(local_folder_path, bucket_name, s3_folder_path):
 def upload_file_to_s3_by_presign_url(local_path, s3_presign_url):
     response = requests.put(s3_presign_url, open(local_path, "rb"))
     response.raise_for_status()
+
+def upload_multipart_files_to_s3_by_signed_url(local_path, signed_urls, part_size):
+
+    with open(local_path, "rb") as f:
+        parts = []
+        try:
+            for i, signed_url in enumerate(signed_urls):
+                file_data = f.read(part_size)
+                response = requests.put(signed_url, data=file_data)
+                etag = response.headers['ETag']
+                parts.append({
+                    'ETag': etag,
+                    'PartNumber': i + 1
+                })
+                print(f'model upload part {i+1}: {response}')
+            return parts
+        except Exception as e:
+            print(e)
+
+
+            # response = requests.put(s3_presign_url, open(local_path, "rb"))
+    # response.raise_for_status()
 
 def download_folder_from_s3(bucket_name, s3_folder_path, local_folder_path):
     s3_resource = boto3.resource('s3')
@@ -165,13 +187,13 @@ def fast_upload(session, bucketname, s3dir, filelist, progress_func=None, worker
 
 def save_variable_to_json(variable_name, variable_value, filename='sagemaker_ui.json'):
     data = {}
-    
+
     if os.path.exists(filename):
         with open(filename, 'r') as json_file:
             data = json.load(json_file)
-    
+
     data[variable_name] = variable_value
-    
+
     with open(filename, 'w') as json_file:
         json.dump(data, json_file)
 
@@ -182,9 +204,9 @@ def get_variable_from_json(variable_name, filename='sagemaker_ui.json'):
 
     with open(filename, 'r') as json_file:
         data = json.load(json_file)
-    
+
     variable_value = data.get(variable_name)
-    
+
     return variable_value
 
 if __name__ == '__main__':

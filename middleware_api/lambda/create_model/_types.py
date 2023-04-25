@@ -76,3 +76,9 @@ class TrainJob:
         if type(self.job_status) == str:
             self.job_status = TrainJobStatus[self.job_status]
 
+
+@dataclasses.dataclass
+class MultipartFileReq:
+    filename: str
+    parts_number: int
+
