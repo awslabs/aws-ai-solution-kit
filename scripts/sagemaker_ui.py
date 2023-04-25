@@ -416,11 +416,7 @@ def generate_on_cloud():
         "task": "text-to-image", 
         "checkpoint_info":checkpoint_info,
         "models":{
-<<<<<<< HEAD
-            "space_free_size": 4e10,
-=======
             "space_free_size": 2e9,
->>>>>>> [fix] fix async inference backend bugs
             "Stable-diffusion": selected_sd_model,
             "ControlNet": [],
             "hypernetworks": selected_hypernets,
