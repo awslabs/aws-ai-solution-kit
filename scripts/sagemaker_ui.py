@@ -581,6 +581,7 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
                 generate_on_cloud_button.click(
+                    _js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[],
                     outputs=[]

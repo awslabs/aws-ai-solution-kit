@@ -153,7 +153,7 @@ def _start_train_job(train_job_id: str):
         def json_encode_hyperparameters(hyperparameters):
             new_params = {}
             for k, v in hyperparameters.items():
-                json_v = json.dumps(v)
+                json_v = json.dumps(v, cls=DecimalEncoder)
                 v_bytes = json_v.encode('ascii')
                 base64_bytes = base64.b64encode(v_bytes)
                 base64_v = base64_bytes.decode('ascii')
@@ -163,8 +163,8 @@ def _start_train_job(train_job_id: str):
         hyperparameters = json_encode_hyperparameters({
             "sagemaker_program": "extensions/sd-webui-sagemaker/sagemaker_entrypoint_json.py",
             "params": train_job.params,
-            "s3_input_path": train_job.input_s3_location,
-            "s3_output_path": checkpoint.s3_location,
+            "s3-input-path": train_job.input_s3_location,
+            "s3-output-path": checkpoint.s3_location,
         })
 
         est = sagemaker.estimator.Estimator(
