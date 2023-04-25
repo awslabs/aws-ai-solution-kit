@@ -109,6 +109,7 @@ def on_after_component_callback(component, **_kwargs):
         # return test
     if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
         txt2img_show_hook = "finish"
+        print("guming debug>>>>>>>>>")
         sagemaker_ui.inference_job_dropdown.change(
             fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
             inputs=[sagemaker_ui.inference_job_dropdown],

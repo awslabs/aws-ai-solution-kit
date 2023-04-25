@@ -38,7 +38,7 @@ export class SDAsyncInferenceStack extends Stack {
 
   constructor(scope: Construct, id: string, props?: SDAsyncInferenceStackProps) {
     super(scope, id, props);
-    const srcImg = 'public.ecr.aws/l7s6x2w8/aigc-webui-inference:latest';
+    const srcImg = 'public.ecr.aws/t6q0v9n4/aigc-webui-inference:latest';
 
     const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'ImportedRestApi', {
       restApiId: props?.api_gate_way.restApiId ?? '',

@@ -175,7 +175,7 @@ async def deploy_sagemaker_endpoint(request: Request):
         response = endpoint_deployment_table.put_item(
         Item={
             'EndpointDeploymentJobId': endpoint_deployment_id,
-            'dateTime': current_time,
+            'startTime': current_time,
             'status': 'inprogress'
         })
 

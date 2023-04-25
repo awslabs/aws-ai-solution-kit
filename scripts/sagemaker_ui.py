@@ -89,7 +89,7 @@ def update_sagemaker_endpoints():
     for obj in r:
         if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success':
             aaa_value = obj["EndpointDeploymentJobId"]
-            datetime_string = datetime_to_short_form(obj['dateTime'])
+            datetime_string = datetime_to_short_form(obj['startTime'])
             aaa_value = f"{datetime_string}-{aaa_value}"
             sagemaker_endpoints.append(aaa_value)
 
@@ -311,7 +311,7 @@ def generate_on_cloud():
     # use txt2imgConfig.json instead of ui-config.json
     with open("ui-config.json") as f:
         params_dict = json.load(f)
-    #print(f"Current parameters are {params_dict}")
+    # print(f"Current parameters are {params_dict}")
 
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
@@ -327,6 +327,7 @@ def generate_on_cloud():
     selected_hypernets = params_dict['customscript/main.py/txt2img/HyperNetwork/value']#['mjv4Hypernetwork_v1.pt']
     selected_loras = params_dict['customscript/main.py/txt2img/LoRA/value'] #['cuteGirlMix4_v10.safetensors']
     selected_embeddings = params_dict['customscript/main.py/txt2img/Textual Inversion/value'] #['pureerosface_v1.pt']
+    print(str(selected_embeddings))
     prompt = params_dict['txt2img/Prompt/value']
     for embedding in selected_embeddings:
         prompt = prompt + embedding
@@ -415,7 +416,11 @@ def generate_on_cloud():
         "task": "text-to-image", 
         "checkpoint_info":checkpoint_info,
         "models":{
+<<<<<<< HEAD
             "space_free_size": 4e10,
+=======
+            "space_free_size": 2e9,
+>>>>>>> [fix] fix async inference backend bugs
             "Stable-diffusion": selected_sd_model,
             "ControlNet": [],
             "hypernetworks": selected_hypernets,

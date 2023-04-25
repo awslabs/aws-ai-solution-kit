@@ -25,7 +25,7 @@ def lambda_handler(event, context):
     endpoint_creation_job_id = event['endpoint_deployment_id']
 
     # Extract the error information
-    error_info = event.get('error_info', 'Unknown error')
+    error_info = event.get('error', 'Unknown error')
 
     # Update the DynamoDB table
     try:
