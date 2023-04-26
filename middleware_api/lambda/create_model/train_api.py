@@ -184,6 +184,7 @@ def _start_train_job(train_job_id: str):
         while not est._current_job_name:
             time.sleep(1)
 
+        train_job.sagemaker_train_name = est._current_job_name
         # trigger stepfunction
         stepfunctions_client = StepFunctionUtilsService(logger=logger)
         sfn_input = {
@@ -192,7 +193,6 @@ def _start_train_job(train_job_id: str):
         }
         sfn_arn = stepfunctions_client.invoke_step_function(training_stepfunction_arn, sfn_input)
         # todo: use batch update, this is ugly!!!
-        train_job.sagemaker_train_name = est._current_job_name
         search_key = {'id': train_job.id}
         ddb_service.update_item(
             table=train_table,
