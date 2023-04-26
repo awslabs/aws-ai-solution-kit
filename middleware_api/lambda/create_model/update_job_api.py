@@ -5,13 +5,13 @@ from dataclasses import dataclass
 from typing import Any, Dict
 
 import boto3
-from botocore.config import Config
 from botocore.exceptions import ClientError
 
 from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
 from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
+from create_model.common_tools import complete_mulipart_upload
 from create_model_async_job import create_sagemaker_inference
 
 bucket_name = os.environ.get('S3_BUCKET')
@@ -49,34 +49,23 @@ def update_model_job_api(raw_event, context):
 
         model_job = ModelJob(**raw_training_job)
         resp = train_job_exec(model_job, CreateModelStatus[event.status])
-
         ddb_service.update_item(
             table=model_table,
             key={'id': event.model_id},
             field_name='job_status',
             value=event.status
         )
-        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
-        if 'multipart_upload' in model_job.params:
-            multipart = model_job.params['multipart_upload']
-            for filename, val in multipart.items():
-                # todo: can add s3 MD5 check here to see if file is upload properly
-                if filename in event.multi_parts_tags:
-                    event.multi_parts_tags[filename].sort(key=lambda x: x['PartNumber'])
-                    response = s3.complete_multipart_upload(
-                        Bucket=val['bucket'],
-                        Key=val['key'],
-                        MultipartUpload={'Parts': event.multi_parts_tags[filename]},
-                        UploadId=val['upload_id']
-                    )
-                    print(f'complete upload multipart response {response}')
-                    response = s3.abort_multipart_upload(
-                        Bucket=val['bucket'],
-                        Key=val['key'],
-                        UploadId=val['upload_id']
-                    )
-                    print(f'abort upload multipart response {response}')
+        raw_checkpoint = ddb_service.get_item(table=checkpoint_table, key_values={
+            'id': model_job.checkpoint_id
+        })
+        if raw_checkpoint is None:
+            return {
+                'status': 500,
+                'error': f'create model ckpt with id {event.model_id} is not found'
+            }
 
+        ckpt = CheckPoint(**raw_checkpoint)
+        complete_mulipart_upload(ckpt, event.multi_parts_tags)
         return resp
     except ClientError as e:
         logger.error(e)
