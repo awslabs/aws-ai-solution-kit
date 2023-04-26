@@ -72,7 +72,7 @@ def server_request(path):
     }
     list_endpoint_url = urljoin(api_gateway_url, path)
     response = requests.get(list_endpoint_url, headers=headers)
-    print(f"response for rest api {response.json()}")
+    # print(f"response for rest api {response.json()}")
     return response
 
 def datetime_to_short_form(datetime_str):
@@ -88,11 +88,10 @@ def update_sagemaker_endpoints():
     sagemaker_endpoints = []
     
     for obj in r:
-        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success':
-            aaa_value = obj["EndpointDeploymentJobId"]
-            datetime_string = datetime_to_short_form(obj['startTime'])
-            aaa_value = f"{datetime_string}-{aaa_value}"
-            sagemaker_endpoints.append(aaa_value)
+        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success' and obj.get('endpoint_status') == "InService":
+            endpoint_name = obj["endpoint_name"]
+            if endpoint_name not in sagemaker_endpoints:
+                sagemaker_endpoints.append(endpoint_name)
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
@@ -121,8 +120,8 @@ def get_inference_job_image_output(inference_job_id):
     r = response.json()
     txt2img_inference_job_image_list = []
     for obj in r:
-        aaa_value = str(obj)
-        txt2img_inference_job_image_list.append(aaa_value)
+        obj_value = str(obj)
+        txt2img_inference_job_image_list.append(obj_value)
     return txt2img_inference_job_image_list
 
 def get_inference_job_param_output(inference_job_id):
@@ -130,19 +129,9 @@ def get_inference_job_param_output(inference_job_id):
     r = response.json()
     txt2img_inference_job_param_list = []
     for obj in r:
-        aaa_value = str(obj)
-        txt2img_inference_job_param_list.append(aaa_value)
+        obj_value = str(obj)
+        txt2img_inference_job_param_list.append(obj_value)
     return txt2img_inference_job_param_list 
-
-    # json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
-
-    # f = open(json_file)
-
-    # log_file = json.load(f)
-
-    # info_text = log_file["info"]
-
-    # infotexts = json.loads(info_text)["infotexts"][0]
 
 def download_images(image_urls: list, local_directory: str):
     if not os.path.exists(local_directory):
@@ -203,28 +192,6 @@ def get_hypernetwork_list():
 def get_controlnet_model_list():
     model_type = "ControlNet"
     return get_model_list_by_type(model_type)
-
-def inference_update_func():
-    root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
-    from PIL import Image
-    gallery = [f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_0.jpg"]
-    images = []
-    for g in gallery:
-        im = Image.open(g)
-        images.append(im)
-    
-    json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
-
-    f = open(json_file)
-
-    log_file = json.load(f)
-
-    info_text = log_file["info"]
-
-    infotexts = json.loads(info_text)["infotexts"][0]
-
-    return images, info_text, plaintext_to_html(infotexts)
-
 
 def refresh_all_models():
     print("Refresh checkpoints")
@@ -344,7 +311,7 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
     return plaintext_to_html(log)
 
 def generate_on_cloud():
-    print(f"ccheckpiont_info {checkpoint_info}")
+    print(f"checkpiont_info {checkpoint_info}")
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
@@ -600,8 +567,14 @@ def create_ui():
                     sd_checkpoint = gr.Dropdown(label="Stable Diffusion Checkpoint", choices=sorted(update_sd_checkpoints()))
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_sd_checkpoints")
             with gr.Column():
-                generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
+                generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary')
                 generate_on_cloud_button.click(
+                    fn=generate_on_cloud,
+                    inputs=[],
+                    outputs=[]
+                )
+                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use javascript to update config--developing)", variant='primary')
+                generate_on_cloud_button_with_js.click(
                     _js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[],
