@@ -4,12 +4,10 @@ import os
 
 sagemaker = boto3.client('sagemaker')
 lambda_client = boto3.client("lambda")
-# role = "arn:aws:iam::002224604296:role/service-role/AmazonSageMaker-ExecutionRole-20230319T081280"
 role_response = (lambda_client.get_function_configuration(
     FunctionName = os.environ['AWS_LAMBDA_FUNCTION_NAME'])
 )
 EXECUTION_ROLE = role_response['Role']
-# async_success_topic = 'arn:aws:sns:us-west-2:002224604296:SdAsyncInferenceStack-dev-SNSReceiveSageMakerinferencesuccess314267EE-OcvPLAvRGaNL'
 ASYNC_SUCCESS_TOPIC = os.environ["SNS_INFERENCE_SUCCESS"]
 ASYNC_ERROR_TOPIC = os.environ["SNS_INFERENCE_ERROR"]
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
@@ -18,7 +16,6 @@ INFERENCE_ECR_IMAGE_URL = os.environ.get("INFERENCE_ECR_IMAGE_URL")
 def lambda_handler(event, context):
     # Parse the input data
     print(f"event is {event}")
-    # best_training_job = event['best_training_job']
 
     str_uuid = str(uuid.uuid4())[:4] 
     sagemaker_model_name = f"infer-model-{str_uuid}"

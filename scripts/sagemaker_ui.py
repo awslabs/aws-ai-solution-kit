@@ -15,8 +15,9 @@ import gradio as gr
 from modules import shared, scripts
 from modules.ui import create_refresh_button
 from utils import get_variable_from_json
-from utils import upload_file_to_s3_by_presign_url
+from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
 from datetime import datetime
+import math
 
 inference_job_dropdown = None
 
@@ -71,7 +72,7 @@ def server_request(path):
     }
     list_endpoint_url = urljoin(api_gateway_url, path)
     response = requests.get(list_endpoint_url, headers=headers)
-    print(f"response for rest api {response.json()}")
+    # print(f"response for rest api {response.json()}")
     return response
 
 def datetime_to_short_form(datetime_str):
@@ -87,11 +88,10 @@ def update_sagemaker_endpoints():
     sagemaker_endpoints = []
     
     for obj in r:
-        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success':
-            aaa_value = obj["EndpointDeploymentJobId"]
-            datetime_string = datetime_to_short_form(obj['startTime'])
-            aaa_value = f"{datetime_string}-{aaa_value}"
-            sagemaker_endpoints.append(aaa_value)
+        if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success' and obj.get('endpoint_status') == "InService":
+            endpoint_name = obj["endpoint_name"]
+            if endpoint_name not in sagemaker_endpoints:
+                sagemaker_endpoints.append(endpoint_name)
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
@@ -106,7 +106,11 @@ def get_inference_job_list():
     if r:
         txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
         for obj in r:
-            json_string = json.dumps(obj)
+            extracted_data = {
+                'completeTime': obj.get('completeTime'),
+                'InferenceJobId': obj.get('InferenceJobId')
+            }
+            json_string = json.dumps(extracted_data)
             txt2img_inference_job_ids.append(json_string)
     else:
         print("The API response is empty.")
@@ -116,8 +120,8 @@ def get_inference_job_image_output(inference_job_id):
     r = response.json()
     txt2img_inference_job_image_list = []
     for obj in r:
-        aaa_value = str(obj)
-        txt2img_inference_job_image_list.append(aaa_value)
+        obj_value = str(obj)
+        txt2img_inference_job_image_list.append(obj_value)
     return txt2img_inference_job_image_list
 
 def get_inference_job_param_output(inference_job_id):
@@ -125,19 +129,9 @@ def get_inference_job_param_output(inference_job_id):
     r = response.json()
     txt2img_inference_job_param_list = []
     for obj in r:
-        aaa_value = str(obj)
-        txt2img_inference_job_param_list.append(aaa_value)
+        obj_value = str(obj)
+        txt2img_inference_job_param_list.append(obj_value)
     return txt2img_inference_job_param_list 
-
-    # json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
-
-    # f = open(json_file)
-
-    # log_file = json.load(f)
-
-    # info_text = log_file["info"]
-
-    # infotexts = json.loads(info_text)["infotexts"][0]
 
 def download_images(image_urls: list, local_directory: str):
     if not os.path.exists(local_directory):
@@ -199,28 +193,6 @@ def get_controlnet_model_list():
     model_type = "ControlNet"
     return get_model_list_by_type(model_type)
 
-def inference_update_func():
-    root_path = "/home/ubuntu/py_gpu_ubuntu_ue2_workplace/csdc/aws-ai-solution-kit/containers/stable-diffusion-webui/extensions/aws-ai-solution-kit/tests/txt2img_inference"
-    from PIL import Image
-    gallery = [f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_0.jpg"]
-    images = []
-    for g in gallery:
-        im = Image.open(g)
-        images.append(im)
-    
-    json_file = f"{root_path}/438cf745-d164-4eca-a1bc-52fde6e7de61_param.json"
-
-    f = open(json_file)
-
-    log_file = json.load(f)
-
-    info_text = log_file["info"]
-
-    infotexts = json.loads(info_text)["infotexts"][0]
-
-    return images, info_text, plaintext_to_html(infotexts)
-
-
 def refresh_all_models():
     print("Refresh checkpoints")
     api_gateway_url = get_variable_from_json('api_gateway_url')
@@ -260,9 +232,18 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             print(f"!!!skip to upload duplicate model {model_name}")
             continue
 
+        part_size = 1000 * 1024 * 1024
+        file_size = os.stat(lp)
+        parts_number = math.ceil(file_size.st_size/part_size)
+        print('!!!!!!!!!!', file_size, parts_number)
+
+        local_tar_path = f'{model_name}.tar'        
         payload = {
             "checkpoint_type": rp,
-            "filenames": [model_name],
+            "filenames": [{
+            "filename": local_tar_path,
+            "parts_number": parts_number
+            }],
             "params": {"message": "placeholder for chkpts upload test"}
         }
 
@@ -280,13 +261,14 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             print(f"Upload to S3 {s3_base}")
             print(f"Checkpoint ID: {checkpoint_id}")
 
-            s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            #s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            s3_signed_urls_resp = json_response["s3PresignUrl"][local_tar_path]
             # Upload src model to S3.
             if rp != "embeddings" :
                 local_model_path_in_repo = f'models/{rp}/{model_name}'
             else:
                 local_model_path_in_repo = f'{rp}/{model_name}'
-            local_tar_path = f'{model_name}.tar'
+            #local_tar_path = f'{model_name}.tar'
             print("Pack the model file.")
             os.system(f"cp -f {lp} {local_model_path_in_repo}")
             if rp == "Stable-diffusion":
@@ -300,11 +282,17 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
                     os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
             else:
                 os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
-            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            #upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            multiparts_tags = upload_multipart_files_to_s3_by_signed_url(
+                local_tar_path,
+                s3_signed_urls_resp,
+                part_size
+            )
 
             payload = {
                 "checkpoint_id": checkpoint_id,
-                "status": "Active"
+                "status": "Active",
+                "multi_parts_tags": {local_tar_path: multiparts_tags}
             }
             # Start creating model on cloud.
             response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
@@ -323,7 +311,7 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
     return plaintext_to_html(log)
 
 def generate_on_cloud():
-    print(f"ccheckpiont_info {checkpoint_info}")
+    print(f"checkpiont_info {checkpoint_info}")
     # print(f"Current working directory: {os.getcwd()}")
     # load json files
     # stage 1: make payload
@@ -579,8 +567,14 @@ def create_ui():
                     sd_checkpoint = gr.Dropdown(label="Stable Diffusion Checkpoint", choices=sorted(update_sd_checkpoints()))
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_sd_checkpoints")
             with gr.Column():
-                generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
+                generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary')
                 generate_on_cloud_button.click(
+                    fn=generate_on_cloud,
+                    inputs=[],
+                    outputs=[]
+                )
+                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use javascript to update config--developing)", variant='primary')
+                generate_on_cloud_button_with_js.click(
                     _js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[],
