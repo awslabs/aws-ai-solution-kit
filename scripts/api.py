@@ -178,6 +178,7 @@ disk_path = '/tmp'
 def checkspace_and_update_models(selected_models, checkpoint_info):
     models_num = len(models_type_list)
     space_free_size = selected_models['space_free_size']
+    os.system("df -h")
     for type_id in range(models_num):
         model_type = models_type_list[type_id]
         selected_models_name = selected_models[model_type]
@@ -242,6 +243,8 @@ def download_and_update(model_type, model_name, model_s3_pos):
     #download from s3
     os.system(f'./tools/s5cmd cp {model_s3_pos} ./')
     os.system(f"tar xvf {model_name}")
+    os.system(f"rm {model_name}")
+    os.system("df -h")
     if model_type == 'Stable-diffusion':
         sd_models.list_models()
     if model_type == 'hypernetworks':
@@ -549,7 +552,7 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    # script_callbacks.on_app_started(move_model_to_tmp)
+    script_callbacks.on_app_started(move_model_to_tmp)
     logger.debug("SD-Webui API layer loaded")
 except Exception as e:
     print(e)
