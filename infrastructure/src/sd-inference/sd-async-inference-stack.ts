@@ -45,12 +45,6 @@ export class SDAsyncInferenceStack extends Stack {
       rootResourceId: props?.api_gate_way.restApiRootResourceId ?? '',
     });
 
-
-    // Create an S3 bucket to store input and output payloads with public access blocked
-    // const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
-    //   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    // });
-
     // create Dynamodb table to save the inference job data
     const sd_inference_job_table = new dynamodb.Table(
       this,
@@ -224,10 +218,14 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
-    // Create a deployment for the API Gateway
-    new apigw.Deployment(this, 'Deployment', {
-        api: restful_api,
-    });
+    const test_output = inference.addResource('test-output');
+    test_output.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const deployment = new apigw.Deployment(this, 'rest-api-deployment', { api: restful_api });
+    deployment.addToLogicalId(new Date().toISOString());
+    (deployment as any).resource.stageName = 'prod';
    
     // Create a Lambda function for inference
     const handler = new lambda.DockerImageFunction(
