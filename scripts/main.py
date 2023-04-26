@@ -499,7 +499,7 @@ def async_create_model_on_sagemaker(
     payload = {
         "model_id": model_id,
         "status": "Creating",
-        "multi_parts_tags": multiparts_tags
+        "multi_parts_tags": {local_tar_path: multiparts_tags}
     }
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})

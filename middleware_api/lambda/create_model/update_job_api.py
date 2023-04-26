@@ -2,7 +2,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Dict
 
 import boto3
 from botocore.config import Config
@@ -32,7 +32,7 @@ stepfunctions_client = StepFunctionUtilsService(logger=logger)
 class Event:
     model_id: str
     status: str
-    multi_parts_tags: Any
+    multi_parts_tags: Dict[str, Any]
 
 
 # PUT /model
@@ -61,21 +61,21 @@ def update_model_job_api(raw_event, context):
             multipart = model_job.params['multipart_upload']
             for filename, val in multipart.items():
                 # todo: can add s3 MD5 check here to see if file is upload properly
-                event.multi_parts_tags.sort(key=lambda x: x['PartNumber'])
-                response = s3.complete_multipart_upload(
-                    Bucket=val['bucket'],
-                    Key=val['key'],
-                    MultipartUpload={'Parts': event.multi_parts_tags},
-                    UploadId=val['upload_id']
-                )
-                print(f'complete upload multipart response {response}')
-                response = s3.abort_multipart_upload(
-                    Bucket=val['bucket'],
-                    Key=val['key'],
-                    UploadId=val['upload_id']
-                )
-                print(f'abort upload multipart response {response}')
-
+                if filename in event.multi_parts_tags:
+                    event.multi_parts_tags[filename].sort(key=lambda x: x['PartNumber'])
+                    response = s3.complete_multipart_upload(
+                        Bucket=val['bucket'],
+                        Key=val['key'],
+                        MultipartUpload={'Parts': event.multi_parts_tags[filename]},
+                        UploadId=val['upload_id']
+                    )
+                    print(f'complete upload multipart response {response}')
+                    response = s3.abort_multipart_upload(
+                        Bucket=val['bucket'],
+                        Key=val['key'],
+                        UploadId=val['upload_id']
+                    )
+                    print(f'abort upload multipart response {response}')
 
         return resp
     except ClientError as e:
