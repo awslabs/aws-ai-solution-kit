@@ -15,8 +15,9 @@ import gradio as gr
 from modules import shared, scripts
 from modules.ui import create_refresh_button
 from utils import get_variable_from_json
-from utils import upload_file_to_s3_by_presign_url
+from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
 from datetime import datetime
+import math
 
 inference_job_dropdown = None
 
@@ -260,9 +261,17 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             print(f"!!!skip to upload duplicate model {model_name}")
             continue
 
+        part_size = 1000 * 1024 * 1024
+        file_size = os.stat(model_name)
+        parts_number = math.ceil(file_size.st_size/part_size)
+
+
         payload = {
             "checkpoint_type": rp,
-            "filenames": [model_name],
+            "filenames": [{
+            "filename": model_name,
+            "parts_number": parts_number
+            }],
             "params": {"message": "placeholder for chkpts upload test"}
         }
 
@@ -280,7 +289,8 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             print(f"Upload to S3 {s3_base}")
             print(f"Checkpoint ID: {checkpoint_id}")
 
-            s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            #s3_presigned_url = json_response["s3PresignUrl"][model_name]
+            s3_signed_urls_resp = json_response["s3PresignUrl"][model_name]
             # Upload src model to S3.
             if rp != "embeddings" :
                 local_model_path_in_repo = f'models/{rp}/{model_name}'
@@ -300,11 +310,17 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
                     os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
             else:
                 os.system(f"tar cvf {local_tar_path} {local_model_path_in_repo}")
-            upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            #upload_file_to_s3_by_presign_url(local_tar_path, s3_presigned_url)
+            multiparts_tags = upload_multipart_files_to_s3_by_signed_url(
+                local_tar_path,
+                s3_signed_urls_resp,
+                part_size
+            )
 
             payload = {
                 "checkpoint_id": checkpoint_id,
-                "status": "Active"
+                "status": "Active",
+                "multi_parts_tags": {local_tar_path: multiparts_tags}
             }
             # Start creating model on cloud.
             response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
