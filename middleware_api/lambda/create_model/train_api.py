@@ -2,7 +2,9 @@ import json
 import logging
 import os
 import base64
+import time
 from dataclasses import dataclass
+
 from typing import Any
 import sagemaker
 from common.ddb_service.client import DynamoDbUtilsService
@@ -179,6 +181,9 @@ def _start_train_job(train_job_id: str):
         )
         est.fit(wait=False)
 
+        while not est._current_job_name:
+            time.sleep(1)
+
         # trigger stepfunction
         stepfunctions_client = StepFunctionUtilsService(logger=logger)
         sfn_input = {
@@ -279,7 +284,6 @@ def check_train_job_status(event, context):
 
         checkpoint = CheckPoint(**raw_checkpoint)
         checkpoint.checkpoint_status = CheckPointStatus.Active
-        checkpoint.checkpoint_names = ['updated name']  # todo: findout output location
         ddb_service.update_item(
             table=checkpoint_table,
             key={
@@ -288,6 +292,7 @@ def check_train_job_status(event, context):
             field_name='checkpoint_status',
             value=checkpoint.checkpoint_status.value
         )
+        # checkpoint.checkpoint_names = ['updated name']  # todo: findout output location
         # ddb_service.update_item(
         #     table=checkpoint_table,
         #     key={
