@@ -11,7 +11,7 @@ from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
 from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
-from create_model.common_tools import complete_mulipart_upload
+from common_tools import complete_mulipart_upload, split_s3_path
 from create_model_async_job import create_sagemaker_inference
 
 bucket_name = os.environ.get('S3_BUCKET')
@@ -161,11 +161,7 @@ def get_object(bucket: str, key: str):
     return content
 
 
-def split_s3_path(s3_path):
-    path_parts = s3_path.replace("s3://", "").split("/")
-    bucket = path_parts.pop(0)
-    key = "/".join(path_parts)
-    return bucket, key
+
 
 
 def train_job_exec(model_job: ModelJob, action: CreateModelStatus):

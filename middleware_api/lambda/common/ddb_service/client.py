@@ -1,3 +1,4 @@
+import datetime
 import enum
 import json
 import logging
@@ -162,6 +163,8 @@ class DynamoDbUtilsService:
                     res[key] = DynamoDbUtilsService._convert(val)
 
             return {'M': res}
+        elif isinstance(val, datetime.datetime):
+            return {'S': str(val)}
         else:
             raise Exception(f'unknown type {val} at type: {type(val)}')
 

@@ -90,20 +90,20 @@ class ModelsApiTest(TestCase):
 
     def test_create_update_checkpoint(self):
         from checkpoint_api import create_checkpoint_api, update_checkpoint_api
-        resp = create_checkpoint_api({
-            "checkpoint_type": "dreambooth",
-            "filenames": [
-                {"filename": "test1", "parts_number": 5}
-            ],
-            "params": {
-                "new_model_name": "test_api",
-                "number": 1,
-                "string": "abc"
-            }
-        }, MockContext(aws_request_id="asdfasdf"))
-        print(resp)
+        # resp = create_checkpoint_api({
+        #     "checkpoint_type": "dreambooth",
+        #     "filenames": [
+        #         {"filename": "test1", "parts_number": 5}
+        #     ],
+        #     "params": {
+        #         "new_model_name": "test_api",
+        #         "number": 1,
+        #         "string": "abc"
+        #     }
+        # }, MockContext(aws_request_id="asdfasdf"))
+        # print(resp)
         resp = update_checkpoint_api({
-            "checkpoint_id": "asdfasdf",
+            "checkpoint_id": "4e5118f5-9d9a-4a7e-aace-6f5e52c4edd9",
             "status": "Active",
             'multi_parts_tags': {"test1": [{'ETag': '"cc95c41fa28463c8e9b88d67805f24e0"', 'PartNumber': 1}]},
         }, {})
@@ -228,3 +228,17 @@ class ModelsApiTest(TestCase):
             [MultipartFileReq(filename='name_not_matter', parts_number=5)]
         )
         print(resp)
+
+    def test_list_bucket_objects(self):
+        import boto3
+        from botocore.config import Config
+        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+        bucket = 'alvindaiyan-aigc-testing-playground'
+        key = 'dreambooth/checkpoint/db-training-test-1/51b8d59b-ba48-4f79-964f-05f2190f5bc3/'
+        response = s3.list_objects(
+            Bucket=bucket,
+            Prefix=key,
+        )
+        print(response)
+        for obj in response['Contents']:
+            print(obj['Key'].replace(key, ""))

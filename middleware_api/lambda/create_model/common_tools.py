@@ -95,3 +95,10 @@ def complete_mulipart_upload(ckpt: CheckPoint, filename_etag):
                 )
                 print(f'abort upload multipart response {response}')
 
+
+def split_s3_path(s3_path):
+    path_parts = s3_path.replace("s3://", "").split("/")
+    bucket = path_parts.pop(0)
+    key = "/".join(path_parts)
+    return bucket, key
+
