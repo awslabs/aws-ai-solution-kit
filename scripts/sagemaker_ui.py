@@ -106,7 +106,11 @@ def get_inference_job_list():
     if r:
         txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
         for obj in r:
-            json_string = json.dumps(obj)
+            extracted_data = {
+                'completeTime': obj.get('completeTime'),
+                'InferenceJobId': obj.get('InferenceJobId')
+            }
+            json_string = json.dumps(extracted_data)
             txt2img_inference_job_ids.append(json_string)
     else:
         print("The API response is empty.")

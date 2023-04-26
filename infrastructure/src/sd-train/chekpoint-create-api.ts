@@ -72,6 +72,9 @@ export class CreateCheckPointApi {
         's3:PutObject',
         's3:DeleteObject',
         's3:ListBucket',
+        's3:AbortMultipartUpload',
+        's3:ListMultipartUploadParts',
+        's3:ListBucketMultipartUploads',
       ],
       resources: [
         `${this.s3Bucket.bucketArn}/*`,

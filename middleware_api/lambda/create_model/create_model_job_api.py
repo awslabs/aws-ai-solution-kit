@@ -48,27 +48,26 @@ def create_model_api(raw_event, context):
             file = MultipartFileReq(**f)
             filenames_only.append(file.filename)
 
-        checkpoint = CheckPoint(
-            id=request_id,
-            checkpoint_type=event.model_type,
-            s3_location=f's3://{bucket_name}/{get_base_checkpoint_s3_key(_type, event.name, request_id)}',
-            checkpoint_names=filenames_only,
-            checkpoint_status=CheckPointStatus.Initial,
-            params={
-                'created': str(datetime.datetime.now())
-            }
-        )
-        ddb_service.put_items(table=checkpoint_table, entries=checkpoint.__dict__)
-        event.params['multipart_upload'] = {}
+        checkpoint_params = {'created': str(datetime.datetime.now()), 'multipart_upload': {
+        }}
         multiparts_resp = {}
         for key, val in presign_url_map.items():
-            event.params['multipart_upload'][key] = {
+            checkpoint_params['multipart_upload'][key] = {
                 'upload_id': val['upload_id'],
                 'bucket': val['bucket'],
                 'key': val['key'],
             }
             multiparts_resp[key] = val['s3_signed_urls']
 
+        checkpoint = CheckPoint(
+            id=request_id,
+            checkpoint_type=event.model_type,
+            s3_location=f's3://{bucket_name}/{get_base_checkpoint_s3_key(_type, event.name, request_id)}',
+            checkpoint_names=filenames_only,
+            checkpoint_status=CheckPointStatus.Initial,
+            params=checkpoint_params
+        )
+        ddb_service.put_items(table=checkpoint_table, entries=checkpoint.__dict__)
         model_job = ModelJob(
             id=request_id,
             name=event.name,
