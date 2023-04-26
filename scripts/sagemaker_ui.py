@@ -262,14 +262,15 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             continue
 
         part_size = 1000 * 1024 * 1024
-        file_size = os.stat(model_name)
+        file_size = os.stat(lp)
         parts_number = math.ceil(file_size.st_size/part_size)
+        print('!!!!!!!!!!', file_size, parts_number)
 
-
+        local_tar_path = f'{model_name}.tar'        
         payload = {
             "checkpoint_type": rp,
             "filenames": [{
-            "filename": model_name,
+            "filename": local_tar_path,
             "parts_number": parts_number
             }],
             "params": {"message": "placeholder for chkpts upload test"}
@@ -290,13 +291,13 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             print(f"Checkpoint ID: {checkpoint_id}")
 
             #s3_presigned_url = json_response["s3PresignUrl"][model_name]
-            s3_signed_urls_resp = json_response["s3PresignUrl"][model_name]
+            s3_signed_urls_resp = json_response["s3PresignUrl"][local_tar_path]
             # Upload src model to S3.
             if rp != "embeddings" :
                 local_model_path_in_repo = f'models/{rp}/{model_name}'
             else:
                 local_model_path_in_repo = f'{rp}/{model_name}'
-            local_tar_path = f'{model_name}.tar'
+            #local_tar_path = f'{model_name}.tar'
             print("Pack the model file.")
             os.system(f"cp -f {lp} {local_model_path_in_repo}")
             if rp == "Stable-diffusion":
