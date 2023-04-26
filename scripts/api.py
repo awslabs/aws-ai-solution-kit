@@ -228,6 +228,15 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
     sd_models.reload_model_weights()
     sd_vae.reload_vae_weights()
 
+def download_model(model_name, model_s3_pos):
+    #download from s3
+    os.system(f'./tools/s5cmd cp {model_s3_pos} ./')
+    os.system(f"tar xvf {model_name}")
+
+def upload_model(model_type, model_name, model_s3_pos):
+    #upload model to s3
+    os.system(f"tar cvf {model_name} {models_path[model_type]}/{model_name}")
+    os.system(f'./tools/s5cmd cp {model_name} {model_s3_pos}') 
 
 def download_and_update(model_type, model_name, model_s3_pos):
     #download from s3
@@ -284,8 +293,8 @@ def sagemaker_api(_, app: FastAPI):
         @return:
         """
         print('-------invocation------')
-        #print(req)
-        #print(f"json is {json.loads(req.json())}")
+        print(req)
+        print(f"json is {json.loads(req.json())}")
 
         if req.task == 'text-to-image' or req.task == 'controlnet_txt2img':
             selected_models = req.models
@@ -423,7 +432,7 @@ def sagemaker_api(_, app: FastAPI):
                             return [None, None, None, f"Error merging checkpoints: {e}"]
                         return results
 
-                    merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
+                    merge_checkpoint_payload = req.merge_checkpoint_payload
                     primary_model_name = merge_checkpoint_payload["primary_model_name"]
                     secondary_model_name = merge_checkpoint_payload["secondary_model_name"]
                     tertiary_model_name = merge_checkpoint_payload["teritary_model_name"]
@@ -435,10 +444,19 @@ def sagemaker_api(_, app: FastAPI):
                     config_source = merge_checkpoint_payload["config_source"]
                     bake_in_vae = merge_checkpoint_payload["bake_in_vae"]
                     discard_weights = merge_checkpoint_payload["discard_weights"]
+                    merge_model_s3_pos = merge_checkpoint_payload["merge_model_s3"]
 
                     # upload checkpoints from cloud to local variable
-                    
+                    model_type = 'Stable-diffusion'
                     checkpoint_info = req.checkpoint_info
+                    selected_model_s3_pos = checkpoint_info[model_type][primary_model_name] 
+                    download_model(primary_model_name, selected_model_s3_pos)
+                    selected_model_s3_pos = checkpoint_info[model_type][secondary_model_name] 
+                    download_model(secondary_model_name, selected_model_s3_pos)
+                    if tertiary_model_name:
+                        selected_model_s3_pos = checkpoint_info[model_type][tertiary_model_name] 
+                        download_model(tertiary_model_name, selected_model_s3_pos)
+                    
                     sd_models.list_models()
 
                     [primary_model_name, secondary_model_name, tertiary_model_name, component_dict_sd_model_checkpoints, modelmerger_result] = \
@@ -447,6 +465,10 @@ def sagemaker_api(_, app: FastAPI):
                         bake_in_vae, discard_weights)
                     
                     output_model_position = modelmerger_result[21:] 
+
+                    merge_model_name = output_model_position.split('/')[-1]
+
+                    upload_model(model_type, merge_model_name, merge_model_s3_pos)
 
                     print(f"output model path is {output_model_position}")
                     
