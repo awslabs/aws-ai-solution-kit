@@ -142,7 +142,16 @@ export class SagemakerInferenceStateMachine {
         //TODO: still not working for assume sagemaker service, need to work it later
         lambdaStartDeploy.addToRolePolicy(lambdaPolicy)
         lambdaCheckDeploymentStatus.addToRolePolicy(lambdaPolicy);
-        lambdaStartDeploy.role?.grant(new iam.ServicePrincipal("sagemaker.amazonaws.com"));
+
+        // Add the trust relationship for SageMaker service principal to both Lambda roles
+        const sagemakerAssumeRolePolicy = new iam.PolicyStatement({
+            actions: ['sts:AssumeRole'],
+            effect: iam.Effect.ALLOW,
+            principals: [new iam.ServicePrincipal('sagemaker.amazonaws.com')],
+        });
+  
+        (lambdaStartDeploy.role as iam.Role).assumeRolePolicy?.addStatements(sagemakerAssumeRolePolicy);
+        (lambdaCheckDeploymentStatus.role as iam.Role).assumeRolePolicy?.addStatements(sagemakerAssumeRolePolicy);
         lambdaCheckDeploymentStatus.role?.grant(new iam.ServicePrincipal('sagemaker.amazonaws.com'))
 
 
