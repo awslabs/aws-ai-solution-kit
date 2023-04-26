@@ -35,13 +35,13 @@ sh build_and_push_inference_from_scratch.sh Dockerfile.inference.from_scratch ai
 ### Build public images for aigc-webui-dreambooth-train which is used for training model in Dreambooth.
 
 ```
-sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-dreambooth-train
+sh build_and_push_dreambooth_from_scratch.sh Dockerfile.dreambooth.from_scratch aigc-webui-dreambooth-training
 
 ```
 
 ### Update public ecr to your private ecr
 
 ```
-sh update_private_ecr.sh aigc-webui-utils|aigc-webui-inference|aigc-webui-dreambooth-train
+sh update_private_ecr.sh aigc-webui-utils|aigc-webui-inference|aigc-webui-dreambooth-training
 
 ```
