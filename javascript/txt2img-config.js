@@ -282,11 +282,14 @@ function txt2img_config_save() {
                 console.error("Error fetching presigned URL:", error);
             } else {
                 console.log("Presigned URL:", presignedUrl);
+                const url = presignedUrl.replace(/"/g, '');
+                console.log("url:", url);
+
                 // Upload configuration JSON file to S3 bucket with pre-signed URL
                 const config_data = JSON.stringify(config);
                 console.log(config_data)
 
-                put_with_xmlhttprequest(presignedUrl, config_data)
+                put_with_xmlhttprequest(url, config_data)
                     .then((response) => {
                         console.log(response);
                     })
