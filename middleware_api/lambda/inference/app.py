@@ -14,6 +14,7 @@ from datetime import datetime
 from typing import List
 
 import boto3
+from botocore.client import Config
 import json
 import uuid
 
@@ -267,6 +268,35 @@ def generate_presigned_url(bucket_name: str, key: str, expiration=3600) -> str:
 
     return response
 
+
+@app.get("/inference/generate-s3-presigned-url-for-uploading")
+async def generate_s3_presigned_url_for_uploading(s3_bucket_name: str = None, key: str = None):
+    s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+    if not s3_bucket_name:
+        s3_bucket_name = S3_BUCKET_NAME
+
+    if not key:
+        raise HTTPException(status_code=400, detail="Key parameter is required")
+
+    presigned_url = s3.generate_presigned_url(
+        'put_object',
+        Params={
+            'Bucket': s3_bucket_name,
+            'Key': key,
+            'ContentType': 'text/plain;charset=UTF-8'
+        },
+        ExpiresIn=3600,
+        HttpMethod='PUT'
+    )
+    headers = {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    }
+
+    response = JSONResponse(content=presigned_url, headers=headers)
+
+    return response
 
 @app.get("/inference/get-texual-inversion-list")
 async def get_texual_inversion_list():

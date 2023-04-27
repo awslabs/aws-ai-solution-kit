@@ -190,12 +190,22 @@ export class SdTrainDeployStack extends Stack {
       description: 'Base bucket for aigc solution to use. Mainly for uploading data files and storing results',
     });
 
+    // Define the CORS configuration
+    const corsRules: s3.CorsRule[] = [
+      {
+        allowedHeaders: ['*'],
+        allowedMethods: [s3.HttpMethods.PUT],
+        allowedOrigins: ['*']
+      }
+    ];
+
     //The code that defines your stack goes here
     return new s3.Bucket(this, 'aigc-bucket', {
       bucketName: bucketName.valueAsString,
       blockPublicAccess: BlockPublicAccess.BLOCK_ACLS,
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
+      cors: corsRules
     });
   }
 

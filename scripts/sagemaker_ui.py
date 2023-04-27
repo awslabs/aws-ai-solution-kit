@@ -320,6 +320,48 @@ def generate_on_cloud():
         params_dict = json.load(f)
     # print(f"Current parameters are {params_dict}")
 
+    #### scripts args
+    ## Prompt matrix : ["False", "False", "positive", "comma", 16] 14:19
+    ## [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
+    ## Prompts from file or textbox: ["False", "False", "chinese, beautiful woman\na cute dog\na cute baby"] 19:22
+    ## [checkbox_iterate, checkbox_iterate_batch, prompt_txt: str]
+    ## prompt_txt: "\n".join(lines) lines = [x.strip() for x in file.decode('utf8', errors='ignore').split("\n")]
+    ## X/Y/Z plot: [4, '20,30', 6, '10,15', 0, '', "True", "False", "False", "False", 0] 22:33
+    # [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+    ## controlnet m2m: [] 33:36
+
+    script_name = params_dict['txt2img/Script/value']
+    script_args = []
+    if script_name == 'Prompt matrix':
+        put_at_start = params_dict['customscript/prompt_matrix.py/txt2img/Put variable parts at start of prompt/value']
+        different_seeds = params_dict['customscript/prompt_matrix.py/txt2img/Use different seed for each picture/value']
+        prompt_type = params_dict['customscript/prompt_matrix.py/txt2img/Select prompt/value']
+        variations_delimiter = params_dict['customscript/prompt_matrix.py/txt2img/Select joining char/value']
+        margin_size = params_dict['customscript/prompt_matrix.py/txt2img/Grid margins (px)/value']
+        script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
+    
+    if script_name == 'Prompts from file or textbox':
+        checkbox_iterate = params_dict['customscript/prompts_from_file.py/txt2img/Iterate seed every line/value']
+        checkbox_iterate_batch = params_dict['customscript/prompts_from_file.py/txt2img/Use same random seed for all lines/value']
+        list_prompt_inputs = params_dict['customscript/prompts_from_file.py/txt2img/List of prompt inputs/value']
+        lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
+        script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
+    
+    if script_name == 'X/Y/Z plot':
+        x_type = params_dict['customscript/xyz_grid.py/txt2img/X type/value']
+        x_values = params_dict['customscript/xyz_grid.py/txt2img/X values/value']
+        y_type = params_dict['customscript/xyz_grid.py/txt2img/Y type/value']
+        y_values = params_dict['customscript/xyz_grid.py/txt2img/Y values/value']
+        z_type = params_dict['customscript/xyz_grid.py/txt2img/Z type/value']
+        z_values = params_dict['customscript/xyz_grid.py/txt2img/Z values/value']
+        draw_legend = params_dict['customscript/xyz_grid.py/txt2img/Draw legend/value']
+        include_lone_images = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Images/value']
+        include_sub_grids = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Grids/value']
+        no_fixed_seeds = params_dict['customscript/xyz_grid.py/txt2img/Keep -1 for seeds/value']
+        margin_size = params_dict['customscript/xyz_grid.py/txt2img/Grid margins (px)/value']
+        script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+
+
     contronet_enable = params_dict['txt2img/Enable/value']
     if contronet_enable:
         controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
@@ -349,6 +391,7 @@ def generate_on_cloud():
     # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
     
+    batch_count = params_dict['txt2img/Batch count/value']
     
     if contronet_enable:
        print('txt2img with controlnet!!!!!!!!!!')
@@ -379,7 +422,7 @@ def generate_on_cloud():
             "seed_resize_from_w": 0, 
             "sampler_index": "Euler a", 
             "batch_size": 1, 
-            "n_iter": 1, 
+            "n_iter": batch_count, 
             "steps": 20, 
             "cfg_scale": 7, 
             "width": 512, 
@@ -393,8 +436,8 @@ def generate_on_cloud():
             "s_tmin": 0, 
             "s_noise": 1, 
             "override_settings": {}, 
-            "script_name": "",
-            "script_args": [0, "False", "False", "False" "", 1, "", 0, "", "True", "True", "True"],
+            "script_name": script_name,
+            "script_args": script_args,
             "controlnet_units": [
                 {
                 "input_image": image.decode(),
@@ -444,7 +487,7 @@ def generate_on_cloud():
             "seed_resize_from_w": 0, 
             "sampler_index": "Euler a", 
             "batch_size": 1, 
-            "n_iter": 1, 
+            "n_iter": batch_count, 
             "steps": 20, 
             "cfg_scale": 7, 
             "width": 512, 
@@ -458,7 +501,8 @@ def generate_on_cloud():
             "s_tmin": 0, 
             "s_noise": 1, 
             "override_settings": {}, 
-            "script_args": [0, "False", "False", "False", "", 1, "", 0, "", "True", "True", "True"]}, 
+            "script_name": script_name,
+            "script_args": script_args}, 
             "username": ""
             }
     
