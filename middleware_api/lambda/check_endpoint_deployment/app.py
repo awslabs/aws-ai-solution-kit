@@ -28,6 +28,9 @@ def lambda_handler(event, context):
             update_endpoint_job_table(endpoint_deployment_job_id,'endpoint_status', status)
             update_endpoint_job_table(endpoint_deployment_job_id,'endTime', current_time)
             update_endpoint_job_table(endpoint_deployment_job_id,'status', 'success')
+        elif status == 'Creating':
+            update_endpoint_job_table(endpoint_deployment_job_id,'endpoint_name', endpoint_name)
+            update_endpoint_job_table(endpoint_deployment_job_id,'endpoint_status', status) 
         elif status == 'Failed':
             failure_reason = endpoint_details['FailureReason']
             event_payload['message'] = 'Deployment failed for endpoint "{}". {}'.format(name, failure_reason)
