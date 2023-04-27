@@ -478,12 +478,12 @@ def sagemaker_api(_, app: FastAPI):
                         interp_method, interp_amount, save_as_half, custom_name, checkpoint_format, config_source, \
                         bake_in_vae, discard_weights)
 
-                    output_model_position = modelmerger_result[21:]
+                    output_model_position = modelmerger_result[20:]
 
                     # check whether yaml exists
                     merge_model_name = output_model_position.split('/')[-1].replace(' ','\ ')
 
-                    yaml_position = output_model_position.replace(output_model_position.split('.')[-1], 'yaml')
+                    yaml_position = output_model_position[:-len(output_model_position.split('.')[-1])]+'yaml'
                     yaml_states = os.path.isfile(yaml_position)
 
                     new_merge_model_name = merge_model_name.replace('(','_').replace(')','_')
@@ -495,7 +495,7 @@ def sagemaker_api(_, app: FastAPI):
                     merge_model_name_complete_path = merge_model_name_complete_path.replace('(','\(').replace(')','\)')
                     os.system(f"mv {merge_model_name_complete_path} {new_merge_model_name_complete_path}")
 
-                    model_yaml = merge_model_name.replace(merge_model_name.split('.')[-1], 'yaml').replace('(','\(').replace(')','\)')
+                    model_yaml = (merge_model_name[:-len(merge_model_name.split('.')[-1])]+'yaml').replace('(','\(').replace(')','\)')
                     model_yaml_complete_path = base_path + '/' + model_yaml
                     
                     print(f"m {merge_model_name_complete_path}, n_m {new_merge_model_name_complete_path}, yaml {model_yaml_complete_path}")
