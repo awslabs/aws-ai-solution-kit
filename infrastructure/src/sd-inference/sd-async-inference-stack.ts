@@ -218,7 +218,7 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
-    const test_output = inference.addResource('test-output');
+    const test_output = inference.addResource('generate-s3-presigned-url-for-uploading');
     test_output.addMethod('GET', txt2imgIntegration, {
       apiKeyRequired: true,
     })
