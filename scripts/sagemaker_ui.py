@@ -382,6 +382,7 @@ def generate_on_cloud():
     # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
     
+    batch_count = params_dict['txt2img/Batch count/value']
     
     if contronet_enable:
        print('txt2img with controlnet!!!!!!!!!!')
@@ -412,7 +413,7 @@ def generate_on_cloud():
             "seed_resize_from_w": 0, 
             "sampler_index": "Euler a", 
             "batch_size": 1, 
-            "n_iter": 1, 
+            "n_iter": batch_count, 
             "steps": 20, 
             "cfg_scale": 7, 
             "width": 512, 
@@ -477,7 +478,7 @@ def generate_on_cloud():
             "seed_resize_from_w": 0, 
             "sampler_index": "Euler a", 
             "batch_size": 1, 
-            "n_iter": 1, 
+            "n_iter": batch_count, 
             "steps": 20, 
             "cfg_scale": 7, 
             "width": 512, 
@@ -602,7 +603,7 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (Please save settings before !)", variant='primary')
                 generate_on_cloud_button.click(
-                    _js="generate_on_cloud",
+                    #_js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[],
                     outputs=[]
