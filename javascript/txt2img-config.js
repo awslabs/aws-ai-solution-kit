@@ -245,6 +245,37 @@ function txt2img_config_save() {
         "#txt2img_sampling > label > div > div > span"
     ).textContent;
 
+    //stable diffusion checkpoint
+    config["sagemaker_stable_diffuion_checkpoing"] = document.querySelector("#component-118 > label > div > div.wrap-inner.svelte-a6vu2r > div > input") //stable diffusion checkpoint 
+    
+    //Textual Inversion
+    config["sagemaker_texual_inversion_model"] = document.querySelector("#component-132 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+
+    //LoRa
+    config["sagemaker_lora_model"] = document.querySelector("#component-134 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+
+    //HyperNetwork
+    config["sagemaker_hypernetwork_model"] = document.querySelector("#component-138 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+
+    //ControlNet model
+    config["sagemaker_controlnet_model"] = document.querySelector("#component-140 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+
+    //control net part parameter
+    config["txt2img_controlnet_ControlNet_input_image"] = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img")
+    config["controlnet_enable"] = document.querySelector("#component-182 > label > input")
+    config["controlnet_lowVRAM_enable"] = document.querySelector("#component-183 > label > input")
+    config["controlnet_pixel_perfect"] = document.querySelector("#component-185 > label > input")
+    config["controlnet_allow_preview"] = document.querySelector("#component-186 > label > input")
+    config["controlnet_preprocessor"] = document.querySelector("#component-188 > label > div > div.wrap-inner.svelte-a6vu2r > span")
+    config["controlnet_model"] = document.querySelector("#component-190 > label > div > div.wrap-inner.svelte-a6vu2r > span")
+    config["control_weight"] = document.querySelector("#component-195 > div.wrap.svelte-jigama > div > input")
+    config["controlnet_starting_control_step"] = document.querySelector("#component-196 > div.wrap.svelte-jigama > div > input")
+    config["controlnet_ending_control_step"] = document.querySelector("#component-197 > div.wrap.svelte-jigama > div > input")
+    config["controlnet_control_mode(guess_mode)"]=document.querySelector("#component-204 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected")
+    config["controlnet_resize_mode"] = document.querySelector("#component-205 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > span")
+    config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"]=document.querySelector("#component-206 > label > input")
+
+
     // config for prompt area
     config["txt2img_prompt"] = document.querySelector(
         "#txt2img_prompt > label > textarea"
