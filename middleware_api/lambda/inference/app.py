@@ -4,6 +4,7 @@ import logging.config
 import os
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 from common.response_wrapper import resp_err
 from common.enum import MessageEnum
@@ -116,10 +117,22 @@ def get_s3_objects(bucket_name, folder_name):
 
     return object_names
  
+def load_json_from_s3(bucket_name, key):
+    # Create an S3 client
+
+    # Get the JSON file from the specified bucket and key
+    response = s3.get_object(Bucket=bucket_name, Key=key)
+    json_file = response['Body'].read().decode('utf-8')
+
+    # Load the JSON file into a dictionary
+    data = json.loads(json_file)
+
+    return data
+ 
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
 # Among them, code is the business failure code, and message is the content of the failure
-biz_exception(app)
+# biz_exception(app)
 stepf_client = boto3.client('stepfunctions')
 
 @app.get("/")
@@ -133,7 +146,14 @@ async def run_sagemaker_inference(request: Request):
     # TODO: add logic for inference id
     inference_id = get_uuid() 
 
-    payload = await request.json()
+    # payload = await request.json()
+    payload = {}
+    data_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
+
+    logger.info(json.dumps(data_dict))
+    # Need to generate the payload from data_dict here:
+    
+
     print(f"input in json format {payload}")
     endpoint_name = payload["endpoint_name"]
 
@@ -155,7 +175,15 @@ async def run_sagemaker_inference(request: Request):
         })
     
     print(f"output_path is {output_path}")
-    return {"endpoint_name": endpoint_name, "output_path": output_path}
+    # return {"endpoint_name": endpoint_name, "output_path": output_path}
+    headers = {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "*"
+    }
+
+    response = JSONResponse(content={"endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+    return response
 
 @app.post("/inference/deploy-sagemaker-endpoint")
 async def deploy_sagemaker_endpoint(request: Request):

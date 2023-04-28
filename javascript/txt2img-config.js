@@ -267,70 +267,63 @@ function txt2img_config_save() {
     // store config in local storage for debugging
     localStorage.setItem("txt2imgConfig", JSON.stringify(config));
 
-    const key = "aigc.json";
-    const remote_url =
-        config["aws_api_gateway_url"] +
-        "inference/generate-s3-presigned-url-for-uploading";
+    //following code is to get s3 presigned url from middleware and upload the ui parameters
+    const key = "config/aigc.json";
+    let remote_url = config["aws_api_gateway_url"];
+    if (!remote_url.endsWith("/")) {
+      remote_url += "/";
+    }
+    let get_presigned_s3_url = remote_url
+    get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
     const api_key = config["aws_api_token"];
 
     const config_presigned_url = getPresignedUrl(
-        remote_url,
+        get_presigned_s3_url,
         api_key,
         key,
         function (error, presignedUrl) {
             if (error) {
                 console.error("Error fetching presigned URL:", error);
             } else {
-                console.log("Presigned URL:", presignedUrl);
+                // console.log("Presigned URL:", presignedUrl);
                 const url = presignedUrl.replace(/"/g, '');
-                console.log("url:", url);
+                // console.log("url:", url);
 
                 // Upload configuration JSON file to S3 bucket with pre-signed URL
                 const config_data = JSON.stringify(config);
-                console.log(config_data)
+                // console.log(config_data)
 
                 put_with_xmlhttprequest(url, config_data)
                     .then((response) => {
                         console.log(response);
+                        // Trigger a simple alert after the HTTP PUT has completed
+                        alert("The configuration has been successfully uploaded.");
+                        // TODO: meet the cors issue, need to implement it later
+                        // let inference_url = remote_url + 'inference/run-sagemaker-inference';
+                        // console.log("api-key is ", api_key)
+                        // postToApiGateway(inference_url, api_key, config_data, function (error, response) {
+                        //     if (error) {
+                        //         console.error("Error posting to API Gateway:", error);
+                        //     } else {
+                        //         console.log("Successfully posted to API Gateway:", response);
+                        //         alert("Succeed trigger the remote sagemaker inference.");
+                        //         // You can also add an alert or any other action you'd like to perform on success
+                        //     }
+                        // }) 
                     })
                     .catch((error) => {
                         console.log(error);
+                        alert("An error occurred while uploading the configuration.");
                     });
             }
         }
     );
 
-    // store as config file in local directory
-    // var config_file = "txt2imgConfig.json";
-    // var a = document.createElement('a');
-    // a.download = config_file;
-    // a.style.display = 'none';
-    // var blob = new Blob([config_data], {type: "application/json"});
-    // a.href = URL.createObjectURL(blob);
-    // document.body.appendChild(a);
-    // a.click();
-    // document.body.removeChild(a);
 }
-
-// function put_with_xmlhttprequest(url, data) {
-//     return new Promise((resolve, reject) => {
-//         const xhr = new XMLHttpRequest();
-//         xhr.open("PUT", url);
-//         xhr.setRequestHeader("Content-Length", new Blob([data]).size);
-//         xhr.onload = () => {
-//             resolve(xhr.responseText);
-//         };
-//         xhr.onerror = () => {
-//             reject(xhr.statusText);
-//         };
-//         xhr.send(data);
-//     });
-// }
 
 function put_with_xmlhttprequest(config_url, config_data) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        console.log(`guming debug>> config_url is ${config_url}`)
         xhr.open("PUT", config_url, true);
         //   xhr.setRequestHeader("Content-Type", "application/json");
 
@@ -379,3 +372,31 @@ function getPresignedUrl(remote_url, api_key, key, callback) {
 
     xhr.send();
 }
+
+function postToApiGateway(remote_url, api_key, data, callback) {
+    const apiUrl = remote_url;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", apiUrl, true);
+    // xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("x-api-key", api_key);
+
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 400) {
+            callback(null, xhr.responseText);
+        } else {
+            callback(
+                new Error(`Error posting to API Gateway: ${xhr.statusText}`),
+                null
+            );
+        }
+    };
+
+    xhr.onerror = function () {
+        callback(new Error("Error posting to API Gateway"), null);
+    };
+
+    // Convert data object to JSON string before sending
+    xhr.send(JSON.stringify(data));
+}
+
