@@ -55,6 +55,7 @@ try:
 except ImportError:
     pass
 
+# Note: Change symbol hints mapping in `javascript/hints.js` when you change the symbol values.
 refresh_symbol = '\U0001f504'       # 🔄
 switch_values_symbol = '\U000021C5' # ⇅
 camera_symbol = '\U0001F4F7'        # 📷
@@ -85,7 +86,7 @@ class ToolButton(gr.Button, gr.components.FormComponent):
     """Small button with single emoji as text, fits inside gradio forms"""
 
     def __init__(self, **kwargs):
-        super().__init__(variant="tool", **kwargs)
+        super().__init__(variant="tool", elem_classes=['cnet-toolbutton'], **kwargs)
 
     def get_block_name(self):
         return "button"
@@ -134,14 +135,23 @@ def image_dict_from_any(image) -> Optional[Dict[str, np.ndarray]]:
     if isinstance(image['image'], str):
         if os.path.exists(image['image']):
             image['image'] = numpy.array(Image.open(image['image'])).astype('uint8')
-        else:
+        elif image['image']:
             image['image'] = external_code.to_base64_nparray(image['image'])
+        else:
+            image['image'] = None            
+
+    # If there is no image, return image with None image and None mask
+    if image['image'] is None:
+        image['mask'] = None
+        return image
 
     if isinstance(image['mask'], str):
         if os.path.exists(image['mask']):
             image['mask'] = numpy.array(Image.open(image['mask'])).astype('uint8')
-        else:
+        elif image['mask']:
             image['mask'] = external_code.to_base64_nparray(image['mask'])
+        else:
+            image['mask'] = np.zeros_like(image['image'], dtype=np.uint8)
     elif image['mask'] is None:
         image['mask'] = np.zeros_like(image['image'], dtype=np.uint8)
 
@@ -373,10 +383,10 @@ class Script(scripts.Script):
                     gr.update(visible=False, interactive=False),
                     gr.update(visible=True)
                 ]
-            elif module == "tile_gaussian":
+            elif module == "tile_resample":
                 return [
-                    gr.update(label="Preprocessor resolution", value=512, minimum=64, maximum=2048, step=1, visible=not pp, interactive=not pp),
-                    gr.update(label="Noise", value=16.0, minimum=0.1, maximum=48.0, step=0.01, visible=True, interactive=True),
+                    gr.update(visible=False, interactive=False),
+                    gr.update(label="Down Sampling Rate", value=1.0, minimum=1.0, maximum=8.0, step=0.01, visible=True, interactive=True),
                     gr.update(visible=False, interactive=False),
                     gr.update(visible=True)
                 ]
@@ -450,10 +460,7 @@ class Script(scripts.Script):
             module = self.get_module_basename(module)
             preprocessor = self.preprocessor[module]
 
-            if pres > 64:
-                result, is_image = preprocessor(img, res=pres, thr_a=pthr_a, thr_b=pthr_b)
-            else:
-                result, is_image = preprocessor(img)
+            result, is_image = preprocessor(img, res=pres, thr_a=pthr_a, thr_b=pthr_b)
 
             if is_image:
                 if result.ndim == 3 and result.shape[2] == 4:
@@ -944,6 +951,7 @@ class Script(scripts.Script):
                     image['mask'] = image['mask'][..., np.newaxis]
 
             resize_mode = external_code.resize_mode_from_value(unit.resize_mode)
+            control_mode = external_code.control_mode_from_value(unit.control_mode)
 
             if unit.low_vram:
                 hook_lowvram = True
@@ -1065,34 +1073,32 @@ class Script(scripts.Script):
             print(f"Loading preprocessor: {unit.module}")
             preprocessor = self.preprocessor[unit.module]
             h, w, bsz = p.height, p.width, p.batch_size
-            if unit.processor_res > 64:
-                preprocessor_resolution = unit.processor_res
-                if unit.pixel_perfect:
-                    raw_H, raw_W, _ = input_image.shape
-                    target_H, target_W = p.height, p.width
 
-                    k0 = float(target_H) / float(raw_H)
-                    k1 = float(target_W) / float(raw_W)
+            preprocessor_resolution = unit.processor_res
+            if unit.pixel_perfect:
+                raw_H, raw_W, _ = input_image.shape
+                target_H, target_W = p.height, p.width
 
-                    if resize_mode == external_code.ResizeMode.OUTER_FIT:
-                        estimation = min(k0, k1) * float(min(raw_H, raw_W))
-                    else:
-                        estimation = max(k0, k1) * float(min(raw_H, raw_W))
+                k0 = float(target_H) / float(raw_H)
+                k1 = float(target_W) / float(raw_W)
 
-                    preprocessor_resolution = int(np.round(float(estimation) / 64.0)) * 64
+                if resize_mode == external_code.ResizeMode.OUTER_FIT:
+                    estimation = min(k0, k1) * float(min(raw_H, raw_W))
+                else:
+                    estimation = max(k0, k1) * float(min(raw_H, raw_W))
 
-                    print(f'Pixel Perfect Mode Enabled.')
-                    print(f'resize_mode = {str(resize_mode)}')
-                    print(f'raw_H = {raw_H}')
-                    print(f'raw_W = {raw_W}')
-                    print(f'target_H = {target_H}')
-                    print(f'target_W = {target_W}')
-                    print(f'estimation = {estimation}')
+                preprocessor_resolution = int(np.round(float(estimation) / 64.0)) * 64
 
-                print(f'preprocessor resolution = {preprocessor_resolution}')
-                detected_map, is_image = preprocessor(input_image, res=preprocessor_resolution, thr_a=unit.threshold_a, thr_b=unit.threshold_b)
-            else:
-                detected_map, is_image = preprocessor(input_image)
+                print(f'Pixel Perfect Mode Enabled.')
+                print(f'resize_mode = {str(resize_mode)}')
+                print(f'raw_H = {raw_H}')
+                print(f'raw_W = {raw_W}')
+                print(f'target_H = {target_H}')
+                print(f'target_W = {target_W}')
+                print(f'estimation = {estimation}')
+
+            print(f'preprocessor resolution = {preprocessor_resolution}')
+            detected_map, is_image = preprocessor(input_image, res=preprocessor_resolution, thr_a=unit.threshold_a, thr_b=unit.threshold_b)
 
             if unit.module == "none" and "style" in unit.model:
                 detected_map_bytes = detected_map[:,:,0].tobytes()
@@ -1144,8 +1150,8 @@ class Script(scripts.Script):
                 instance_counter=0,
                 is_vanilla_samplers=is_vanilla_samplers,
                 cfg_scale=p.cfg_scale,
-                soft_injection=unit.control_mode != external_code.ControlMode.BALANCED.value,
-                cfg_injection=unit.control_mode == external_code.ControlMode.CONTROL.value
+                soft_injection=control_mode != external_code.ControlMode.BALANCED,
+                cfg_injection=control_mode == external_code.ControlMode.CONTROL,
             )
             forward_params.append(forward_param)
 
@@ -1177,7 +1183,7 @@ class Script(scripts.Script):
             return
 
         no_detectmap_opt = shared.opts.data.get("control_net_no_detectmap", False)
-        if not batch_hijack.instance.is_batch or not no_detectmap_opt and self.detected_map:
+        if not batch_hijack.instance.is_batch and not no_detectmap_opt and self.detected_map:
             for detect_map, module in self.detected_map:
                 if detect_map is None:
                     continue

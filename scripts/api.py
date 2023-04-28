@@ -178,6 +178,7 @@ disk_path = '/tmp'
 def checkspace_and_update_models(selected_models, checkpoint_info):
     models_num = len(models_type_list)
     space_free_size = selected_models['space_free_size']
+    os.system("df -h")
     for type_id in range(models_num):
         model_type = models_type_list[type_id]
         selected_models_name = selected_models[model_type]
@@ -228,11 +229,22 @@ def checkspace_and_update_models(selected_models, checkpoint_info):
     sd_models.reload_model_weights()
     sd_vae.reload_vae_weights()
 
+def download_model(model_name, model_s3_pos):
+    #download from s3
+    os.system(f'./tools/s5cmd cp {model_s3_pos} ./')
+    os.system(f"tar xvf {model_name}")
+
+def upload_model(model_type, model_name, model_s3_pos):
+    #upload model to s3
+    os.system(f"tar cvf {model_name} {models_path[model_type]}/{model_name}")
+    os.system(f'./tools/s5cmd cp {model_name} {model_s3_pos}') 
 
 def download_and_update(model_type, model_name, model_s3_pos):
     #download from s3
     os.system(f'./tools/s5cmd cp {model_s3_pos} ./')
     os.system(f"tar xvf {model_name}")
+    os.system(f"rm {model_name}")
+    os.system("df -h")
     if model_type == 'Stable-diffusion':
         sd_models.list_models()
     if model_type == 'hypernetworks':
@@ -284,8 +296,8 @@ def sagemaker_api(_, app: FastAPI):
         @return:
         """
         print('-------invocation------')
-        logger.info(req)
-        #print(f"json is {json.loads(req.json())}")
+        print(req)
+        print(f"json is {json.loads(req.json())}")
 
         if req.task == 'text-to-image' or req.task == 'controlnet_txt2img':
             selected_models = req.models
@@ -428,12 +440,12 @@ def sagemaker_api(_, app: FastAPI):
                             results = modules.extras.run_modelmerger(*args)
                         except Exception as e:
                             print(f"Error loading/saving model file: {e}")
-                            # print(traceback.format_exc(), file=sys.stderr)
+                            print(traceback.format_exc(), file=sys.stderr)
                             # modules.sd_models.list_models()  # to remove the potentially missing models from the list
-                            return [None, None, None, f"Error merging checkpoints: {e}"]
+                            return [None, None, None, None, f"Error merging checkpoints: {e}"]
                         return results
 
-                    merge_checkpoint_payload = json.loads(req.merge_checkpoint_paylod)
+                    merge_checkpoint_payload = req.merge_checkpoint_payload
                     primary_model_name = merge_checkpoint_payload["primary_model_name"]
                     secondary_model_name = merge_checkpoint_payload["secondary_model_name"]
                     tertiary_model_name = merge_checkpoint_payload["teritary_model_name"]
@@ -445,25 +457,76 @@ def sagemaker_api(_, app: FastAPI):
                     config_source = merge_checkpoint_payload["config_source"]
                     bake_in_vae = merge_checkpoint_payload["bake_in_vae"]
                     discard_weights = merge_checkpoint_payload["discard_weights"]
+                    merge_model_s3_pos = merge_checkpoint_payload["merge_model_s3"]
 
                     # upload checkpoints from cloud to local variable
-                    
+                    model_type = 'Stable-diffusion'
                     checkpoint_info = req.checkpoint_info
+                    selected_model_s3_pos = checkpoint_info[model_type][primary_model_name]
+                    download_model(primary_model_name, selected_model_s3_pos)
+                    selected_model_s3_pos = checkpoint_info[model_type][secondary_model_name]
+                    download_model(secondary_model_name, selected_model_s3_pos)
+                    if tertiary_model_name:
+                        selected_model_s3_pos = checkpoint_info[model_type][tertiary_model_name]
+                        download_model(tertiary_model_name, selected_model_s3_pos)
+
                     sd_models.list_models()
+
+                    for model_name in sd_models.checkpoints_list.keys():
+                        raw_name = model_name[:-13]
+                        if raw_name == primary_model_name:
+                            primary_model_name = model_name
+                        if raw_name == secondary_model_name:
+                            secondary_model_name = model_name
+                        if raw_name == tertiary_model_name:
+                            tertiary_model_name = model_name
+
+                    print(f"sd model checkpoint list is {sd_models.checkpoints_list}")
 
                     [primary_model_name, secondary_model_name, tertiary_model_name, component_dict_sd_model_checkpoints, modelmerger_result] = \
                         modelmerger("fake_id_task", primary_model_name, secondary_model_name, tertiary_model_name, \
                         interp_method, interp_amount, save_as_half, custom_name, checkpoint_format, config_source, \
                         bake_in_vae, discard_weights)
+
+                    output_model_position = modelmerger_result[20:]
+
+                    # check whether yaml exists
+                    merge_model_name = output_model_position.split('/')[-1].replace(' ','\ ')
+
+                    yaml_position = output_model_position[:-len(output_model_position.split('.')[-1])]+'yaml'
+                    yaml_states = os.path.isfile(yaml_position)
+
+                    new_merge_model_name = merge_model_name.replace('(','_').replace(')','_')
+
+                    base_path = models_path[model_type]
+
+                    merge_model_name_complete_path = base_path + '/' + merge_model_name
+                    new_merge_model_name_complete_path = base_path + '/' + new_merge_model_name
+                    merge_model_name_complete_path = merge_model_name_complete_path.replace('(','\(').replace(')','\)')
+                    os.system(f"mv {merge_model_name_complete_path} {new_merge_model_name_complete_path}")
+
+                    model_yaml = (merge_model_name[:-len(merge_model_name.split('.')[-1])]+'yaml').replace('(','\(').replace(')','\)')
+                    model_yaml_complete_path = base_path + '/' + model_yaml
                     
-                    output_model_position = modelmerger_result[21:] 
+                    print(f"m {merge_model_name_complete_path}, n_m {new_merge_model_name_complete_path}, yaml {model_yaml_complete_path}")
+
+                    if yaml_states:
+                        new_model_yaml = model_yaml.replace('(','_').replace(')','_')
+                        new_model_yaml_complete_path = base_path + '/' + new_model_yaml
+                        os.system(f"mv {model_yaml_complete_path} {new_model_yaml_complete_path}")
+                        os.system(f"tar cvf {new_merge_model_name} {new_merge_model_name_complete_path} {new_model_yaml_complete_path}")
+                    else:
+                        os.system(f"tar cvf {new_merge_model_name} {new_merge_model_name_complete_path} ")
+
+                    os.system(f'./tools/s5cmd cp {new_merge_model_name} {merge_model_s3_pos}{new_merge_model_name}')
+                    os.system(f'rm {new_merge_model_name_complete_path}')
+                    os.system(f'rm {new_model_yaml_complete_path}')
 
                     print(f"output model path is {output_model_position}")
                     
                     # upload merge results , merge task info to s3
 
                     response = {
-                        "id": job_id,
                         "statusCode": 200,
                         "message": output_model_position,
                     }
@@ -503,7 +566,7 @@ try:
     import modules.script_callbacks as script_callbacks
 
     script_callbacks.on_app_started(sagemaker_api)
-    # script_callbacks.on_app_started(move_model_to_tmp)
+    script_callbacks.on_app_started(move_model_to_tmp)
     logger.debug("SD-Webui API layer loaded")
 except Exception as e:
     print(e)

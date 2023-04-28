@@ -44,6 +44,7 @@ class ModelsApiTest(TestCase):
 
     def test_upload_2(self):
         url = "presign s3 url"
+
         def upload_with_put(url):
             with open('file.tar.gz', 'rb') as file:
                 response = requests.put(url, data=file)
@@ -54,13 +55,13 @@ class ModelsApiTest(TestCase):
     def test_model_update(self):
         from update_job_api import update_model_job_api
         update_model_job_api({
-            'model_id': 'id',
+            'model_id': 'asdfasdf',
             'status': 'Creating',
-            'multi_parts_tags': [{'ETag': '"cc95c41fa28463c8e9b88d67805f24e0"', 'PartNumber': 1}, ]}, {})
-
+            'multi_parts_tags': {"test1": [{'ETag': '"cc95c41fa28463c8e9b88d67805f24e0"', 'PartNumber': 1}]},
+        }, {})
 
     def test_process(self):
-        data = {} # sample data
+        data = {}  # sample data
         from create_model.update_job_api import process_result
         process_result(data, {})
 
@@ -82,16 +83,36 @@ class ModelsApiTest(TestCase):
         from create_model.update_job_api import get_object
         get_object(bucket=bucket, key=key)
 
-
     def test_list_checkpoints(self):
         from create_model.checkpoint_api import list_all_checkpoints_api
         resp = list_all_checkpoints_api({}, {})
         print(resp)
 
+    def test_create_update_checkpoint(self):
+        from checkpoint_api import create_checkpoint_api, update_checkpoint_api
+        # resp = create_checkpoint_api({
+        #     "checkpoint_type": "dreambooth",
+        #     "filenames": [
+        #         {"filename": "test1", "parts_number": 5}
+        #     ],
+        #     "params": {
+        #         "new_model_name": "test_api",
+        #         "number": 1,
+        #         "string": "abc"
+        #     }
+        # }, MockContext(aws_request_id="asdfasdf"))
+        # print(resp)
+        resp = update_checkpoint_api({
+            "checkpoint_id": "4e5118f5-9d9a-4a7e-aace-6f5e52c4edd9",
+            "status": "Active",
+            'multi_parts_tags': {"test1": [{'ETag': '"cc95c41fa28463c8e9b88d67805f24e0"', 'PartNumber': 1}]},
+        }, {})
+        print(resp)
+
     def test_update_train_job_api(self):
         from create_model.train_api import update_train_job_api
         update_train_job_api({
-            "train_job_id": "0e78f0b0-1617-40eb-961c-dca5374b34ea",
+            "train_job_id": "asdfasdf",
             "status": "Training"
         }, {})
 
@@ -112,18 +133,20 @@ class ModelsApiTest(TestCase):
         logger = logging.getLogger('boto3')
         ddb_service = DynamoDbUtilsService(logger=logger)
         ddb_service.put_items(table='ModelTable', entries={
-                                                              'id': '512d5e64-021e-49f5-a313-227f842c3f93',
-                                                              'name': 'testProgressBar01',
-                                                              'checkpoint_id': '512d5e64-021e-49f5-a313-227f842c3f93',
-                                                              'model_type': 'dreambooth',
-                                                              'job_status': 'Initial',
+            'id': '512d5e64-021e-49f5-a313-227f842c3f93',
+            'name': 'testProgressBar01',
+            'checkpoint_id': '512d5e64-021e-49f5-a313-227f842c3f93',
+            'model_type': 'dreambooth',
+            'job_status': 'Initial',
             'output_s3_location': 's3://alvindaiyan-aigc-testing-playground/dreambooth/model/testProgressBar01/512d5e64-021e-49f5-a313-227f842c3f93/output',
-            'params': {'create_model_params': {'new_model_name': 'testProgressBar01', 'ckpt_path': 'v1-5-pruned-emaonly.safetensors', 'from_hub': False, 'new_model_url': '', 'new_model_token': '', 'extract_ema': False, 'train_unfrozen': False, 'is_512': True, 'sh': None}}})
+            'params': {'create_model_params': {'new_model_name': 'testProgressBar01',
+                                               'ckpt_path': 'v1-5-pruned-emaonly.safetensors', 'from_hub': False,
+                                               'new_model_url': '', 'new_model_token': '', 'extract_ema': False,
+                                               'train_unfrozen': False, 'is_512': True, 'sh': None}}})
         resp = ddb_service._convert({
             'params': {'test': None}
         })
         print(resp)
-
 
     def test_multipart(self):
         import boto3
@@ -138,7 +161,7 @@ class ModelsApiTest(TestCase):
         part_size = 1 * 1024 * 1024
         file_size = os.stat(large_file_location)
         print(file_size.st_size)
-        parts_number = math.ceil(file_size.st_size/part_size)
+        parts_number = math.ceil(file_size.st_size / part_size)
         print(parts_number)
         # parts = 5
 
@@ -154,7 +177,7 @@ class ModelsApiTest(TestCase):
 
         presign_urls = []
 
-        for i in range(1, parts_number+1):
+        for i in range(1, parts_number + 1):
             presign_url = s3.generate_presigned_url(
                 ClientMethod='upload_part',
                 Params={
@@ -196,8 +219,6 @@ class ModelsApiTest(TestCase):
                 )
                 print(response)
 
-
-
     def test_batch_get_s3_multipart_signed_urls(self):
         from create_model.common_tools import batch_get_s3_multipart_signed_urls
         from create_model._types import MultipartFileReq
@@ -207,3 +228,17 @@ class ModelsApiTest(TestCase):
             [MultipartFileReq(filename='name_not_matter', parts_number=5)]
         )
         print(resp)
+
+    def test_list_bucket_objects(self):
+        import boto3
+        from botocore.config import Config
+        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+        bucket = 'alvindaiyan-aigc-testing-playground'
+        key = 'dreambooth/checkpoint/db-training-test-1/51b8d59b-ba48-4f79-964f-05f2190f5bc3/'
+        response = s3.list_objects(
+            Bucket=bucket,
+            Prefix=key,
+        )
+        print(response)
+        for obj in response['Contents']:
+            print(obj['Key'].replace(key, ""))

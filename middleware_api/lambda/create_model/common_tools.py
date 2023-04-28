@@ -5,7 +5,7 @@ from botocore.config import Config
 from datetime import datetime
 from datetime import timedelta
 
-from create_model._types import MultipartFileReq
+from _types import MultipartFileReq, CheckPoint
 
 
 def get_s3_presign_urls(bucket_name, base_key, filenames) -> Dict[str, str]:
@@ -71,3 +71,34 @@ def get_base_model_s3_key(_type: str, name: str, request_id: str) -> str:
 
 def get_base_checkpoint_s3_key(_type: str, name: str, request_id: str) -> str:
     return f'{_type}/checkpoint/{name}/{request_id}'
+
+
+def complete_mulipart_upload(ckpt: CheckPoint, filename_etag):
+    s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+    if 'multipart_upload' in ckpt.params:
+        multipart = ckpt.params['multipart_upload']
+        for filename, val in multipart.items():
+            # todo: can add s3 MD5 check here to see if file is upload properly
+            if filename in filename_etag:
+                filename_etag[filename].sort(key=lambda x: x['PartNumber'])
+                response = s3.complete_multipart_upload(
+                    Bucket=val['bucket'],
+                    Key=val['key'],
+                    MultipartUpload={'Parts': filename_etag[filename]},
+                    UploadId=val['upload_id']
+                )
+                print(f'complete upload multipart response {response}')
+                response = s3.abort_multipart_upload(
+                    Bucket=val['bucket'],
+                    Key=val['key'],
+                    UploadId=val['upload_id']
+                )
+                print(f'abort upload multipart response {response}')
+
+
+def split_s3_path(s3_path):
+    path_parts = s3_path.replace("s3://", "").split("/")
+    bucket = path_parts.pop(0)
+    key = "/".join(path_parts)
+    return bucket, key
+

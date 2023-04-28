@@ -7,10 +7,12 @@ from dataclasses import dataclass
 
 from typing import Any
 import sagemaker
+from botocore.config import Config
+
 from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
-from common_tools import get_s3_presign_urls
+from common_tools import get_s3_presign_urls, split_s3_path
 from _types import TrainJob, TrainJobStatus, ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
 from create_model_async_job import DecimalEncoder
 
@@ -184,6 +186,7 @@ def _start_train_job(train_job_id: str):
         while not est._current_job_name:
             time.sleep(1)
 
+        train_job.sagemaker_train_name = est._current_job_name
         # trigger stepfunction
         stepfunctions_client = StepFunctionUtilsService(logger=logger)
         sfn_input = {
@@ -192,7 +195,6 @@ def _start_train_job(train_job_id: str):
         }
         sfn_arn = stepfunctions_client.invoke_step_function(training_stepfunction_arn, sfn_input)
         # todo: use batch update, this is ugly!!!
-        train_job.sagemaker_train_name = est._current_job_name
         search_key = {'id': train_job.id}
         ddb_service.update_item(
             table=train_table,
@@ -259,7 +261,7 @@ def check_train_job_status(event, context):
         }
 
     training_job = TrainJob(**raw_train_job)
-    if training_job_status == 'Training':
+    if training_job_status == 'InProgress' or training_job_status == 'Stopping':
         return event
 
     if training_job_status == 'Failed' or training_job_status == 'Stopped':
@@ -292,15 +294,24 @@ def check_train_job_status(event, context):
             field_name='checkpoint_status',
             value=checkpoint.checkpoint_status.value
         )
-        # checkpoint.checkpoint_names = ['updated name']  # todo: findout output location
-        # ddb_service.update_item(
-        #     table=checkpoint_table,
-        #     key={
-        #         'id': checkpoint.id
-        #     },
-        #     field_name='checkpoint_names',
-        #     value=checkpoint.checkpoint_names
-        # )
+        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+        bucket, key = split_s3_path(checkpoint.s3_location)
+        s3_resp = s3.list_objects(
+            Bucket=bucket,
+            Prefix=key,
+        )
+        checkpoint.checkpoint_names = []
+        for obj in s3_resp['Contents']:
+            checkpoint.checkpoint_names.append(obj['Key'].replace(f'{key}/', ""))
+
+        ddb_service.update_item(
+            table=checkpoint_table,
+            key={
+                'id': checkpoint.id
+            },
+            field_name='checkpoint_names',
+            value=checkpoint.checkpoint_names
+        )
 
         training_job.params['resp'] = {
             'status': 'Failed',
