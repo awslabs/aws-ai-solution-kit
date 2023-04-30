@@ -2,9 +2,10 @@ import time
 import logging
 import logging.config
 import os
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+from fastapi.exception_handlers import http_exception_handler
 from mangum import Mangum
 from common.response_wrapper import resp_err
 from common.enum import MessageEnum
@@ -39,10 +40,23 @@ s3 = boto3.client('s3')
 inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
 endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
 
+async def custom_exception_handler(request: Request, exc: HTTPException):
+    headers = {
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+    }
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=headers
+    )
+
 app = FastAPI(
     title="API List of SageMaker Inference",
     version="0.9",
 )
+app.exception_handler(HTTPException)(custom_exception_handler)
 
 def get_uuid():
     uuid_str = str(uuid.uuid4())
@@ -141,49 +155,62 @@ def root():
 
 @app.post("/inference/run-sagemaker-inference")
 async def run_sagemaker_inference(request: Request):
-    logger.info('entering the run_sage_maker_inference function!')
+    try:
+        logger.info('entering the run_sage_maker_inference function!')
 
-    # TODO: add logic for inference id
-    inference_id = get_uuid() 
+        # TODO: add logic for inference id
+        inference_id = get_uuid()
 
-    # payload = await request.json()
-    payload = {}
-    data_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
+        # payload = await request.json()
+        payload = {}
+        data_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
 
-    logger.info(json.dumps(data_dict))
-    # Need to generate the payload from data_dict here:
-    
+        logger.info(json.dumps(data_dict))
+        # Need to generate the payload from data_dict here:
 
-    print(f"input in json format {payload}")
-    endpoint_name = payload["endpoint_name"]
+        print(f"input in json format {payload}")
+        endpoint_name = payload["endpoint_name"]
 
-    predictor = Predictor(endpoint_name)
+        predictor = Predictor(endpoint_name)
 
-    predictor = AsyncPredictor(predictor, name=endpoint_name)
-    predictor.serializer = JSONSerializer()
-    predictor.deserializer = JSONDeserializer()
-    prediction = predictor.predict_async(data=payload, inference_id=inference_id)
-    output_path = prediction.output_path
+        predictor = AsyncPredictor(predictor, name=endpoint_name)
+        predictor.serializer = JSONSerializer()
+        predictor.deserializer = JSONDeserializer()
+        prediction = predictor.predict_async(data=payload, inference_id=inference_id)
+        output_path = prediction.output_path
 
-    #put the item to inference DDB for later check status
-    current_time = str(datetime.now())
-    response = inference_table.put_item(
-        Item={
-            'InferenceJobId': inference_id,
-            'startTime': current_time,
-            'status': 'inprogress'
-        })
-    
-    print(f"output_path is {output_path}")
-    # return {"endpoint_name": endpoint_name, "output_path": output_path}
-    headers = {
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "*"
-    }
+        #put the item to inference DDB for later check status
+        current_time = str(datetime.now())
+        response = inference_table.put_item(
+            Item={
+                'InferenceJobId': inference_id,
+                'startTime': current_time,
+                'status': 'inprogress'
+            })
 
-    response = JSONResponse(content={"endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
-    return response
+        print(f"output_path is {output_path}")
+        # return {"endpoint_name": endpoint_name, "output_path": output_path}
+        headers = {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        }
+
+        response = JSONResponse(content={"endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+        return response
+
+    except Exception as e:
+        logger.error(f"Error occurred: {str(e)}")
+
+        # raise HTTPException(status_code=500, detail=f"An error occurred during processing.{str(e)}")
+        headers = {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        }
+
+        response = JSONResponse(content={"error": f"error info {str(e)}"}, headers=headers)
+        return response
 
 @app.post("/inference/deploy-sagemaker-endpoint")
 async def deploy_sagemaker_endpoint(request: Request):
