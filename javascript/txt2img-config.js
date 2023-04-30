@@ -275,6 +275,17 @@ function txt2img_config_save() {
     config["controlnet_resize_mode"] = document.querySelector("#component-205 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > span")
     config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"]=document.querySelector("#component-206 > label > input")
 
+    config['script_txt2txt_prompt_matrix_prompt_type_positive']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
+    config['script_txt2txt_prompt_matrix_prompt_type_negative']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")
+    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
+    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")    
+    config['script_txt2txt_prompt_matrix_margin_size']=document.querySelector("#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input")
+
+    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input")
+    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input")
+    config['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea")
+    config['script_txt2txt_prompts_from_file_or_textbox_file']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div")
+
 
     // config for prompt area
     config["txt2img_prompt"] = document.querySelector(
