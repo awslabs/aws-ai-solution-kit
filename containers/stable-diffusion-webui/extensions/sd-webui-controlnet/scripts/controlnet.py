@@ -3,6 +3,7 @@ import inspect
 import os
 from collections import OrderedDict
 from copy import copy
+import base64
 from typing import Union, Dict, Optional, List
 import importlib
 
@@ -115,6 +116,33 @@ def swap_img2img_pipeline(p: processing.StableDiffusionProcessingImg2Img):
         if hasattr(p, k):
             continue
         setattr(p, k, v)
+
+
+def update_json_download_link(json_string: str, file_name: str) -> Dict:
+    base64_encoded_json = base64.b64encode(json_string.encode('utf-8')).decode('utf-8')
+    data_uri = f'data:application/json;base64,{base64_encoded_json}'
+    style = """ 
+    position: absolute;
+    right: var(--size-2);
+    bottom: calc(var(--size-2) * 4);
+    font-size: x-small;
+    font-weight: bold;
+    padding: 2px;
+
+    box-shadow: var(--shadow-drop);
+    border: 1px solid var(--button-secondary-border-color);
+    border-radius: var(--radius-sm);
+    background: var(--background-fill-primary);
+    height: var(--size-5);
+    color: var(--block-label-text-color);
+    """
+    hint = "Download the pose as .json file"
+    html = f"""<a href='{data_uri}' download='{file_name}' style="{style}" title="{hint}">
+                Json</a>"""
+    return gr.update(
+        value=html,
+        visible=(json_string != '')
+    )
 
 
 global_state.update_cn_models()
@@ -241,7 +269,28 @@ class Script(scripts.Script):
                 with gr.Row(equal_height=True):
                     input_image = gr.Image(source='upload', brush_radius=20, mirror_webcam=False, type='numpy', tool='sketch', elem_id=f'{elem_id_tabname}_{tabname}_input_image')
                     # Gradio's magic number. Only 242 works.
-                    generated_image = gr.Image(label="Preprocessor Preview", visible=False, elem_id=f'{elem_id_tabname}_{tabname}_generated_image').style(height=242)
+                    with gr.Group(visible=False) as generated_image_group:
+                        generated_image = gr.Image(label="Preprocessor Preview", elem_id=f'{elem_id_tabname}_{tabname}_generated_image').style(height=242)
+                        download_pose_link = gr.HTML(value='', visible=False)
+                        preview_close_button_style = """ 
+                            position: absolute;
+                            right: var(--size-2);
+                            bottom: var(--size-2);
+                            font-size: x-small;
+                            font-weight: bold;
+                            padding: 2px;
+                            cursor: pointer;
+
+                            box-shadow: var(--shadow-drop);
+                            border: 1px solid var(--button-secondary-border-color);
+                            border-radius: var(--radius-sm);
+                            background: var(--background-fill-primary);
+                            height: var(--size-5);
+                            color: var(--block-label-text-color);
+                            """
+                        preview_check_elem_id = f'{elem_id_tabname}_{tabname}_preprocessor_preview'
+                        preview_close_button_js = f"document.querySelector(\'#{preview_check_elem_id} input[type=\\\'checkbox\\\']\').click();"
+                        gr.HTML(value=f'''<a style="{preview_close_button_style}" title="Close Preview" onclick="{preview_close_button_js}">Close</a>''', visible=True)
 
             with gr.Tab(label='Batch') as batch_tab:
                 batch_image_dir = gr.Textbox(label='Input Directory', placeholder='Leave empty to use img2img batch controlnet input directory', elem_id=f'{elem_id_tabname}_{tabname}_batch_image_dir')
@@ -269,7 +318,7 @@ class Script(scripts.Script):
             guess_mode = gr.Checkbox(label='Guess Mode', value=default_unit.guess_mode, interactive=False, visible=False)
             # Guess mode will be removed soon after API is fixed.
             pixel_perfect = gr.Checkbox(label='Pixel Perfect', value=default_unit.pixel_perfect)
-            preprocessor_preview = gr.Checkbox(label='Allow Preview', value=False)
+            preprocessor_preview = gr.Checkbox(label='Allow Preview', value=False, elem_id=preview_check_elem_id)
 
         # infotext_fields.append((enabled, "ControlNet Enabled"))
 
@@ -308,7 +357,7 @@ class Script(scripts.Script):
 
         with gr.Row():
             module = gr.Dropdown(global_state.ui_preprocessor_keys, label=f"Preprocessor", value=default_unit.module)
-            trigger_preprocessor = ToolButton(value=trigger_symbol, visible=False)
+            trigger_preprocessor = ToolButton(value=trigger_symbol, visible=True)
             model = gr.Dropdown(list(global_state.cn_models.keys()), label=f"Model", value=default_unit.model)
             refresh_models = ToolButton(value=refresh_symbol)
             refresh_models.click(refresh_all_models, model, model)
@@ -355,7 +404,7 @@ class Script(scripts.Script):
                     gr.update(visible=False, interactive=False),
                     gr.update(visible=True)
                 ]
-            elif module in ["depth_leres", "depth_leres_boost"]:
+            elif module in ["depth_leres", "depth_leres++"]:
                 return [
                     gr.update(label="Preprocessor Resolution", minimum=64, maximum=2048, value=512, step=1, visible=not pp, interactive=not pp),
                     gr.update(label="Remove Near %", value=0, minimum=0, maximum=100, step=0.1, visible=True, interactive=True),
@@ -444,9 +493,9 @@ class Script(scripts.Script):
                 return input_image.orgpreprocess(inputs)
             return None
 
-        def run_annotator(image, module, pres, pthr_a, pthr_b):
+        def run_annotator(image, module, pres, pthr_a, pthr_b, t2i_w, t2i_h, pp, rm):
             if image is None:
-                return gr.update(value=None, visible=True)
+                return gr.update(value=None, visible=True), gr.update(), gr.update()
 
             img = HWC3(image['image'])
             if not ((image['mask'][:, :, 0] == 0).all() or (image['mask'][:, :, 0] == 255).all()):
@@ -460,25 +509,78 @@ class Script(scripts.Script):
             module = self.get_module_basename(module)
             preprocessor = self.preprocessor[module]
 
-            result, is_image = preprocessor(img, res=pres, thr_a=pthr_a, thr_b=pthr_b)
+            if pp:
+                raw_H, raw_W, _ = img.shape
+                target_H, target_W = t2i_h, t2i_w
+                rm = str(rm)
+
+                k0 = float(target_H) / float(raw_H)
+                k1 = float(target_W) / float(raw_W)
+
+                if rm == external_code.ResizeMode.OUTER_FIT.value:
+                    estimation = min(k0, k1) * float(min(raw_H, raw_W))
+                else:
+                    estimation = max(k0, k1) * float(min(raw_H, raw_W))
+
+                pres = int(np.round(float(estimation) / 64.0)) * 64
+                print(f'Pixel Perfect Mode Enabled In Preview.')
+                print(f'resize_mode = {rm}')
+                print(f'raw_H = {raw_H}')
+                print(f'raw_W = {raw_W}')
+                print(f'target_H = {target_H}')
+                print(f'target_W = {target_W}')
+                print(f'estimation = {estimation}')
+
+            class JsonAcceptor:
+                def __init__(self) -> None:
+                    self.value = ''
+
+                def accept(self, json_string: str) -> None:
+                    self.value = json_string
+            json_acceptor = JsonAcceptor()
+
+            print(f'Preview Resolution = {pres}')
+            result, is_image = preprocessor(img, res=pres, thr_a=pthr_a, thr_b=pthr_b, json_pose_callback=json_acceptor.accept)
+
+            if preprocessor is processor.clip:
+                result = processor.clip_vision_visualization(result)
+                is_image = True
 
             if is_image:
                 if result.ndim == 3 and result.shape[2] == 4:
                     inpaint_mask = result[:, :, 3]
                     result = result[:, :, 0:3]
                     result[inpaint_mask > 127] = 0
-                return gr.update(value=result, visible=True, interactive=False)
+                return (
+                    # Update to `generated_image`
+                    gr.update(value=result, visible=True, interactive=False),
+                    # Update to `download_pose_link`
+                    update_json_download_link(json_acceptor.value, 'pose.json'),
+                    # preprocessor_preview
+                    gr.update(value=True)
+                )
 
-            return gr.update(value=None, visible=True)
+            return (
+                # Update to `generated_image`
+                gr.update(value=None, visible=True),
+                # Update to `download_pose_link`
+                update_json_download_link(json_acceptor.value, 'pose.json'),
+                # preprocessor_preview
+                gr.update(value=True)
+            )
 
         def shift_preview(is_on):
-            if is_on:
-                return gr.update(visible=True), gr.update(value=None, visible=True)
-            else:
-                return gr.update(visible=False), gr.update(visible=False)
+            return (
+                # generated_image
+                gr.update() if is_on else gr.update(value=None),
+                # generated_image_group
+                gr.update(visible=is_on),
+                # download_pose_link
+                gr.update() if is_on else gr.update(value=None),
+            )
 
-        preprocessor_preview.change(fn=shift_preview, inputs=[preprocessor_preview], outputs=[trigger_preprocessor, generated_image])
-        trigger_preprocessor.click(fn=run_annotator, inputs=[input_image, module, processor_res, threshold_a, threshold_b], outputs=[generated_image])
+        preprocessor_preview.change(fn=shift_preview, inputs=[preprocessor_preview], 
+                                    outputs=[generated_image, generated_image_group, download_pose_link])
 
         if is_img2img:
             send_dimen_button.click(fn=send_dimensions, inputs=[input_image], outputs=[self.img2img_w_slider, self.img2img_h_slider])
@@ -490,6 +592,13 @@ class Script(scripts.Script):
         resize_mode = gr.Radio(choices=[e.value for e in external_code.ResizeMode], value=default_unit.resize_mode.value, label="Resize Mode")
 
         loopback = gr.Checkbox(label='[Loopback] Automatically send generated images to this ControlNet unit', value=default_unit.loopback)
+
+        trigger_preprocessor.click(fn=run_annotator, inputs=[
+            input_image, module, processor_res, threshold_a, threshold_b,
+            self.img2img_w_slider if is_img2img else self.txt2img_w_slider,
+            self.img2img_h_slider if is_img2img else self.txt2img_h_slider,
+            pixel_perfect, resize_mode
+        ], outputs=[generated_image, download_pose_link, preprocessor_preview])
 
         def fn_canvas(h, w):
             return np.zeros(shape=(h, w, 3), dtype=np.uint8) + 255, gr.Accordion.update(visible=False)
@@ -708,6 +817,15 @@ class Script(scripts.Script):
 
         if os.path.exists(override_config):
             network_config = override_config
+        else:
+            print(f'ERROR: ControlNet cannot find model config [{override_config}] \n'
+                  f'ERROR: ControlNet will use a WRONG config [{network_config}] to load your model. \n'
+                  f'ERROR: The WRONG config may not match your model. The generated results can be bad. \n'
+                  f'ERROR: You are using a ControlNet model [{model_stem}] without correct YAML config file. \n'
+                  f'ERROR: The performance of this model may be worse than your expectation. \n'
+                  f'ERROR: If this model cannot get good results, the reason is that you do not have a YAML file for the model. \n'
+                  f'Solution: Please download YAML file, or ask your model provider to provide [{override_config}] for you to download.\n'
+                  f'Hint: You can take a look at [{os.path.join(global_state.script_dir, "models")}] to find many existing YAML files.\n')
 
         print(f"Loading config: {network_config}")
         network = network_module(
@@ -894,17 +1012,21 @@ class Script(scripts.Script):
 
             enabled_units.append(copy(unit))
             if len(units) != 1:
-                prefix = f"ControlNet-{idx}"
+                prefix = f"ControlNet {idx}"
             else:
                 prefix = "ControlNet"
 
             p.extra_generation_params.update({
                 f"{prefix} Enabled": True,
-                f"{prefix} Module": unit.module,
+                f"{prefix} Preprocessor": unit.module,
                 f"{prefix} Model": unit.model,
                 f"{prefix} Weight": unit.weight,
-                f"{prefix} Guidance Start": unit.guidance_start,
-                f"{prefix} Guidance End": unit.guidance_end,
+                f"{prefix} Starting Step": unit.guidance_start,
+                f"{prefix} Ending Step": unit.guidance_end,
+                f"{prefix} Resize Mode": str(unit.resize_mode),
+                f"{prefix} Pixel Perfect": str(unit.pixel_perfect),
+                f"{prefix} Control Mode": str(unit.control_mode),
+                f"{prefix} Preprocessor Parameters": str((unit.processor_res, unit.threshold_a, unit.threshold_b)),
             })
 
         return enabled_units
@@ -1126,10 +1248,8 @@ class Script(scripts.Script):
                 detected_maps.append((detected_map, unit.module))
             else:
                 control = detected_map
-
                 if unit.module == 'clip_vision':
-                    fake_detected_map = np.ndarray((detected_map.shape[0]*4, detected_map.shape[1]),dtype="uint8", buffer=detected_map.detach().cpu().numpy().tobytes())
-                    detected_maps.append((fake_detected_map, unit.module))
+                    detected_maps.append((processor.clip_vision_visualization(detected_map), unit.module))
 
             is_vanilla_samplers = p.sampler_name in ["DDIM", "PLMS", "UniPC"]
 
@@ -1162,10 +1282,9 @@ class Script(scripts.Script):
         self.latest_network.notify(forward_params, is_vanilla_samplers)
         self.detected_map = detected_maps
 
-        if len(self.enabled_units) > 0 and shared.opts.data.get("control_net_skip_img2img_processing") and hasattr(p, "init_images"):
-            swap_img2img_pipeline(p)
-
     def postprocess(self, p, processed, *args):
+        processor_params_flag = (', '.join(getattr(processed, 'extra_generation_params', []))).lower()
+
         if not batch_hijack.instance.is_batch:
             self.enabled_units.clear()
 
@@ -1182,12 +1301,18 @@ class Script(scripts.Script):
         if self.latest_network is None:
             return
 
-        no_detectmap_opt = shared.opts.data.get("control_net_no_detectmap", False)
-        if not batch_hijack.instance.is_batch and not no_detectmap_opt and self.detected_map:
-            for detect_map, module in self.detected_map:
-                if detect_map is None:
-                    continue
-                processed.images.extend([Image.fromarray(detect_map.clip(0, 255).astype(np.uint8))])
+        if not batch_hijack.instance.is_batch:
+            if not shared.opts.data.get("control_net_no_detectmap", False):
+                if 'sd upscale' not in processor_params_flag:
+                    if self.detected_map is not None:
+                        for detect_map, module in self.detected_map:
+                            if detect_map is None:
+                                continue
+                            processed.images.extend([
+                                Image.fromarray(
+                                    np.ascontiguousarray(detect_map.copy()).copy().clip(0, 255).astype(np.uint8)
+                                )
+                            ])
 
         self.input_image = None
         self.latest_network.restore(p.sd_model.model.diffusion_model)
@@ -1243,30 +1368,18 @@ def on_ui_settings():
         1, "Multi ControlNet: Max models amount (requires restart)", gr.Slider, {"minimum": 1, "maximum": 10, "step": 1}, section=section))
     shared.opts.add_option("control_net_model_cache_size", shared.OptionInfo(
         1, "Model cache size (requires restart)", gr.Slider, {"minimum": 1, "maximum": 5, "step": 1}, section=section))
-    shared.opts.add_option("control_net_control_transfer", shared.OptionInfo(
-        False, "Apply transfer control when loading models", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("control_net_no_detectmap", shared.OptionInfo(
         False, "Do not append detectmap to output", gr.Checkbox, {"interactive": True}, section=section))
-    shared.opts.add_option("control_net_high_res_only_mid", shared.OptionInfo(
-        False, "Use only-mid-control on high-res. fix (second pass)", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("control_net_detectmap_autosaving", shared.OptionInfo(
         False, "Allow detectmap auto saving", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("control_net_allow_script_control", shared.OptionInfo(
         False, "Allow other script to control this extension", gr.Checkbox, {"interactive": True}, section=section))
-    shared.opts.add_option("control_net_skip_img2img_processing", shared.OptionInfo(
-        False, "Skip img2img processing when using img2img initial image", gr.Checkbox, {"interactive": True}, section=section))
-    shared.opts.add_option("control_net_monocular_depth_optim", shared.OptionInfo(
-        False, "Enable optimized monocular depth estimation", gr.Checkbox, {"interactive": True}, section=section))
-    shared.opts.add_option("control_net_only_mid_control", shared.OptionInfo(
-        False, "Only use mid-control when inference", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("control_net_sync_field_args", shared.OptionInfo(
         False, "Passing ControlNet parameters with \"Send to img2img\"", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("controlnet_show_batch_images_in_ui", shared.OptionInfo(
-        False, "Show batch images in gradio gallerie output", gr.Checkbox, {"interactive": True}, section=section))
+        False, "Show batch images in gradio gallery output", gr.Checkbox, {"interactive": True}, section=section))
     shared.opts.add_option("controlnet_increment_seed_during_batch", shared.OptionInfo(
         False, "Increment seed after each controlnet batch iteration", gr.Checkbox, {"interactive": True}, section=section))
-    # shared.opts.add_option("control_net_advanced_weighting", shared.OptionInfo(
-    #     False, "Enable advanced weight tuning", gr.Checkbox, {"interactive": False}, section=section))
 
 
 def on_after_component(component, **_kwargs):
