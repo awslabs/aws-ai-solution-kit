@@ -1,6 +1,6 @@
 # Vesion control for stable-diffusion-webui
 
-Update time: 20230427
+Update time: 20230504
 
 webui/lora 5ab7f213 (20230502)
 controlnet 23c0c803 (20230503)
