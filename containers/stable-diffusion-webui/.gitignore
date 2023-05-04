@@ -8,7 +8,6 @@ __pycache__
 /venv
 /tmp
 /model.ckpt
-/models/
 /models/**/*
 /GFPGANv1.3.pth
 /gfpgan/weights/*.pth
@@ -30,7 +29,8 @@ notification.mp3
 /SwinIR
 /textual_inversion
 .vscode
-/extensions/aws-ai-solution-kit
+/extensions
 /test/stdout.txt
 /test/stderr.txt
-/cache.json
+/cache.json*
+/config_states/

@@ -2,12 +2,9 @@
 
 Update time: 20230427
 
-webui/lora 22bcc7be (20230329)
-controlnet 93b0f9e1 (20230425)
+webui/lora 5ab7f213 (20230502)
+controlnet 23c0c803 (20230503)
 dreambooth 926ae204 (20230331)
-
-update patch for webui (PR 9319)
-    https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/9319/commits/aef42bfec09a9ca93d1222b7b47256f37e192a32
 
 # How to play with /stable-diffusion-webui
 
