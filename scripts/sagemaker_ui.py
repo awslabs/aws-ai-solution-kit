@@ -16,6 +16,7 @@ from modules import shared, scripts
 from modules.ui import create_refresh_button
 from utils import get_variable_from_json
 from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
+from requests.exceptions import JSONDecodeError
 from datetime import datetime
 import math
 
@@ -85,6 +86,7 @@ def update_sagemaker_endpoints():
 
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
+    print(f"guming debug>>update_sagemaker_endpoints, {r}")
     sagemaker_endpoints = []
     
     for obj in r:
@@ -516,6 +518,25 @@ def generate_on_cloud():
     r = response.json()
     print(f"response for rest api {r}")
 
+def generate_on_cloud_no_input():
+    print(f"start cloud inference with empty payload")
+    
+    # stage 2: inference using endpoint_name
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {}
+    inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"
+    response = requests.post(inference_url, json=payload, headers=headers)
+    try:
+        r = response.json()
+    except JSONDecodeError as e:
+        print(f"Failed to decode JSON response: {e}")
+        print(f"Raw server response: {response.text}")
+    else:
+        print(f"response for rest api {r}")
+
 def sagemaker_deploy(instance_type, initial_instance_count=1):
     """ Create SageMaker endpoint for GPU inference.
     Args:
@@ -617,10 +638,10 @@ def create_ui():
                     inputs=[],
                     outputs=[]
                 )
-                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use javascript to update config--developing)", variant='primary')
+                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use config on the cloud)", variant='primary')
                 generate_on_cloud_button_with_js.click(
-                    _js="generate_on_cloud",
-                    fn=generate_on_cloud,
+                    # _js="txt2img_config_save",
+                    fn=generate_on_cloud_no_input,
                     inputs=[],
                     outputs=[]
                 )

@@ -339,6 +339,7 @@ def sagemaker_api(_, app: FastAPI):
                 db_create_model_payload:
                     :s3_input_path: S3 path for download src model.
                     :s3_output_path: S3 path for upload generated model.
+                    :ckpt_from_cloud: Whether to get ckpt from cloud or local.
                     :job_id: job id.
                     :param
                         :new_model_name: generated model name.
@@ -357,8 +358,17 @@ def sagemaker_api(_, app: FastAPI):
                     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
                     output_path = get_path_from_s3_path(s3_output_path)
                     db_create_model_params = db_create_model_payload["param"]["create_model_params"]
+                    if "ckpt_from_cloud" in db_create_model_payload["param"]:
+                        ckpt_from_s3 = db_create_model_payload["param"]["ckpt_from_cloud"]
+                    else:
+                        ckpt_from_s3 = False
                     if not db_create_model_params['from_hub']:
-                        s3_input_path = db_create_model_payload["s3_input_path"]
+                        if not ckpt_from_s3:
+                            logger.info(f"ckpt from s3")
+                            s3_input_path = db_create_model_payload["s3_input_path"]
+                        else:
+                            logger.info(f"ckpt from local")
+                            s3_input_path = db_create_model_payload["param"]["s3_ckpt_path"]
                         input_bucket_name = get_bucket_name_from_s3_path(s3_input_path)
                         local_model_path = f'{db_create_model_params["ckpt_path"]}.tar'
                         input_path = os.path.join(get_path_from_s3_path(s3_input_path), local_model_path)
@@ -379,7 +389,7 @@ def sagemaker_api(_, app: FastAPI):
                     # print("Delete src model.")
                     # os.system(f"rm -rf models/Stable-diffusion")
                     logging.info("Upload tgt model to s3.")
-                    upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
+                    # upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
                     config_file = os.path.join(target_local_model_dir, "db_config.json")
                     with open(config_file, 'r') as openfile:
                         config_dict = json.load(openfile)
@@ -395,7 +405,7 @@ def sagemaker_api(_, app: FastAPI):
                     }
                     # Clean up
                     logging.info("Delete tgt model.")
-                    os.system(f"rm -rf models/dreambooth")
+                    # os.system(f"rm -rf models/dreambooth")
                     logging.info("Check disk usage after request.")
                     os.system("df -h")
                     return response
@@ -403,9 +413,9 @@ def sagemaker_api(_, app: FastAPI):
                     response = {
                         "id": job_id,
                         "statusCode": 500,
-                        "message": e,
+                        "message": traceback.format_exc(),
                     }
-                    logger.error(e)
+                    logger.error(traceback.format_exc())
                     return response
             elif req.task == 'merge-checkpoint':
                 r"""

@@ -7,7 +7,7 @@ import pickle
 import logging
 import base64
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 import boto3
 from utils import download_file_from_s3, download_folder_from_s3, download_folder_from_s3_by_tar, upload_folder_to_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
@@ -72,7 +72,10 @@ def check_and_upload(local_path, bucket, s3_path):
 
 def upload_model_to_s3(model_name, s3_output_path):
     output_bucket_name = get_bucket_name_from_s3_path(s3_output_path)
-    local_path = os.path.join("Stable-diffusion", model_name)
+    local_path = os.path.join("models/Stable-diffusion", model_name)
+    s3_output_path = get_path_from_s3_path(s3_output_path)
+    logger.info(f"Upload check point to s3 {local_path} {output_bucket_name} {s3_output_path}")
+    print(f"Upload check point to s3 {local_path} {output_bucket_name} {s3_output_path}")
     upload_folder_to_s3_by_tar(local_path, output_bucket_name, s3_output_path)
     return os.path.join(s3_output_path, f"{model_name}.tar")
 
@@ -123,6 +126,7 @@ def main(s3_input_path, s3_output_path, params):
     prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, class_data_tar)
     # sync_status(job_id, bucket_name, model_dir)
     train(model_name)
+    upload_model_to_s3(model_name, s3_output_path)
 
 def test():
     model_name = "dreambooth_sagemaker_test"
