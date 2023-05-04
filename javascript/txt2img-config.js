@@ -335,6 +335,13 @@ function scrap_ui_component_value(config) {
         "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
     ).value;
 
+    const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-a6vu2r .token > span");
+    const selectedValues = Array.from(tokens).map(token => token.textContent);
+    
+    console.log("guming debug>>>")
+    console.log(selectedValues);
+
+
     //LoRa
     config["sagemaker_lora_model"] = document.querySelector(
         "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
@@ -357,16 +364,16 @@ function scrap_ui_component_value(config) {
         );
     config["controlnet_enable"] = document.querySelector(
         "#component-185 > label > input"
-    ).value;
+    ).checked;
     config["controlnet_lowVRAM_enable"] = document.querySelector(
         "#component-186 > label > input"
-    ).value;
+    ).checked;
     config["controlnet_pixel_perfect"] = document.querySelector(
         "#component-188 > label > input"
-    ).value;
+    ).checked;
     config["controlnet_allow_preview"] = document.querySelector(
         "#component-189 > label > input"
-    ).value;
+    ).checked;
     config["controlnet_preprocessor"] = document.querySelector(
         "#component-191 > label > div > div.wrap-inner.svelte-a6vu2r > span"
     ).textContent;
