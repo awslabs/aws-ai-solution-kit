@@ -18,6 +18,10 @@ RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/
 
 WORKDIR /opt/ml/code
 
+RUN mkdir /opt/ml/code/vae_models
+COPY models/vae_models /opt/ml/code/vae_models
+RUN mkdir /opt/ml/code/models
+RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
 # ENV PATH="$PATH:/opt/ml/code"
 
 # ENV SAGEMAKER_PROGRAM sagemaker_dreambooth_train.py
