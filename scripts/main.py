@@ -427,7 +427,10 @@ def get_cloud_ckpts():
         return []
     global ckpt_dict
     for ckpt in response["checkpoints"]:
-        ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
+        if len(ckpt['name']) > 0:
+            ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
+        else:
+            ckpt_key = f"cloud-{ckpt['id']}"
         ckpt_dict[ckpt_key] = ckpt
 
 def get_cloud_ckpt_name_list():
