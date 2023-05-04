@@ -40,6 +40,8 @@ txt2img_show_hook = None
 txt2img_gallery = None
 txt2img_generation_info = None
 txt2img_html_info = None
+modelmerger_merge_hook = None
+modelmerger_merge_component = None
 job_link_list = []
 ckpt_dict = {}
 
@@ -88,7 +90,7 @@ def on_after_component_callback(component, **_kwargs):
             (is_dreambooth_train or is_dreambooth_model_name or is_dreambooth_use_txt2img):
         print('Create click callback')
         db_sagemaker_train.click(
-            fn=start_sagemaker_training,
+            fn=cloud_train,
             _js="db_start_sagemaker_train",
             inputs=[
                 db_model_name,
@@ -601,6 +603,9 @@ def async_create_model_on_sagemaker(
                 "status": "Creating",
                 "multi_parts_tags": {local_tar_path: multiparts_tags}
             }
+    else:
+        logging.error("Create model params error.")
+        return
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
     print(response)
