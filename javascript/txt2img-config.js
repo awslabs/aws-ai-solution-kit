@@ -245,8 +245,11 @@ function txt2img_config_save() {
         "#txt2img_sampling > label > div > div > span"
     ).textContent;
 
+    //sagemaker endpoint
+    config["sagemaker_endpoint"]=document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > span").value
     //stable diffusion checkpoint
-    config["sagemaker_stable_diffuion_checkpoing"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value //stable diffusion checkpoint 
+    config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value //stable diffusion checkpoint 
+    config["stable_diffusion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
     
     
     //Textual Inversion
