@@ -68,6 +68,7 @@ ControlNetImg2ImgRequest = create_controlnet_request_model(StableDiffusionImg2Im
 class InvocationsRequest(BaseModel):
     task: str
     username: Optional[str]
+    checkpoint_info:Optional[dict]
     models: Optional[dict]
     txt2img_payload: Optional[StableDiffusionTxt2ImgProcessingAPI]
     controlnet_txt2img_payload: Optional[ControlNetTxt2ImgRequest]
@@ -75,6 +76,7 @@ class InvocationsRequest(BaseModel):
     extras_single_payload: Optional[ExtrasSingleImageRequest]
     extras_batch_payload: Optional[ExtrasBatchImagesRequest]
     db_create_model_payload: Optional[str]
+    merge_checkpoint_payload: Optional[dict]
 
 class PingResponse(BaseModel):
     status: str

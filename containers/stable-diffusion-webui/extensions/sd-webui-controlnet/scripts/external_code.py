@@ -1,16 +1,25 @@
+import inspect
 from enum import Enum
 from typing import List, Any, Optional, Union, Tuple, Dict
 import numpy as np
 from modules import scripts, processing, shared
-from scripts.global_state import update_cn_models, cn_models_names, cn_preprocessor_modules
+from scripts import global_state
 
 from modules.api import api
-
-PARAM_COUNT = 15
 
 
 def get_api_version() -> int:
     return 1
+
+
+class ControlMode(Enum):
+    """
+    The improved guess mode.
+    """
+
+    BALANCED = "Balanced"
+    PROMPT = "My prompt is more important"
+    CONTROL = "ControlNet is more important"
 
 
 class ResizeMode(Enum):
@@ -19,17 +28,38 @@ class ResizeMode(Enum):
     """
 
     RESIZE = "Just Resize"
-    INNER_FIT = "Scale to Fit (Inner Fit)"
-    OUTER_FIT = "Envelope (Outer Fit)"
+    INNER_FIT = "Crop and Resize"
+    OUTER_FIT = "Resize and Fill"
+
+
+resize_mode_aliases = {
+    'Inner Fit (Scale to Fit)': 'Crop and Resize',
+    'Outer Fit (Shrink to Fit)': 'Resize and Fill',
+    'Scale to Fit (Inner Fit)': 'Crop and Resize',
+    'Envelope (Outer Fit)': 'Resize and Fill',
+}
 
 
 def resize_mode_from_value(value: Union[str, int, ResizeMode]) -> ResizeMode:
     if isinstance(value, str):
-        return ResizeMode(value)
+        return ResizeMode(resize_mode_aliases.get(value, value))
     elif isinstance(value, int):
         return [e for e in ResizeMode][value]
     else:
         return value
+
+
+def control_mode_from_value(value: Union[str, int, ControlMode]) -> ControlMode:
+    if isinstance(value, str):
+        return ControlMode(value)
+    elif isinstance(value, int):
+        return [e for e in ControlMode][value]
+    else:
+        return value
+
+
+InputImage = Union[np.ndarray, str]
+InputImage = Union[Dict[str, InputImage], Tuple[InputImage, InputImage], InputImage]
 
 
 class ControlNetUnit:
@@ -43,26 +73,25 @@ class ControlNetUnit:
         module: Optional[str]=None,
         model: Optional[str]=None,
         weight: float=1.0,
-        image: Optional[Union[Dict[str, Union[np.ndarray, str]], Tuple[Union[np.ndarray, str], Union[np.ndarray, str]], np.ndarray, str]]=None,
-        invert_image: bool=False,
-        resize_mode: Union[ResizeMode, int, str]=ResizeMode.INNER_FIT,
-        rgbbgr_mode: bool=False,
+        image: Optional[InputImage]=None,
+        resize_mode: Union[ResizeMode, int, str] = ResizeMode.INNER_FIT,
         low_vram: bool=False,
-        processor_res: int=64,
+        processor_res: int=512,
         threshold_a: float=64,
         threshold_b: float=64,
         guidance_start: float=0.0,
         guidance_end: float=1.0,
-        guess_mode: bool=True,
+        guess_mode: bool=False,
+        pixel_perfect: bool=False,
+        control_mode: Union[ControlMode, int, str] = ControlMode.BALANCED,
+        **_kwargs, # for backwards compatibility
     ):
         self.enabled = enabled
         self.module = module
         self.model = model
         self.weight = weight
         self.image = image
-        self.invert_image = invert_image
         self.resize_mode = resize_mode
-        self.rgbbgr_mode = rgbbgr_mode
         self.low_vram = low_vram
         self.processor_res = processor_res
         self.threshold_a = threshold_a
@@ -70,12 +99,17 @@ class ControlNetUnit:
         self.guidance_start = guidance_start
         self.guidance_end = guidance_end
         self.guess_mode = guess_mode
+        self.pixel_perfect = pixel_perfect
+        self.control_mode = control_mode
 
     def __eq__(self, other):
         if not isinstance(other, ControlNetUnit):
             return False
 
         return vars(self) == vars(other)
+
+
+PARAM_COUNT = len(inspect.getfullargspec(ControlNetUnit.__init__)[0]) - 1
 
 
 def to_base64_nparray(encoding: str):
@@ -161,8 +195,7 @@ def to_processing_unit(unit: Union[Dict[str, Any], ControlNetUnit]) -> ControlNe
         'guessmode': 'guess_mode',
         'guidance': 'guidance_end',
         'lowvram': 'low_vram',
-        'input_image': 'image',
-        'scribble_mode': 'invert_image'
+        'input_image': 'image'
     }
 
     if isinstance(unit, dict):
@@ -174,7 +207,11 @@ def to_processing_unit(unit: Union[Dict[str, Any], ControlNetUnit]) -> ControlNe
             del unit['mask']
 
         if 'image' in unit and not isinstance(unit['image'], dict):
-            unit['image'] = {'image': unit['image'], 'mask': mask} if mask else unit['image'] if unit['image'] else None
+            unit['image'] = {'image': unit['image'], 'mask': mask} if mask is not None else unit['image'] if unit['image'] else None
+
+        if 'guess_mode' in unit:
+            unit['control_mode'] = ControlMode.CONTROL if unit['guess_mode'] else ControlMode.BALANCED
+            del unit['guess_mode']
 
         unit = ControlNetUnit(**unit)
 
@@ -247,26 +284,35 @@ def get_models(update: bool=False) -> List[str]:
     """
 
     if update:
-        update_cn_models()
+        global_state.update_cn_models()
 
-    return list(cn_models_names.values())
+    return list(global_state.cn_models_names.values())
 
 
-def get_modules() -> List[str]:
+def get_modules(alias_names: bool = False) -> List[str]:
     """
     Fetch the list of available preprocessors.
     Each value is a valid candidate of `ControlNetUnit.module`.
 
     Keyword arguments:
+    alias_names -- Whether to get the ui alias names instead of internal keys
     """
 
-    return list(cn_preprocessor_modules.keys())
+    modules = list(global_state.cn_preprocessor_modules.keys())
+
+    if alias_names:
+        modules = [global_state.preprocessor_aliases.get(module, module) for module in modules]
+
+    return modules
 
 
 def find_cn_script(script_runner: scripts.ScriptRunner) -> Optional[scripts.Script]:
     """
     Find the ControlNet script in `script_runner`. Returns `None` if `script_runner` does not contain a ControlNet script.
     """
+
+    if script_runner is None:
+        return None
 
     for script in script_runner.alwayson_scripts:
         if is_cn_script(script):

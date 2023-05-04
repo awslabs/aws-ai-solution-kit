@@ -74,6 +74,9 @@ export class CreateModelJobApi {
       actions: [
         's3:GetObject',
         's3:PutObject',
+        's3:AbortMultipartUpload',
+        's3:ListMultipartUploadParts',
+        's3:ListBucketMultipartUploads',
       ],
       resources: [`${this.s3Bucket.bucketArn}/*`],
     }));

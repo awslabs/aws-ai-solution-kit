@@ -12,8 +12,7 @@ import gradio as gr
 from modules.api.models import *
 from modules.api import api
 
-from scripts import external_code
-from scripts.processor import *
+from scripts import external_code, global_state
 
 def encode_to_base64(image):
     if type(image) is str:
@@ -36,7 +35,7 @@ cn_fields = {
     "module": (str, Field(default="none", title='Controlnet Module')),
     "model": (str, Field(default="None", title='Controlnet Model')),
     "weight": (float, Field(default=1.0, title='Controlnet Weight')),
-    "resize_mode": (Union[int, str], Field(default="Scale to Fit (Inner Fit)", title='Controlnet Resize Mode')),
+    "resize_mode": (Union[int, str], Field(default="Crop and Resize", title='Controlnet Resize Mode')),
     "lowvram": (bool, Field(default=False, title='Controlnet Low VRAM')),
     "processor_res": (int, Field(default=64, title='Controlnet Processor Res')),
     "threshold_a": (float, Field(default=64, title='Controlnet Threshold a')),
@@ -45,6 +44,7 @@ cn_fields = {
     "guidance_start": (float, Field(0.0, title='ControlNet Guidance Start')),
     "guidance_end": (float, Field(1.0, title='ControlNet Guidance End')),
     "guessmode": (bool, Field(default=True, title="Guess Mode")),
+    "pixel_perfect": (bool, Field(default=False, title="Pixel Perfect"))
 }
 
 def get_deprecated_cn_field(field_name: str, field):
@@ -168,6 +168,7 @@ def to_api_cn_unit(unit_request: ControlNetUnitRequest) -> external_code.Control
         guidance_start=unit_request.guidance_start,
         guidance_end=unit_request.guidance_end,
         guess_mode=unit_request.guessmode,
+        pixel_perfect=unit_request.pixel_perfect
     )
 
 def warn_deprecated_route(is_img2img):
@@ -188,8 +189,8 @@ def controlnet_api(_: gr.Blocks, app: FastAPI):
         return {"model_list": up_to_date_model_list}
 
     @app.get("/controlnet/module_list")
-    async def module_list():
-        _module_list = external_code.get_modules()
+    async def module_list(alias_names: bool = False):
+        _module_list = external_code.get_modules(alias_names)
         print(_module_list)
         return {"module_list": _module_list}
 
@@ -201,23 +202,9 @@ def controlnet_api(_: gr.Blocks, app: FastAPI):
         controlnet_threshold_a: float = Body(64, title='Controlnet Threshold a'),
         controlnet_threshold_b: float = Body(64, title='Controlnet Threshold b')
     ):
+        controlnet_module = global_state.reverse_preprocessor_aliases.get(controlnet_module, controlnet_module)
 
-        available_modules = [
-            "none",
-            "canny",
-            "depth",
-            "depth_leres",
-            "fake_scribble",
-            "hed",
-            "mlsd",
-            "normal_map",
-            "openpose",
-            "segmentation",
-            "binary",
-            "color"
-        ]
-
-        if controlnet_module not in available_modules:
+        if controlnet_module not in global_state.cn_preprocessor_modules:
             return {"images": [], "info": "Module not available"}
         if len(controlnet_input_images) == 0:
             return {"images": [], "info": "No image selected"}
@@ -226,45 +213,13 @@ def controlnet_api(_: gr.Blocks, app: FastAPI):
 
         results = []
 
+        processor_module = global_state.cn_preprocessor_modules[controlnet_module]
+
         for input_image in controlnet_input_images:
             img = external_code.to_base64_nparray(input_image)
+            results.append(processor_module(img, res=controlnet_processor_res, thr_a=controlnet_threshold_a, thr_b=controlnet_threshold_b)[0])
 
-            if controlnet_module == "canny":
-                results.append(canny(img, controlnet_processor_res, controlnet_threshold_a, controlnet_threshold_b)[0])
-            elif controlnet_module == "hed":
-                results.append(hed(img, controlnet_processor_res)[0])
-            elif controlnet_module == "mlsd":
-                results.append(mlsd(img, controlnet_processor_res, controlnet_threshold_a, controlnet_threshold_b)[0])
-            elif controlnet_module == "depth":
-                results.append(midas(img, controlnet_processor_res, np.pi * 2.0)[0])
-            elif controlnet_module == "normal_map":
-                results.append(midas_normal(img, controlnet_processor_res, np.pi * 2.0, controlnet_threshold_a)[0])
-            elif controlnet_module == "depth_leres":
-                results.append(leres(img, controlnet_processor_res, np.pi * 2.0, controlnet_threshold_a, controlnet_threshold_b)[0])
-            elif controlnet_module == "openpose":
-                results.append(openpose(img, controlnet_processor_res, False)[0])
-            elif controlnet_module == "fake_scribble":
-                results.append(fake_scribble(img, controlnet_processor_res)[0])
-            elif controlnet_module == "segmentation":
-                results.append(uniformer(img, controlnet_processor_res)[0])
-            elif controlnet_module == "binary":
-                results.append(binary(img, controlnet_processor_res, controlnet_threshold_a)[0])
-            elif controlnet_module == "color":
-                results.append(color(img, controlnet_processor_res)[0])
-
-        if controlnet_module == "hed":
-            unload_hed()
-        elif controlnet_module == "mlsd":
-            unload_mlsd()
-        elif controlnet_module == "depth" or controlnet_module == "normal_map":
-            unload_midas()
-        elif controlnet_module == "depth_leres":
-            unload_leres()
-        elif controlnet_module == "openpose":
-            unload_openpose()
-        elif controlnet_module == "segmentation":
-            unload_uniformer()
-
+        global_state.cn_preprocessor_unloadable.get(controlnet_module, lambda: None)()
         results64 = list(map(encode_to_base64, results))
         return {"images": results64, "info": "Success"}
 

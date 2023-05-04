@@ -1,13 +1,18 @@
 import json
 import logging
 import os
+import base64
+import time
 from dataclasses import dataclass
+
 from typing import Any
 import sagemaker
+from botocore.config import Config
+
 from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
-from common_tools import get_s3_presign_urls
+from common_tools import get_s3_presign_urls, split_s3_path
 from _types import TrainJob, TrainJobStatus, ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
 from create_model_async_job import DecimalEncoder
 
@@ -150,13 +155,20 @@ def _start_train_job(train_job_id: str):
     try:
         # JSON encode hyperparameters
         def json_encode_hyperparameters(hyperparameters):
-            return {str(k): json.dumps(v, cls=DecimalEncoder) for (k, v) in hyperparameters.items()}
+            new_params = {}
+            for k, v in hyperparameters.items():
+                json_v = json.dumps(v, cls=DecimalEncoder)
+                v_bytes = json_v.encode('ascii')
+                base64_bytes = base64.b64encode(v_bytes)
+                base64_v = base64_bytes.decode('ascii')
+                new_params[k] = base64_v
+            return new_params
 
         hyperparameters = json_encode_hyperparameters({
             "sagemaker_program": "extensions/sd-webui-sagemaker/sagemaker_entrypoint_json.py",
             "params": train_job.params,
-            "s3_input_path": train_job.input_s3_location,
-            "s3_output_path": checkpoint.s3_location,
+            "s3-input-path": train_job.input_s3_location,
+            "s3-output-path": checkpoint.s3_location,
         })
 
         est = sagemaker.estimator.Estimator(
@@ -171,6 +183,10 @@ def _start_train_job(train_job_id: str):
         )
         est.fit(wait=False)
 
+        while not est._current_job_name:
+            time.sleep(1)
+
+        train_job.sagemaker_train_name = est._current_job_name
         # trigger stepfunction
         stepfunctions_client = StepFunctionUtilsService(logger=logger)
         sfn_input = {
@@ -179,7 +195,6 @@ def _start_train_job(train_job_id: str):
         }
         sfn_arn = stepfunctions_client.invoke_step_function(training_stepfunction_arn, sfn_input)
         # todo: use batch update, this is ugly!!!
-        train_job.sagemaker_train_name = est._current_job_name
         search_key = {'id': train_job.id}
         ddb_service.update_item(
             table=train_table,
@@ -246,7 +261,7 @@ def check_train_job_status(event, context):
         }
 
     training_job = TrainJob(**raw_train_job)
-    if training_job_status == 'Training':
+    if training_job_status == 'InProgress' or training_job_status == 'Stopping':
         return event
 
     if training_job_status == 'Failed' or training_job_status == 'Stopped':
@@ -271,7 +286,6 @@ def check_train_job_status(event, context):
 
         checkpoint = CheckPoint(**raw_checkpoint)
         checkpoint.checkpoint_status = CheckPointStatus.Active
-        checkpoint.checkpoint_names = ['updated name']  # todo: findout output location
         ddb_service.update_item(
             table=checkpoint_table,
             key={
@@ -280,14 +294,24 @@ def check_train_job_status(event, context):
             field_name='checkpoint_status',
             value=checkpoint.checkpoint_status.value
         )
-        # ddb_service.update_item(
-        #     table=checkpoint_table,
-        #     key={
-        #         'id': checkpoint.id
-        #     },
-        #     field_name='checkpoint_names',
-        #     value=checkpoint.checkpoint_names
-        # )
+        s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+        bucket, key = split_s3_path(checkpoint.s3_location)
+        s3_resp = s3.list_objects(
+            Bucket=bucket,
+            Prefix=key,
+        )
+        checkpoint.checkpoint_names = []
+        for obj in s3_resp['Contents']:
+            checkpoint.checkpoint_names.append(obj['Key'].replace(f'{key}/', ""))
+
+        ddb_service.update_item(
+            table=checkpoint_table,
+            key={
+                'id': checkpoint.id
+            },
+            field_name='checkpoint_names',
+            value=checkpoint.checkpoint_names
+        )
 
         training_job.params['resp'] = {
             'status': 'Failed',

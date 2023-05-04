@@ -2,6 +2,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass
+from typing import Any, Dict
 
 import boto3
 from botocore.exceptions import ClientError
@@ -10,6 +11,7 @@ from common.ddb_service.client import DynamoDbUtilsService
 from common.stepfunction_service.client import StepFunctionUtilsService
 from common.util import publish_msg
 from _types import ModelJob, CreateModelStatus, CheckPoint, CheckPointStatus
+from common_tools import complete_mulipart_upload, split_s3_path
 from create_model_async_job import create_sagemaker_inference
 
 bucket_name = os.environ.get('S3_BUCKET')
@@ -30,10 +32,11 @@ stepfunctions_client = StepFunctionUtilsService(logger=logger)
 class Event:
     model_id: str
     status: str
+    multi_parts_tags: Dict[str, Any]
 
 
 # PUT /model
-def update_train_job_api(raw_event, context):
+def update_model_job_api(raw_event, context):
     event = Event(**raw_event)
 
     try:
@@ -46,14 +49,23 @@ def update_train_job_api(raw_event, context):
 
         model_job = ModelJob(**raw_training_job)
         resp = train_job_exec(model_job, CreateModelStatus[event.status])
-
         ddb_service.update_item(
             table=model_table,
             key={'id': event.model_id},
             field_name='job_status',
             value=event.status
         )
+        raw_checkpoint = ddb_service.get_item(table=checkpoint_table, key_values={
+            'id': model_job.checkpoint_id
+        })
+        if raw_checkpoint is None:
+            return {
+                'status': 500,
+                'error': f'create model ckpt with id {event.model_id} is not found'
+            }
 
+        ckpt = CheckPoint(**raw_checkpoint)
+        complete_mulipart_upload(ckpt, event.multi_parts_tags)
         return resp
     except ClientError as e:
         logger.error(e)
@@ -149,11 +161,7 @@ def get_object(bucket: str, key: str):
     return content
 
 
-def split_s3_path(s3_path):
-    path_parts = s3_path.replace("s3://", "").split("/")
-    bucket = path_parts.pop(0)
-    key = "/".join(path_parts)
-    return bucket, key
+
 
 
 def train_job_exec(model_job: ModelJob, action: CreateModelStatus):

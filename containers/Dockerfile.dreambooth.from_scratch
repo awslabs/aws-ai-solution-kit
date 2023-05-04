@@ -12,7 +12,6 @@ RUN pip install safetensors
 RUN pip install omegaconf
 
 RUN rm requirements.txt
-
 WORKDIR /opt/ml/code
 
 ENV SAGEMAKER_PROGRAM extensions/aws-ai-solution-kit/sagemaker_entrypoint_json.py

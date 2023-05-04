@@ -8,7 +8,6 @@ COPY utils/default_config.yaml /root/.cache/huggingface/accelerate/
 RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt \
     && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 
-RUN echo "/opt/ml/code" > "/opt/conda/lib/python3.9/site-packages/packages.pth"
 WORKDIR /opt/ml/code
 
 ENTRYPOINT ["python", "/opt/ml/code/serve"]

@@ -4,6 +4,7 @@ import boto3
 import base64
 import os
 from PIL import Image
+from datetime import datetime
 
 s3_resource = boto3.resource('s3')
 s3_client = boto3.client('s3')
@@ -49,6 +50,12 @@ def update_inference_job_table(inference_id, key, value):
         ReturnValues="UPDATED_NEW"
     )
 
+def get_curent_time():
+    # Get the current time
+    now = datetime.now()
+    formatted_time = now.strftime("%Y-%m-%d-%H-%M-%S")
+    return formatted_time
+
 def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
     # If S3 object_name was not specified, use file_name
     if object_name is None:
@@ -71,13 +78,15 @@ def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
     message = event['Records'][0]['Sns']['Message']
     print("From SNS: " + str(message))
-    # message = json.loads(message)
+    message = json.loads(message)
     invocation_status = message["invocationStatus"]
     inference_id = message["inferenceId"]
     if invocation_status == "Completed":
         print(f"Complete invocation!")
         endpoint_name = message["requestParameters"]["endpointName"]
         update_inference_job_table(inference_id, 'status', 'succeed')
+        update_inference_job_table(inference_id, 'completeTime', get_curent_time())
+        update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         
         output_location = message["responseParameters"]["outputLocation"]
 
@@ -117,16 +126,17 @@ def lambda_handler(event, context):
         inference_parameters["inference_id"] = inference_id
         inference_parameters["sns_info"] = message
 
-        json_file_name = f"{inference_id}_param.json"
+        json_file_name = f"/tmp/{inference_id}_param.json"
 
         with open(json_file_name, "w") as outfile:
             json.dump(inference_parameters, outfile)
 
-        upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result")
+        upload_file_to_s3(json_file_name, S3_BUCKET_NAME, f"out/{inference_id}/result",f"{inference_id}_param.json")
         update_inference_job_table(inference_id, 'inference_info_name', json_file_name)
         
         print(f"Complete inference parameters {inference_parameters}")
     else:
         update_inference_job_table(inference_id, 'status', 'failed')
+        update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         print(f"Not complete invocation!")
     return message

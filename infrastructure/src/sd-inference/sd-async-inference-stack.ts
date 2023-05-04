@@ -4,6 +4,8 @@ import {
   Duration,
   Aws,
   RemovalPolicy,
+  aws_ecr,
+  CustomResource,
 } from 'aws-cdk-lib';
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 
@@ -15,6 +17,7 @@ import { RetentionDays } from 'aws-cdk-lib/aws-logs';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as sns from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
+import { DockerImageName, ECRDeployment } from '../cdk-ecr-deployment/lib';
 import { SagemakerInferenceStateMachine } from './sd-sagemaker-inference-state-machine';
 /*
 AWS CDK code to create API Gateway, Lambda and SageMaker inference endpoint for txt2img/img2img inference
@@ -30,19 +33,17 @@ export interface SDAsyncInferenceStackProps extends StackProps {
 }
 
 export class SDAsyncInferenceStack extends Stack {
+
+
+
   constructor(scope: Construct, id: string, props?: SDAsyncInferenceStackProps) {
     super(scope, id, props);
+    const srcImg = 'public.ecr.aws/t6q0v9n4/aigc-webui-inference:latest';
 
     const restful_api = apigw.RestApi.fromRestApiAttributes(this, 'ImportedRestApi', {
       restApiId: props?.api_gate_way.restApiId ?? '',
       rootResourceId: props?.api_gate_way.restApiRootResourceId ?? '',
     });
-
-
-    // Create an S3 bucket to store input and output payloads with public access blocked
-    // const payloadBucket = new s3.Bucket(this, 'PayloadBucket', {
-    //   blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-    // });
 
     // create Dynamodb table to save the inference job data
     const sd_inference_job_table = new dynamodb.Table(
@@ -85,6 +86,8 @@ export class SDAsyncInferenceStack extends Stack {
       'SNS-Receive-SageMaker-inference-error',
     );
 
+    const inferenceECR_url = this.createInferenceECR(srcImg);
+
     const stepFunctionStack = new SagemakerInferenceStateMachine(this, {
       snsTopic: inference_result_topic,
       snsErrorTopic: inference_result_error_topic,
@@ -93,7 +96,8 @@ export class SDAsyncInferenceStack extends Stack {
       endpointDeploymentJobName: sd_endpoint_deployment_job_table.tableName,
       userNotifySNS: props?.snsTopic ?? new sns.Topic(this, 'MyTopic', {
         displayName: 'My SNS Topic',
-      })
+      }),
+      inference_ecr_url: inferenceECR_url
     });
 
     // Create a Lambda function for inference
@@ -114,7 +118,8 @@ export class SDAsyncInferenceStack extends Stack {
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
           SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
           STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
-          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? ""
+          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? "",
+          INFERENCE_ECR_IMAGE_URL: inferenceECR_url
         },
         logRetention: RetentionDays.ONE_WEEK,
       });
@@ -208,10 +213,19 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
-    // Create a deployment for the API Gateway
-    new apigw.Deployment(this, 'Deployment', {
-        api: restful_api,
-    });
+    const get_inference_job_param_output = inference.addResource('get-inference-job-param-output');
+    get_inference_job_param_output.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const test_output = inference.addResource('generate-s3-presigned-url-for-uploading');
+    test_output.addMethod('GET', txt2imgIntegration, {
+      apiKeyRequired: true,
+    })
+
+    const deployment = new apigw.Deployment(this, 'rest-api-deployment', { api: restful_api });
+    deployment.addToLogicalId(new Date().toISOString());
+    (deployment as any).resource.stageName = 'prod';
    
     // Create a Lambda function for inference
     const handler = new lambda.DockerImageFunction(
@@ -231,7 +245,8 @@ export class SDAsyncInferenceStack extends Stack {
           SNS_INFERENCE_SUCCESS: inference_result_topic.topicName,
           SNS_INFERENCE_ERROR: inference_result_error_topic.topicName,
           STEP_FUNCTION_ARN: stepFunctionStack.stateMachineArn,
-          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? ""
+          NOTICE_SNS_TOPIC: props?.snsTopic.topicArn ?? "",
+          INFERENCE_ECR_IMAGE_URL: inferenceECR_url
         },
         logRetention: RetentionDays.ONE_WEEK,
       });
@@ -262,5 +277,35 @@ export class SDAsyncInferenceStack extends Stack {
       new eventSources.SnsEventSource(inference_result_error_topic),
     );
 
+    
+
+  }
+
+  private createInferenceECR(srcImg: string) {
+    const dockerRepo = new aws_ecr.Repository(this, 'aigc-webui-inference-repo', {
+      repositoryName: 'aigc-webui-inference',
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteImages: true,
+    });
+
+    const ecrDeployment = new ECRDeployment(this, `aigc-webui-inference-ecr-deploy`, {
+      src: new DockerImageName(srcImg),
+      dest: new DockerImageName(`${dockerRepo.repositoryUri}:latest`),
+    });
+
+    // trigger the custom resource lambda
+    const customJob = new CustomResource(this, `aigc-webui-inference-ecr-cr-image`, {
+      serviceToken: ecrDeployment.serviceToken,
+      resourceType: 'Custom::AIGCSolutionECRLambda',
+      properties: {
+        SrcImage: `docker://${srcImg}`,
+        DestImage: `docker://${dockerRepo.repositoryUri}:latest`,
+        RepositoryName: `${dockerRepo.repositoryName}`,
+      },
+    });
+
+    customJob.node.addDependency(ecrDeployment);
+
+    return dockerRepo.repositoryUri
   }
 }

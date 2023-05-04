@@ -233,6 +233,7 @@ export class UpdateTrainJobApi {
       ],
       resources: [
         `${this.s3Bucket.bucketArn}/*`,
+        `${this.s3Bucket.bucketArn}`,
         'arn:aws:s3:::*SageMaker*',
         'arn:aws:s3:::*Sagemaker*',
         'arn:aws:s3:::*sagemaker*',
@@ -397,7 +398,7 @@ export class UpdateTrainJobApi {
 
     const waitStatusDeploymentTask = new stepfunctions.Wait(
       this.scope,
-      'WaitStatusDeployment',
+      'WaitTrainingJobStatus',
       {
         time: stepfunctions.WaitTime.duration(Duration.minutes(2)),
       },
@@ -409,10 +410,13 @@ export class UpdateTrainJobApi {
         .next(
           checkTrainingBranch
             .when(
-              sfn.Condition.stringEquals(
+              sfn.Condition.or(sfn.Condition.stringEquals(
                 '$.status',
-                'Training',
-              ),
+                'InProgress',
+              ), sfn.Condition.stringEquals(
+                '$.status',
+                'Stopping',
+              )),
               waitStatusDeploymentTask.next(trainingJobCheckState),
             ).otherwise(
               processJobResult,
