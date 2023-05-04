@@ -1,122 +1,195 @@
 // Save configuration in txt2img panel
+function getDomValue(selector, defaultValue, isTextContent = false) {
+    try {
+        const element = document.querySelector(selector);
+        if (isTextContent) {
+            return element.textContent || defaultValue;
+        } else {
+            return element.value || defaultValue;
+        }
+    } catch (error) {
+        return defaultValue;
+    }
+}
+
 function txt2img_config_save() {
     var config = {};
-    // list of input elements to save
-    // step 1: copy html elements from browser with filter "txt2img_settings"
-    // step 2: extract div id from save html with command "grep -oP '(?<=<div id=")[^"]*' txt2img_settings.html | grep -v "component" | awk '{print "\"" $0 "\","}' | sort | uniq", 50 in total for now
-    // step 3: handle special cases for textarea and ignore empty elements with comments below
-
-    // element with "input class", it's now obsolete due to upstream changes, we need to handle all input elements as special case
-    var params_save_input = [
-        // "axis_options",
-        // "gallery",
-        // "sampler_selection_txt2img",
-        // "script_txt2txt_prompt_matrix_different_seeds",
-        // "script_txt2txt_prompt_matrix_margin_size",
-        // "script_txt2txt_prompt_matrix_put_at_start",
-        // "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate",
-        // "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch",
-        // "script_txt2txt_prompts_from_file_or_textbox_file",
-        // "script_txt2txt_prompts_from_file_or_textbox_prompt_txt",
-        // "script_txt2txt_xyz_plot_draw_legend",
-        // "script_txt2txt_xyz_plot_include_lone_images",
-        // "script_txt2txt_xyz_plot_include_sub_grids",
-        // "script_txt2txt_xyz_plot_margin_size",
-        // "script_txt2txt_xyz_plot_no_fixed_seeds",
-        // "script_txt2txt_xyz_plot_x_values",
-        // "script_txt2txt_xyz_plot_y_values",
-        // "script_txt2txt_xyz_plot_z_values",
-        // "swap_axes",
-        // "txt2img_batch_count",
-        // "txt2img_batch_size",
-        // "txt2img_cfg_scale",
-        // "txt2img_column_batch",
-        // "txt2img_column_size",
-        // "txt2img_denoising_strength",
-        // "txt2img_dimensions_row",
-        // "txt2img_enable_hr",
-        // "txt2img_height",
-        // "txt2img_hires_fix",
-        // "txt2img_hires_fix_row1",
-        // "txt2img_hires_fix_row2",
-        // "txt2img_hires_steps",
-        // "txt2img_hr_resize_x",
-        // "txt2img_hr_resize_y",
-        // "txt2img_hr_scale",
-        // "txt2img_override_settings",
-        // "txt2img_override_settings_row",
-        // "txt2img_restore_faces",
-        // "txt2img_script_container",
-        // "txt2img_seed",
-        // "txt2img_seed_resize_from_h",
-        // "txt2img_seed_resize_from_w",
-        // "txt2img_override_settings_row",
-        // "txt2img_settings",
-        // "txt2img_steps",
-        // "txt2img_subseed",
-        // "txt2img_subseed_row",
-        // "txt2img_subseed_show",
-        // "txt2img_subseed_show_box",
-        // "txt2img_subseed_strength",
-        // "txt2img_tiling",
-        // "txt2img_width",
-        // "txtimg_hr_finalres",
-    ];
-    // element with "select class"
-    var params_save_select = [
-        // "script_list",
-        // "script_txt2txt_xyz_plot_x_type",
-        // "script_txt2txt_xyz_plot_y_type",
-        // "script_txt2txt_xyz_plot_z_type",
-        // "txt2img_hr_upscaler",
-        // "txt2img_sampling"
-    ];
-
-    // iterate through all input elements list
-    for (var i = 0; i < params_save_input.length; i++) {
-        var element = params_save_input[i];
-        console.log("iterating through input elements: " + element);
-        // skip if element value is empty
-        if (
-            document
-                .querySelector("body > gradio-app")
-                .shadowRoot.getElementById(element)
-                .querySelector("input").value == ""
-        ) {
-            console.log("skipping empty element: " + element);
-            continue;
-        }
-        element_val = document
-            .querySelector("body > gradio-app")
-            .shadowRoot.getElementById(element)
-            .querySelector("input").value;
-        // store key value pair in config
-        config[element] = element_val;
-    }
-
-    // iterate through all select elements
-    for (var i = 0; i < params_save_select.length; i++) {
-        var element = params_save_select[i];
-        console.log("iterating through select elements: " + element);
-        // skip if element value is empty
-        if (
-            document
-                .querySelector("body > gradio-app")
-                .shadowRoot.getElementById(element)
-                .querySelector("select").value == ""
-        ) {
-            console.log("skipping empty element: " + element);
-            continue;
-        }
-        element_val = document
-            .querySelector("body > gradio-app")
-            .shadowRoot.getElementById(element)
-            .querySelector("select").value;
-        // store key value pair in config
-        config[element] = element_val;
-    }
 
     // now it's all special case under txt2img_settings div element
+    scrap_ui_component_value(config);
+
+    // store config in local storage for debugging
+    localStorage.setItem("txt2imgConfig", JSON.stringify(config));
+
+    //following code is to get s3 presigned url from middleware and upload the ui parameters
+    const key = "config/aigc.json";
+    let remote_url = config["aws_api_gateway_url"];
+    if (!remote_url.endsWith("/")) {
+        remote_url += "/";
+    }
+    let get_presigned_s3_url = remote_url;
+    get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
+    const api_key = config["aws_api_token"];
+
+    const config_presigned_url = getPresignedUrl(
+        get_presigned_s3_url,
+        api_key,
+        key,
+        function (error, presignedUrl) {
+            if (error) {
+                console.error("Error fetching presigned URL:", error);
+            } else {
+                // console.log("Presigned URL:", presignedUrl);
+                const url = presignedUrl.replace(/"/g, "");
+                // console.log("url:", url);
+
+                // Upload configuration JSON file to S3 bucket with pre-signed URL
+                const config_data = JSON.stringify(config);
+                // console.log(config_data)
+
+                put_with_xmlhttprequest(url, config_data)
+                    .then((response) => {
+                        console.log(response);
+                        // Trigger a simple alert after the HTTP PUT has completed
+                        alert(
+                            "The configuration has been successfully uploaded."
+                        );
+                        // TODO: meet the cors issue, need to implement it later
+                        // let inference_url = remote_url + 'inference/run-sagemaker-inference';
+                        // console.log("api-key is ", api_key)
+                        // postToApiGateway(inference_url, api_key, config_data, function (error, response) {
+                        //     if (error) {
+                        //         console.error("Error posting to API Gateway:", error);
+                        //     } else {
+                        //         console.log("Successfully posted to API Gateway:", response);
+                        //         alert("Succeed trigger the remote sagemaker inference.");
+                        //         // You can also add an alert or any other action you'd like to perform on success
+                        //     }
+                        // })
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        alert(
+                            "An error occurred while uploading the configuration."
+                        );
+                    });
+            }
+        }
+    );
+}
+
+function scrap_ui_component_value_with_error_handling(config) {
+    config["script_txt2txt_xyz_plot_x_values"] = getValue(
+        "#script_txt2txt_xyz_plot_x_values > label > textarea"
+    );
+    config["script_txt2txt_xyz_plot_y_values"] = getValue(
+        "#script_txt2txt_xyz_plot_y_values > label > textarea"
+    );
+    config["script_txt2txt_xyz_plot_z_values"] = getValue(
+        "#script_txt2txt_xyz_plot_z_values > label > textarea"
+    );
+    config["script_txt2txt_prompt_matrix_different_seeds"] = getValue(
+        "#script_txt2txt_prompt_matrix_different_seeds > label > input"
+    );
+    config["script_txt2txt_prompt_matrix_margin_size"] = getValue(
+        "#script_txt2txt_prompt_matrix_margin_size > div > div > input"
+    );
+    config["script_txt2txt_prompt_matrix_put_at_start"] = getValue(
+        "#script_txt2txt_prompt_matrix_put_at_start > label > input"
+    );
+    config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate"] =
+        getValue(
+            "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input"
+        );
+    config[
+        "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"
+    ] = getValue(
+        "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input"
+    );
+    config["script_txt2txt_xyz_plot_draw_legend"] = getValue(
+        "#script_txt2txt_xyz_plot_draw_legend > label > input"
+    );
+    config["script_txt2txt_xyz_plot_include_lone_images"] = getValue(
+        "#script_txt2txt_xyz_plot_include_lone_images > label > input"
+    );
+    config["script_txt2txt_xyz_plot_include_sub_grids"] = getValue(
+        "#script_txt2txt_xyz_plot_include_sub_grids > label > input"
+    );
+    config["script_txt2txt_xyz_plot_margin_size"] = getValue(
+        "#script_txt2txt_xyz_plot_margin_size > div > div > input"
+    );
+    config["script_txt2txt_xyz_plot_no_fixed_seeds"] = getValue(
+        "#script_txt2txt_xyz_plot_no_fixed_seeds > label > input"
+    );
+    config["txt2img_batch_count"] = getValue(
+        "#txt2img_batch_count > div > div > input"
+    );
+    config["txt2img_batch_size"] = getValue(
+        "#txt2img_batch_size > div > div > input"
+    );
+    config["txt2img_cfg_scale"] = getValue(
+        "#txt2img_cfg_scale > div > div > input"
+    );
+    config["txt2img_denoising_strength"] = getValue(
+        "#txt2img_denoising_strength > div > div > input"
+    );
+    config["txt2img_enable_hr"] = getValue(
+        "#txt2img_enable_hr > label > input"
+    );
+    config["txt2img_height"] = getValue("#txt2img_height > div > div > input");
+    config["txt2img_hires_steps"] = getValue(
+        "#txt2img_hires_steps > div > div > input"
+    );
+    config["txt2img_hr_resize_x"] = getValue(
+        "#txt2img_hr_resize_x > div > div > input"
+    );
+    config["txt2img_hr_resize_y"] = getValue(
+        "#txt2img_hr_resize_y > div > div > input"
+    );
+    config["txt2img_hr_scale"] = getValue(
+        "#txt2img_hr_scale > div > div > input"
+    );
+    config["txt2img_restore_faces"] = getValue(
+        "#txt2img_restore_faces > label > input"
+    );
+    config["txt2img_seed"] = getValue("#txt2img_seed > label > input");
+    config["txt2img_seed_resize_from_h"] = getValue(
+        "#txt2img_seed_resize_from_h > div > div > input"
+    );
+    config["txt2img_seed_resize_from_w"] = getValue(
+        "#txt2img_seed_resize_from_w > div > div > input"
+    );
+    config["txt2img_steps"] = getValue("#txt2img_steps > div > div > input");
+    config["txt2img_style_img"] = getText(
+        "#txt2img_style_img > label > textarea"
+    );
+    config["txt2img_style_img_batch_size"] = getValue(
+        "#txt2img_style_img_batch_size > div > div > input"
+    );
+    config["txt2img_style_img_seed"] = getValue(
+        "#txt2img_style_img_seed > label > input"
+    );
+    config["txt2img_style_img_steps"] = getValue(
+        "#txt2img_style_img_steps > div > div > input"
+    );
+    config["txt2img_style_img_style_strength"] = getValue(
+        "#txt2img_style_img_style_strength > div > div > input"
+    );
+    config["txt2img_style_txt"] = getText(
+        "#txt2img_style_txt > label > textarea"
+    );
+    config["txt2img_style_txt_seed"] = getValue(
+        "#txt2img_style_txt_seed > label > input"
+    );
+    config["txt2img_style_txt_steps"] = getValue(
+        "#txt2img_style_txt_steps > div > div > input"
+    );
+    config["txt2img_style_txt_style_strength"] = getValue(
+        "#txt2img_style_txt_style_strength > div > div > input"
+    );
+    config["txt2img_width"] = getValue("#txt2img_width > div > div > input");
+}
+function scrap_ui_component_value(config) {
     config["script_txt2txt_xyz_plot_x_values"] = document.querySelector(
         "#script_txt2txt_xyz_plot_x_values > label > textarea"
     ).value;
@@ -245,47 +318,124 @@ function txt2img_config_save() {
         "#txt2img_sampling > label > div > div > span"
     ).textContent;
 
+    //sagemaker endpoint
+    config["sagemaker_endpoint"] = document.querySelector(
+        "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
     //stable diffusion checkpoint
-    config["sagemaker_stable_diffuion_checkpoing"] = document.querySelector("#component-118 > label > div > div.wrap-inner.svelte-a6vu2r > div > input") //stable diffusion checkpoint 
-    
+    config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector(
+        "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value; //stable diffusion checkpoint
+    config["stable_diffusion_checkpoint"] = document.querySelector(
+        "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
+
     //Textual Inversion
-    config["sagemaker_texual_inversion_model"] = document.querySelector("#component-132 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_texual_inversion_model"] = document.querySelector(
+        "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
+
+    const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-a6vu2r .token > span");
+    const selectedValues = Array.from(tokens).map(token => token.textContent);
+    
+    console.log("guming debug>>>")
+    console.log(selectedValues);
+
 
     //LoRa
-    config["sagemaker_lora_model"] = document.querySelector("#component-134 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_lora_model"] = document.querySelector(
+        "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //HyperNetwork
-    config["sagemaker_hypernetwork_model"] = document.querySelector("#component-138 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_hypernetwork_model"] = document.querySelector(
+        "#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //ControlNet model
-    config["sagemaker_controlnet_model"] = document.querySelector("#component-140 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_controlnet_model"] = document.querySelector(
+        "#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //control net part parameter
-    config["txt2img_controlnet_ControlNet_input_image"] = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img")
-    config["controlnet_enable"] = document.querySelector("#component-182 > label > input")
-    config["controlnet_lowVRAM_enable"] = document.querySelector("#component-183 > label > input")
-    config["controlnet_pixel_perfect"] = document.querySelector("#component-185 > label > input")
-    config["controlnet_allow_preview"] = document.querySelector("#component-186 > label > input")
-    config["controlnet_preprocessor"] = document.querySelector("#component-188 > label > div > div.wrap-inner.svelte-a6vu2r > span")
-    config["controlnet_model"] = document.querySelector("#component-190 > label > div > div.wrap-inner.svelte-a6vu2r > span")
-    config["control_weight"] = document.querySelector("#component-195 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_starting_control_step"] = document.querySelector("#component-196 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_ending_control_step"] = document.querySelector("#component-197 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_control_mode(guess_mode)"]=document.querySelector("#component-204 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected")
-    config["controlnet_resize_mode"] = document.querySelector("#component-205 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > span")
-    config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"]=document.querySelector("#component-206 > label > input")
+    config["txt2img_controlnet_ControlNet_input_image"] =
+        document.querySelector(
+            "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
+        );
+    config["controlnet_enable"] = document.querySelector(
+        "#component-185 > label > input"
+    ).checked;
+    config["controlnet_lowVRAM_enable"] = document.querySelector(
+        "#component-186 > label > input"
+    ).checked;
+    config["controlnet_pixel_perfect"] = document.querySelector(
+        "#component-188 > label > input"
+    ).checked;
+    config["controlnet_allow_preview"] = document.querySelector(
+        "#component-189 > label > input"
+    ).checked;
+    config["controlnet_preprocessor"] = document.querySelector(
+        "#component-191 > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
+    config["controlnet_model"] = document.querySelector(
+        "#component-193 > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
+    config["control_weight"] = document.querySelector(
+        "#component-198 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_starting_control_step"] = document.querySelector(
+        "#component-199 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_ending_control_step"] = document.querySelector(
+        "#component-200 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_control_mode(guess_mode)"] = document.querySelector(
+        "#component-207 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+    ).value;
+    config["controlnet_resize_mode"] = document.querySelector(
+        "#component-208 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input"
+    ).value;
+    config[
+        "controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"
+    ] = document.querySelector("#component-209 > label > input").value;
 
-    config['script_txt2txt_prompt_matrix_prompt_type_positive']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
-    config['script_txt2txt_prompt_matrix_prompt_type_negative']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")    
-    config['script_txt2txt_prompt_matrix_margin_size']=document.querySelector("#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input")
+    config["script_txt2txt_prompt_matrix_prompt_type_positive"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_prompt_type_negative"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_margin_size"] = document.querySelector(
+        "#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input"
+    ).value;
 
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input")
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input")
-    config['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea")
-    config['script_txt2txt_prompts_from_file_or_textbox_file']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div")
-
+    config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input"
+        ).value;
+    config[
+        "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"
+    ] = document.querySelector(
+        "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input"
+    ).value;
+    config["script_txt2txt_prompts_from_file_or_textbox_prompt_txt"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea"
+        ).value;
+    config["script_txt2txt_prompts_from_file_or_textbox_file"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div"
+        );
 
     // config for prompt area
     config["txt2img_prompt"] = document.querySelector(
@@ -300,67 +450,12 @@ function txt2img_config_save() {
 
     // get the api-gateway url and token
     config["aws_api_gateway_url"] = document.querySelector(
-        "#component-1298 > label > textarea"
+        "#aws_middleware_api > label > textarea"
     ).value;
+
     config["aws_api_token"] = document.querySelector(
-        "#component-1299 > label > textarea"
+        "#aws_middleware_token > label > textarea"
     ).value;
-
-    // store config in local storage for debugging
-    localStorage.setItem("txt2imgConfig", JSON.stringify(config));
-
-    //following code is to get s3 presigned url from middleware and upload the ui parameters
-    const key = "config/aigc.json";
-    let remote_url = config["aws_api_gateway_url"];
-    if (!remote_url.endsWith("/")) {
-      remote_url += "/";
-    }
-    let get_presigned_s3_url = remote_url
-    get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
-    const api_key = config["aws_api_token"];
-
-    const config_presigned_url = getPresignedUrl(
-        get_presigned_s3_url,
-        api_key,
-        key,
-        function (error, presignedUrl) {
-            if (error) {
-                console.error("Error fetching presigned URL:", error);
-            } else {
-                // console.log("Presigned URL:", presignedUrl);
-                const url = presignedUrl.replace(/"/g, '');
-                // console.log("url:", url);
-
-                // Upload configuration JSON file to S3 bucket with pre-signed URL
-                const config_data = JSON.stringify(config);
-                // console.log(config_data)
-
-                put_with_xmlhttprequest(url, config_data)
-                    .then((response) => {
-                        console.log(response);
-                        // Trigger a simple alert after the HTTP PUT has completed
-                        alert("The configuration has been successfully uploaded.");
-                        // TODO: meet the cors issue, need to implement it later
-                        // let inference_url = remote_url + 'inference/run-sagemaker-inference';
-                        // console.log("api-key is ", api_key)
-                        // postToApiGateway(inference_url, api_key, config_data, function (error, response) {
-                        //     if (error) {
-                        //         console.error("Error posting to API Gateway:", error);
-                        //     } else {
-                        //         console.log("Successfully posted to API Gateway:", response);
-                        //         alert("Succeed trigger the remote sagemaker inference.");
-                        //         // You can also add an alert or any other action you'd like to perform on success
-                        //     }
-                        // }) 
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        alert("An error occurred while uploading the configuration.");
-                    });
-            }
-        }
-    );
-
 }
 
 function put_with_xmlhttprequest(config_url, config_data) {
@@ -399,7 +494,7 @@ function getPresignedUrl(remote_url, api_key, key, callback) {
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 400) {
-            callback(null, xhr.responseText);;
+            callback(null, xhr.responseText);
         } else {
             callback(
                 new Error(`Error fetching presigned URL: ${xhr.statusText}`),
@@ -441,4 +536,3 @@ function postToApiGateway(remote_url, api_key, data, callback) {
     // Convert data object to JSON string before sending
     xhr.send(JSON.stringify(data));
 }
-

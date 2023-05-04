@@ -29,7 +29,8 @@ WORKDIR /opt/ml/code
 # ENV PATH="$PATH:/opt/ml/code"
 
 # ENV SAGEMAKER_PROGRAM sagemaker_dreambooth_train.py
-
+RUN mkdir /opt/ml/code/vae_models
+COPY models/vae_models /opt/ml/code/vae_models
 RUN mkdir /opt/ml/code/models
 RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
 
