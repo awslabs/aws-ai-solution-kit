@@ -2,7 +2,7 @@
 
 (WIP) WebUI extension for ControlNet and other injection-based SD controls.
 
-![image](https://user-images.githubusercontent.com/19834515/233910272-6ef975ec-c05a-43ef-9a82-42bd7d108244.png)
+![image](https://user-images.githubusercontent.com/19834515/235606305-229b3d1e-5bfc-467f-9d55-0976eab71652.png)
 
 This extension is for AUTOMATIC1111's [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui), allows the Web UI to add [ControlNet](https://github.com/lllyasviel/ControlNet) to the original Stable Diffusion model to generate images. The addition is on-the-fly, the merging is not required.
 
@@ -32,13 +32,9 @@ You need to download model files ending with ".pth" .
 
 **Put models in your "stable-diffusion-webui\extensions\sd-webui-controlnet\models". Now we have already included all "yaml" files. You only need to download "pth" files.** 
 
-Note: If you download models elsewhere, please make sure that yaml file names and model files names are same. Please manually rename all yaml files if you download from other sources. Otherwise, models may have unexpected behaviors. You can ignore this if you download models from official sources.
-
-(For authors of other ControlNet model extractions or fp16 model providers: now some models like "shuffle" needs the YAML file so that we know the outputs of ControlNet should pass a global average pooling before inject to SD U-Nets. Please add yaml files with same filenames to your renaming when delivering your processed models.)
+Note: If you download models elsewhere, please make sure that yaml file names and model files names are same. Please manually rename all yaml files if you download from other sources. Otherwise, models may have unexpected behaviors. You can ignore this if you download models from official sources. (Some models like "shuffle" needs the YAML file so that we know the outputs of ControlNet should pass a global average pooling before inject to SD U-Nets.)
 
 **Do not right click the filenames in HuggingFace website to download. Some users right clicked those HuggingFace HTML websites and saved those HTML pages as PTH/YAML files. They are not downloading correct PTH/YAML files. Instead, please click the small download arrow “↓” icon in HuggingFace to download.**
-
-If your A1111 Extension's ControlNet displays a link look like 'jihulab.com/affair3547', then unfortunately, your A1111 does NOT support ControlNet 1.1. Please use official version of A1111.
 
 ### New Features in A1111 ControlNet Extension 1.1
 
@@ -62,6 +58,10 @@ Now if you turn on pixel-perfect mode, you do not need to set preprocessor (anno
 
 We reorganized some previously confusing UI like "canvas width/height for new canvas" and it is in the 📝 button now. Now the preview GUI is controlled by the "allow preview" option and the trigger button 💥. The preview image size is better than before, and you do not need to scroll up and down - your a1111 GUI will not be messed up anymore!
 
+**Support for Upscaling Scripts**
+
+Now ControlNet 1.1 can support almost all Upscaling/Tile methods. ControlNet 1.1 support the script "Ultimate SD upscale" and almost all other tile-based extensions. Please do not confuse ["Ultimate SD upscale"](https://github.com/Coyote-A/ultimate-upscale-for-automatic1111) with "SD upscale" - they are different scripts. Note that the most recommended upscaling method is ["Tiled VAE/Diffusion"](https://github.com/pkuliyi2015/multidiffusion-upscaler-for-automatic1111) but we test as many methods/extensions as possible. Note that "SD upscale" is supported since 1.1.117, and if you use it, you need to leave all ControlNet images as blank (We do not recommend "SD upscale" since it is somewhat buggy and cannot be maintained).
+
 **Control Mode (previously called Guess Mode)**
 
 We have fixed many bugs in previous 1.0’s Guess Mode and now it is called Control Mode
@@ -73,6 +73,12 @@ Now you can control which aspect is more important (your prompt or your ControlN
 | Input (depth+canny+hed) | Control Mode: "Balanced" | Control Mode: "My prompt is more important" | Control Mode: "ControlNet is more important"
 | --- | --- | --- | --- |
 | ![image](https://user-images.githubusercontent.com/19834515/233898012-3b7f970e-a599-42b2-a56a-65899b816085.png) | ![image](https://user-images.githubusercontent.com/19834515/233897765-8ecf4ee7-a605-46fc-b124-57474c3d7575.png) | ![image](https://user-images.githubusercontent.com/19834515/233897802-6bf46513-9203-482b-8997-e889d578a381.png) | ![image](https://user-images.githubusercontent.com/19834515/233897826-54033ff3-3251-4a6a-bf4a-62f877cb6434.png) |
+
+"Balanced" = put ControlNet on both sides of cfg scale, same as turn off "Guess Mode" in ControlNet 1.0
+
+"My prompt is more important" = put ControlNet on both sides of cfg scale and use progressively reduced SD U-Net injections (layer_weight*=0.825**I, where 0<=I <13, and the 13 means ControlNet injected SD 13 times). In this way, you can make sure that your prompts are perfectly displayed in your generated images.
+
+"ControlNet is more important" = put ControlNet only on the Conditional Side (the cond in A1111's batch-cond-uncond). This means the ControlNet will be X times stronger if your cfg-scale is X. For example, if your cfg-scale is 7, then ControlNet is 7 times stronger. Note that here the X times stronger is different from "Control Weights" since your weights are not modified. This "stronger" effect usually has less artifacts and give ControlNet more space to guess what is missing from your prompts (and in 1.0, it is called "Guess Mode"). 
 
 ### See Also
 
@@ -91,7 +97,7 @@ If you are a previous user of ControlNet 1.0, you may:
 
 This is my setting. If you run into any problem, you can use this setting as a sanity check
 
-![image](https://user-images.githubusercontent.com/19834515/233909293-a6b75cb7-30fb-4679-8dad-d28b02755ebd.png)
+![image](https://user-images.githubusercontent.com/19834515/235620638-17937171-8ac1-45bc-a3cb-3aebf605b4ef.png)
 
 ### Previous Models
 

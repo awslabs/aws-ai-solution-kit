@@ -16,6 +16,7 @@ from modules import shared, scripts
 from modules.ui import create_refresh_button
 from utils import get_variable_from_json
 from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
+from requests.exceptions import JSONDecodeError
 from datetime import datetime
 import math
 
@@ -85,6 +86,7 @@ def update_sagemaker_endpoints():
 
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
+    print(f"guming debug>>update_sagemaker_endpoints, {r}")
     sagemaker_endpoints = []
     
     for obj in r:
@@ -551,6 +553,25 @@ def generate_on_cloud():
     r = response.json()
     print(f"response for rest api {r}")
 
+def generate_on_cloud_no_input():
+    print(f"start cloud inference with empty payload")
+    
+    # stage 2: inference using endpoint_name
+    headers = {
+        "x-api-key": api_key,
+        "Content-Type": "application/json"
+    }
+    payload = {}
+    inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"
+    response = requests.post(inference_url, json=payload, headers=headers)
+    try:
+        r = response.json()
+    except JSONDecodeError as e:
+        print(f"Failed to decode JSON response: {e}")
+        print(f"Raw server response: {response.text}")
+    else:
+        print(f"response for rest api {r}")
+
 def sagemaker_deploy(instance_type, initial_instance_count=1):
     """ Create SageMaker endpoint for GPU inference.
     Args:
@@ -652,10 +673,10 @@ def create_ui():
                     inputs=[],
                     outputs=[]
                 )
-                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use javascript to update config--developing)", variant='primary')
+                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use config on the cloud)", variant='primary')
                 generate_on_cloud_button_with_js.click(
-                    _js="generate_on_cloud",
-                    fn=generate_on_cloud,
+                    # _js="txt2img_config_save",
+                    fn=generate_on_cloud_no_input,
                     inputs=[],
                     outputs=[]
                 )
@@ -729,5 +750,9 @@ def create_ui():
                 instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type", label="SageMaker Instance Type")
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
+
+    with gr.Group():
+        with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
+            sagemaker_html_log = gr.HTML(elem_id=f'html_log_sagemaker')
 
     return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
