@@ -695,4 +695,8 @@ def create_ui():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary')
                 sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
 
+    with gr.Group():
+        with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
+            sagemaker_html_log = gr.HTML(elem_id=f'html_log_sagemaker')
+
     return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
