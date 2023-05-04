@@ -5,6 +5,11 @@ COPY utils/serve /opt/ml/code
 RUN mkdir -p /root/.cache/huggingface/accelerate
 COPY utils/default_config.yaml /root/.cache/huggingface/accelerate/
 
+RUN mkdir -p /opt/ml/code/tools
+RUN wget https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -O /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz
+RUN tar xzvf /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz -C /opt/ml/code/tools/
+RUN pip install --upgrade pip
+
 RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt \
     && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 
