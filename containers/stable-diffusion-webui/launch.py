@@ -19,6 +19,7 @@ python = sys.executable
 git = os.environ.get('GIT', "git")
 index_url = os.environ.get('INDEX_URL', "")
 stored_commit_hash = None
+skip_install = False
 dir_repos = "repositories"
 
 if 'GRADIO_ANALYTICS_ENABLED' not in os.environ:
@@ -261,7 +262,6 @@ def prepare_environment():
 
     if not is_installed("clip"):
         run_pip(f"install {clip_package}", "clip")
-
     if not is_installed("open_clip"):
         run_pip(f"install {openclip_package}", "open_clip")
 

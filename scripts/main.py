@@ -113,53 +113,57 @@ def on_after_component_callback(component, **_kwargs):
         # return test
     if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
         txt2img_show_hook = "finish"
-        print("guming debug>>>>>>>>>")
         sagemaker_ui.inference_job_dropdown.change(
             fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
             inputs=[sagemaker_ui.inference_job_dropdown],
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
-    # hook logic for merge checkpoints
-    global modelmerger_merge_component, modelmerger_merge_hook
-    is_modelmerger_merge_component = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'modelmerger_merge'
-    if is_modelmerger_merge_component:
-        print("create model merge component")
-        modelmerger_merge_component = component
-    if modelmerger_merge_component is not None and modelmerger_merge_hook is None:
-        modelmerger_merge_hook = "finish"
-        print("create merge in the cloud")
-        def get_model_list_by_type(model_type):
-            if api_gateway_url is None:
-                print(f"failed to get the api-gateway url, can not fetch remote data")
-                return []
-            url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-            response = requests.get(url=url, headers={'x-api-key': api_key})
-            json_response = response.json()
-            # print(f"response url json for model {model_type} is {json_response}")
+        sagemaker_ui.generate_on_cloud_button_with_js.click(
+            fn=sagemaker_ui.generate_on_cloud_no_input,
+                    inputs=[],
+                    outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
+                )
+    # # hook logic for merge checkpoints
+    # global modelmerger_merge_component, modelmerger_merge_hook
+    # is_modelmerger_merge_component = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'modelmerger_merge'
+    # if is_modelmerger_merge_component:
+    #     print("create model merge component")
+    #     modelmerger_merge_component = component
+    # if modelmerger_merge_component is not None and modelmerger_merge_hook is None:
+    #     modelmerger_merge_hook = "finish"
+    #     print("create merge in the cloud")
+    #     def get_model_list_by_type(model_type):
+    #         if api_gateway_url is None:
+    #             print(f"failed to get the api-gateway url, can not fetch remote data")
+    #             return []
+    #         url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
+    #         response = requests.get(url=url, headers={'x-api-key': api_key})
+    #         json_response = response.json()
+    #         # print(f"response url json for model {model_type} is {json_response}")
 
-            if "checkpoints" not in json_response.keys():
-                return []
+    #         if "checkpoints" not in json_response.keys():
+    #             return []
 
-            checkpoint_list = []
-            for ckpt in json_response["checkpoints"]:
-                ckpt_type = ckpt["type"]
-                for ckpt_name in ckpt["name"]:
-                    ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-                    checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-                    checkpoint_list.append(ckpt_name)
+    #         checkpoint_list = []
+    #         for ckpt in json_response["checkpoints"]:
+    #             ckpt_type = ckpt["type"]
+    #             for ckpt_name in ckpt["name"]:
+    #                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
+    #                 checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+    #                 checkpoint_list.append(ckpt_name)
 
-            return checkpoint_list
-        def update_sd_checkpoints():
-            model_type = "Stable-diffusion"
-            return get_model_list_by_type(model_type)
-        with gr.Group():
-            with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
-                with FormRow(elem_id="modelmerger_models_in_the_cloud"):
-                    primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
-                                                     choices=sorted(sagemaker_ui.update_sd_checkpoints()))
-                    create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
-                                          lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
-                                          "refresh primary model (A)")
+    #         return checkpoint_list
+    #     def update_sd_checkpoints():
+    #         model_type = "Stable-diffusion"
+    #         return get_model_list_by_type(model_type)
+    #     with gr.Group():
+    #         with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
+    #             with FormRow(elem_id="modelmerger_models_in_the_cloud"):
+    #                 primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
+    #                                                  choices=sorted(sagemaker_ui.update_sd_checkpoints()), elem_id="model_on_the_cloud")
+    #                 create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
+    #                                       lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
+    #                                       "refresh primary model (A)")
 
                     # secondary_model_name = gr.Dropdown(modules.sd_models.checkpoint_tiles(), elem_id="modelmerger_secondary_model_name", label="Secondary model (B) in the cloud")
                     # create_refresh_button(secondary_model_name, modules.sd_models.list_models, lambda: {"choices": modules.sd_models.checkpoint_tiles()}, "refresh_checkpoint_B")
@@ -188,15 +192,15 @@ def on_ui_tabs():
             with gr.Column(variant="panel", elem_id="PipelinePanel"):
                 with gr.Tab("Select"):
                     with gr.Row():
-                        db_model_name = gr.Dropdown(elem_id='pipeline', label='Pipeline', choices=["dreambooth_train"])
+                        db_model_name = gr.Dropdown(label='Pipeline', choices=["dreambooth_train"],elem_id="pipeline_drop_down")
                         for job_link in job_link_list:
                             gr.HTML(value=f"<span class='hhh'>{job_link}</span>")
         with  gr.Row():
             with gr.Column(variant="panel", scale=1):
                 gr.HTML(value="AWS Connect Setting")
-                api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url")
-                api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token")
-                aws_connect_button = gr.Button(value="Update Setting", variant='primary')
+                api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url",elem_id="aws_middleware_api")
+                api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token", elem_id="aws_middleware_token")
+                aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
                 aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
             with gr.Column(variant="panel", scale=2):
                 gr.HTML(value="Resource")
@@ -234,7 +238,8 @@ def ui_tabs_callback():
                                 with gr.Tab('Select From Cloud'):
                                     with gr.Row():
                                         cloud_db_model_name = gr.Dropdown(
-                                            label="Model", choices=sorted(get_cloud_db_model_name_list())
+                                            label="Model", choices=sorted(get_cloud_db_model_name_list()),
+                                            elem_id="cloud_db_model_name"
                                         )
                                         create_refresh_button(
                                             cloud_db_model_name,
@@ -246,6 +251,7 @@ def ui_tabs_callback():
                                         cloud_db_snapshot = gr.Dropdown(
                                             label="Cloud Snapshot to Resume",
                                             choices=sorted(get_cloud_model_snapshots()),
+                                            elem_id="cloud_snapshot_to_resume_dropdown"
                                         )
                                         create_refresh_button(
                                             cloud_db_snapshot,
@@ -255,7 +261,8 @@ def ui_tabs_callback():
                                         )
                                     with gr.Row(visible=False) as lora_model_row:
                                         cloud_db_lora_model_name = gr.Dropdown(
-                                            label="Lora Model", choices=get_sorted_lora_cloud_models()
+                                            label="Lora Model", choices=get_sorted_lora_cloud_models(),
+                                            elem_id="cloud_lora_model_dropdown"
                                         )
                                         create_refresh_button(
                                             cloud_db_lora_model_name,
@@ -299,6 +306,7 @@ def ui_tabs_callback():
                                         cloud_db_new_model_url = gr.Textbox(
                                             label="Model Path",
                                             placeholder="runwayml/stable-diffusion-v1-5",
+                                            elem_id="cloud_db_model_path_text_box"
                                         )
                                         cloud_db_new_model_token = gr.Textbox(
                                             label="HuggingFace Token", value=""
@@ -308,6 +316,7 @@ def ui_tabs_callback():
                                             cloud_db_new_model_src = gr.Dropdown(
                                                 label="Source Checkpoint",
                                                 choices=sorted(get_sd_cloud_models()),
+                                                elem_id="cloud_db_source_checkpoint_dropdown" 
                                             )
                                             create_refresh_button(
                                                 cloud_db_new_model_src,
@@ -318,7 +327,7 @@ def ui_tabs_callback():
                                     cloud_db_new_model_extract_ema = gr.Checkbox(
                                         label="Extract EMA Weights", value=False
                                     )
-                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
+                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False, elem_id="cloud_db_unfreeze_model_checkbox")
 
                                 def toggle_new_rows(create_from):
                                     return gr.update(visible=create_from), gr.update(visible=not create_from)
@@ -427,7 +436,10 @@ def get_cloud_ckpts():
         return []
     global ckpt_dict
     for ckpt in response["checkpoints"]:
-        ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
+        if len(ckpt['name']) > 0:
+            ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
+        else:
+            ckpt_key = f"cloud-{ckpt['id']}"
         ckpt_dict[ckpt_key] = ckpt
 
 def get_cloud_ckpt_name_list():

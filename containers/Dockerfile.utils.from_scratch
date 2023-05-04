@@ -1,4 +1,4 @@
-FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-cpu-py39-ubuntu20.04-sagemaker
+FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0.0-cpu-py310-ubuntu20.04-sagemaker
 
 COPY stable-diffusion-webui /opt/ml/code/
 COPY utils/serve /opt/ml/code

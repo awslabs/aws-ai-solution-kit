@@ -245,45 +245,49 @@ function txt2img_config_save() {
         "#txt2img_sampling > label > div > div > span"
     ).textContent;
 
+    //sagemaker endpoint
+    config["sagemaker_endpoint"]=document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > span").value
     //stable diffusion checkpoint
-    config["sagemaker_stable_diffuion_checkpoing"] = document.querySelector("#component-118 > label > div > div.wrap-inner.svelte-a6vu2r > div > input") //stable diffusion checkpoint 
+    config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value //stable diffusion checkpoint 
+    config["stable_diffusion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
+    
     
     //Textual Inversion
-    config["sagemaker_texual_inversion_model"] = document.querySelector("#component-132 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_texual_inversion_model"] = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
 
     //LoRa
-    config["sagemaker_lora_model"] = document.querySelector("#component-134 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_lora_model"] = document.querySelector("#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
 
     //HyperNetwork
-    config["sagemaker_hypernetwork_model"] = document.querySelector("#component-138 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_hypernetwork_model"] = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
 
     //ControlNet model
-    config["sagemaker_controlnet_model"] = document.querySelector("#component-140 > label > div > div.wrap-inner.svelte-a6vu2r > div > input")
+    config["sagemaker_controlnet_model"] = document.querySelector("#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value
 
     //control net part parameter
     config["txt2img_controlnet_ControlNet_input_image"] = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img")
-    config["controlnet_enable"] = document.querySelector("#component-182 > label > input")
-    config["controlnet_lowVRAM_enable"] = document.querySelector("#component-183 > label > input")
-    config["controlnet_pixel_perfect"] = document.querySelector("#component-185 > label > input")
-    config["controlnet_allow_preview"] = document.querySelector("#component-186 > label > input")
-    config["controlnet_preprocessor"] = document.querySelector("#component-188 > label > div > div.wrap-inner.svelte-a6vu2r > span")
-    config["controlnet_model"] = document.querySelector("#component-190 > label > div > div.wrap-inner.svelte-a6vu2r > span")
-    config["control_weight"] = document.querySelector("#component-195 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_starting_control_step"] = document.querySelector("#component-196 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_ending_control_step"] = document.querySelector("#component-197 > div.wrap.svelte-jigama > div > input")
-    config["controlnet_control_mode(guess_mode)"]=document.querySelector("#component-204 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected")
-    config["controlnet_resize_mode"] = document.querySelector("#component-205 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > span")
-    config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"]=document.querySelector("#component-206 > label > input")
+    config["controlnet_enable"] = document.querySelector("#component-185 > label > input").value
+    config["controlnet_lowVRAM_enable"] = document.querySelector("#component-186 > label > input").value
+    config["controlnet_pixel_perfect"] = document.querySelector("#component-188 > label > input").value
+    config["controlnet_allow_preview"] = document.querySelector("#component-189 > label > input").value
+    config["controlnet_preprocessor"] = document.querySelector("#component-191 > label > div > div.wrap-inner.svelte-a6vu2r > span").value
+    config["controlnet_model"] = document.querySelector("#component-193 > label > div > div.wrap-inner.svelte-a6vu2r > span").textContent
+    config["control_weight"] = document.querySelector("#component-198 > div.wrap.svelte-jigama > div > input").value
+    config["controlnet_starting_control_step"] = document.querySelector("#component-199 > div.wrap.svelte-jigama > div > input").value
+    config["controlnet_ending_control_step"] = document.querySelector("#component-200 > div.wrap.svelte-jigama > div > input").value
+    config["controlnet_control_mode(guess_mode)"]=document.querySelector("#component-207 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value
+    config["controlnet_resize_mode"] = document.querySelector("#component-208 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input").value
+    config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"]=document.querySelector("#component-209 > label > input").value
 
-    config['script_txt2txt_prompt_matrix_prompt_type_positive']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
-    config['script_txt2txt_prompt_matrix_prompt_type_negative']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input")
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input")    
-    config['script_txt2txt_prompt_matrix_margin_size']=document.querySelector("#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input")
+    config['script_txt2txt_prompt_matrix_prompt_type_positive']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value
+    config['script_txt2txt_prompt_matrix_prompt_type_negative']=document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").value
+    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value
+    config['script_txt2txt_prompt_matrix_variations_delimiter_comma']=document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").value    
+    config['script_txt2txt_prompt_matrix_margin_size']=document.querySelector("#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input").value
 
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input")
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input")
-    config['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea")
+    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input").value
+    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input").value
+    config['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea").value
     config['script_txt2txt_prompts_from_file_or_textbox_file']=document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div")
 
 
@@ -300,11 +304,10 @@ function txt2img_config_save() {
 
     // get the api-gateway url and token
     config["aws_api_gateway_url"] = document.querySelector(
-        "#component-1298 > label > textarea"
+        "#aws_middleware_api > label > textarea"
     ).value;
-    config["aws_api_token"] = document.querySelector(
-        "#component-1299 > label > textarea"
-    ).value;
+
+    config["aws_api_token"] = document.querySelector("#aws_middleware_token > label > textarea").value;
 
     // store config in local storage for debugging
     localStorage.setItem("txt2imgConfig", JSON.stringify(config));

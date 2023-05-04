@@ -161,8 +161,9 @@ async def run_sagemaker_inference(request: Request):
         # TODO: add logic for inference id
         inference_id = get_uuid()
 
-        # payload = await request.json()
-        #payload = {}
+        #payload = await request.json()
+        #print(f"input in json format {payload}")
+
         params_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
 
         logger.info(json.dumps(params_dict))
@@ -390,34 +391,34 @@ async def run_sagemaker_inference(request: Request):
             }
 
         print(f"input in json format {payload}")
-        endpoint_name = payload["endpoint_name"]
+        # endpoint_name = payload["endpoint_name"]
 
-        predictor = Predictor(endpoint_name)
+        # predictor = Predictor(endpoint_name)
 
-        predictor = AsyncPredictor(predictor, name=endpoint_name)
-        predictor.serializer = JSONSerializer()
-        predictor.deserializer = JSONDeserializer()
-        prediction = predictor.predict_async(data=payload, inference_id=inference_id)
-        output_path = prediction.output_path
+        # predictor = AsyncPredictor(predictor, name=endpoint_name)
+        # predictor.serializer = JSONSerializer()
+        # predictor.deserializer = JSONDeserializer()
+        # prediction = predictor.predict_async(data=payload, inference_id=inference_id)
+        # output_path = prediction.output_path
 
-        #put the item to inference DDB for later check status
-        current_time = str(datetime.now())
-        response = inference_table.put_item(
-            Item={
-                'InferenceJobId': inference_id,
-                'startTime': current_time,
-                'status': 'inprogress'
-            })
+        # #put the item to inference DDB for later check status
+        # current_time = str(datetime.now())
+        # response = inference_table.put_item(
+        #     Item={
+        #         'InferenceJobId': inference_id,
+        #         'startTime': current_time,
+        #         'status': 'inprogress'
+        #     })
+        # print(f"output_path is {output_path}")
 
-        print(f"output_path is {output_path}")
-        # return {"endpoint_name": endpoint_name, "output_path": output_path}
         headers = {
             "Access-Control-Allow-Headers": "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         }
 
-        response = JSONResponse(content={"inference_id": inference_id, "status": "inprogress", "endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+        # response = JSONResponse(content={"inference_id": inference_id, "status": "inprogress", "endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+        response = JSONResponse(content={"inference_id": '6fa743f0-cb7a-496f-8205-dbd67df08be2', "status": "succeed", "output_path": ""}, headers=headers)
         return response
 
     except Exception as e:

@@ -457,6 +457,7 @@ def sagemaker_api(_, app: FastAPI):
                     config_source = merge_checkpoint_payload["config_source"]
                     bake_in_vae = merge_checkpoint_payload["bake_in_vae"]
                     discard_weights = merge_checkpoint_payload["discard_weights"]
+                    save_metadata = merge_checkpoint_payload["save_metadata"]
                     merge_model_s3_pos = merge_checkpoint_payload["merge_model_s3"]
 
                     # upload checkpoints from cloud to local variable
@@ -486,7 +487,7 @@ def sagemaker_api(_, app: FastAPI):
                     [primary_model_name, secondary_model_name, tertiary_model_name, component_dict_sd_model_checkpoints, modelmerger_result] = \
                         modelmerger("fake_id_task", primary_model_name, secondary_model_name, tertiary_model_name, \
                         interp_method, interp_amount, save_as_half, custom_name, checkpoint_format, config_source, \
-                        bake_in_vae, discard_weights)
+                        bake_in_vae, discard_weights, save_metadata)
 
                     output_model_position = modelmerger_result[20:]
 
