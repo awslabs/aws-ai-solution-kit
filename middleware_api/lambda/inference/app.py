@@ -196,7 +196,7 @@ async def run_sagemaker_inference(request: Request):
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         }
 
-        response = JSONResponse(content={"endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+        response = JSONResponse(content={"inference_id": inference_id, "status": "inprogress", "endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
         return response
 
     except Exception as e:
@@ -209,7 +209,7 @@ async def run_sagemaker_inference(request: Request):
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         }
 
-        response = JSONResponse(content={"error": f"error info {str(e)}"}, headers=headers)
+        response = JSONResponse(content={"inference_id": inference_id, "status":"failure", "error": f"error info {str(e)}"}, headers=headers)
         return response
 
 @app.post("/inference/deploy-sagemaker-endpoint")
