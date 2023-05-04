@@ -223,7 +223,8 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
-    const deployment = new apigw.Deployment(this, 'rest-api-deployment', { api: restful_api });
+    const current_time = new Date().toISOString;
+    const deployment = new apigw.Deployment(this, 'rest-api-deployment'+current_time, { api: restful_api });
     deployment.addToLogicalId(new Date().toISOString());
     (deployment as any).resource.stageName = 'prod';
    
