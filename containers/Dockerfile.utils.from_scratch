@@ -4,8 +4,6 @@ COPY stable-diffusion-webui /opt/ml/code/
 COPY utils/serve /opt/ml/code
 RUN mkdir -p /root/.cache/huggingface/accelerate
 COPY utils/default_config.yaml /root/.cache/huggingface/accelerate/
-# RUN pip install sagemaker==2.143.0
-# RUN pip install GitPython
 
 RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt \
     && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
