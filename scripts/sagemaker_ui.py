@@ -588,7 +588,7 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     r = response.json()
     print(f"response for rest api {r}")
 
-def modelmerger_on_cloud(primary_model_name, secondary_model_name, tertiary_model_name):
+def modelmerger_on_cloud_func(primary_model_name, secondary_model_name, tertiary_model_name):
     print(f"function not implemented, current checkpoint_info is {checkpoint_info}")
 
 def txt2img_config_save():
@@ -790,9 +790,9 @@ def create_ui():
                 tertiary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_tertiary_model_name_in_the_cloud", label="tertiary model (C) in the cloud")
                 create_refresh_button(tertiary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_C_in_the_cloud")
             with gr.Row():
-                modelmerger_merge = gr.Button(elem_id="modelmerger_merge_in_the_cloud", value="Merge", variant='primary')
-                modelmerger_merge.click(
-                    fn=modelmerger_on_cloud,
+                modelmerger_merge_on_cloud = gr.Button(elem_id="modelmerger_merge_in_the_cloud", value="Merge", variant='primary')
+                modelmerger_merge_on_cloud.click(
+                    fn=modelmerger_on_cloud_func,
                     inputs=[
                         primary_model_name,
                         secondary_model_name,
@@ -801,4 +801,4 @@ def create_ui():
                     outputs=[
                     ])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_on_cloud
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
