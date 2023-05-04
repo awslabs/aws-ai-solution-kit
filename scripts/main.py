@@ -113,12 +113,16 @@ def on_after_component_callback(component, **_kwargs):
         # return test
     if sagemaker_ui.inference_job_dropdown is not None and txt2img_gallery is not None and txt2img_generation_info is not None and txt2img_html_info is not None and txt2img_show_hook is None:
         txt2img_show_hook = "finish"
-        print("guming debug>>>>>>>>>")
         sagemaker_ui.inference_job_dropdown.change(
             fn=lambda selected_value: sagemaker_ui.fake_gan(selected_value),
             inputs=[sagemaker_ui.inference_job_dropdown],
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
+        sagemaker_ui.generate_on_cloud_button_with_js.click(
+            fn=sagemaker_ui.generate_on_cloud_no_input,
+                    inputs=[],
+                    outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
+                )
     # # hook logic for merge checkpoints
     # global modelmerger_merge_component, modelmerger_merge_hook
     # is_modelmerger_merge_component = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'modelmerger_merge'
@@ -156,7 +160,7 @@ def on_after_component_callback(component, **_kwargs):
     #         with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
     #             with FormRow(elem_id="modelmerger_models_in_the_cloud"):
     #                 primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
-    #                                                  choices=sorted(sagemaker_ui.update_sd_checkpoints()))
+    #                                                  choices=sorted(sagemaker_ui.update_sd_checkpoints()), elem_id="model_on_the_cloud")
     #                 create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
     #                                       lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
     #                                       "refresh primary model (A)")
@@ -188,15 +192,15 @@ def on_ui_tabs():
             with gr.Column(variant="panel", elem_id="PipelinePanel"):
                 with gr.Tab("Select"):
                     with gr.Row():
-                        db_model_name = gr.Dropdown(elem_id='pipeline', label='Pipeline', choices=["dreambooth_train"])
+                        db_model_name = gr.Dropdown(label='Pipeline', choices=["dreambooth_train"],elem_id="pipeline_drop_down")
                         for job_link in job_link_list:
                             gr.HTML(value=f"<span class='hhh'>{job_link}</span>")
         with  gr.Row():
             with gr.Column(variant="panel", scale=1):
                 gr.HTML(value="AWS Connect Setting")
-                api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url")
-                api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token")
-                aws_connect_button = gr.Button(value="Update Setting", variant='primary')
+                api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url",elem_id="aws_middleware_api")
+                api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token", elem_id="aws_middleware_token")
+                aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
                 aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
             with gr.Column(variant="panel", scale=2):
                 gr.HTML(value="Resource")
@@ -234,7 +238,8 @@ def ui_tabs_callback():
                                 with gr.Tab('Select From Cloud'):
                                     with gr.Row():
                                         cloud_db_model_name = gr.Dropdown(
-                                            label="Model", choices=sorted(get_cloud_db_model_name_list())
+                                            label="Model", choices=sorted(get_cloud_db_model_name_list()),
+                                            elem_id="cloud_db_model_name"
                                         )
                                         create_refresh_button(
                                             cloud_db_model_name,
@@ -246,6 +251,7 @@ def ui_tabs_callback():
                                         cloud_db_snapshot = gr.Dropdown(
                                             label="Cloud Snapshot to Resume",
                                             choices=sorted(get_cloud_model_snapshots()),
+                                            elem_id="cloud_snapshot_to_resume_dropdown"
                                         )
                                         create_refresh_button(
                                             cloud_db_snapshot,
@@ -255,7 +261,8 @@ def ui_tabs_callback():
                                         )
                                     with gr.Row(visible=False) as lora_model_row:
                                         cloud_db_lora_model_name = gr.Dropdown(
-                                            label="Lora Model", choices=get_sorted_lora_cloud_models()
+                                            label="Lora Model", choices=get_sorted_lora_cloud_models(),
+                                            elem_id="cloud_lora_model_dropdown"
                                         )
                                         create_refresh_button(
                                             cloud_db_lora_model_name,
@@ -299,6 +306,7 @@ def ui_tabs_callback():
                                         cloud_db_new_model_url = gr.Textbox(
                                             label="Model Path",
                                             placeholder="runwayml/stable-diffusion-v1-5",
+                                            elem_id="cloud_db_model_path_text_box"
                                         )
                                         cloud_db_new_model_token = gr.Textbox(
                                             label="HuggingFace Token", value=""
@@ -308,6 +316,7 @@ def ui_tabs_callback():
                                             cloud_db_new_model_src = gr.Dropdown(
                                                 label="Source Checkpoint",
                                                 choices=sorted(get_sd_cloud_models()),
+                                                elem_id="cloud_db_source_checkpoint_dropdown" 
                                             )
                                             create_refresh_button(
                                                 cloud_db_new_model_src,
@@ -318,7 +327,7 @@ def ui_tabs_callback():
                                     cloud_db_new_model_extract_ema = gr.Checkbox(
                                         label="Extract EMA Weights", value=False
                                     )
-                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False)
+                                    cloud_db_train_unfrozen = gr.Checkbox(label="Unfreeze Model", value=False, elem_id="cloud_db_unfreeze_model_checkbox")
 
                                 def toggle_new_rows(create_from):
                                     return gr.update(visible=create_from), gr.update(visible=not create_from)
