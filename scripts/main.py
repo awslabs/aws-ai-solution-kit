@@ -119,47 +119,47 @@ def on_after_component_callback(component, **_kwargs):
             inputs=[sagemaker_ui.inference_job_dropdown],
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
-    # hook logic for merge checkpoints
-    global modelmerger_merge_component, modelmerger_merge_hook
-    is_modelmerger_merge_component = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'modelmerger_merge'
-    if is_modelmerger_merge_component:
-        print("create model merge component")
-        modelmerger_merge_component = component
-    if modelmerger_merge_component is not None and modelmerger_merge_hook is None:
-        modelmerger_merge_hook = "finish"
-        print("create merge in the cloud")
-        def get_model_list_by_type(model_type):
-            if api_gateway_url is None:
-                print(f"failed to get the api-gateway url, can not fetch remote data")
-                return []
-            url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
-            response = requests.get(url=url, headers={'x-api-key': api_key})
-            json_response = response.json()
-            # print(f"response url json for model {model_type} is {json_response}")
+    # # hook logic for merge checkpoints
+    # global modelmerger_merge_component, modelmerger_merge_hook
+    # is_modelmerger_merge_component = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'modelmerger_merge'
+    # if is_modelmerger_merge_component:
+    #     print("create model merge component")
+    #     modelmerger_merge_component = component
+    # if modelmerger_merge_component is not None and modelmerger_merge_hook is None:
+    #     modelmerger_merge_hook = "finish"
+    #     print("create merge in the cloud")
+    #     def get_model_list_by_type(model_type):
+    #         if api_gateway_url is None:
+    #             print(f"failed to get the api-gateway url, can not fetch remote data")
+    #             return []
+    #         url = api_gateway_url + f"checkpoints?status=Active&types={model_type}"
+    #         response = requests.get(url=url, headers={'x-api-key': api_key})
+    #         json_response = response.json()
+    #         # print(f"response url json for model {model_type} is {json_response}")
 
-            if "checkpoints" not in json_response.keys():
-                return []
+    #         if "checkpoints" not in json_response.keys():
+    #             return []
 
-            checkpoint_list = []
-            for ckpt in json_response["checkpoints"]:
-                ckpt_type = ckpt["type"]
-                for ckpt_name in ckpt["name"]:
-                    ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-                    checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
-                    checkpoint_list.append(ckpt_name)
+    #         checkpoint_list = []
+    #         for ckpt in json_response["checkpoints"]:
+    #             ckpt_type = ckpt["type"]
+    #             for ckpt_name in ckpt["name"]:
+    #                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
+    #                 checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+    #                 checkpoint_list.append(ckpt_name)
 
-            return checkpoint_list
-        def update_sd_checkpoints():
-            model_type = "Stable-diffusion"
-            return get_model_list_by_type(model_type)
-        with gr.Group():
-            with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
-                with FormRow(elem_id="modelmerger_models_in_the_cloud"):
-                    primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
-                                                     choices=sorted(sagemaker_ui.update_sd_checkpoints()))
-                    create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
-                                          lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
-                                          "refresh primary model (A)")
+    #         return checkpoint_list
+    #     def update_sd_checkpoints():
+    #         model_type = "Stable-diffusion"
+    #         return get_model_list_by_type(model_type)
+    #     with gr.Group():
+    #         with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
+    #             with FormRow(elem_id="modelmerger_models_in_the_cloud"):
+    #                 primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
+    #                                                  choices=sorted(sagemaker_ui.update_sd_checkpoints()))
+    #                 create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
+    #                                       lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
+    #                                       "refresh primary model (A)")
 
                     # secondary_model_name = gr.Dropdown(modules.sd_models.checkpoint_tiles(), elem_id="modelmerger_secondary_model_name", label="Secondary model (B) in the cloud")
                     # create_refresh_button(secondary_model_name, modules.sd_models.list_models, lambda: {"choices": modules.sd_models.checkpoint_tiles()}, "refresh_checkpoint_B")
