@@ -204,41 +204,52 @@ async def run_sagemaker_inference(request: Request):
         # get all parameters from ui-config.json
         prompt = params_dict['txt2img_prompt'] #'chinese, beautiful woman' # 'a busy city street in a modern city | illustration | cinematic lighting' #
         negative_prompt = params_dict['txt2img_neg_prompt']#: "", 
-        enable_hr = params_dict['txt2img_enable_hr'] #: "False", 
-        denoising_strength = params_dict['txt2img_denoising_strength'] #: 0.7, 
-        hr_scale = params_dict['txt2img_hr_scale'],
+        enable_hr = "False" #params_dict['txt2img_enable_hr'] #: "False", 
+        denoising_strength = float(params_dict['txt2img_denoising_strength']) #: 0.7, 
+        hr_scale = float(params_dict['txt2img_hr_scale'])
         hr_upscaler = params_dict['txt2img_hr_upscaler'] #hr_upscaler,
-        hr_second_pass_steps = params_dict['txt2img_hires_steps'] #hr_second_pass_steps,
-        firstphase_width = params_dict['txt2img_hr_resize_x']#: 0, 
-        firstphase_height = params_dict['txt2img_hr_resize_y']#: 0, 
-        styles = params_dict['txt2img_styles']#: ["None", "None"], 
-        seed = params_dict['txt2img_seed']#: -1.0, 
-        subseed = params_dict['txt2img_subseed']#: -1.0, 
-        subseed_strength = params_dict['txt2img_subseed_strength']#: 0, 
-        seed_resize_from_h = params_dict['txt2img_seed_resize_from_h']#: 0, 
-        seed_resize_from_w = params_dict['txt2img_seed_resize_from_w']#: 0, 
+        hr_second_pass_steps = int(params_dict['txt2img_hires_steps']) #hr_second_pass_steps,
+        firstphase_width = int(params_dict['txt2img_hr_resize_x'])#: 0, 
+        firstphase_height = int(params_dict['txt2img_hr_resize_y'])#: 0, 
+        styles = []#params_dict['txt2img_styles']#: ["None", "None"], 
+        seed = float(params_dict['txt2img_seed'])#: -1.0, 
+        subseed = float(params_dict['txt2img_subseed'])#: -1.0, 
+        subseed_strength = float(params_dict['txt2img_subseed_strength'])#: 0, 
+        seed_resize_from_h = int(params_dict['txt2img_seed_resize_from_h'])#: 0, 
+        seed_resize_from_w = int(params_dict['txt2img_seed_resize_from_w'])#: 0, 
         sampler_index = params_dict['txt2img_sampling']#: "Euler a", 
-        batch_size = params_dict['txt2img_batch_size']#: 1, 
-        n_iter = params_dict['txt2img_batch_count']
-        steps = params_dict['txt2img_steps']#: 20, 
-        cfg_scale = params_dict['txt2img_cfg_scale']#: 7, 
-        width = params_dict['txt2img_width']#: 512, 
-        height = params_dict['txt2img_height']#: 512, 
-        restore_faces = params_dict['txt2img_restore_faces']#: "False", 
-        tiling = params_dict['txt2img_tiling']#: "False", 
-        override_settings = {},
-        eta = 1, 
-        s_churn = 0, 
-        s_tmax = 1, 
-        s_tmin = 0, 
-        s_noise = 1, 
+        batch_size = int(params_dict['txt2img_batch_size'])#: 1, 
+        n_iter = int(params_dict['txt2img_batch_count'])
+        steps = int(params_dict['txt2img_steps'])#: 20, 
+        cfg_scale = int(params_dict['txt2img_cfg_scale'])#: 7, 
+        width = int(params_dict['txt2img_width'])#: 512, 
+        height = int(params_dict['txt2img_height'])#: 512, 
+        restore_faces = "False" #params_dict['txt2img_restore_faces']#: "False", 
+        tiling = "False" #params_dict['txt2img_tiling']#: "False", 
+        override_settings = {}
+        eta = 1
+        s_churn = 0
+        s_tmax = 1
+        s_tmin = 0
+        s_noise = 1 
 
-        selected_sd_model = params_dict['sagemaker_stable_diffuion_checkpoing'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
+        selected_sd_model = params_dict['sagemaker_stable_diffuion_checkpoint'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
         selected_cn_model = params_dict['sagemaker_controlnet_model']#['control_openpose-fp16.safetensors']#
         selected_hypernets = params_dict['sagemaker_hypernetwork_model']#['mjv4Hypernetwork_v1.pt']#'LuisapKawaii_v1.pt'
         selected_loras = params_dict['sagemaker_lora_model']#['hanfu_v30Song.safetensors']# 'cuteGirlMix4_v10.safetensors'
         selected_embeddings = params_dict['sagemaker_texual_inversion_model']#['pureerosface_v1.pt']#'corneo_marin_kitagawa.pt''pureerosface_v1.pt'
-
+        
+        if selected_sd_model == "":
+            selected_sd_model = ["v1-5-pruned-emaonly.safetensors"]
+        if selected_cn_model == "":
+            selected_cn_model = []
+        if selected_hypernets == "":
+            selected_hypernets = []
+        if selected_loras == "":
+            selected_loras = []
+        if selected_embeddings == "":
+            selected_embeddings = []
+        
         for embedding in selected_embeddings:
             prompt = prompt + embedding
         for hypernet in selected_hypernets:
@@ -389,27 +400,61 @@ async def run_sagemaker_inference(request: Request):
                 "script_name": script_name,
                 "script_args": script_args}, 
             }
+        '''
+
+                        "txt2img_payload": {
+                "enable_hr": enable_hr, 
+                "denoising_strength": denoising_strength, 
+                "firstphase_width": firstphase_width, 
+                "firstphase_height": firstphase_height, 
+                "prompt": prompt, 
+                "styles": styles, 
+                "seed": seed, 
+                "subseed": subseed, 
+                "subseed_strength": subseed_strength, 
+                "seed_resize_from_h": seed_resize_from_h, 
+                "seed_resize_from_w": seed_resize_from_w, 
+                "sampler_index": sampler_index, 
+                "batch_size": batch_size, 
+                "n_iter": n_iter, 
+                "steps": steps, 
+                "cfg_scale": cfg_scale, 
+                "width": width, 
+                "height": height, 
+                "restore_faces": restore_faces, 
+                "tiling": tiling, 
+                "negative_prompt": negative_prompt, 
+                "eta": eta, 
+                "s_churn": s_churn, 
+                "s_tmax": s_tmax, 
+                "s_tmin": s_tmin, 
+                "s_noise": s_noise, 
+                "override_settings": override_settings, 
+                "script_name": script_name,
+                "script_args": script_args}, 
+            }
+        '''
 
         print(f"input in json format {payload}")
         # endpoint_name = payload["endpoint_name"]
 
-        # predictor = Predictor(endpoint_name)
+        predictor = Predictor(endpoint_name)
 
-        # predictor = AsyncPredictor(predictor, name=endpoint_name)
-        # predictor.serializer = JSONSerializer()
-        # predictor.deserializer = JSONDeserializer()
-        # prediction = predictor.predict_async(data=payload, inference_id=inference_id)
-        # output_path = prediction.output_path
+        predictor = AsyncPredictor(predictor, name=endpoint_name)
+        predictor.serializer = JSONSerializer()
+        predictor.deserializer = JSONDeserializer()
+        prediction = predictor.predict_async(data=payload, inference_id=inference_id)
+        output_path = prediction.output_path
 
-        # #put the item to inference DDB for later check status
-        # current_time = str(datetime.now())
-        # response = inference_table.put_item(
-        #     Item={
-        #         'InferenceJobId': inference_id,
-        #         'startTime': current_time,
-        #         'status': 'inprogress'
-        #     })
-        # print(f"output_path is {output_path}")
+        #put the item to inference DDB for later check status
+        current_time = str(datetime.now())
+        response = inference_table.put_item(
+            Item={
+                'InferenceJobId': inference_id,
+                'startTime': current_time,
+                'status': 'inprogress'
+            })
+        print(f"output_path is {output_path}")
 
         headers = {
             "Access-Control-Allow-Headers": "Content-Type",
@@ -417,8 +462,8 @@ async def run_sagemaker_inference(request: Request):
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         }
 
-        # response = JSONResponse(content={"inference_id": inference_id, "status": "inprogress", "endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
-        response = JSONResponse(content={"inference_id": '6fa743f0-cb7a-496f-8205-dbd67df08be2', "status": "succeed", "output_path": ""}, headers=headers)
+        response = JSONResponse(content={"inference_id": inference_id, "status": "inprogress", "endpoint_name": endpoint_name, "output_path": output_path}, headers=headers)
+        #response = JSONResponse(content={"inference_id": '6fa743f0-cb7a-496f-8205-dbd67df08be2', "status": "succeed", "output_path": ""}, headers=headers)
         return response
 
     except Exception as e:
