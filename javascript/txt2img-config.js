@@ -25,9 +25,9 @@ function txt2img_config_save() {
     const key = "config/aigc.json";
     let remote_url = config["aws_api_gateway_url"];
     if (!remote_url.endsWith("/")) {
-      remote_url += "/";
+        remote_url += "/";
     }
-    let get_presigned_s3_url = remote_url
+    let get_presigned_s3_url = remote_url;
     get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
     const api_key = config["aws_api_token"];
 
@@ -40,7 +40,7 @@ function txt2img_config_save() {
                 console.error("Error fetching presigned URL:", error);
             } else {
                 // console.log("Presigned URL:", presignedUrl);
-                const url = presignedUrl.replace(/"/g, '');
+                const url = presignedUrl.replace(/"/g, "");
                 // console.log("url:", url);
 
                 // Upload configuration JSON file to S3 bucket with pre-signed URL
@@ -51,7 +51,9 @@ function txt2img_config_save() {
                     .then((response) => {
                         console.log(response);
                         // Trigger a simple alert after the HTTP PUT has completed
-                        alert("The configuration has been successfully uploaded.");
+                        alert(
+                            "The configuration has been successfully uploaded."
+                        );
                         // TODO: meet the cors issue, need to implement it later
                         // let inference_url = remote_url + 'inference/run-sagemaker-inference';
                         // console.log("api-key is ", api_key)
@@ -63,16 +65,17 @@ function txt2img_config_save() {
                         //         alert("Succeed trigger the remote sagemaker inference.");
                         //         // You can also add an alert or any other action you'd like to perform on success
                         //     }
-                        // }) 
+                        // })
                     })
                     .catch((error) => {
                         console.log(error);
-                        alert("An error occurred while uploading the configuration.");
+                        alert(
+                            "An error occurred while uploading the configuration."
+                        );
                     });
             }
         }
     );
-
 }
 
 function scrap_ui_component_value_with_error_handling(config) {
@@ -211,7 +214,9 @@ function scrap_ui_component_value(config) {
         document.querySelector(
             "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input"
         ).value;
-    config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"] = document.querySelector(
+    config[
+        "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"
+    ] = document.querySelector(
         "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input"
     ).value;
     config["script_txt2txt_xyz_plot_draw_legend"] = document.querySelector(
@@ -314,50 +319,131 @@ function scrap_ui_component_value(config) {
     ).textContent;
 
     //sagemaker endpoint
-    config["sagemaker_endpoint"] = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > span").value;
+    config["sagemaker_endpoint"] = document.querySelector(
+        "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
     //stable diffusion checkpoint
-    config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value; //stable diffusion checkpoint 
-    config["stable_diffusion_checkpoint"] = document.querySelector("#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value;
-
+    config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector(
+        "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value; //stable diffusion checkpoint
+    config["stable_diffusion_checkpoint"] = document.querySelector(
+        "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //Textual Inversion
-    config["sagemaker_texual_inversion_model"] = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value;
+    config["sagemaker_texual_inversion_model"] = document.querySelector(
+        "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
+
+    // const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-a6vu2r .token > span");
+    const wrapInner = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r")
+    const tokens = wrapInner.querySelectorAll(".token.svelte-a6vu2r");
+    const values = [];
+    
+    tokens.forEach(token => {
+      const spanValue = token.querySelector("span.svelte-a6vu2r").textContent;
+      values.push(spanValue);
+    });
+    
+    console.log("guming debug>>>")
+    console.log(values);
+    
+
 
     //LoRa
-    config["sagemaker_lora_model"] = document.querySelector("#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value;
+    config["sagemaker_lora_model"] = document.querySelector(
+        "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //HyperNetwork
-    config["sagemaker_hypernetwork_model"] = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value;
+    config["sagemaker_hypernetwork_model"] = document.querySelector(
+        "#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //ControlNet model
-    config["sagemaker_controlnet_model"] = document.querySelector("#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input").value;
+    config["sagemaker_controlnet_model"] = document.querySelector(
+        "#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
+    ).value;
 
     //control net part parameter
-    config["txt2img_controlnet_ControlNet_input_image"] = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img");
-    config["controlnet_enable"] = document.querySelector("#component-185 > label > input").value;
-    config["controlnet_lowVRAM_enable"] = document.querySelector("#component-186 > label > input").value;
-    config["controlnet_pixel_perfect"] = document.querySelector("#component-188 > label > input").value;
-    config["controlnet_allow_preview"] = document.querySelector("#component-189 > label > input").value;
-    config["controlnet_preprocessor"] = document.querySelector("#component-191 > label > div > div.wrap-inner.svelte-a6vu2r > span").value;
-    config["controlnet_model"] = document.querySelector("#component-193 > label > div > div.wrap-inner.svelte-a6vu2r > span").textContent;
-    config["control_weight"] = document.querySelector("#component-198 > div.wrap.svelte-jigama > div > input").value;
-    config["controlnet_starting_control_step"] = document.querySelector("#component-199 > div.wrap.svelte-jigama > div > input").value;
-    config["controlnet_ending_control_step"] = document.querySelector("#component-200 > div.wrap.svelte-jigama > div > input").value;
-    config["controlnet_control_mode(guess_mode)"] = document.querySelector("#component-207 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value;
-    config["controlnet_resize_mode"] = document.querySelector("#component-208 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input").value;
-    config["controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"] = document.querySelector("#component-209 > label > input").value;
+    config["txt2img_controlnet_ControlNet_input_image"] =
+        document.querySelector(
+            "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
+        );
+    config["controlnet_enable"] = document.querySelector(
+        "#component-185 > label > input"
+    ).checked;
+    config["controlnet_lowVRAM_enable"] = document.querySelector(
+        "#component-186 > label > input"
+    ).checked;
+    config["controlnet_pixel_perfect"] = document.querySelector(
+        "#component-188 > label > input"
+    ).checked;
+    config["controlnet_allow_preview"] = document.querySelector(
+        "#component-189 > label > input"
+    ).checked;
+    config["controlnet_preprocessor"] = document.querySelector(
+        "#component-191 > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
+    config["controlnet_model"] = document.querySelector(
+        "#component-193 > label > div > div.wrap-inner.svelte-a6vu2r > span"
+    ).textContent;
+    config["control_weight"] = document.querySelector(
+        "#component-198 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_starting_control_step"] = document.querySelector(
+        "#component-199 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_ending_control_step"] = document.querySelector(
+        "#component-200 > div.wrap.svelte-jigama > div > input"
+    ).value;
+    config["controlnet_control_mode(guess_mode)"] = document.querySelector(
+        "#component-207 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+    ).value;
+    config["controlnet_resize_mode"] = document.querySelector(
+        "#component-208 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input"
+    ).value;
+    config[
+        "controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"
+    ] = document.querySelector("#component-209 > label > input").value;
 
-    config['script_txt2txt_prompt_matrix_prompt_type_positive'] = document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value;
-    config['script_txt2txt_prompt_matrix_prompt_type_negative'] = document.querySelector("#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").value;
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma'] = document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input").value;
-    config['script_txt2txt_prompt_matrix_variations_delimiter_comma'] = document.querySelector("#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").value;
-    config['script_txt2txt_prompt_matrix_margin_size'] = document.querySelector("#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input").value;
+    config["script_txt2txt_prompt_matrix_prompt_type_positive"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_prompt_type_negative"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
+        ).value;
+    config["script_txt2txt_prompt_matrix_margin_size"] = document.querySelector(
+        "#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-jigama > div > input"
+    ).value;
 
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate'] = document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input").value;
-    config['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch'] = document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input").value;
-    config['script_txt2txt_prompts_from_file_or_textbox_prompt_txt'] = document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea").value;
-    config['script_txt2txt_prompts_from_file_or_textbox_file'] = document.querySelector("#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div");
-
+    config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input"
+        ).value;
+    config[
+        "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"
+    ] = document.querySelector(
+        "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input"
+    ).value;
+    config["script_txt2txt_prompts_from_file_or_textbox_prompt_txt"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_prompt_txt > label > textarea"
+        ).value;
+    config["script_txt2txt_prompts_from_file_or_textbox_file"] =
+        document.querySelector(
+            "#script_txt2txt_prompts_from_file_or_textbox_file > div.svelte-116rqfv.center.boundedheight.flex > div"
+        );
 
     // config for prompt area
     config["txt2img_prompt"] = document.querySelector(
@@ -375,7 +461,9 @@ function scrap_ui_component_value(config) {
         "#aws_middleware_api > label > textarea"
     ).value;
 
-    config["aws_api_token"] = document.querySelector("#aws_middleware_token > label > textarea").value;
+    config["aws_api_token"] = document.querySelector(
+        "#aws_middleware_token > label > textarea"
+    ).value;
 }
 
 function put_with_xmlhttprequest(config_url, config_data) {
@@ -414,7 +502,7 @@ function getPresignedUrl(remote_url, api_key, key, callback) {
 
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 400) {
-            callback(null, xhr.responseText);;
+            callback(null, xhr.responseText);
         } else {
             callback(
                 new Error(`Error fetching presigned URL: ${xhr.statusText}`),
@@ -456,4 +544,3 @@ function postToApiGateway(remote_url, api_key, data, callback) {
     // Convert data object to JSON string before sending
     xhr.send(JSON.stringify(data));
 }
-

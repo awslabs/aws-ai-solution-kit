@@ -15,6 +15,7 @@ import gradio as gr
 
 from modules import shared, scripts
 from modules.ui import create_refresh_button
+from modules.ui_components import FormRow, FormColumn, FormGroup, ToolButton, FormHTML
 from utils import get_variable_from_json
 from utils import upload_file_to_s3_by_presign_url, upload_multipart_files_to_s3_by_signed_url
 from requests.exceptions import JSONDecodeError
@@ -622,6 +623,9 @@ def sagemaker_deploy(instance_type, initial_instance_count=1):
     r = response.json()
     print(f"response for rest api {r}")
 
+def modelmerger_on_cloud_func(primary_model_name, secondary_model_name, tertiary_model_name):
+    print(f"function not implemented, current checkpoint_info is {checkpoint_info}")
+
 def txt2img_config_save():
     # placeholder for saving txt2img config
     pass
@@ -811,5 +815,25 @@ def create_ui():
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
             sagemaker_html_log = gr.HTML(elem_id=f'html_log_sagemaker')
+            with FormRow(elem_id="modelmerger_models_in_the_cloud"):
+                primary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_primary_model_name_in_the_cloud", label="Primary model (A) in the cloud")
+                create_refresh_button(primary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_A_in_the_cloud")
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button
+                secondary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_secondary_model_name_in_the_cloud", label="secondary model (B) in the cloud")
+                create_refresh_button(secondary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_B_in_the_cloud")
+
+                tertiary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_tertiary_model_name_in_the_cloud", label="tertiary model (C) in the cloud")
+                create_refresh_button(tertiary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_C_in_the_cloud")
+            with gr.Row():
+                modelmerger_merge_on_cloud = gr.Button(elem_id="modelmerger_merge_in_the_cloud", value="Merge", variant='primary')
+                modelmerger_merge_on_cloud.click(
+                    fn=modelmerger_on_cloud_func,
+                    inputs=[
+                        primary_model_name,
+                        secondary_model_name,
+                        tertiary_model_name,
+                    ],
+                    outputs=[
+                    ])
+
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
