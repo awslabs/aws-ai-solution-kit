@@ -335,9 +335,9 @@ function scrap_ui_component_value(config) {
     ).value;
 
     //Textual Inversion
-    config["sagemaker_texual_inversion_model"] = document.querySelector(
-        "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    ).value;
+    // config["sagemaker_texual_inversion_model"] = document.querySelector(
+    //     "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
+    // ).value;
 
     // const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-1g4zxts .token > span");
     const wrapInner = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
@@ -348,6 +348,7 @@ function scrap_ui_component_value(config) {
       const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
       values.push(spanValue);
     });
+    config["sagemaker_texual_inversion_model"]=values.join(':')
     
     console.log("guming debug>>>")
     console.log(values);
@@ -355,19 +356,55 @@ function scrap_ui_component_value(config) {
 
 
     //LoRa
-    config["sagemaker_lora_model"] = document.querySelector(
-        "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    ).value;
+    // config["sagemaker_lora_model"] = document.querySelector(
+    //     "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
+    // ).value;
+
+    const wrapInner1 = document.querySelector("#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
+    const tokens1 = wrapInner1.querySelectorAll(".token.svelte-1g4zxts");
+    const values1 = [];
+    
+    tokens1.forEach(token => {
+      const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
+      values1.push(spanValue);
+    });
+    config["sagemaker_lora_model"] = values1.join(':')
+    console.log(values1);
+
 
     //HyperNetwork
-    config["sagemaker_hypernetwork_model"] = document.querySelector(
-        "#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    ).value;
+    // config["sagemaker_hypernetwork_model"] = document.querySelector(
+    //     "#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
+    // ).value;
+
+    // document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
+    // const wrapInner2 = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
+    const wrapInner2 = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
+    const tokens2 = wrapInner2.querySelectorAll(".token.svelte-1g4zxts");
+    const values2 = [];
+    
+    tokens2.forEach(token => {
+      const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
+      values2.push(spanValue);
+    });
+    config["sagemaker_hypernetwork_model"] = values2.join(':')
+    console.log(values2);
 
     //ControlNet model
-    config["sagemaker_controlnet_model"] = document.querySelector(
-        "#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    ).value;
+    // config["sagemaker_controlnet_model"] = document.querySelector(
+    //     "#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
+    // ).value;
+    
+    const wrapInner3 = document.querySelector("#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
+    const tokens3 = wrapInner3.querySelectorAll(".token.svelte-1g4zxts");
+    const values3 = [];
+    
+    tokens3.forEach(token => {
+      const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
+      values3.push(spanValue);
+    });
+    config["sagemaker_controlnet_model"] = values3.join(':')
+    console.log(values3);
 
     //control net part parameter
     config["txt2img_controlnet_ControlNet_input_image"] =
