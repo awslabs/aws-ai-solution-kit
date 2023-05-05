@@ -335,11 +335,19 @@ function scrap_ui_component_value(config) {
         "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r > div > input"
     ).value;
 
-    const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-a6vu2r .token > span");
-    const selectedValues = Array.from(tokens).map(token => token.textContent);
+    // const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-a6vu2r .token > span");
+    const wrapInner = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-a6vu2r")
+    const tokens = wrapInner.querySelectorAll(".token.svelte-a6vu2r");
+    const values = [];
+    
+    tokens.forEach(token => {
+      const spanValue = token.querySelector("span.svelte-a6vu2r").textContent;
+      values.push(spanValue);
+    });
     
     console.log("guming debug>>>")
-    console.log(selectedValues);
+    console.log(values);
+    
 
 
     //LoRa
