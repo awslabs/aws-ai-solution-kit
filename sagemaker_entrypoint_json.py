@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import threading
 import sys
@@ -79,14 +80,19 @@ def upload_model_to_s3(model_name, s3_output_path):
     upload_folder_to_s3_by_tar(local_path, output_bucket_name, s3_output_path)
     return os.path.join(s3_output_path, f"{model_name}.tar")
 
-def hack_db_config(db_config, db_config_file_path):
+def hack_db_config(db_config, db_config_file_path, model_name):
     for k in db_config:
         if type(db_config[k]) is str:
-            db_config[k] = db_config[k].replace("/opt/ml/code/", "")
+            if k == "model_dir":
+                db_config[k] = re.sub(".+/(models/dreambooth/).+$", f"\\1{model_name}", db_config[k])
+            elif k == "pretrained_model_name_or_path":
+                db_config[k] = re.sub(".+/(models/dreambooth/).+(working)$", f"\\1{model_name}/\\2", db_config[k])
+            else:
+                db_config[k] = re.sub(".+/(models/dreambooth/).+$", f"\1{model_name}", db_config[k])
     with open(db_config_file_path, "w") as db_config_file_w:
         json.dump(db_config, db_config_file_w)
 
-def prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, class_data_tar):
+def prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar_list, class_data_tar_list):
     model_bucket_name = get_bucket_name_from_s3_path(s3_model_path)
     s3_model_path = os.path.join(get_path_from_s3_path(s3_model_path), f'{model_name}.tar')
     logger.info(f"Download src model from s3 {model_bucket_name} {s3_model_path} {model_name}.tar")
@@ -97,10 +103,18 @@ def prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, cla
     input_path = os.path.join(get_path_from_s3_path(s3_input_path), "db_config.tar")
     logger.info(f"Download db_config from s3 {input_bucket_name} {input_path} db_config.tar")
     download_folder_from_s3_by_tar(input_bucket_name, input_path, "db_config.tar")
-    input_path = os.path.join(get_path_from_s3_path(s3_input_path), data_tar)
-    logger.info(f"Download data from s3 {input_bucket_name} {input_path} {data_tar}")
-    download_folder_from_s3_by_tar(input_bucket_name, input_path, data_tar)
-    if class_data_tar:
+    os.system(f"cp models/dreambooth/dummy_local_model/db_config.json models/dreambooth/{model_name}/db_config.json")
+    os.system("ls models/dreambooth/")
+    db_config_path = f"models/dreambooth/{model_name}/db_config.json"
+    with open(db_config_path) as db_config_file:
+        db_config = json.load(db_config_file)
+    hack_db_config(db_config, db_config_path, model_name)
+
+    for data_tar in data_tar_list:
+        input_path = os.path.join(get_path_from_s3_path(s3_input_path), data_tar)
+        logger.info(f"Download data from s3 {input_bucket_name} {input_path} {data_tar}")
+        download_folder_from_s3_by_tar(input_bucket_name, input_path, data_tar)
+    for class_data_tar in class_data_tar_list:
         input_path = os.path.join(get_path_from_s3_path(s3_input_path), class_data_tar)
         logger.info(f"Download class data from s3 {input_bucket_name} {input_path} {class_data_tar}")
         download_folder_from_s3_by_tar(input_bucket_name, input_path, class_data_tar)
@@ -118,12 +132,12 @@ def main(s3_input_path, s3_output_path, params):
     params = params["training_params"]
     model_name = params["model_name"]
     s3_model_path = params["s3_model_path"]
-    data_tar = params["data_tar"]
-    if "class_data_tar" in params:
-        class_data_tar = params["class_data_tar"]
+    data_tar_list = params["data_tar_list"]
+    if "class_data_tar_list" in params:
+        class_data_tar_list = params["class_data_tar_list"]
     else:
-        class_data_tar = None
-    prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar, class_data_tar)
+        class_data_tar_list = None
+    prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar_list, class_data_tar_list)
     # sync_status(job_id, bucket_name, model_dir)
     train(model_name)
     upload_model_to_s3(model_name, s3_output_path)
