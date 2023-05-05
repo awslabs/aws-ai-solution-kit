@@ -339,6 +339,8 @@ def generate_on_cloud():
     ## controlnet m2m: [] 33:36
 
     script_name = params_dict['txt2img/Script/value']
+    if script_name == "None":
+        script_name = ""
     script_args = []
     if script_name == 'Prompt matrix':
         put_at_start = params_dict['customscript/prompt_matrix.py/txt2img/Put variable parts at start of prompt/value']
@@ -387,7 +389,7 @@ def generate_on_cloud():
     print(str(selected_embeddings))
     prompt = params_dict['txt2img/Prompt/value']
     for embedding in selected_embeddings:
-        prompt = prompt + embedding
+        prompt = prompt + os.path.splitext(embedding)[0]
     for hypernet in selected_hypernets:
         hypernet_name = os.path.splitext(hypernet)[0]
         prompt = prompt + f"<hypernet:{hypernet_name}:1>"
@@ -396,10 +398,42 @@ def generate_on_cloud():
         prompt = prompt + f"<lora:{lora_name}:1>"
 
 
+    # get all parameters from ui-config.json
+    enable_hr = params_dict['txt2img/Hires. fix/value'] #: "False", 
+    denoising_strength = params_dict['txt2img/Denoising strength/value'] #: 0.7, 
+    hr_scale = params_dict['txt2img/Upscale by/value'],
+    hr_upscaler = params_dict['txt2img/Upscaler/value'] #hr_upscaler,
+    hr_second_pass_steps = params_dict['txt2img/Hires steps/value'] #hr_second_pass_steps,
+    firstphase_width = params_dict['txt2img/Resize width to/value']#: 0, 
+    firstphase_height = params_dict['txt2img/Resize height to/value']#: 0, 
+    styles = params_dict['txt2img/Styles/value']#: ["None", "None"], 
+    seed = params_dict['txt2img/Seed/value']#: -1.0, 
+    subseed = params_dict['txt2img/Variation seed/value']#: -1.0, 
+    subseed_strength = params_dict['txt2img/Variation strength/value']#: 0, 
+    seed_resize_from_h = params_dict['txt2img/Resize seed from height/value']#: 0, 
+    seed_resize_from_w = params_dict['txt2img/Resize seed from width/value']#: 0, 
+    sampler_index = params_dict['txt2img/Sampling method/value']#: "Euler a", 
+    batch_size = params_dict['txt2img/Batch size/value'] #: 1, 
+    batch_count = params_dict['txt2img/Batch count/value'] #: 1
+    steps = params_dict['txt2img/Sampling steps/value']#: 20, 
+    cfg_scale = params_dict['txt2img/CFG Scale/value']#: 7, 
+    width = params_dict['txt2img/Width/value']#: 512, 
+    height = params_dict['txt2img/Height/value']#: 512, 
+    restore_faces = params_dict['txt2img/Restore faces/value']#: "False", 
+    tiling = params_dict['txt2img/Tiling/value']#: "False", 
+    negative_prompt = params_dict['txt2img/Negative prompt/value']#: "", 
+    tiling = params_dict['txt2img/Tiling/value']
+    override_settings = {},
+    eta = 1, 
+    s_churn = 0, 
+    s_tmax = 1, 
+    s_tmin = 0, 
+    s_noise = 1, 
+    
+
+
     # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
     endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
-    
-    batch_count = params_dict['txt2img/Batch count/value']
     
     if contronet_enable:
        print('txt2img with controlnet!!!!!!!!!!')
@@ -417,33 +451,33 @@ def generate_on_cloud():
             "embeddings": selected_embeddings
         },
         "controlnet_txt2img_payload":{ 
-            "enable_hr": "False", 
-            "denoising_strength": 0.7, 
-            "firstphase_width": 0, 
-            "firstphase_height": 0, 
+            "enable_hr": enable_hr, 
+            "denoising_strength": denoising_strength, 
+            "firstphase_width": firstphase_width, 
+            "firstphase_height": firstphase_height, 
             "prompt": prompt, 
-            "styles": ["None", "None"], 
-            "seed": -1.0, 
-            "subseed": -1.0, 
-            "subseed_strength": 0, 
-            "seed_resize_from_h": 0, 
-            "seed_resize_from_w": 0, 
-            "sampler_index": "Euler a", 
-            "batch_size": 1, 
+            "styles": styles, 
+            "seed": seed, 
+            "subseed": subseed, 
+            "subseed_strength": subseed_strength, 
+            "seed_resize_from_h": seed_resize_from_h, 
+            "seed_resize_from_w": seed_resize_from_w, 
+            "sampler_index": sampler_index, 
+            "batch_size": batch_size, 
             "n_iter": batch_count, 
-            "steps": 20, 
-            "cfg_scale": 7, 
-            "width": 512, 
-            "height": 512, 
-            "restore_faces": "False", 
-            "tiling": "False", 
-            "negative_prompt": "", 
-            "eta": 1, 
-            "s_churn": 0, 
-            "s_tmax": 1, 
-            "s_tmin": 0, 
-            "s_noise": 1, 
-            "override_settings": {}, 
+            "steps": steps, 
+            "cfg_scale": cfg_scale, 
+            "width": width, 
+            "height": height, 
+            "restore_faces": restore_faces, 
+            "tiling": tiling, 
+            "negative_prompt": negative_prompt, 
+            "eta": eta, 
+            "s_churn": s_churn, 
+            "s_tmax": s_tmax, 
+            "s_tmin": s_tmin, 
+            "s_noise": s_noise, 
+            "override_settings": override_settings, 
             "script_name": script_name,
             "script_args": script_args,
             "controlnet_units": [
@@ -453,7 +487,7 @@ def generate_on_cloud():
                 "module": controlnet_module,
                 "model": controlnet_model,
                 "weight": 1,
-                "resize_mode": "Scale to Fit (Inner Fit)",
+                "resize_mode": "Crop and Resize",
                 "lowvram": "False",
                 "processor_res": 64,
                 "threshold_a": 64,
@@ -461,7 +495,8 @@ def generate_on_cloud():
                 "guidance": 1,
                 "guidance_start": 0,
                 "guidance_end": 1,
-                "guessmode": "True"
+                "guessmode": "True",
+                "pixel_perfect":"False"
                 }
             ]
         }, 
@@ -472,9 +507,10 @@ def generate_on_cloud():
         payload = {
         "endpoint_name": endpoint_name,
         "task": "text-to-image", 
+        "username": "test",
         "checkpoint_info":checkpoint_info,
         "models":{
-            "space_free_size": 2e9,
+            "space_free_size": 2e10,
             "Stable-diffusion": selected_sd_model,
             "ControlNet": [],
             "hypernetworks": selected_hypernets,
@@ -482,36 +518,35 @@ def generate_on_cloud():
             "embeddings": selected_embeddings
         },
         "txt2img_payload": {
-            "enable_hr": "False", 
-            "denoising_strength": 0.7, 
-            "firstphase_width": 0, 
-            "firstphase_height": 0, 
+            "enable_hr": enable_hr, 
+            "denoising_strength": denoising_strength, 
+            "firstphase_width": firstphase_width, 
+            "firstphase_height": firstphase_height, 
             "prompt": prompt, 
-            "styles": ["None", "None"], 
-            "seed": -1.0, 
-            "subseed": -1.0, 
-            "subseed_strength": 0, 
-            "seed_resize_from_h": 0, 
-            "seed_resize_from_w": 0, 
-            "sampler_index": "Euler a", 
-            "batch_size": 1, 
+            "styles": styles, 
+            "seed": seed, 
+            "subseed": subseed, 
+            "subseed_strength": subseed_strength, 
+            "seed_resize_from_h": seed_resize_from_h, 
+            "seed_resize_from_w": seed_resize_from_w, 
+            "sampler_index": sampler_index, 
+            "batch_size": batch_size, 
             "n_iter": batch_count, 
-            "steps": 20, 
-            "cfg_scale": 7, 
-            "width": 512, 
-            "height": 512, 
-            "restore_faces": "False", 
-            "tiling": "False", 
-            "negative_prompt": "", 
-            "eta": 1, 
-            "s_churn": 0, 
-            "s_tmax": 1, 
-            "s_tmin": 0, 
-            "s_noise": 1, 
-            "override_settings": {}, 
+            "steps": steps, 
+            "cfg_scale": cfg_scale, 
+            "width": width, 
+            "height": height, 
+            "restore_faces": restore_faces, 
+            "tiling": tiling, 
+            "negative_prompt": negative_prompt, 
+            "eta": eta, 
+            "s_churn": s_churn, 
+            "s_tmax": s_tmax, 
+            "s_tmin": s_tmin, 
+            "s_noise": s_noise, 
+            "override_settings": override_settings, 
             "script_name": script_name,
             "script_args": script_args}, 
-            "username": ""
             }
     
     # stage 2: inference using endpoint_name
