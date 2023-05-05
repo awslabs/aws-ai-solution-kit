@@ -407,10 +407,14 @@ function scrap_ui_component_value(config) {
     console.log(values3);
 
     //control net part parameter
-    config["txt2img_controlnet_ControlNet_input_image"] =
-        document.querySelector(
-            "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
-        );
+    // config["txt2img_controlnet_ControlNet_input_image"] =
+    //     document.querySelector(
+    //         "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
+    //     );
+    const imgElement = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.image-container.svelte-p3y7hu > div > img");
+    const srcValue = imgElement.getAttribute('src');
+    config["txt2img_controlnet_ControlNet_input_image"] = srcValue 
+        
     config["controlnet_enable"] = document.querySelector(
         "#component-200 > label > input"
     ).checked;
