@@ -175,15 +175,15 @@ async def run_sagemaker_inference(request: Request):
         if script_name == 'Prompt matrix':
             put_at_start = params_dict['script_txt2txt_prompt_matrix_put_at_start']
             different_seeds = params_dict['script_txt2txt_prompt_matrix_different_seeds']
-            prompt_type = params_dict['']
-            variations_delimiter = params_dict['']
+            prompt_type = params_dict['script_txt2txt_prompt_matrix_prompt_type_positive']
+            variations_delimiter = params_dict['script_txt2txt_prompt_matrix_variations_delimiter_comma']
             margin_size = params_dict['script_txt2txt_prompt_matrix_margin_size']
             script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
 
         if script_name == 'Prompts from file or textbox':
             checkbox_iterate = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']
             checkbox_iterate_batch = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']
-            list_prompt_inputs = params_dict['']
+            list_prompt_inputs = params_dict['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']
             lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
             script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
 
@@ -204,14 +204,16 @@ async def run_sagemaker_inference(request: Request):
         # get all parameters from ui-config.json
         prompt = params_dict['txt2img_prompt'] #'chinese, beautiful woman' # 'a busy city street in a modern city | illustration | cinematic lighting' #
         negative_prompt = params_dict['txt2img_neg_prompt']#: "", 
-        enable_hr = "False" #params_dict['txt2img_enable_hr'] #: "False", 
+        enable_hr = params_dict['txt2img_enable_hr'] #: "False", 
         denoising_strength = float(params_dict['txt2img_denoising_strength']) #: 0.7, 
         hr_scale = float(params_dict['txt2img_hr_scale'])
         hr_upscaler = params_dict['txt2img_hr_upscaler'] #hr_upscaler,
         hr_second_pass_steps = int(params_dict['txt2img_hires_steps']) #hr_second_pass_steps,
         firstphase_width = int(params_dict['txt2img_hr_resize_x'])#: 0, 
         firstphase_height = int(params_dict['txt2img_hr_resize_y'])#: 0, 
-        styles = []#params_dict['txt2img_styles']#: ["None", "None"], 
+        styles = params_dict['txt2img_styles']#: ["None", "None"], 
+        if styles == "":
+            styles = []
         seed = float(params_dict['txt2img_seed'])#: -1.0, 
         subseed = float(params_dict['txt2img_subseed'])#: -1.0, 
         subseed_strength = float(params_dict['txt2img_subseed_strength'])#: 0, 
@@ -224,8 +226,8 @@ async def run_sagemaker_inference(request: Request):
         cfg_scale = int(params_dict['txt2img_cfg_scale'])#: 7, 
         width = int(params_dict['txt2img_width'])#: 512, 
         height = int(params_dict['txt2img_height'])#: 512, 
-        restore_faces = "False" #params_dict['txt2img_restore_faces']#: "False", 
-        tiling = "False" #params_dict['txt2img_tiling']#: "False", 
+        restore_faces = params_dict['txt2img_restore_faces']#: "False", 
+        tiling = params_dict['txt2img_tiling']#: "False", 
         override_settings = {}
         eta = 1
         s_churn = 0
@@ -241,14 +243,24 @@ async def run_sagemaker_inference(request: Request):
         
         if selected_sd_model == "":
             selected_sd_model = ["v1-5-pruned-emaonly.safetensors"]
+        else:
+            selected_sd_model = selected_sd_model.split(":")
         if selected_cn_model == "":
             selected_cn_model = []
+        else:
+            selected_cn_model = selected_cn_model.split(":")
         if selected_hypernets == "":
             selected_hypernets = []
+        else:
+            selected_hypernets = selected_hypernets.split(":")
         if selected_loras == "":
             selected_loras = []
+        else:
+            selected_loras = selected_loras.split(":")
         if selected_embeddings == "":
             selected_embeddings = []
+        else:
+            selected_embeddings = selected_embeddings.split(":")
         
         for embedding in selected_embeddings:
             prompt = prompt + embedding
