@@ -202,40 +202,40 @@ function scrap_ui_component_value(config) {
     config["script_txt2txt_prompt_matrix_different_seeds"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_different_seeds > label > input"
-        ).value;
+        ).checked;
     config["script_txt2txt_prompt_matrix_margin_size"] = document.querySelector(
         "#script_txt2txt_prompt_matrix_margin_size > div > div > input"
     ).value;
     config["script_txt2txt_prompt_matrix_put_at_start"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_put_at_start > label > input"
-        ).value;
+        ).checked;
     config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate"] =
         document.querySelector(
             "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate > label > input"
-        ).value;
+        ).checked;
     config[
         "script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch"
     ] = document.querySelector(
         "#script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch > label > input"
-    ).value;
+    ).checked;
     config["script_txt2txt_xyz_plot_draw_legend"] = document.querySelector(
         "#script_txt2txt_xyz_plot_draw_legend > label > input"
-    ).value;
+    ).checked;
     config["script_txt2txt_xyz_plot_include_lone_images"] =
         document.querySelector(
             "#script_txt2txt_xyz_plot_include_lone_images > label > input"
-        ).value;
+        ).checked;
     config["script_txt2txt_xyz_plot_include_sub_grids"] =
         document.querySelector(
             "#script_txt2txt_xyz_plot_include_sub_grids > label > input"
-        ).value;
+        ).checked;
     config["script_txt2txt_xyz_plot_margin_size"] = document.querySelector(
         "#script_txt2txt_xyz_plot_margin_size > div > div > input"
     ).value;
     config["script_txt2txt_xyz_plot_no_fixed_seeds"] = document.querySelector(
         "#script_txt2txt_xyz_plot_no_fixed_seeds > label > input"
-    ).value;
+    ).checked;
     config["txt2img_batch_count"] = document.querySelector(
         "#txt2img_batch_count > div > div > input"
     ).value;
@@ -250,7 +250,7 @@ function scrap_ui_component_value(config) {
     ).value;
     config["txt2img_enable_hr"] = document.querySelector(
         "#txt2img_enable_hr > label > input"
-    ).value;
+    ).checked;
     config["txt2img_height"] = document.querySelector(
         "#txt2img_height > div > div > input"
     ).value;
@@ -268,7 +268,7 @@ function scrap_ui_component_value(config) {
     ).value;
     config["txt2img_restore_faces"] = document.querySelector(
         "#txt2img_restore_faces > label > input"
-    ).value;
+    ).checked;
     config["txt2img_seed"] = document.querySelector(
         "#txt2img_seed > label > input"
     ).value;
@@ -287,13 +287,13 @@ function scrap_ui_component_value(config) {
     // config['txt2img_subseed_row'] = document.querySelector("#txt2img_subseed_row > label > input").value
     config["txt2img_subseed_show"] = document.querySelector(
         "#txt2img_subseed_show > label > input"
-    ).value;
+    ).checked;
     config["txt2img_subseed_strength"] = document.querySelector(
         "#txt2img_subseed_strength > div > div > input"
     ).value;
     config["txt2img_tiling"] = document.querySelector(
         "#txt2img_tiling > label > input"
-    ).value;
+    ).checked;
     config["txt2img_width"] = document.querySelector(
         "#txt2img_width > div > div > input"
     ).value;
@@ -407,10 +407,14 @@ function scrap_ui_component_value(config) {
     console.log(values3);
 
     //control net part parameter
-    config["txt2img_controlnet_ControlNet_input_image"] =
-        document.querySelector(
-            "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
-        );
+    // config["txt2img_controlnet_ControlNet_input_image"] =
+    //     document.querySelector(
+    //         "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
+    //     );
+    const imgElement = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.image-container.svelte-p3y7hu > div > img");
+    const srcValue = imgElement.getAttribute('src');
+    config["txt2img_controlnet_ControlNet_input_image"] = srcValue 
+        
     config["controlnet_enable"] = document.querySelector(
         "#component-200 > label > input"
     ).checked;

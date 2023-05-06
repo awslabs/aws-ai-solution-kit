@@ -136,10 +136,11 @@ def download_folder_from_s3(bucket_name, s3_folder_path, local_folder_path):
 def download_folder_from_s3_by_tar(bucket_name, s3_tar_path, local_tar_path):
     s3_client = boto3.client('s3')
     s3_client.download_file(bucket_name, s3_tar_path, local_tar_path)
-    tar_name = os.path.basename(s3_tar_path)
-    tar = tarfile.open(local_tar_path, "r")
-    tar.extractall()
-    tar.close()
+    # tar_name = os.path.basename(s3_tar_path)
+    os.system(f"tar xvf {local_tar_path}")
+    # tar = tarfile.open(local_tar_path, "r")
+    # tar.extractall()
+    # tar.close()
     os.system(f"rm {local_tar_path}")
 
 

@@ -28,17 +28,21 @@ from dreambooth.shared import status
 from dreambooth import shared as dreambooth_shared
 # from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
 from dreambooth_sagemaker.train import start_sagemaker_training
-from dreambooth.ui_functions import load_model_params
-from dreambooth.dataclasses.db_config import save_config
+from dreambooth.ui_functions import load_model_params, load_params
+from dreambooth.dataclasses.db_config import save_config, from_file
 import sagemaker_ui
 
 db_model_name = None
+cloud_db_model_name = None
 db_use_txt2img = None
 db_sagemaker_train = None
+db_save_config = None
 txt2img_show_hook = None
 txt2img_gallery = None
 txt2img_generation_info = None
 txt2img_html_info = None
+modelmerger_merge_hook = None
+modelmerger_merge_component = None
 job_link_list = []
 ckpt_dict = {}
 
@@ -65,30 +69,43 @@ class SageMakerUI(scripts.Script):
         # )
 
 def on_after_component_callback(component, **_kwargs):
-    global db_model_name, db_use_txt2img, db_sagemaker_train
+    global db_model_name, db_use_txt2img, db_sagemaker_train, db_save_config, cloud_db_model_name
+    # if getattr(component, 'elem_id', None) is not None:
+    #     print(getattr(component, 'elem_id', None))
     is_dreambooth_train = type(component) is gr.Button and getattr(component, 'elem_id', None) == 'db_train'
     is_dreambooth_model_name = type(component) is gr.Dropdown and \
                                (getattr(component, 'elem_id', None) == 'model_name' or \
                                 (getattr(component, 'label', None) == 'Model' and getattr(component.parent.parent.parent.parent, 'elem_id', None) == 'ModelPanel'))
+    is_cloud_dreambooth_model_name = type(component) is gr.Dropdown and \
+                               getattr(component, 'elem_id', None) == 'cloud_db_model_name'
     is_dreambooth_use_txt2img = type(component) is gr.Checkbox and getattr(component, 'label', None) == 'Use txt2img'
+    is_db_save_config = getattr(component, 'elem_id', None) == 'db_save_config'
     if is_dreambooth_train:
         print('Add SageMaker button')
         db_sagemaker_train = gr.Button(value="SageMaker Train", elem_id = "db_sagemaker_train", variant='primary')
     if is_dreambooth_model_name:
-        print('Get model name')
+        print('Get local model name')
         db_model_name = component
+    if is_cloud_dreambooth_model_name:
+        print('Get cloud model name')
+        cloud_db_model_name = component
     if is_dreambooth_use_txt2img:
         print('Get use tet2img')
         db_use_txt2img = component
+    if is_db_save_config:
+        print('Get save config button')
+        db_save_config = component
     # After all requiment comment is loaded, add the SageMaker training button click callback function.
-    if db_model_name is not None and db_use_txt2img is not None and db_sagemaker_train is not None and \
-            (is_dreambooth_train or is_dreambooth_model_name or is_dreambooth_use_txt2img):
+    if cloud_db_model_name is not None and db_model_name is not None and \
+            db_use_txt2img is not None and db_sagemaker_train is not None and \
+            (is_dreambooth_train or is_dreambooth_model_name or is_dreambooth_use_txt2img or is_cloud_dreambooth_model_name):
         print('Create click callback')
+        db_model_name.value = "dummy_local_model"
         db_sagemaker_train.click(
-            fn=start_sagemaker_training,
+            fn=cloud_train,
             _js="db_start_sagemaker_train",
             inputs=[
-                db_model_name,
+                cloud_db_model_name,
                 db_use_txt2img,
             ],
             outputs=[]
@@ -417,7 +434,6 @@ def get_cloud_db_models():
                 os.makedirs(model_dir, exist_ok=True)
             with open(f"{model_dir}/db_config.json", "w") as db_config_file:
                 json.dump(db_config, db_config_file)
-    print(response)
     return model_list
 
 def get_cloud_ckpts():
@@ -462,13 +478,10 @@ def async_prepare_for_training_on_sagemaker(
         model_id: str,
         model_name: str,
         s3_model_path: str,
-        data_path: str,
-        class_data_path: str,
+        data_path_list: list,
+        class_data_path_list: list,
+        db_config_path: str,
 ):
-    db_config_path = f"models/dreambooth/{model_name}/db_config.json"
-    with open(db_config_path) as db_config_file:
-        config = json.load(db_config_file)
-        data_path = config.concepts
     url = get_variable_from_json('api_gateway_url')
     api_key = get_variable_from_json('api_token')
     if url is None or api_key is None:
@@ -479,17 +492,21 @@ def async_prepare_for_training_on_sagemaker(
     db_config_tar = f"db_config.tar"
     os.system(f"tar cvf {db_config_tar} {db_config_path}")
     upload_files.append(db_config_tar)
-
-    data_tar = f'data_{os.path.basename(data_path)}.tar'
-    print("Pack the data file.")
-    os.system(f"tar cvf {data_tar} {data_path}")
-    upload_files.append(data_tar)
-    if class_data_path:
-        class_data_tar = f'class_data_{os.path.basename(data_path)}.tar'
+    data_tar_list = []
+    for data_path in data_path_list:
+        data_tar = f'data_{os.path.basename(data_path)}.tar'
+        data_tar_list.append(data_tar)
+        print("Pack the data file.")
+        os.system(f"tar cvf {data_tar} {data_path}")
+        upload_files.append(data_tar)
+    class_data_tar_list = []
+    for class_data_path in class_data_path_list:
+        class_data_tar = f'class_data_{os.path.basename(class_data_path)}.tar'
+        class_data_tar_list.append(class_data_tar)
         upload_files.append(class_data_tar)
         print("Pack the class data file.")
-        os.system(f"tar cvf {class_data_tar} {data_path}")
-        payload = {
+        os.system(f"tar cvf {class_data_tar} {class_data_path}")
+    payload = {
         "train_type": "dreambooth",
         "model_id": model_id,
         "filenames": upload_files,
@@ -497,8 +514,8 @@ def async_prepare_for_training_on_sagemaker(
             "training_params": {
                 "s3_model_path": s3_model_path,
                 "model_name": model_name,
-                "data_tar": data_tar,
-                "class_data_tar": class_data_tar,
+                "data_tar_list": data_tar_list,
+                "class_data_tar_list": class_data_tar_list,
             }
         }
     }
@@ -515,6 +532,17 @@ def wrap_load_model_params(model_name):
     resp = load_model_params(model_name)
     setattr(dreambooth_shared, 'dreambooth_models_path', origin_model_path)
     return resp
+
+def wrap_get_local_config(model_name):
+    config = from_file(model_name)
+    return config
+
+def wrap_get_cloud_config(model_name):
+    origin_model_path = dreambooth_shared.dreambooth_models_path
+    setattr(dreambooth_shared, 'dreambooth_models_path', base_model_folder)
+    config = from_file(model_name)
+    setattr(dreambooth_shared, 'dreambooth_models_path', origin_model_path)
+    return config
 
 def wrap_save_config(model_name):
     origin_model_path = dreambooth_shared.dreambooth_models_path
@@ -607,6 +635,9 @@ def async_create_model_on_sagemaker(
                 "status": "Creating",
                 "multi_parts_tags": {local_tar_path: multiparts_tags}
             }
+    else:
+        logging.error("Create model params error.")
+        return
     # Start creating model on cloud.
     response = requests.put(url=url, json=payload, headers={'x-api-key': api_key})
     print(response)
@@ -626,13 +657,54 @@ def cloud_create_model(
     upload_thread.start()
 
 def cloud_train(
-        model_id: str,
         model_name: str,
-        s3_model_path: str,
-        data_path: str,
-        class_data_path: str,
+        local_model_name=False
     ):
-    wrap_save_config(model_name)
-    upload_thread = threading.Thread(target=async_prepare_for_training_on_sagemaker,
-                                     args=(model_id, model_name, s3_model_path,data_path, class_data_path))
-    upload_thread.start()
+    # Get data path and class data path.
+    print(f"Start cloud training {model_name}")
+    config = wrap_get_local_config("dummy_local_model")
+    data_path_list = []
+    class_data_path_list = []
+    for concept in config.concepts():
+        data_path_list.append(concept.instance_data_dir)
+        class_data_path_list.append(concept.class_data_dir)
+    model_list = get_cloud_db_models()
+    db_config_path = "models/dreambooth/dummy_local_model/db_config.json"
+    # db_config_path = f"models/dreambooth/{model_name}/db_config.json"
+    # os.makedirs(os.path.dirname(db_config_path), exist_ok=True)
+    # os.system(f"cp {dummy_db_config_path} {db_config_path}")
+    for model in model_list:
+        model_id = model["id"]
+        model_name = model["model_name"]
+        model_s3_path = model["output_s3_location"]
+        if model_name == "db-training-test-1":
+            # upload_thread = threading.Thread(target=async_prepare_for_training_on_sagemaker,
+            #                                 args=(model_id, model_name, s3_model_path,data_path, class_data_path))
+            # upload_thread.start()
+            response = async_prepare_for_training_on_sagemaker(
+                model_id, model_name, model_s3_path, data_path_list, class_data_path_list, db_config_path)
+            job_id = response["job"]["id"]
+            url = get_variable_from_json('api_gateway_url')
+            api_key = get_variable_from_json('api_token')
+            if url is None or api_key is None:
+                logging.error("Url or API-Key is not setting.")
+                break
+            url += "train"
+            payload = {
+                "train_job_id": job_id,
+                "status": "Training"
+            }
+            # Start creating model on cloud.
+            url = get_variable_from_json('api_gateway_url')
+            api_key = get_variable_from_json('api_token')
+            if url is None or api_key is None:
+                logging.error("Url or API-Key is not setting.")
+                break
+            url += "train"
+            payload = {
+                "train_job_id": job_id,
+                "status": "Training"
+            }
+            # Start creating model on cloud.
+            response = requests.put(url=url, json=payload, headers={'x-api-key': api_key}).json()
+            print(f"Start training response:\n{response}")
