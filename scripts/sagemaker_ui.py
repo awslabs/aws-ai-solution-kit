@@ -105,19 +105,23 @@ def origin_update_txt2img_inference_job_ids():
 
 def get_inference_job_list():
     global txt2img_inference_job_ids
-    response = server_request('inference/list-inference-jobs')
-    r = response.json()
-    if r:
-        txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
-        for obj in r:
-            extracted_data = {
-                'completeTime': obj.get('completeTime'),
-                'InferenceJobId': obj.get('InferenceJobId')
-            }
-            json_string = json.dumps(extracted_data)
-            txt2img_inference_job_ids.append(json_string)
-    else:
-        print("The API response is empty.")
+    try:
+        response = server_request('inference/list-inference-jobs')
+        r = response.json()
+        if r:
+            txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
+            for obj in r:
+                extracted_data = {
+                 'completeTime': obj.get('completeTime'),
+                 'InferenceJobId': obj.get('InferenceJobId')
+                }
+                json_string = json.dumps(extracted_data)
+                txt2img_inference_job_ids.append(json_string)
+        else:
+            print("The API response is empty.")
+    except Exception as e:
+        print("Exception occurred when fetching inference_job_ids")
+
 
 def get_inference_job(inference_job_id):
     response = server_request(f'inference/get-inference-job?jobID={inference_job_id}')
