@@ -105,19 +105,23 @@ def origin_update_txt2img_inference_job_ids():
 
 def get_inference_job_list():
     global txt2img_inference_job_ids
-    response = server_request('inference/list-inference-jobs')
-    r = response.json()
-    if r:
-        txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
-        for obj in r:
-            extracted_data = {
-                'completeTime': obj.get('completeTime'),
-                'InferenceJobId': obj.get('InferenceJobId')
-            }
-            json_string = json.dumps(extracted_data)
-            txt2img_inference_job_ids.append(json_string)
-    else:
-        print("The API response is empty.")
+    try:
+        response = server_request('inference/list-inference-jobs')
+        r = response.json()
+        if r:
+            txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
+            for obj in r:
+                extracted_data = {
+                 'completeTime': obj.get('completeTime'),
+                 'InferenceJobId': obj.get('InferenceJobId')
+                }
+                json_string = json.dumps(extracted_data)
+                txt2img_inference_job_ids.append(json_string)
+        else:
+            print("The API response is empty.")
+    except Exception as e:
+        print("Exception occurred when fetching inference_job_ids")
+
 
 def get_inference_job(inference_job_id):
     response = server_request(f'inference/get-inference-job?jobID={inference_job_id}')
@@ -808,9 +812,10 @@ def create_ui():
             
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
-                instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
+                instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
+                instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox")
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox])
+                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox, instance_count_textbox])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
@@ -842,4 +847,4 @@ def create_ui():
                     outputs=[
                     ])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud

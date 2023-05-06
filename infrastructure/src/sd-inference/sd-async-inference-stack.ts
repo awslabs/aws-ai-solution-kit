@@ -228,11 +228,11 @@ export class SDAsyncInferenceStack extends Stack {
     //   }
     // );
     const test_output = inference.addResource('generate-s3-presigned-url-for-uploading') 
-    test_output.addCorsPreflight({
-      allowOrigins: apigw.Cors.ALL_ORIGINS,
-      allowMethods: apigw.Cors.ALL_METHODS,
-      allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
-    });
+    // test_output.addCorsPreflight({
+    //   allowOrigins: apigw.Cors.ALL_ORIGINS,
+    //   allowMethods: apigw.Cors.ALL_METHODS,
+    //   allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
+    // });
 
     test_output.addMethod("GET", txt2imgIntegration, {
         apiKeyRequired: true,
