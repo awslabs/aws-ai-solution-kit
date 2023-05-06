@@ -462,18 +462,18 @@ function scrap_ui_component_value(config) {
     config["script_txt2txt_prompt_matrix_prompt_type_positive"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
-        ).enabled;
+        ).checked;
     config["script_txt2txt_prompt_matrix_prompt_type_negative"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
-        ).enabled;
+        ).checked;
     config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
-        ).enabled;
+        ).checked;
     config["script_txt2txt_prompt_matrix_variations_delimiter_space"] =
         document.querySelector(
-            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").enabled;
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").checked;
     config["script_txt2txt_prompt_matrix_margin_size"] = 
         document.querySelector(
             "#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-1cl284s > div > input"
