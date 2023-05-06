@@ -37,6 +37,7 @@ S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
 
 ddb_client = boto3.resource('dynamodb')
 s3 = boto3.client('s3')
+sagemaker = boto3.client('sagemaker')
 inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
 endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
 
@@ -102,6 +103,12 @@ def getInferenceJob(inference_job_id):
 def getEndpointDeploymentJobList():
     response = endpoint_deployment_table.scan()
     logger.info(f"endpoint deployment job list response is {str(response)}")
+
+    # delete ddb recording if not in the sagemaker list TODO: guming
+    # list_results = sagemaker.list_endpoints()
+    # endpoints_info = list_results['Endpoints']
+    # for ep_info in endpoints_info:
+    #     print(ep_info['EndpointName'])
     return response['Items'] 
 
 def getEndpointDeployJob(endpoint_deploy_job_id):
