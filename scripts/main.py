@@ -620,14 +620,15 @@ def async_create_model_on_sagemaker(
                 "multi_parts_tags": {}
         }
     elif params["ckpt_path"].startswith("local-"):
-        params["ckpt_path"] = " ".join(params["ckpt_path"].split(" ")[:-1])
+        # The ckpt path has a hash suffix?
+        params["ckpt_path"] = " ".join(params["ckpt_path"].split(" ")[:1])
         params["ckpt_path"] = params["ckpt_path"].lstrip("local-")
         # Prepare for creating model on cloud.
         local_model_path = f'models/Stable-diffusion/{params["ckpt_path"]}'
         local_tar_path = f'{params["ckpt_path"]}.tar'
 
         part_size = 1000 * 1024 * 1024
-        file_size = os.stat(local_tar_path)
+        file_size = os.stat(local_model_path)
         parts_number = math.ceil(file_size.st_size/part_size)
 
         payload = {
