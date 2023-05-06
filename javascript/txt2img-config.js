@@ -302,7 +302,7 @@ function scrap_ui_component_value(config) {
     //     "#script_list > label > div > div > span"
     // ).textContent;
 
-    config["script_list"] = document.querySelector("#script_list > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value
+    config["script_list"] = document.querySelector("#script_list > label > div > div.wrap-inner.svelte-1g4zxts > div > input").textContent
 
     // config["script_txt2txt_xyz_plot_x_type"] = document.querySelector(
     //     "#script_txt2txt_xyz_plot_x_type > label > div > div > span"
