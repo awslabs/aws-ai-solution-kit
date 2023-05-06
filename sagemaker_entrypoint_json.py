@@ -87,8 +87,10 @@ def hack_db_config(db_config, db_config_file_path, model_name):
                 db_config[k] = re.sub(".+/(models/dreambooth/).+$", f"\\1{model_name}", db_config[k])
             elif k == "pretrained_model_name_or_path":
                 db_config[k] = re.sub(".+/(models/dreambooth/).+(working)$", f"\\1{model_name}/\\2", db_config[k])
+            elif k == "model_name":
+                db_config[k] = db_config[k].replace("dummy_local_model", model_name)
             else:
-                db_config[k] = re.sub(".+/(models/dreambooth/).+$", f"\1{model_name}", db_config[k])
+                db_config[k] = db_config[k].replace("dummy_local_model", model_name)
     with open(db_config_file_path, "w") as db_config_file_w:
         json.dump(db_config, db_config_file_w)
 
@@ -103,10 +105,8 @@ def prepare_for_training(s3_model_path, model_name, s3_input_path, data_tar_list
     input_path = os.path.join(get_path_from_s3_path(s3_input_path), "db_config.tar")
     logger.info(f"Download db_config from s3 {input_bucket_name} {input_path} db_config.tar")
     download_folder_from_s3_by_tar(input_bucket_name, input_path, "db_config.tar")
-    os.system(f"cp models/dreambooth/dummy_local_model/db_config.json models/dreambooth/{model_name}/db_config.json")
-    os.system("ls models/dreambooth/")
     db_config_path = f"models/dreambooth/{model_name}/db_config.json"
-    with open(db_config_path) as db_config_file:
+    with open("models/dreambooth/dummy_local_model/db_config.json") as db_config_file:
         db_config = json.load(db_config_file)
     hack_db_config(db_config, db_config_path, model_name)
 
