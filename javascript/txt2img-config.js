@@ -545,10 +545,10 @@ function scrap_ui_component_value_with_default(config) {
     );
     
     config["script_list"] = getElementValue(
-        "#script_list > label > div > div.wrap-inner.svelte-1g4zxts",
-        "textContent",
+        "#script_list > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
+        "value",
         ""
-    ).textContent;
+    );
     
     config["script_txt2txt_xyz_plot_x_type"] = getElementValue(
         "#script_txt2txt_xyz_plot_x_type > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
