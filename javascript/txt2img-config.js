@@ -284,7 +284,6 @@ function scrap_ui_component_value(config) {
     config["txt2img_subseed"] = document.querySelector(
         "#txt2img_subseed > label > input"
     ).value;
-    // config['txt2img_subseed_row'] = document.querySelector("#txt2img_subseed_row > label > input").value
     config["txt2img_subseed_show"] = document.querySelector(
         "#txt2img_subseed_show > label > input"
     ).checked;
@@ -298,20 +297,10 @@ function scrap_ui_component_value(config) {
         "#txt2img_width > div > div > input"
     ).value;
 
-    // config["script_list"] = document.querySelector(
-    //     "#script_list > label > div > div > span"
-    // ).textContent;
+    config["script_list"] = document.querySelector("#script_list > label > div > div.wrap-inner.svelte-1g4zxts").textContent
 
-    config["script_list"] = document.querySelector("#script_list > label > div > div.wrap-inner.svelte-1g4zxts > div > input").textContent
-
-    // config["script_txt2txt_xyz_plot_x_type"] = document.querySelector(
-    //     "#script_txt2txt_xyz_plot_x_type > label > div > div > span"
-    // ).textContent;
     config["script_txt2txt_xyz_plot_x_type"] = document.querySelector("#script_txt2txt_xyz_plot_x_type > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value
     config["script_txt2txt_xyz_plot_x_value"] = document.querySelector("#script_txt2txt_xyz_plot_x_values > label > textarea").value
-    // config["script_txt2txt_xyz_plot_y_type"] = document.querySelector(
-    //     "#script_txt2txt_xyz_plot_y_type > label > div > div > span"
-    // ).textContent;
     config["script_txt2txt_xyz_plot_y_type"]=document.querySelector("#script_txt2txt_xyz_plot_y_type > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value
     config["script_txt2txt_xyz_plot_y_value"]=document.querySelector("#script_txt2txt_xyz_plot_y_values > label > textarea").value
     config["script_txt2txt_xyz_plot_z_type"] = document.querySelector("#script_txt2txt_xyz_plot_z_type > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value
@@ -335,11 +324,6 @@ function scrap_ui_component_value(config) {
     ).value;
 
     //Textual Inversion
-    // config["sagemaker_texual_inversion_model"] = document.querySelector(
-    //     "#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    // ).value;
-
-    // const tokens = document.querySelectorAll("#sagemaker_texual_inversion_dropdown .wrap-inner.svelte-1g4zxts .token > span");
     const wrapInner = document.querySelector("#sagemaker_texual_inversion_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
     const tokens = wrapInner.querySelectorAll(".token.svelte-1g4zxts");
     const values = [];
@@ -349,17 +333,9 @@ function scrap_ui_component_value(config) {
       values.push(spanValue);
     });
     config["sagemaker_texual_inversion_model"]=values.join(':')
-    
-    console.log("guming debug>>>")
-    console.log(values);
-    
 
 
     //LoRa
-    // config["sagemaker_lora_model"] = document.querySelector(
-    //     "#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    // ).value;
-
     const wrapInner1 = document.querySelector("#sagemaker_lora_list_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
     const tokens1 = wrapInner1.querySelectorAll(".token.svelte-1g4zxts");
     const values1 = [];
@@ -373,12 +349,6 @@ function scrap_ui_component_value(config) {
 
 
     //HyperNetwork
-    // config["sagemaker_hypernetwork_model"] = document.querySelector(
-    //     "#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    // ).value;
-
-    // document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
-    // const wrapInner2 = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
     const wrapInner2 = document.querySelector("#sagemaker_hypernetwork_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
     const tokens2 = wrapInner2.querySelectorAll(".token.svelte-1g4zxts");
     const values2 = [];
@@ -391,10 +361,6 @@ function scrap_ui_component_value(config) {
     console.log(values2);
 
     //ControlNet model
-    // config["sagemaker_controlnet_model"] = document.querySelector(
-    //     "#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
-    // ).value;
-    
     const wrapInner3 = document.querySelector("#sagemaker_controlnet_model_dropdown > label > div > div.wrap-inner.svelte-1g4zxts")
     const tokens3 = wrapInner3.querySelectorAll(".token.svelte-1g4zxts");
     const values3 = [];
@@ -407,10 +373,6 @@ function scrap_ui_component_value(config) {
     console.log(values3);
 
     //control net part parameter
-    // config["txt2img_controlnet_ControlNet_input_image"] =
-    //     document.querySelector(
-    //         "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
-    //     );
     const imgElement = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.image-container.svelte-p3y7hu > div > img");
     if (imgElement) {
         const srcValue = imgElement.getAttribute('src');
@@ -425,8 +387,6 @@ function scrap_ui_component_value(config) {
     config["controlnet_enable"] = document.querySelector(
         "#component-200 > label > input"
     ).checked;
-
-    // document.querySelector("#component-200 > label > input")
 
     config["controlnet_lowVRAM_enable"] = document.querySelector(
         "#component-201 > label > input"

@@ -228,10 +228,41 @@ export class SDAsyncInferenceStack extends Stack {
     //   }
     // );
     const test_output = inference.addResource('generate-s3-presigned-url-for-uploading') 
+    test_output.addCorsPreflight({
+      allowOrigins: apigw.Cors.ALL_ORIGINS,
+      allowMethods: apigw.Cors.ALL_METHODS,
+      allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'],
+    });
 
-    test_output.addMethod('GET', txt2imgIntegration, {
-      apiKeyRequired: true,
-    })
+    test_output.addMethod("GET", txt2imgIntegration, {
+        apiKeyRequired: true,
+    });
+    const testResource = inference.addResource("test-connection");
+    const mockIntegration = new apigw.MockIntegration({
+        integrationResponses: [
+            {
+                statusCode: "200",
+                responseTemplates: {
+                    "application/json": JSON.stringify({ message: "Success" }),
+                },
+            },
+        ],
+        passthroughBehavior: apigw.PassthroughBehavior.NEVER,
+        requestTemplates: {
+            "application/json": '{"statusCode": 200}',
+        },
+    });
+
+    testResource.addMethod("GET", mockIntegration, {
+        methodResponses: [
+            {
+                statusCode: "200",
+                responseModels: {
+                    "application/json": apigw.Model.EMPTY_MODEL,
+                },
+            },
+        ],
+    });
 
     const current_time = new Date().toISOString;
     const deployment = new apigw.Deployment(this, 'rest-api-deployment'+current_time, { api: restful_api });

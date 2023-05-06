@@ -44,6 +44,11 @@ export class RestApiGateway {
         accessLogDestination: new LogGroupLogDestination(apiAccessLogGroup),
         accessLogFormat: AccessLogFormat.clf(),
       },
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigw.Cors.ALL_ORIGINS, // You can also provide a list of specific origins ['https://example.com']
+        allowMethods: apigw.Cors.ALL_METHODS, // You can also provide a list of specific methods ['GET', 'POST', 'OPTIONS']
+        allowHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token', 'X-Amz-User-Agent'], // Customize as needed
+      },
     });
 
     // Add API Key to the API Gateway
