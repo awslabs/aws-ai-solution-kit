@@ -218,7 +218,17 @@ export class SDAsyncInferenceStack extends Stack {
       apiKeyRequired: true,
     })
 
-    const test_output = inference.addResource('generate-s3-presigned-url-for-uploading');
+    // const test_output = inference.addResource('generate-s3-presigned-url-for-uploading',
+    //   {
+    //     defaultCorsPreflightOptions: {
+    //       allowOrigins: ['*'], // Allow all origins
+    //       allowMethods: ['GET', 'POST', 'OPTION', 'PUT'], // Specify the allowed methods
+    //       allowHeaders: ['*'], // Specify the allowed headers
+    //     },
+    //   }
+    // );
+    const test_output = inference.addResource('generate-s3-presigned-url-for-uploading') 
+
     test_output.addMethod('GET', txt2imgIntegration, {
       apiKeyRequired: true,
     })

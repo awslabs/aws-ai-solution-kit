@@ -611,7 +611,7 @@ async def generate_s3_presigned_url_for_uploading(s3_bucket_name: str = None, ke
         HttpMethod='PUT'
     )
     headers = {
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Headers": "*",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     }

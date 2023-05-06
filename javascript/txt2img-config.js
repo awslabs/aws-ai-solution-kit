@@ -412,8 +412,15 @@ function scrap_ui_component_value(config) {
     //         "#txt2img_controlnet_ControlNet_input_image > div.svelte-rlgzoo.fixed-height > div > img"
     //     );
     const imgElement = document.querySelector("#txt2img_controlnet_ControlNet_input_image > div.image-container.svelte-p3y7hu > div > img");
-    const srcValue = imgElement.getAttribute('src');
-    config["txt2img_controlnet_ControlNet_input_image"] = srcValue 
+    if (imgElement) {
+        const srcValue = imgElement.getAttribute('src');
+        // Use the srcValue variable as needed
+        config["txt2img_controlnet_ControlNet_input_image"] = srcValue 
+      } else {
+        // Handle the case when imgElement is null or undefined
+        console.log('imgElement is null or undefined');
+        config["txt2img_controlnet_ControlNet_input_image"]="" 
+      }
         
     config["controlnet_enable"] = document.querySelector(
         "#component-200 > label > input"
@@ -450,26 +457,26 @@ function scrap_ui_component_value(config) {
     ).value;
     config[
         "controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"
-    ] = document.querySelector("#component-224 > label > input").value;
+    ] = document.querySelector("#component-224 > label > input").enabled;
 
     config["script_txt2txt_prompt_matrix_prompt_type_positive"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
-        ).value;
+        ).enabled;
     config["script_txt2txt_prompt_matrix_prompt_type_negative"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
-        ).value;
+        ).enabled;
     config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
         document.querySelector(
             "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input"
-        ).value;
-    config["script_txt2txt_prompt_matrix_variations_delimiter_comma"] =
+        ).enabled;
+    config["script_txt2txt_prompt_matrix_variations_delimiter_space"] =
         document.querySelector(
-            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input"
-        ).value;
-    config["script_txt2txt_prompt_matrix_margin_size"] = document.querySelector(
-        "#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-1cl284s > div > input"
+            "#script_txt2txt_prompt_matrix_variations_delimiter > div.wrap.svelte-1p9xokt > label:nth-child(2) > input").enabled;
+    config["script_txt2txt_prompt_matrix_margin_size"] = 
+        document.querySelector(
+            "#script_txt2txt_prompt_matrix_margin_size > div.wrap.svelte-1cl284s > div > input"
     ).value;
 
     config["script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate"] =
