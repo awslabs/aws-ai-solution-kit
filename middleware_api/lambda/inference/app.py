@@ -202,7 +202,7 @@ def json_convert_to_payload(params_dict):
     subseed_strength = float(params_dict['txt2img_subseed_strength'])#: 0, 
     seed_resize_from_h = int(params_dict['txt2img_seed_resize_from_h'])#: 0, 
     seed_resize_from_w = int(params_dict['txt2img_seed_resize_from_w'])#: 0, 
-    sampler_index = params_dict['txt2img_sampling']#: "Euler a", 
+    sampler_index = params_dict['txt2img_sampling_method']#: "Euler a", 
     batch_size = int(params_dict['txt2img_batch_size'])#: 1, 
     n_iter = int(params_dict['txt2img_batch_count'])
     steps = int(params_dict['txt2img_steps'])#: 20, 
