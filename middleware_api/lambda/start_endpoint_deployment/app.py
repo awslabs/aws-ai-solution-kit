@@ -17,17 +17,18 @@ def lambda_handler(event, context):
     # Parse the input data
     print(f"event is {event}")
 
-    str_uuid = str(uuid.uuid4())[:4] 
-    sagemaker_model_name = f"infer-model-{str_uuid}"
-    sagemaker_endpoint_config = f"infer-config-{str_uuid}"
-    sagemaker_endpoint_name = f"infer-endpoint-{str_uuid}"
+    endpoint_deployment_id = event["endpoint_deployment_id"][:7]
+    sagemaker_model_name = f"infer-model-{endpoint_deployment_id}"
+    sagemaker_endpoint_config = f"infer-config-{endpoint_deployment_id}"
+    sagemaker_endpoint_name = f"infer-endpoint-{endpoint_deployment_id}"
 
     image_url = INFERENCE_ECR_IMAGE_URL 
     model_data_url = f"s3://{S3_BUCKET_NAME}/data/model.tar.gz"
 
     s3_output_path = f"s3://{S3_BUCKET_NAME}/sagemaker_output/"
-    initial_instance_count = 1
-    instance_type = 'ml.g4dn.xlarge'
+
+    initial_instance_count = event["initial_instance_count"]
+    instance_type = event["instance_type"]
 
     print('Creating model resource ...')
     create_model(sagemaker_model_name, image_url, model_data_url)
