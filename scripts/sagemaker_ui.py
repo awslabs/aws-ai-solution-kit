@@ -819,11 +819,17 @@ def create_ui():
                 primary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_primary_model_name_in_the_cloud", label="Primary model (A) in the cloud")
                 create_refresh_button(primary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_A_in_the_cloud")
 
-                secondary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_secondary_model_name_in_the_cloud", label="secondary model (B) in the cloud")
+                secondary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_secondary_model_name_in_the_cloud", label="Secondary model (B) in the cloud")
                 create_refresh_button(secondary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_B_in_the_cloud")
 
-                tertiary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_tertiary_model_name_in_the_cloud", label="tertiary model (C) in the cloud")
+                tertiary_model_name = gr.Dropdown(choices=sorted(update_sd_checkpoints()), elem_id="modelmerger_tertiary_model_name_in_the_cloud", label="Tertiary model (C) in the cloud")
                 create_refresh_button(tertiary_model_name, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_checkpoint_C_in_the_cloud")
+            # with gr.Row():
+            #     merge_job_dropdown = gr.Dropdown(merge_job_ids,
+            #                                 label="Merge Job IDs",
+            #                                 elem_id="merge_job_ids_dropdown"
+            #                                 )
+            #     txt2img_merge_job_ids_refresh_button = modules.ui.create_refresh_button(merge_job_dropdown, update_txt2img_merge_job_ids, lambda: {"choices": txt2img_merge_job_ids}, "refresh_txt2img_merge_job_ids")
             with gr.Row():
                 modelmerger_merge_on_cloud = gr.Button(elem_id="modelmerger_merge_in_the_cloud", value="Merge", variant='primary')
                 modelmerger_merge_on_cloud.click(
