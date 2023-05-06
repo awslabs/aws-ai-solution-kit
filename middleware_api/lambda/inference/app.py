@@ -142,6 +142,260 @@ def load_json_from_s3(bucket_name, key):
     data = json.loads(json_file)
 
     return data
+
+def json_convert_to_payload(params_dict):
+    # Need to generate the payload from data_dict here:
+    script_name = params_dict['script_list']
+    if script_name == "None":
+        script_name = ""
+    script_args = []
+    if script_name == 'Prompt matrix':
+        put_at_start = params_dict['script_txt2txt_prompt_matrix_put_at_start']
+        different_seeds = params_dict['script_txt2txt_prompt_matrix_different_seeds']
+        if params_dict['script_txt2txt_prompt_matrix_prompt_type_positive']:
+            prompt_type = "positive"
+        else:
+            prompt_type = "negative"
+        if params_dict['script_txt2txt_prompt_matrix_variations_delimiter_comma']: 
+            variations_delimiter = "comma"
+        else:
+            variations_delimiter = "space"
+        margin_size = params_dict['script_txt2txt_prompt_matrix_margin_size']
+        script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
+
+    if script_name == 'Prompts from file or textbox':
+        checkbox_iterate = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']
+        checkbox_iterate_batch = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']
+        list_prompt_inputs = params_dict['script_txt2txt_prompts_from_file_or_textbox_prompt_txt']
+        lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
+        script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
+
+    if script_name == 'X/Y/Z plot':
+        x_type = params_dict['script_txt2txt_xyz_plot_x_type']
+        x_values = params_dict['script_txt2txt_xyz_plot_x_values']
+        y_type = params_dict['script_txt2txt_xyz_plot_y_type']
+        y_values = params_dict['script_txt2txt_xyz_plot_y_values']
+        z_type = params_dict['script_txt2txt_xyz_plot_z_type']
+        z_values = params_dict['script_txt2txt_xyz_plot_z_values']
+        draw_legend = params_dict['script_txt2txt_xyz_plot_draw_legend']
+        include_lone_images = params_dict['script_txt2txt_xyz_plot_include_lone_images']
+        include_sub_grids = params_dict['script_txt2txt_xyz_plot_include_sub_grids']
+        no_fixed_seeds = params_dict['script_txt2txt_xyz_plot_no_fixed_seeds']
+        margin_size = params_dict['script_txt2txt_xyz_plot_margin_size']
+        script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+
+    # get all parameters from ui-config.json
+    prompt = params_dict['txt2img_prompt'] #'chinese, beautiful woman' # 'a busy city street in a modern city | illustration | cinematic lighting' #
+    negative_prompt = params_dict['txt2img_neg_prompt']#: "", 
+    enable_hr = params_dict['txt2img_enable_hr'] #: "False", 
+    denoising_strength = float(params_dict['txt2img_denoising_strength']) #: 0.7, 
+    hr_scale = float(params_dict['txt2img_hr_scale'])
+    hr_upscaler = params_dict['txt2img_hr_upscaler'] #hr_upscaler,
+    hr_second_pass_steps = int(params_dict['txt2img_hires_steps']) #hr_second_pass_steps,
+    firstphase_width = int(params_dict['txt2img_hr_resize_x'])#: 0, 
+    firstphase_height = int(params_dict['txt2img_hr_resize_y'])#: 0, 
+    styles = params_dict['txt2img_styles']#: ["None", "None"], 
+    if styles == "":
+        styles = []
+    seed = float(params_dict['txt2img_seed'])#: -1.0, 
+    subseed = float(params_dict['txt2img_subseed'])#: -1.0, 
+    subseed_strength = float(params_dict['txt2img_subseed_strength'])#: 0, 
+    seed_resize_from_h = int(params_dict['txt2img_seed_resize_from_h'])#: 0, 
+    seed_resize_from_w = int(params_dict['txt2img_seed_resize_from_w'])#: 0, 
+    sampler_index = params_dict['txt2img_sampling_method']#: "Euler a", 
+    batch_size = int(params_dict['txt2img_batch_size'])#: 1, 
+    n_iter = int(params_dict['txt2img_batch_count'])
+    steps = int(params_dict['txt2img_steps'])#: 20, 
+    cfg_scale = int(params_dict['txt2img_cfg_scale'])#: 7, 
+    width = int(params_dict['txt2img_width'])#: 512, 
+    height = int(params_dict['txt2img_height'])#: 512, 
+    restore_faces = params_dict['txt2img_restore_faces']#: "False", 
+    tiling = params_dict['txt2img_tiling']#: "False", 
+    override_settings = {}
+    eta = 1
+    s_churn = 0
+    s_tmax = 1
+    s_tmin = 0
+    s_noise = 1 
+
+    selected_sd_model = params_dict['sagemaker_stable_diffuion_checkpoint'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
+    selected_cn_model = params_dict['sagemaker_controlnet_model']#['control_openpose-fp16.safetensors']#
+    selected_hypernets = params_dict['sagemaker_hypernetwork_model']#['mjv4Hypernetwork_v1.pt']#'LuisapKawaii_v1.pt'
+    selected_loras = params_dict['sagemaker_lora_model']#['hanfu_v30Song.safetensors']# 'cuteGirlMix4_v10.safetensors'
+    selected_embeddings = params_dict['sagemaker_texual_inversion_model']#['pureerosface_v1.pt']#'corneo_marin_kitagawa.pt''pureerosface_v1.pt'
+    
+    if selected_sd_model == "":
+        selected_sd_model = ['v1-5-pruned-emaonly.safetensors']
+    else:
+        selected_sd_model = selected_sd_model.split(":")
+    if selected_cn_model == "":
+        selected_cn_model = []
+    else:
+        selected_cn_model = selected_cn_model.split(":")
+    if selected_hypernets == "":
+        selected_hypernets = []
+    else:
+        selected_hypernets = selected_hypernets.split(":")
+    if selected_loras == "":
+        selected_loras = []
+    else:
+        selected_loras = selected_loras.split(":")
+    if selected_embeddings == "":
+        selected_embeddings = []
+    else:
+        selected_embeddings = selected_embeddings.split(":")
+    
+    for embedding in selected_embeddings:
+        prompt = prompt + embedding
+    for hypernet in selected_hypernets:
+        hypernet_name = os.path.splitext(hypernet)[0]
+        prompt = prompt + f"<hypernet:{hypernet_name}:1>"
+    for lora in selected_loras:
+        lora_name = os.path.splitext(lora)[0]
+        prompt = prompt + f"<lora:{lora_name}:1>"
+    
+    contronet_enable = False
+    controlnet_model = None
+    controlnet_module = None
+    controlnet_image = None
+    if contronet_enable:
+        controlnet_module = params_dict['controlnet_preprocessor']
+        controlnet_model = os.path.splitext(selected_cn_model[0])[0]
+        controlnet_image = params_dict['txt2img_controlnet_ControlNet_input_image'] #None
+        weight = params_dict['control_weight'] #1,
+        resize_mode = params_dict['controlnet_resize_mode'] # "Crop and Resize",
+        lowvram = params_dict['controlnet_lowVRAM_enable'] #: "False",
+        processor_res = 64,
+        threshold_a = 64,
+        threshold_b = 64,
+        guidance = 1,
+        guidance_start = params_dict['controlnet_starting_control_step'] #: 0,
+        guidance_end = params_dict['controlnet_ending_control_step'] #: 1,
+        guessmode = params_dict['controlnet_control_mode(guess_mode)'] #: "True",
+        pixel_perfect = params_dict['controlnet_pixel_perfect'] #:"False"
+        allow_preview = params_dict['controlnet_allow_preview']
+        loopback = params_dict['controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit']
+
+        #with open(controlnet_image_path, "rb") as img:
+        # controlnet_image = base64.b64encode(img.read())
+
+    endpoint_name = "infer-endpoint-ca0e"
+    checkpoint_info = {}
+    
+    if contronet_enable:
+        print('txt2img with controlnet!!!!!!!!!!')
+        payload = {
+        "endpoint_name": endpoint_name,
+        "task": "controlnet_txt2img", 
+        "username": "test",
+        "checkpoint_info":checkpoint_info,
+        "models":{
+            "space_free_size": 4e10,
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": selected_cn_model,
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
+        },
+        "controlnet_txt2img_payload":{ 
+            "enable_hr": enable_hr, 
+            "denoising_strength": denoising_strength, 
+            "firstphase_width": firstphase_width, 
+            "firstphase_height": firstphase_height, 
+            "prompt": prompt, 
+            "styles": styles, 
+            "seed": seed, 
+            "subseed": subseed, 
+            "subseed_strength": subseed_strength, 
+            "seed_resize_from_h": seed_resize_from_h, 
+            "seed_resize_from_w": seed_resize_from_w, 
+            "sampler_index": sampler_index, 
+            "batch_size": batch_size, 
+            "n_iter": n_iter, 
+            "steps": steps, 
+            "cfg_scale": cfg_scale, 
+            "width": width, 
+            "height": height, 
+            "restore_faces": restore_faces, 
+            "tiling": tiling, 
+            "negative_prompt": negative_prompt, 
+            "eta": eta, 
+            "s_churn": s_churn, 
+            "s_tmax": s_tmax, 
+            "s_tmin": s_tmin, 
+            "s_noise": s_noise, 
+            "override_settings": override_settings, 
+            "script_name": script_name,
+            "script_args": script_args,
+            "controlnet_units": [
+                {
+                "input_image": controlnet_image,
+                "mask": "",
+                "module": controlnet_module,
+                "model": controlnet_model,
+                "weight": weight,
+                "resize_mode": resize_mode,
+                "lowvram": lowvram,
+                "processor_res": processor_res,
+                "threshold_a": threshold_a,
+                "threshold_b": threshold_b,
+                "guidance": guidance,
+                "guidance_start": guidance_start,
+                "guidance_end": guidance_end,
+                "guessmode": guessmode,
+                "pixel_perfect": pixel_perfect
+                }
+            ]
+        }, 
+        }
+    else:
+        print('txt2img ##########')
+        # construct payload
+        payload = {
+        "endpoint_name": endpoint_name,
+        "task": "text-to-image", 
+        "username": "test",
+        "checkpoint_info":checkpoint_info,
+        "models":{
+            "space_free_size": 2e10,
+            "Stable-diffusion": selected_sd_model,
+            "ControlNet": [],
+            "hypernetworks": selected_hypernets,
+            "Lora": selected_loras,
+            "embeddings": selected_embeddings
+        },
+        "txt2img_payload": {
+            "enable_hr": enable_hr, 
+            "denoising_strength": denoising_strength, 
+            "firstphase_width": firstphase_width, 
+            "firstphase_height": firstphase_height, 
+            "prompt": prompt, 
+            "styles": styles, 
+            "seed": seed, 
+            "subseed": subseed, 
+            "subseed_strength": subseed_strength, 
+            "seed_resize_from_h": seed_resize_from_h, 
+            "seed_resize_from_w": seed_resize_from_w, 
+            "sampler_index": sampler_index, 
+            "batch_size": batch_size, 
+            "n_iter": n_iter, 
+            "steps": steps, 
+            "cfg_scale": cfg_scale, 
+            "width": width, 
+            "height": height, 
+            "restore_faces": restore_faces, 
+            "tiling": tiling, 
+            "negative_prompt": negative_prompt, 
+            "eta": eta, 
+            "s_churn": s_churn, 
+            "s_tmax": s_tmax, 
+            "s_tmin": s_tmin, 
+            "s_noise": s_noise, 
+            "override_settings": override_settings, 
+            "script_name": script_name,
+            "script_args": script_args}, 
+        }
+    return payload
  
 # Global exception capture
 # All exception handling in the code can be written as: raise BizException(code=500, message="XXXX")
@@ -167,276 +421,10 @@ async def run_sagemaker_inference(request: Request):
         params_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
 
         logger.info(json.dumps(params_dict))
-        # Need to generate the payload from data_dict here:
-        script_name = params_dict['script_list']
-        if script_name == "None":
-            script_name = ""
-        script_args = []
-        if script_name == 'Prompt matrix':
-            put_at_start = params_dict['script_txt2txt_prompt_matrix_put_at_start']
-            different_seeds = params_dict['script_txt2txt_prompt_matrix_different_seeds']
-            prompt_type = params_dict['']
-            variations_delimiter = params_dict['']
-            margin_size = params_dict['script_txt2txt_prompt_matrix_margin_size']
-            script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
-
-        if script_name == 'Prompts from file or textbox':
-            checkbox_iterate = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate']
-            checkbox_iterate_batch = params_dict['script_txt2txt_prompts_from_file_or_textbox_checkbox_iterate_batch']
-            list_prompt_inputs = params_dict['']
-            lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
-            script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
-
-        if script_name == 'X/Y/Z plot':
-            x_type = params_dict['script_txt2txt_xyz_plot_x_type']
-            x_values = params_dict['script_txt2txt_xyz_plot_x_values']
-            y_type = params_dict['script_txt2txt_xyz_plot_y_type']
-            y_values = params_dict['script_txt2txt_xyz_plot_y_values']
-            z_type = params_dict['script_txt2txt_xyz_plot_z_type']
-            z_values = params_dict['script_txt2txt_xyz_plot_z_values']
-            draw_legend = params_dict['script_txt2txt_xyz_plot_draw_legend']
-            include_lone_images = params_dict['script_txt2txt_xyz_plot_include_lone_images']
-            include_sub_grids = params_dict['script_txt2txt_xyz_plot_include_sub_grids']
-            no_fixed_seeds = params_dict['script_txt2txt_xyz_plot_no_fixed_seeds']
-            margin_size = params_dict['script_txt2txt_xyz_plot_margin_size']
-            script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
-
-        # get all parameters from ui-config.json
-        prompt = params_dict['txt2img_prompt'] #'chinese, beautiful woman' # 'a busy city street in a modern city | illustration | cinematic lighting' #
-        negative_prompt = params_dict['txt2img_neg_prompt']#: "", 
-        enable_hr = "False" #params_dict['txt2img_enable_hr'] #: "False", 
-        denoising_strength = float(params_dict['txt2img_denoising_strength']) #: 0.7, 
-        hr_scale = float(params_dict['txt2img_hr_scale'])
-        hr_upscaler = params_dict['txt2img_hr_upscaler'] #hr_upscaler,
-        hr_second_pass_steps = int(params_dict['txt2img_hires_steps']) #hr_second_pass_steps,
-        firstphase_width = int(params_dict['txt2img_hr_resize_x'])#: 0, 
-        firstphase_height = int(params_dict['txt2img_hr_resize_y'])#: 0, 
-        styles = []#params_dict['txt2img_styles']#: ["None", "None"], 
-        seed = float(params_dict['txt2img_seed'])#: -1.0, 
-        subseed = float(params_dict['txt2img_subseed'])#: -1.0, 
-        subseed_strength = float(params_dict['txt2img_subseed_strength'])#: 0, 
-        seed_resize_from_h = int(params_dict['txt2img_seed_resize_from_h'])#: 0, 
-        seed_resize_from_w = int(params_dict['txt2img_seed_resize_from_w'])#: 0, 
-        sampler_index = params_dict['txt2img_sampling']#: "Euler a", 
-        batch_size = int(params_dict['txt2img_batch_size'])#: 1, 
-        n_iter = int(params_dict['txt2img_batch_count'])
-        steps = int(params_dict['txt2img_steps'])#: 20, 
-        cfg_scale = int(params_dict['txt2img_cfg_scale'])#: 7, 
-        width = int(params_dict['txt2img_width'])#: 512, 
-        height = int(params_dict['txt2img_height'])#: 512, 
-        restore_faces = "False" #params_dict['txt2img_restore_faces']#: "False", 
-        tiling = "False" #params_dict['txt2img_tiling']#: "False", 
-        override_settings = {}
-        eta = 1
-        s_churn = 0
-        s_tmax = 1
-        s_tmin = 0
-        s_noise = 1 
-
-        selected_sd_model = params_dict['sagemaker_stable_diffuion_checkpoint'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
-        selected_cn_model = params_dict['sagemaker_controlnet_model']#['control_openpose-fp16.safetensors']#
-        selected_hypernets = params_dict['sagemaker_hypernetwork_model']#['mjv4Hypernetwork_v1.pt']#'LuisapKawaii_v1.pt'
-        selected_loras = params_dict['sagemaker_lora_model']#['hanfu_v30Song.safetensors']# 'cuteGirlMix4_v10.safetensors'
-        selected_embeddings = params_dict['sagemaker_texual_inversion_model']#['pureerosface_v1.pt']#'corneo_marin_kitagawa.pt''pureerosface_v1.pt'
-        
-        if selected_sd_model == "":
-            selected_sd_model = ["v1-5-pruned-emaonly.safetensors"]
-        if selected_cn_model == "":
-            selected_cn_model = []
-        if selected_hypernets == "":
-            selected_hypernets = []
-        if selected_loras == "":
-            selected_loras = []
-        if selected_embeddings == "":
-            selected_embeddings = []
-        
-        for embedding in selected_embeddings:
-            prompt = prompt + embedding
-        for hypernet in selected_hypernets:
-            hypernet_name = os.path.splitext(hypernet)[0]
-            prompt = prompt + f"<hypernet:{hypernet_name}:1>"
-        for lora in selected_loras:
-            lora_name = os.path.splitext(lora)[0]
-            prompt = prompt + f"<lora:{lora_name}:1>"
-        
-        contronet_enable = False
-        controlnet_model = None
-        controlnet_module = None
-        controlnet_image = None
-        if contronet_enable:
-            controlnet_module = params_dict['controlnet_preprocessor']
-            controlnet_model = os.path.splitext(selected_cn_model[0])[0]
-            controlnet_image = params_dict['txt2img_controlnet_ControlNet_input_image'] #None
-            weight = params_dict['control_weight'] #1,
-            resize_mode = params_dict['controlnet_resize_mode'] # "Crop and Resize",
-            lowvram = params_dict['controlnet_lowVRAM_enable'] #: "False",
-            processor_res = 64,
-            threshold_a = 64,
-            threshold_b = 64,
-            guidance = 1,
-            guidance_start = params_dict['controlnet_starting_control_step'] #: 0,
-            guidance_end = params_dict['controlnet_ending_control_step'] #: 1,
-            guessmode = params_dict['controlnet_control_mode(guess_mode)'] #: "True",
-            pixel_perfect = params_dict['controlnet_pixel_perfect'] #:"False"
-            allow_preview = params_dict['controlnet_allow_preview']
-            loopback = params_dict['controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit']
-
-            #with open(controlnet_image_path, "rb") as img:
-            # controlnet_image = base64.b64encode(img.read())
-
-        endpoint_name = "infer-endpoint-ca0e"
-        checkpoint_info = {}
-        
-        if contronet_enable:
-            print('txt2img with controlnet!!!!!!!!!!')
-            payload = {
-            "endpoint_name": endpoint_name,
-            "task": "controlnet_txt2img", 
-            "username": "test",
-            "checkpoint_info":checkpoint_info,
-            "models":{
-                "space_free_size": 4e10,
-                "Stable-diffusion": selected_sd_model,
-                "ControlNet": selected_cn_model,
-                "hypernetworks": selected_hypernets,
-                "Lora": selected_loras,
-                "embeddings": selected_embeddings
-            },
-            "controlnet_txt2img_payload":{ 
-                "enable_hr": enable_hr, 
-                "denoising_strength": denoising_strength, 
-                "firstphase_width": firstphase_width, 
-                "firstphase_height": firstphase_height, 
-                "prompt": prompt, 
-                "styles": styles, 
-                "seed": seed, 
-                "subseed": subseed, 
-                "subseed_strength": subseed_strength, 
-                "seed_resize_from_h": seed_resize_from_h, 
-                "seed_resize_from_w": seed_resize_from_w, 
-                "sampler_index": sampler_index, 
-                "batch_size": batch_size, 
-                "n_iter": n_iter, 
-                "steps": steps, 
-                "cfg_scale": cfg_scale, 
-                "width": width, 
-                "height": height, 
-                "restore_faces": restore_faces, 
-                "tiling": tiling, 
-                "negative_prompt": negative_prompt, 
-                "eta": eta, 
-                "s_churn": s_churn, 
-                "s_tmax": s_tmax, 
-                "s_tmin": s_tmin, 
-                "s_noise": s_noise, 
-                "override_settings": override_settings, 
-                "script_name": script_name,
-                "script_args": script_args,
-                "controlnet_units": [
-                    {
-                    "input_image": controlnet_image,
-                    "mask": "",
-                    "module": controlnet_module,
-                    "model": controlnet_model,
-                    "weight": weight,
-                    "resize_mode": resize_mode,
-                    "lowvram": lowvram,
-                    "processor_res": processor_res,
-                    "threshold_a": threshold_a,
-                    "threshold_b": threshold_b,
-                    "guidance": guidance,
-                    "guidance_start": guidance_start,
-                    "guidance_end": guidance_end,
-                    "guessmode": guessmode,
-                    "pixel_perfect": pixel_perfect
-                    }
-                ]
-            }, 
-            }
-        else:
-            print('txt2img ##########')
-            # construct payload
-            payload = {
-            "endpoint_name": endpoint_name,
-            "task": "text-to-image", 
-            "username": "test",
-            "checkpoint_info":checkpoint_info,
-            "models":{
-                "space_free_size": 2e10,
-                "Stable-diffusion": selected_sd_model,
-                "ControlNet": [],
-                "hypernetworks": selected_hypernets,
-                "Lora": selected_loras,
-                "embeddings": selected_embeddings
-            },
-            "txt2img_payload": {
-                "enable_hr": enable_hr, 
-                "denoising_strength": denoising_strength, 
-                "firstphase_width": firstphase_width, 
-                "firstphase_height": firstphase_height, 
-                "prompt": prompt, 
-                "styles": styles, 
-                "seed": seed, 
-                "subseed": subseed, 
-                "subseed_strength": subseed_strength, 
-                "seed_resize_from_h": seed_resize_from_h, 
-                "seed_resize_from_w": seed_resize_from_w, 
-                "sampler_index": sampler_index, 
-                "batch_size": batch_size, 
-                "n_iter": n_iter, 
-                "steps": steps, 
-                "cfg_scale": cfg_scale, 
-                "width": width, 
-                "height": height, 
-                "restore_faces": restore_faces, 
-                "tiling": tiling, 
-                "negative_prompt": negative_prompt, 
-                "eta": eta, 
-                "s_churn": s_churn, 
-                "s_tmax": s_tmax, 
-                "s_tmin": s_tmin, 
-                "s_noise": s_noise, 
-                "override_settings": override_settings, 
-                "script_name": script_name,
-                "script_args": script_args}, 
-            }
-        '''
-
-                        "txt2img_payload": {
-                "enable_hr": enable_hr, 
-                "denoising_strength": denoising_strength, 
-                "firstphase_width": firstphase_width, 
-                "firstphase_height": firstphase_height, 
-                "prompt": prompt, 
-                "styles": styles, 
-                "seed": seed, 
-                "subseed": subseed, 
-                "subseed_strength": subseed_strength, 
-                "seed_resize_from_h": seed_resize_from_h, 
-                "seed_resize_from_w": seed_resize_from_w, 
-                "sampler_index": sampler_index, 
-                "batch_size": batch_size, 
-                "n_iter": n_iter, 
-                "steps": steps, 
-                "cfg_scale": cfg_scale, 
-                "width": width, 
-                "height": height, 
-                "restore_faces": restore_faces, 
-                "tiling": tiling, 
-                "negative_prompt": negative_prompt, 
-                "eta": eta, 
-                "s_churn": s_churn, 
-                "s_tmax": s_tmax, 
-                "s_tmin": s_tmin, 
-                "s_noise": s_noise, 
-                "override_settings": override_settings, 
-                "script_name": script_name,
-                "script_args": script_args}, 
-            }
-        '''
-
+        payload = json_convert_to_payload(params_dict)
         print(f"input in json format {payload}")
-        # endpoint_name = payload["endpoint_name"]
+        
+        endpoint_name = payload["endpoint_name"]
 
         predictor = Predictor(endpoint_name)
 
@@ -611,7 +599,7 @@ async def generate_s3_presigned_url_for_uploading(s3_bucket_name: str = None, ke
         HttpMethod='PUT'
     )
     headers = {
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Headers": "*",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     }

@@ -30,6 +30,7 @@ from dreambooth import shared as dreambooth_shared
 from dreambooth_sagemaker.train import start_sagemaker_training
 from dreambooth.ui_functions import load_model_params, load_params
 from dreambooth.dataclasses.db_config import save_config, from_file
+from urllib.parse import urljoin
 import sagemaker_ui
 
 db_model_name = None
@@ -193,9 +194,25 @@ def update_connect_config(api_url, api_token):
     save_variable_to_json('api_token', api_token)
     value1 = get_variable_from_json('api_gateway_url')
     value2 = get_variable_from_json('api_token')
-    print(f"Variable 1: {value1}")
-    print(f"Variable 2: {value2}")
     print(f"update the api_url:{api_url} and token: {api_token}............")
+
+def test_aws_connect_config(api_url, api_token):
+    api_url = get_variable_from_json('api_gateway_url')
+    api_token = get_variable_from_json('api_token')
+    print(f"get the api_url:{api_url} and token: {api_token}............")
+    target_url = urljoin(api_url, 'inference/test-connection')
+    headers = {
+        "x-api-key": api_token,
+        "Content-Type": "application/json"
+    }
+    try:
+        response = requests.get(target_url,headers=headers)  # Assuming sagemaker_ui.server_request is a wrapper around requests
+        response.raise_for_status()  # Raise an exception if the HTTP request resulted in an error
+        r = response.json()
+        print(f"succeed test connection")
+    except requests.exceptions.RequestException as e:
+        print(f"Error: Failed to get server request. Details: {e}")
+        raise gr.Error("Failed to connect to aws api-gateway! please check the api_gateway_url and token is valid")
 
 def on_ui_tabs():
     buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
@@ -216,6 +233,8 @@ def on_ui_tabs():
                 api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token", elem_id="aws_middleware_token")
                 aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
                 aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
+                aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
+                aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox])
             with gr.Column(variant="panel", scale=2):
                 gr.HTML(value="Resource")
                 gr.Dataframe(
@@ -382,13 +401,13 @@ def ui_tabs_callback():
                                         cloud_db_512_model,
                                     ],
                                     outputs=[
-                                        cloud_db_model_name,
-                                        cloud_db_model_path,
-                                        cloud_db_revision,
-                                        cloud_db_epochs,
-                                        cloud_db_src,
-                                        cloud_db_has_ema,
-                                        cloud_db_v2,
+                                        # cloud_db_model_name,
+                                        # cloud_db_model_path,
+                                        # cloud_db_revision,
+                                        # cloud_db_epochs,
+                                        # cloud_db_src,
+                                        # cloud_db_has_ema,
+                                        # cloud_db_v2,
                                         # cloud_db_resolution,
                                         # cloud_db_status,
                                     ]
@@ -405,36 +424,40 @@ def get_cloud_model_snapshots():
     return ["ran", "swam", "slept"]
 
 def get_cloud_db_models():
-    api_gateway_url = get_variable_from_json('api_gateway_url')
-    print("Get request for model list.")
-    if api_gateway_url is None:
-        print(f"failed to get the api_gateway_url, can not fetch date from remote")
-        return []
+    try:
+        api_gateway_url = get_variable_from_json('api_gateway_url')
+        print("Get request for model list.")
+        if api_gateway_url is None:
+            print(f"failed to get the api_gateway_url, can not fetch date from remote")
+            return []
 
-    url = api_gateway_url + "models?types=dreambooth&status=Complete"
-    response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
-    model_list = []
-    if "models" not in response:
-        return []
-    for model in response["models"]:
-        params = model['params']
-        if 'resp' in params:
-            model['model_name'] = params['resp']['config_dict']['model_name']
-            model_list.append(model)
-            db_config = params['resp']['config_dict']
-            # TODO:
-            model_dir = f"{base_model_folder}/{model['model_name']}"
+        url = api_gateway_url + "models?types=dreambooth&status=Complete"
+        response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
+        model_list = []
+        if "models" not in response:
+            return []
+        for model in response["models"]:
+            params = model['params']
+            if 'resp' in params:
+                model['model_name'] = params['resp']['config_dict']['model_name']
+                model_list.append(model)
+                db_config = params['resp']['config_dict']
+                # TODO:
+                model_dir = f"{base_model_folder}/{model['model_name']}"
 
-            for k in db_config:
-                if type(db_config[k]) is str:
-                    db_config[k] = db_config[k].replace("/opt/ml/code/", "")
-                    db_config[k] = db_config[k].replace("models/dreambooth/", base_model_folder)
+                for k in db_config:
+                    if type(db_config[k]) is str:
+                        db_config[k] = db_config[k].replace("/opt/ml/code/", "")
+                        db_config[k] = db_config[k].replace("models/dreambooth/", base_model_folder)
 
-            if not os.path.exists(model_dir):
-                os.makedirs(model_dir, exist_ok=True)
-            with open(f"{model_dir}/db_config.json", "w") as db_config_file:
-                json.dump(db_config, db_config_file)
-    return model_list
+                if not os.path.exists(model_dir):
+                    os.makedirs(model_dir, exist_ok=True)
+                with open(f"{model_dir}/db_config.json", "w") as db_config_file:
+                    json.dump(db_config, db_config_file)
+        return model_list
+    except Exception as e:
+        print('Failed to get cloud models.')
+        print(e)
 
 def get_cloud_ckpts():
     api_gateway_url = get_variable_from_json('api_gateway_url')
@@ -572,7 +595,11 @@ def async_create_model_on_sagemaker(
         if params["ckpt_path"] not in ckpt_dict:
             logging.error("Cloud checkpoint is not exist.")
             return
-        params["ckpt_path"] = ckpt_dict[ckpt_key]["name"][0].rstrip(".tar")
+        ckpt_name_list = ckpt_dict[ckpt_key]["name"]
+        if len(ckpt_name_list) == 0:
+            logging.error("Checkpoint name error.")
+            return
+        params["ckpt_path"] = ckpt_name_list[0].rstrip(".tar")
         payload = {
             "model_type": "dreambooth",
             "name": new_model_name,

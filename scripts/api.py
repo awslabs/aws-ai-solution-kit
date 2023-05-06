@@ -317,10 +317,10 @@ def sagemaker_api(_, app: FastAPI):
                 #post_invocations(selected_models, response_info['images'])
                 return response.json()
             elif req.task == 'image-to-image':
+                response = requests.post(url=f'http://0.0.0.0:8080/sdapi/v1/img2img', json=json.loads(req.img2img_payload.json()))
                 # response = self.img2imgapi(req.img2img_payload)
                 # shared.opts.data = default_options
-                response = None
-                return response
+                return response.json()
             elif req.task == 'extras-single-image':
                 # response = self.extras_single_image_api(req.extras_single_payload)
                 # shared.opts.data = default_options
