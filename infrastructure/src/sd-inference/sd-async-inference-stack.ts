@@ -300,6 +300,7 @@ export class SDAsyncInferenceStack extends Stack {
                     },
                 },
             ],
+            apiKeyRequired: true,
         });
 
         const current_time = new Date().toISOString;
