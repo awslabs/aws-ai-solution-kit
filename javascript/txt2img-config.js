@@ -51,11 +51,12 @@ function txt2img_config_save() {
 
                 put_with_xmlhttprequest(url, config_data)
                     .then((response) => {
-                        console.log(response);
+                        console.log('The configuration has been successfully uploaded to s3');
                         // Trigger a simple alert after the HTTP PUT has completed
                         alert(
                             "The configuration has been successfully uploaded."
                         );
+
                         // TODO: meet the cors issue, need to implement it later
                         // let inference_url = remote_url + 'inference/run-sagemaker-inference';
                         // console.log("api-key is ", api_key)

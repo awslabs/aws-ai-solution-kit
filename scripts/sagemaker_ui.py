@@ -747,7 +747,7 @@ def create_ui():
                 txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
                 txt2img_config_save_button.click(
                     _js="txt2img_config_save",
-                    fn=txt2img_config_save,
+                    fn=None,
                     inputs=[],
                     outputs=[]
                 )
