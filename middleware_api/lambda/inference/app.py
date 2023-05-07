@@ -150,7 +150,7 @@ def load_json_from_s3(bucket_name, key):
 
     return data
 
-def json_convert_to_payload(params_dict):
+def json_convert_to_payload(params_dict, checkpoint_info):
     # Need to generate the payload from data_dict here:
     script_name = params_dict['script_list']
     if script_name == "None":
@@ -324,7 +324,6 @@ def json_convert_to_payload(params_dict):
         # controlnet_image = base64.b64encode(img.read())
 
     endpoint_name = "infer-endpoint-ca0e"
-    checkpoint_info = {}
     
     if contronet_enable:
         print('txt2img with controlnet!!!!!!!!!!')
@@ -465,7 +464,7 @@ async def run_sagemaker_inference(request: Request):
         params_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
 
         logger.info(json.dumps(params_dict))
-        payload = json_convert_to_payload(params_dict)
+        payload = json_convert_to_payload(params_dict, payload_checkpoint_info)
         print(f"input in json format {payload}")
         
         endpoint_name = payload["endpoint_name"]
