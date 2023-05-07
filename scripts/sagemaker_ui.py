@@ -180,8 +180,8 @@ def get_model_list_by_type(model_type):
         ckpt_type = ckpt["type"]
         for ckpt_name in ckpt["name"]:
             ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name[:-4]] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name[:-4])
+            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+            checkpoint_list.append(ckpt_name)
 
     return checkpoint_list
 
@@ -222,7 +222,7 @@ def refresh_all_models():
             checkpoint_info[ckpt_type] = {} 
             for ckpt_name in ckpt["name"]:
                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-                checkpoint_info[ckpt_type][ckpt_name[:-4]] = ckpt_s3_pos
+                checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
 
 def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path):
     log = "start upload model to s3..."
@@ -249,7 +249,8 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         parts_number = math.ceil(file_size.st_size/part_size)
         print('!!!!!!!!!!', file_size, parts_number)
 
-        local_tar_path = f'{model_name}.tar'        
+        #local_tar_path = f'{model_name}.tar'  
+        local_tar_path = model_name      
         payload = {
             "checkpoint_type": rp,
             "filenames": [{
