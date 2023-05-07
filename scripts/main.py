@@ -211,9 +211,10 @@ def test_aws_connect_config(api_url, api_token):
         response.raise_for_status()  # Raise an exception if the HTTP request resulted in an error
         r = response.json()
         print(f"succeed test connection")
+        return "succeed test connection"
     except requests.exceptions.RequestException as e:
         print(f"Error: Failed to get server request. Details: {e}")
-        raise gr.Error("Failed to connect to aws api-gateway! please check the api_gateway_url and token is valid")
+        return "failed to connect to backend server, please check the url and token"
 
 def on_ui_tabs():
     buildin_model_list = ['Buildin model 1','Buildin model 2','Buildin model 3']
@@ -235,7 +236,8 @@ def on_ui_tabs():
                 aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
                 aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
                 aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
-                aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox])
+                test_connection_result = gr.Label();
+                aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox], outputs=[test_connection_result])
             with gr.Column(variant="panel", scale=2):
                 gr.HTML(value="Resource")
                 gr.Dataframe(
