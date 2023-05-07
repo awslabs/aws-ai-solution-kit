@@ -178,18 +178,55 @@ def json_convert_to_payload(params_dict):
         script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
 
     if script_name == 'X/Y/Z plot':
-        x_type = params_dict['script_txt2txt_xyz_plot_x_type']
+        type_dict = {'Nothing': 0,
+                       'Seed': 1,
+                       'Var. seed': 2,
+                       'Var. strength': 3,
+                       'Steps': 4,
+                       'Hires stteps': 5,
+                       'CFG Scale': 6,
+                       'Prompt S/R': 7,
+                       'Prompt order': 8,
+                       'Sampler': 9,
+                       'Checkpoint name': 10,
+                       'Negative Guidance minimum sigma': 11,
+                       'Sigma Churn': 12,
+                       'Sigma min': 13,
+                       'Sigma max': 14,
+                       'Sigma noise': 15,
+                       'Eta': 16,
+                       'Clip skip': 17,
+                       'Denoising': 18,
+                       'Hires upscaler': 19,
+                       'VAE': 20,
+                       'Styles': 21,
+                       'UniPC Order': 22,
+                       'Face restore': 23,
+                       '[ControlNet] Enabled': 24,
+                       '[ControlNet] Model': 25,
+                       '[ControlNet] Weight': 26,
+                       '[ControlNet] Guidance Start': 27,
+                       '[ControlNet] Guidance End': 28,
+                       '[ControlNet] Resize Mode': 29,
+                       '[ControlNet] Preprocessor': 30,
+                       '[ControlNet] Pre Resolution': 31,
+                       '[ControlNet] Pre Threshold A': 32,
+                       '[ControlNet] Pre Threshold B': 33}
+        x_type = type_dict[params_dict['script_txt2txt_xyz_plot_x_type']]
         x_values = params_dict['script_txt2txt_xyz_plot_x_values']
-        y_type = params_dict['script_txt2txt_xyz_plot_y_type']
+        x_values_dropdown = params_dict['script_txt2txt_xyz_plot_x_values']
+        y_type = type_dict[params_dict['script_txt2txt_xyz_plot_y_type']]
         y_values = params_dict['script_txt2txt_xyz_plot_y_values']
-        z_type = params_dict['script_txt2txt_xyz_plot_z_type']
+        y_values_dropdown = params_dict['script_txt2txt_xyz_plot_y_values']
+        z_type = type_dict[params_dict['script_txt2txt_xyz_plot_z_type']]
         z_values = params_dict['script_txt2txt_xyz_plot_z_values']
+        z_values_dropdown = params_dict['script_txt2txt_xyz_plot_z_values']
         draw_legend = params_dict['script_txt2txt_xyz_plot_draw_legend']
         include_lone_images = params_dict['script_txt2txt_xyz_plot_include_lone_images']
         include_sub_grids = params_dict['script_txt2txt_xyz_plot_include_sub_grids']
         no_fixed_seeds = params_dict['script_txt2txt_xyz_plot_no_fixed_seeds']
-        margin_size = params_dict['script_txt2txt_xyz_plot_margin_size']
-        script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+        margin_size = int(params_dict['script_txt2txt_xyz_plot_margin_size'])
+        script_args = [x_type, x_values, x_values_dropdown, y_type, y_values, y_values_dropdown, z_type, z_values, z_values_dropdown, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
 
     # get all parameters from ui-config.json
     prompt = params_dict['txt2img_prompt'] #'chinese, beautiful woman' # 'a busy city street in a modern city | illustration | cinematic lighting' #
@@ -422,8 +459,8 @@ async def run_sagemaker_inference(request: Request):
         # TODO: add logic for inference id
         inference_id = get_uuid()
 
-        #payload = await request.json()
-        #print(f"input in json format {payload}")
+        payload_checkpoint_info = await request.json()
+        print(f"!!!!!!!!!!input in json format {payload_checkpoint_info}")
 
         params_dict = load_json_from_s3(S3_BUCKET_NAME, 'config/aigc.json')
 
