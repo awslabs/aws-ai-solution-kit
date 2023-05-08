@@ -605,18 +605,7 @@ function scrap_ui_component_value_with_default(config) {
         "value",
         ""
     );
-    //sagemaker checkpoint
-    config["sagemaker_stable_diffuion_checkpoint"] = getElementValue(
-        "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
-        "value",
-        ""
-    );
-    //stable diffusion checkpoint
-    // config["stable_diffusion_checkpoint"] = getElementValue(
-    //     "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
-    //     "value",
-    //     ""
-    // );
+
     //stable diffusion checkpoint
     const sd_checkpoint = document.querySelector(
         "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts"
@@ -628,7 +617,7 @@ function scrap_ui_component_value_with_default(config) {
         const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
         sd_values.push(spanValue);
     });
-    config["stable_diffusion_checkpoint"] = sd_values.join(":");
+    config["sagemaker_stable_diffusion_checkpoint"] = sd_values.join(":");
     
     //Textual Inversion
     const wrapInner = document.querySelector(
@@ -700,18 +689,18 @@ function scrap_ui_component_value_with_default(config) {
     }
     
     config["controlnet_enable"] = getElementValue(
-        "#component-200 > label > input",
+        "#component-201 > label > input",
         "checked",
         false
     );
     
     config["controlnet_lowVRAM_enable"] = getElementValue(
-        "#component-201 > label > input",
+        "#component-202 > label > input",
         "checked",
         false
     );
     config["controlnet_pixel_perfect"] = getElementValue(
-        "#component-203 > label > input",
+        "#component-204 > label > input",
         "checked",
         false
     );
@@ -732,19 +721,20 @@ function scrap_ui_component_value_with_default(config) {
         "value",
         ""
     );
-    config["control_weight"] = getElementValue(
-        "#component-213 > div.wrap.svelte-1cl284s > div > input",
-        "value",
-        ""
-    );
-    // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
-    config["controlnet_starting_control_step"] = getElementValue(
+    config["controlnet_weight"] = getElementValue(
         "#component-214 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
-    config["controlnet_ending_control_step"] = getElementValue(
+    // document.querySelector("#component-214 > div.wrap.svelte-1cl284s > div > input")
+    // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
+    config["controlnet_starting_control_step"] = getElementValue(
         "#component-215 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    );
+    config["controlnet_ending_control_step"] = getElementValue(
+        "#component-216 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
@@ -763,6 +753,26 @@ function scrap_ui_component_value_with_default(config) {
     ] = getElementValue("#component-224 > label > input", "enabled", false);
     
     // Completed when Preprocessor is null
+
+    // Start when Preprocessor is canny
+    config["controlnet_preprocessor_resolution"] = getElementValue(
+        "#component-219 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    )
+    config["controlnet_canny_low_threshold"] = getElementValue(
+        "#component-220 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    )
+
+    config["controlnet_canny_high_threshold"] = getElementValue(
+        "#component-221 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    ) 
+
+    // end of controlnet section
     
     config["script_txt2txt_prompt_matrix_prompt_type_positive"] = getElementValue(
         "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input",
