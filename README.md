@@ -1,4 +1,5 @@
-
+## Version
+v.0.2.g
 ## For contributor
 Setup your repo first:
 
