@@ -605,18 +605,7 @@ function scrap_ui_component_value_with_default(config) {
         "value",
         ""
     );
-    //sagemaker checkpoint
-    config["sagemaker_stable_diffuion_checkpoint"] = getElementValue(
-        "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
-        "value",
-        ""
-    );
-    //stable diffusion checkpoint
-    // config["stable_diffusion_checkpoint"] = getElementValue(
-    //     "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
-    //     "value",
-    //     ""
-    // );
+
     //stable diffusion checkpoint
     const sd_checkpoint = document.querySelector(
         "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts"
@@ -628,7 +617,7 @@ function scrap_ui_component_value_with_default(config) {
         const spanValue = token.querySelector("span.svelte-1g4zxts").textContent;
         sd_values.push(spanValue);
     });
-    config["stable_diffusion_checkpoint"] = sd_values.join(":");
+    config["sagemaker_stable_diffusion_checkpoint"] = sd_values.join(":");
     
     //Textual Inversion
     const wrapInner = document.querySelector(
