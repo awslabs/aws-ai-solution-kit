@@ -45,7 +45,6 @@ fi
 
 aws ecr get-login-password --region ${region} | docker login -u AWS --password-stdin ${account}.dkr.ecr.${region}.amazonaws.com
 
-<<<<<<< Updated upstream
 if [ "$image" == "aigc-webui-utils" ]; then
     repo_id="e2t2y5y0"
 elif [ "$image" == "aigc-webui-inference" ]; then
@@ -60,9 +59,6 @@ complete_command="FROM public.ecr.aws/${repo_id}/${repo_name}"
 echo $complete_command
 
 echo $complete_command > Dockerfile
-=======
-
->>>>>>> Stashed changes
 
 docker build  -t ${image} -f Dockerfile .
 docker tag ${image} ${fullname}
