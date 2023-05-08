@@ -388,8 +388,8 @@ def sagemaker_api(_, app: FastAPI):
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
                     # print("Delete src model.")
                     # os.system(f"rm -rf models/Stable-diffusion")
-                    logging.info("Upload tgt model to s3.")
-                    # upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
+                    logging.info(f"Upload tgt model to s3 {target_local_model_dir} {output_bucket_name} {output_path}")
+                    upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
                     config_file = os.path.join(target_local_model_dir, "db_config.json")
                     with open(config_file, 'r') as openfile:
                         config_dict = json.load(openfile)
