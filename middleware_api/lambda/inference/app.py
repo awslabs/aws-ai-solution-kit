@@ -239,15 +239,37 @@ def json_convert_to_payload(params_dict, checkpoint_info):
                        '[ControlNet] Pre Resolution': 31,
                        '[ControlNet] Pre Threshold A': 32,
                        '[ControlNet] Pre Threshold B': 33}
+        dropdown_index = [9, 10, 19, 20, 21, 24, 25, 29, 30]
         x_type = type_dict[params_dict['script_txt2txt_xyz_plot_x_type']]
         x_values = params_dict['script_txt2txt_xyz_plot_x_values']
         x_values_dropdown = params_dict['script_txt2txt_xyz_plot_x_values']
+        if x_type in dropdown_index:
+            if x_type == 10:
+                x_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+            elif x_type == 25:
+                x_values_dropdown = params_dict['sagemaker_controlnet_model']
+            x_values_dropdown = x_values_dropdown.split(":")
+        
         y_type = type_dict[params_dict['script_txt2txt_xyz_plot_y_type']]
         y_values = params_dict['script_txt2txt_xyz_plot_y_values']
         y_values_dropdown = params_dict['script_txt2txt_xyz_plot_y_values']
+        if y_type in dropdown_index:
+            if y_type == 10:
+                y_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+            elif y_type == 25:
+                y_values_dropdown = params_dict['sagemaker_controlnet_model']
+            y_values_dropdown = y_values_dropdown.split(":")
+        
         z_type = type_dict[params_dict['script_txt2txt_xyz_plot_z_type']]
         z_values = params_dict['script_txt2txt_xyz_plot_z_values']
         z_values_dropdown = params_dict['script_txt2txt_xyz_plot_z_values']
+        if z_type in dropdown_index:
+            if z_type == 10:
+                z_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+            elif z_type == 25:
+                z_values_dropdown = params_dict['sagemaker_controlnet_model']
+            z_values_dropdown = z_values_dropdown.split(":")
+        
         draw_legend = params_dict['script_txt2txt_xyz_plot_draw_legend']
         include_lone_images = params_dict['script_txt2txt_xyz_plot_include_lone_images']
         include_sub_grids = params_dict['script_txt2txt_xyz_plot_include_sub_grids']
