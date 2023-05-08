@@ -763,6 +763,26 @@ function scrap_ui_component_value_with_default(config) {
     ] = getElementValue("#component-224 > label > input", "enabled", false);
     
     // Completed when Preprocessor is null
+
+    // Start when Preprocessor is canny
+    config["controlnet_preprocessor_resolution"] = getElementValue(
+        "#component-219 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    )
+    config["controlnet_canny_low_threshold"] = getElementValue(
+        "#component-220 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    )
+
+    config["controlnet_canny_high_threshold"] = getElementValue(
+        "#component-221 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    ) 
+
+    // end of controlnet section
     
     config["script_txt2txt_prompt_matrix_prompt_type_positive"] = getElementValue(
         "#script_txt2txt_prompt_matrix_prompt_type > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input",
