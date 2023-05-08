@@ -350,7 +350,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         #with open(controlnet_image_path, "rb") as img:
         # controlnet_image = base64.b64encode(img.read())
 
-    endpoint_name = "infer-endpoint-ca0e"
+    endpoint_name = params_dict['sagemaker_endpoint'] #"infer-endpoint-ca0e"
     
     if contronet_enable:
         print('txt2img with controlnet!!!!!!!!!!')
