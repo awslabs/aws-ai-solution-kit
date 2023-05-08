@@ -105,7 +105,7 @@ def getEndpointDeploymentJobList():
     try:
         sagemaker = boto3.client('sagemaker')
         ddb = boto3.resource('dynamodb')
-        endpoint_deployment_table = ddb.Table('SdAsyncInferenceStack-dev-SDendpointdeploymentjobC9FD0CE7-189DH131ZIB6G')
+        endpoint_deployment_table = ddb.Table(endpoint_deployment_table)
 
         response = endpoint_deployment_table.scan()
         logger.info(f"endpoint deployment job list response is {str(response)}")
