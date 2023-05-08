@@ -1,5 +1,5 @@
 import os
 
-cmd = "accelerate launch --num_cpu_threads_per_process=6 launch.py --nowebui --api --listen --port 8080 --xformers"
+cmd = "accelerate launch --num_cpu_threads_per_process=6 launch.py --api --listen --port 8080 --xformers"
 
 os.system(cmd)
