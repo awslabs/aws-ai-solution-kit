@@ -113,18 +113,20 @@ def getEndpointDeploymentJobList():
         # Get the list of SageMaker endpoints
         list_results = sagemaker.list_endpoints()
         sagemaker_endpoints = [ep_info['EndpointName'] for ep_info in list_results['Endpoints']]
+        logger.info(str(sagemaker_endpoints))
 
         # Filter the endpoint job list
         filtered_endpoint_jobs = []
         for job in response['Items']:
-            endpoint_name = job['endpoint_name']
-            deployment_job_id = job['EndpointDeploymentJobId']
+            if 'endpoint_name' in job:  
+                endpoint_name = job['endpoint_name']
+                deployment_job_id = job['EndpointDeploymentJobId']
 
-            if endpoint_name in sagemaker_endpoints:
-                filtered_endpoint_jobs.append(job)
-            else:
-                # Remove the job item from the DynamoDB table if the endpoint doesn't exist in SageMaker
-                endpoint_deployment_table.delete_item(Key={'EndpointDeploymentJobId': deployment_job_id})
+                if endpoint_name in sagemaker_endpoints:
+                    filtered_endpoint_jobs.append(job)
+                else:
+                    # Remove the job item from the DynamoDB table if the endpoint doesn't exist in SageMaker
+                    endpoint_deployment_table.delete_item(Key={'EndpointDeploymentJobId': deployment_job_id})
 
         return filtered_endpoint_jobs
 
