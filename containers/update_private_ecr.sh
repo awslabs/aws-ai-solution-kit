@@ -54,11 +54,13 @@ elif [ "$image" == "aigc-webui-dreambooth-train" ]; then
 fi
 
 repo_name=${image}
-complete_command="FROM public.ecr.aws/${repo_id}/${repo_name}"
+complete_command="FROM public.ecr.aws/${repo_id}/${repo_name}:latest"
 
 echo $complete_command
 
 echo $complete_command > Dockerfile
+
+docker logout public.ecr.aws
 
 docker build  -t ${image} -f Dockerfile .
 docker tag ${image} ${fullname}
