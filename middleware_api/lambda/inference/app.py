@@ -17,6 +17,7 @@ from typing import List
 
 import boto3
 from botocore.client import Config
+from botocore.exceptions import ClientError
 import json
 import uuid
 
@@ -101,15 +102,39 @@ def getInferenceJob(inference_job_id):
     return record_list[0]
     
 def getEndpointDeploymentJobList():
-    response = endpoint_deployment_table.scan()
-    logger.info(f"endpoint deployment job list response is {str(response)}")
+    try:
+        sagemaker = boto3.client('sagemaker')
+        ddb = boto3.resource('dynamodb')
+        endpoint_deployment_table = ddb.Table('SdAsyncInferenceStack-dev-SDendpointdeploymentjobC9FD0CE7-189DH131ZIB6G')
 
-    # delete ddb recording if not in the sagemaker list TODO: guming
-    # list_results = sagemaker.list_endpoints()
-    # endpoints_info = list_results['Endpoints']
-    # for ep_info in endpoints_info:
-    #     print(ep_info['EndpointName'])
-    return response['Items'] 
+        response = endpoint_deployment_table.scan()
+        logger.info(f"endpoint deployment job list response is {str(response)}")
+
+        # Get the list of SageMaker endpoints
+        list_results = sagemaker.list_endpoints()
+        sagemaker_endpoints = [ep_info['EndpointName'] for ep_info in list_results['Endpoints']]
+
+        # Filter the endpoint job list
+        filtered_endpoint_jobs = []
+        for job in response['Items']:
+            endpoint_name = job['endpoint_name']
+            deployment_job_id = job['EndpointDeploymentJobId']
+
+            if endpoint_name in sagemaker_endpoints:
+                filtered_endpoint_jobs.append(job)
+            else:
+                # Remove the job item from the DynamoDB table if the endpoint doesn't exist in SageMaker
+                endpoint_deployment_table.delete_item(Key={'EndpointDeploymentJobId': deployment_job_id})
+
+        return filtered_endpoint_jobs
+
+    except ClientError as e:
+        print(f"An error occurred: {e}")
+        return []
+
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return []
 
 def getEndpointDeployJob(endpoint_deploy_job_id):
     try:
