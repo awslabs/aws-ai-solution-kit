@@ -27,7 +27,7 @@ def lambda_handler(event, context):
 
     s3_output_path = f"s3://{S3_BUCKET_NAME}/sagemaker_output/"
 
-    initial_instance_count = event["initial_instance_count"]
+    initial_instance_count = int(event.get("initial_instance_count", 1))
     instance_type = event["instance_type"]
 
     print('Creating model resource ...')
