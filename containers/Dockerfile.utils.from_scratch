@@ -1,5 +1,9 @@
 FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0.0-cpu-py310-ubuntu20.04-sagemaker
 
+RUN apt-get update -y
+RUN apt-get install -y pkg-config
+RUN apt-get install -y libcairo2-dev
+
 COPY stable-diffusion-webui /opt/ml/code/
 COPY utils/serve /opt/ml/code
 RUN mkdir -p /root/.cache/huggingface/accelerate

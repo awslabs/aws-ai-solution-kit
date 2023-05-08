@@ -1,1 +1,1 @@
-FROM public.ecr.aws/t6q0v9n4/aigc-webui-inference
+FROM public.ecr.aws//aigc-webui-inference

@@ -1,5 +1,9 @@
 FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-gpu-py39-cu117-ubuntu20.04-sagemaker
 
+RUN apt-get update -y
+RUN apt-get install -y pkg-config
+RUN apt-get install -y libcairo2-dev
+
 COPY stable-diffusion-webui /opt/ml/code/
 
 # RUN pip install -r /opt/ml/code/extensions/sd_dreambooth_extension/requirements.txt
