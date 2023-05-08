@@ -689,18 +689,18 @@ function scrap_ui_component_value_with_default(config) {
     }
     
     config["controlnet_enable"] = getElementValue(
-        "#component-200 > label > input",
+        "#component-201 > label > input",
         "checked",
         false
     );
     
     config["controlnet_lowVRAM_enable"] = getElementValue(
-        "#component-201 > label > input",
+        "#component-202 > label > input",
         "checked",
         false
     );
     config["controlnet_pixel_perfect"] = getElementValue(
-        "#component-203 > label > input",
+        "#component-204 > label > input",
         "checked",
         false
     );
@@ -721,19 +721,20 @@ function scrap_ui_component_value_with_default(config) {
         "value",
         ""
     );
-    config["control_weight"] = getElementValue(
-        "#component-213 > div.wrap.svelte-1cl284s > div > input",
-        "value",
-        ""
-    );
-    // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
-    config["controlnet_starting_control_step"] = getElementValue(
+    config["controlnet_weight"] = getElementValue(
         "#component-214 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
-    config["controlnet_ending_control_step"] = getElementValue(
+    // document.querySelector("#component-214 > div.wrap.svelte-1cl284s > div > input")
+    // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
+    config["controlnet_starting_control_step"] = getElementValue(
         "#component-215 > div.wrap.svelte-1cl284s > div > input",
+        "value",
+        ""
+    );
+    config["controlnet_ending_control_step"] = getElementValue(
+        "#component-216 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
