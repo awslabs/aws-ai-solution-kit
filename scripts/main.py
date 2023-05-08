@@ -520,14 +520,14 @@ def async_prepare_for_training_on_sagemaker(
     upload_files.append(db_config_tar)
     data_tar_list = []
     for data_path in data_path_list:
-        data_tar = f'data_{os.path.basename(data_path)}.tar'
+        data_tar = f'data_{data_path.replace("/", "-")}.tar'
         data_tar_list.append(data_tar)
         print("Pack the data file.")
         os.system(f"tar cvf {data_tar} {data_path}")
         upload_files.append(data_tar)
     class_data_tar_list = []
     for class_data_path in class_data_path_list:
-        class_data_tar = f'class_data_{os.path.basename(class_data_path)}.tar'
+        class_data_tar = f'class_data_{class_data_path.replace("/", "-")}.tar'
         class_data_tar_list.append(class_data_tar)
         upload_files.append(class_data_tar)
         print("Pack the class data file.")
@@ -694,17 +694,19 @@ def cloud_create_model(
     upload_thread.start()
 
 def cloud_train(
-        model_name: str,
+        train_model_name: str,
         local_model_name=False
     ):
     # Get data path and class data path.
-    print(f"Start cloud training {model_name}")
+    print(f"Start cloud training {train_model_name}")
     config = wrap_get_local_config("dummy_local_model")
     data_path_list = []
     class_data_path_list = []
     for concept in config.concepts():
-        data_path_list.append(concept.instance_data_dir)
-        class_data_path_list.append(concept.class_data_dir)
+        if concept.instance_data_dir:
+            data_path_list.append(concept.instance_data_dir)
+        if concept.class_data_dir:
+            class_data_path_list.append(concept.class_data_dir)
     model_list = get_cloud_db_models()
     db_config_path = "models/dreambooth/dummy_local_model/db_config.json"
     # db_config_path = f"models/dreambooth/{model_name}/db_config.json"
@@ -714,7 +716,7 @@ def cloud_train(
         model_id = model["id"]
         model_name = model["model_name"]
         model_s3_path = model["output_s3_location"]
-        if model_name == "db-training-test-1":
+        if model_name == train_model_name:
             # upload_thread = threading.Thread(target=async_prepare_for_training_on_sagemaker,
             #                                 args=(model_id, model_name, s3_model_path,data_path, class_data_path))
             # upload_thread.start()
