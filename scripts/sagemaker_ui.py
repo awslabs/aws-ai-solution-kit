@@ -323,246 +323,249 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
 
     return plaintext_to_html(log)
 
-def generate_on_cloud():
+def generate_on_cloud(sagemaker_endpoint):
     print(f"checkpiont_info {checkpoint_info}")
-    # print(f"Current working directory: {os.getcwd()}")
-    # load json files
-    # stage 1: make payload
-    # use txt2imgConfig.json instead of ui-config.json
-    with open("ui-config.json") as f:
-        params_dict = json.load(f)
-    # print(f"Current parameters are {params_dict}")
+    print(f"sagemaker endpoint {sagemaker_endpoint}")
+    text = "failed to check endpoint"
+    return plaintext_to_html(text)
+    ## print(f"Current working directory: {os.getcwd()}")
+    ## load json files
+    ## stage 1: make payload
+    ## use txt2imgConfig.json instead of ui-config.json
+    #with open("ui-config.json") as f:
+    #    params_dict = json.load(f)
+    ## print(f"Current parameters are {params_dict}")
 
-    #### scripts args
-    ## Prompt matrix : ["False", "False", "positive", "comma", 16] 14:19
-    ## [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
-    ## Prompts from file or textbox: ["False", "False", "chinese, beautiful woman\na cute dog\na cute baby"] 19:22
-    ## [checkbox_iterate, checkbox_iterate_batch, prompt_txt: str]
-    ## prompt_txt: "\n".join(lines) lines = [x.strip() for x in file.decode('utf8', errors='ignore').split("\n")]
-    ## X/Y/Z plot: [4, '20,30', 6, '10,15', 0, '', "True", "False", "False", "False", 0] 22:33
-    # [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
-    ## controlnet m2m: [] 33:36
+    ##### scripts args
+    ### Prompt matrix : ["False", "False", "positive", "comma", 16] 14:19
+    ### [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
+    ### Prompts from file or textbox: ["False", "False", "chinese, beautiful woman\na cute dog\na cute baby"] 19:22
+    ### [checkbox_iterate, checkbox_iterate_batch, prompt_txt: str]
+    ### prompt_txt: "\n".join(lines) lines = [x.strip() for x in file.decode('utf8', errors='ignore').split("\n")]
+    ### X/Y/Z plot: [4, '20,30', 6, '10,15', 0, '', "True", "False", "False", "False", 0] 22:33
+    ## [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+    ### controlnet m2m: [] 33:36
 
-    script_name = params_dict['txt2img/Script/value']
-    if script_name == "None":
-        script_name = ""
-    script_args = []
-    if script_name == 'Prompt matrix':
-        put_at_start = params_dict['customscript/prompt_matrix.py/txt2img/Put variable parts at start of prompt/value']
-        different_seeds = params_dict['customscript/prompt_matrix.py/txt2img/Use different seed for each picture/value']
-        prompt_type = params_dict['customscript/prompt_matrix.py/txt2img/Select prompt/value']
-        variations_delimiter = params_dict['customscript/prompt_matrix.py/txt2img/Select joining char/value']
-        margin_size = params_dict['customscript/prompt_matrix.py/txt2img/Grid margins (px)/value']
-        script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
+    #script_name = params_dict['txt2img/Script/value']
+    #if script_name == "None":
+    #    script_name = ""
+    #script_args = []
+    #if script_name == 'Prompt matrix':
+    #    put_at_start = params_dict['customscript/prompt_matrix.py/txt2img/Put variable parts at start of prompt/value']
+    #    different_seeds = params_dict['customscript/prompt_matrix.py/txt2img/Use different seed for each picture/value']
+    #    prompt_type = params_dict['customscript/prompt_matrix.py/txt2img/Select prompt/value']
+    #    variations_delimiter = params_dict['customscript/prompt_matrix.py/txt2img/Select joining char/value']
+    #    margin_size = params_dict['customscript/prompt_matrix.py/txt2img/Grid margins (px)/value']
+    #    script_args = [put_at_start, different_seeds, prompt_type, variations_delimiter, margin_size]
     
-    if script_name == 'Prompts from file or textbox':
-        checkbox_iterate = params_dict['customscript/prompts_from_file.py/txt2img/Iterate seed every line/value']
-        checkbox_iterate_batch = params_dict['customscript/prompts_from_file.py/txt2img/Use same random seed for all lines/value']
-        list_prompt_inputs = params_dict['customscript/prompts_from_file.py/txt2img/List of prompt inputs/value']
-        lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
-        script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
+    #if script_name == 'Prompts from file or textbox':
+    #    checkbox_iterate = params_dict['customscript/prompts_from_file.py/txt2img/Iterate seed every line/value']
+    #    checkbox_iterate_batch = params_dict['customscript/prompts_from_file.py/txt2img/Use same random seed for all lines/value']
+    #    list_prompt_inputs = params_dict['customscript/prompts_from_file.py/txt2img/List of prompt inputs/value']
+    #    lines = [x.strip() for x in list_prompt_inputs.decode('utf8', errors='ignore').split("\n")]
+    #    script_args = [checkbox_iterate, checkbox_iterate_batch, "\n".join(lines)]
     
-    if script_name == 'X/Y/Z plot':
-        x_type = params_dict['customscript/xyz_grid.py/txt2img/X type/value']
-        x_values = params_dict['customscript/xyz_grid.py/txt2img/X values/value']
-        y_type = params_dict['customscript/xyz_grid.py/txt2img/Y type/value']
-        y_values = params_dict['customscript/xyz_grid.py/txt2img/Y values/value']
-        z_type = params_dict['customscript/xyz_grid.py/txt2img/Z type/value']
-        z_values = params_dict['customscript/xyz_grid.py/txt2img/Z values/value']
-        draw_legend = params_dict['customscript/xyz_grid.py/txt2img/Draw legend/value']
-        include_lone_images = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Images/value']
-        include_sub_grids = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Grids/value']
-        no_fixed_seeds = params_dict['customscript/xyz_grid.py/txt2img/Keep -1 for seeds/value']
-        margin_size = params_dict['customscript/xyz_grid.py/txt2img/Grid margins (px)/value']
-        script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
+    #if script_name == 'X/Y/Z plot':
+    #    x_type = params_dict['customscript/xyz_grid.py/txt2img/X type/value']
+    #    x_values = params_dict['customscript/xyz_grid.py/txt2img/X values/value']
+    #    y_type = params_dict['customscript/xyz_grid.py/txt2img/Y type/value']
+    #    y_values = params_dict['customscript/xyz_grid.py/txt2img/Y values/value']
+    #    z_type = params_dict['customscript/xyz_grid.py/txt2img/Z type/value']
+    #    z_values = params_dict['customscript/xyz_grid.py/txt2img/Z values/value']
+    #    draw_legend = params_dict['customscript/xyz_grid.py/txt2img/Draw legend/value']
+    #    include_lone_images = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Images/value']
+    #    include_sub_grids = params_dict['customscript/xyz_grid.py/txt2img/Include Sub Grids/value']
+    #    no_fixed_seeds = params_dict['customscript/xyz_grid.py/txt2img/Keep -1 for seeds/value']
+    #    margin_size = params_dict['customscript/xyz_grid.py/txt2img/Grid margins (px)/value']
+    #    script_args = [x_type, x_values, y_type, y_values, z_type, z_values, draw_legend, include_lone_images, include_sub_grids, no_fixed_seeds, margin_size]
 
 
-    contronet_enable = params_dict['txt2img/Enable/value']
-    if contronet_enable:
-        controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
-        controlnet_module = params_dict['txt2img/Preprocessor/value']
-        selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']
-        controlnet_model = os.path.splitext(selected_cn_model[0])[0]
+    #contronet_enable = params_dict['txt2img/Enable/value']
+    #if contronet_enable:
+    #    controlnet_image_path = "/home/ubuntu/images_SD/shaoshuminzu/685a4b41a07c4cb42e88fcc75b95603a.jpeg"
+    #    controlnet_module = params_dict['txt2img/Preprocessor/value']
+    #    selected_cn_model = params_dict['customscript/main.py/txt2img/ControlNet-Model/value']
+    #    controlnet_model = os.path.splitext(selected_cn_model[0])[0]
 
-        with open(controlnet_image_path, "rb") as img:
-            image = base64.b64encode(img.read())
+    #    with open(controlnet_image_path, "rb") as img:
+    #        image = base64.b64encode(img.read())
     
-    selected_sd_model = params_dict['customscript/main.py/txt2img/Stable Diffusion Checkpoint/value']#['my_style_132.safetensors']
-    selected_hypernets = params_dict['customscript/main.py/txt2img/HyperNetwork/value']#['mjv4Hypernetwork_v1.pt']
-    selected_loras = params_dict['customscript/main.py/txt2img/LoRA/value'] #['cuteGirlMix4_v10.safetensors']
-    selected_embeddings = params_dict['customscript/main.py/txt2img/Textual Inversion/value'] #['pureerosface_v1.pt']
-    print(str(selected_embeddings))
-    prompt = params_dict['txt2img/Prompt/value']
-    for embedding in selected_embeddings:
-        prompt = prompt + os.path.splitext(embedding)[0]
-    for hypernet in selected_hypernets:
-        hypernet_name = os.path.splitext(hypernet)[0]
-        prompt = prompt + f"<hypernet:{hypernet_name}:1>"
-    for lora in selected_loras:
-        lora_name = os.path.splitext(lora)[0]
-        prompt = prompt + f"<lora:{lora_name}:1>"
+    #selected_sd_model = params_dict['customscript/main.py/txt2img/Stable Diffusion Checkpoint/value']#['my_style_132.safetensors']
+    #selected_hypernets = params_dict['customscript/main.py/txt2img/HyperNetwork/value']#['mjv4Hypernetwork_v1.pt']
+    #selected_loras = params_dict['customscript/main.py/txt2img/LoRA/value'] #['cuteGirlMix4_v10.safetensors']
+    #selected_embeddings = params_dict['customscript/main.py/txt2img/Textual Inversion/value'] #['pureerosface_v1.pt']
+    #print(str(selected_embeddings))
+    #prompt = params_dict['txt2img/Prompt/value']
+    #for embedding in selected_embeddings:
+    #    prompt = prompt + os.path.splitext(embedding)[0]
+    #for hypernet in selected_hypernets:
+    #    hypernet_name = os.path.splitext(hypernet)[0]
+    #    prompt = prompt + f"<hypernet:{hypernet_name}:1>"
+    #for lora in selected_loras:
+    #    lora_name = os.path.splitext(lora)[0]
+    #    prompt = prompt + f"<lora:{lora_name}:1>"
 
 
-    # get all parameters from ui-config.json
-    enable_hr = params_dict['txt2img/Hires. fix/value'] #: "False", 
-    denoising_strength = params_dict['txt2img/Denoising strength/value'] #: 0.7, 
-    hr_scale = params_dict['txt2img/Upscale by/value'],
-    hr_upscaler = params_dict['txt2img/Upscaler/value'] #hr_upscaler,
-    hr_second_pass_steps = params_dict['txt2img/Hires steps/value'] #hr_second_pass_steps,
-    firstphase_width = params_dict['txt2img/Resize width to/value']#: 0, 
-    firstphase_height = params_dict['txt2img/Resize height to/value']#: 0, 
-    styles = params_dict['txt2img/Styles/value']#: ["None", "None"], 
-    seed = params_dict['txt2img/Seed/value']#: -1.0, 
-    subseed = params_dict['txt2img/Variation seed/value']#: -1.0, 
-    subseed_strength = params_dict['txt2img/Variation strength/value']#: 0, 
-    seed_resize_from_h = params_dict['txt2img/Resize seed from height/value']#: 0, 
-    seed_resize_from_w = params_dict['txt2img/Resize seed from width/value']#: 0, 
-    sampler_index = params_dict['txt2img/Sampling method/value']#: "Euler a", 
-    batch_size = params_dict['txt2img/Batch size/value'] #: 1, 
-    batch_count = params_dict['txt2img/Batch count/value'] #: 1
-    steps = params_dict['txt2img/Sampling steps/value']#: 20, 
-    cfg_scale = params_dict['txt2img/CFG Scale/value']#: 7, 
-    width = params_dict['txt2img/Width/value']#: 512, 
-    height = params_dict['txt2img/Height/value']#: 512, 
-    restore_faces = params_dict['txt2img/Restore faces/value']#: "False", 
-    tiling = params_dict['txt2img/Tiling/value']#: "False", 
-    negative_prompt = params_dict['txt2img/Negative prompt/value']#: "", 
-    tiling = params_dict['txt2img/Tiling/value']
-    override_settings = {},
-    eta = 1, 
-    s_churn = 0, 
-    s_tmax = 1, 
-    s_tmin = 0, 
-    s_noise = 1, 
+    ## get all parameters from ui-config.json
+    #enable_hr = params_dict['txt2img/Hires. fix/value'] #: "False", 
+    #denoising_strength = params_dict['txt2img/Denoising strength/value'] #: 0.7, 
+    #hr_scale = params_dict['txt2img/Upscale by/value'],
+    #hr_upscaler = params_dict['txt2img/Upscaler/value'] #hr_upscaler,
+    #hr_second_pass_steps = params_dict['txt2img/Hires steps/value'] #hr_second_pass_steps,
+    #firstphase_width = params_dict['txt2img/Resize width to/value']#: 0, 
+    #firstphase_height = params_dict['txt2img/Resize height to/value']#: 0, 
+    #styles = params_dict['txt2img/Styles/value']#: ["None", "None"], 
+    #seed = params_dict['txt2img/Seed/value']#: -1.0, 
+    #subseed = params_dict['txt2img/Variation seed/value']#: -1.0, 
+    #subseed_strength = params_dict['txt2img/Variation strength/value']#: 0, 
+    #seed_resize_from_h = params_dict['txt2img/Resize seed from height/value']#: 0, 
+    #seed_resize_from_w = params_dict['txt2img/Resize seed from width/value']#: 0, 
+    #sampler_index = params_dict['txt2img/Sampling method/value']#: "Euler a", 
+    #batch_size = params_dict['txt2img/Batch size/value'] #: 1, 
+    #batch_count = params_dict['txt2img/Batch count/value'] #: 1
+    #steps = params_dict['txt2img/Sampling steps/value']#: 20, 
+    #cfg_scale = params_dict['txt2img/CFG Scale/value']#: 7, 
+    #width = params_dict['txt2img/Width/value']#: 512, 
+    #height = params_dict['txt2img/Height/value']#: 512, 
+    #restore_faces = params_dict['txt2img/Restore faces/value']#: "False", 
+    #tiling = params_dict['txt2img/Tiling/value']#: "False", 
+    #negative_prompt = params_dict['txt2img/Negative prompt/value']#: "", 
+    #tiling = params_dict['txt2img/Tiling/value']
+    #override_settings = {},
+    #eta = 1, 
+    #s_churn = 0, 
+    #s_tmax = 1, 
+    #s_tmin = 0, 
+    #s_noise = 1, 
     
 
 
-    # endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
-    endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
+    ## endpoint_name = "ask-webui-api-gpu-2023-04-10-05-53-21-649"
+    #endpoint_name = params_dict['customscript/main.py/txt2img/Select Cloud SageMaker Endpoint/value']#"infer-endpoint-d6bf"
     
-    if contronet_enable:
-       print('txt2img with controlnet!!!!!!!!!!')
-       payload = {
-        "endpoint_name": endpoint_name,
-        "task": "controlnet_txt2img", 
-        "username": "test",
-        "checkpoint_info":checkpoint_info,
-        "models":{
-            "space_free_size": 4e10,
-            "Stable-diffusion": selected_sd_model,
-            "ControlNet": selected_cn_model,
-            "hypernetworks": selected_hypernets,
-            "Lora": selected_loras,
-            "embeddings": selected_embeddings
-        },
-        "controlnet_txt2img_payload":{ 
-            "enable_hr": enable_hr, 
-            "denoising_strength": denoising_strength, 
-            "firstphase_width": firstphase_width, 
-            "firstphase_height": firstphase_height, 
-            "prompt": prompt, 
-            "styles": styles, 
-            "seed": seed, 
-            "subseed": subseed, 
-            "subseed_strength": subseed_strength, 
-            "seed_resize_from_h": seed_resize_from_h, 
-            "seed_resize_from_w": seed_resize_from_w, 
-            "sampler_index": sampler_index, 
-            "batch_size": batch_size, 
-            "n_iter": batch_count, 
-            "steps": steps, 
-            "cfg_scale": cfg_scale, 
-            "width": width, 
-            "height": height, 
-            "restore_faces": restore_faces, 
-            "tiling": tiling, 
-            "negative_prompt": negative_prompt, 
-            "eta": eta, 
-            "s_churn": s_churn, 
-            "s_tmax": s_tmax, 
-            "s_tmin": s_tmin, 
-            "s_noise": s_noise, 
-            "override_settings": override_settings, 
-            "script_name": script_name,
-            "script_args": script_args,
-            "controlnet_units": [
-                {
-                "input_image": image.decode(),
-                "mask": "",
-                "module": controlnet_module,
-                "model": controlnet_model,
-                "weight": 1,
-                "resize_mode": "Crop and Resize",
-                "lowvram": "False",
-                "processor_res": 64,
-                "threshold_a": 64,
-                "threshold_b": 64,
-                "guidance": 1,
-                "guidance_start": 0,
-                "guidance_end": 1,
-                "guessmode": "True",
-                "pixel_perfect":"False"
-                }
-            ]
-        }, 
-        }
-    else:
-        print('txt2img ##########')
-        # construct payload
-        payload = {
-        "endpoint_name": endpoint_name,
-        "task": "text-to-image", 
-        "username": "test",
-        "checkpoint_info":checkpoint_info,
-        "models":{
-            "space_free_size": 2e10,
-            "Stable-diffusion": selected_sd_model,
-            "ControlNet": [],
-            "hypernetworks": selected_hypernets,
-            "Lora": selected_loras,
-            "embeddings": selected_embeddings
-        },
-        "txt2img_payload": {
-            "enable_hr": enable_hr, 
-            "denoising_strength": denoising_strength, 
-            "firstphase_width": firstphase_width, 
-            "firstphase_height": firstphase_height, 
-            "prompt": prompt, 
-            "styles": styles, 
-            "seed": seed, 
-            "subseed": subseed, 
-            "subseed_strength": subseed_strength, 
-            "seed_resize_from_h": seed_resize_from_h, 
-            "seed_resize_from_w": seed_resize_from_w, 
-            "sampler_index": sampler_index, 
-            "batch_size": batch_size, 
-            "n_iter": batch_count, 
-            "steps": steps, 
-            "cfg_scale": cfg_scale, 
-            "width": width, 
-            "height": height, 
-            "restore_faces": restore_faces, 
-            "tiling": tiling, 
-            "negative_prompt": negative_prompt, 
-            "eta": eta, 
-            "s_churn": s_churn, 
-            "s_tmax": s_tmax, 
-            "s_tmin": s_tmin, 
-            "s_noise": s_noise, 
-            "override_settings": override_settings, 
-            "script_name": script_name,
-            "script_args": script_args}, 
-            }
+    #if contronet_enable:
+    #   print('txt2img with controlnet!!!!!!!!!!')
+    #   payload = {
+    #    "endpoint_name": endpoint_name,
+    #    "task": "controlnet_txt2img", 
+    #    "username": "test",
+    #    "checkpoint_info":checkpoint_info,
+    #    "models":{
+    #        "space_free_size": 4e10,
+    #        "Stable-diffusion": selected_sd_model,
+    #        "ControlNet": selected_cn_model,
+    #        "hypernetworks": selected_hypernets,
+    #        "Lora": selected_loras,
+    #        "embeddings": selected_embeddings
+    #    },
+    #    "controlnet_txt2img_payload":{ 
+    #        "enable_hr": enable_hr, 
+    #        "denoising_strength": denoising_strength, 
+    #        "firstphase_width": firstphase_width, 
+    #        "firstphase_height": firstphase_height, 
+    #        "prompt": prompt, 
+    #        "styles": styles, 
+    #        "seed": seed, 
+    #        "subseed": subseed, 
+    #        "subseed_strength": subseed_strength, 
+    #        "seed_resize_from_h": seed_resize_from_h, 
+    #        "seed_resize_from_w": seed_resize_from_w, 
+    #        "sampler_index": sampler_index, 
+    #        "batch_size": batch_size, 
+    #        "n_iter": batch_count, 
+    #        "steps": steps, 
+    #        "cfg_scale": cfg_scale, 
+    #        "width": width, 
+    #        "height": height, 
+    #        "restore_faces": restore_faces, 
+    #        "tiling": tiling, 
+    #        "negative_prompt": negative_prompt, 
+    #        "eta": eta, 
+    #        "s_churn": s_churn, 
+    #        "s_tmax": s_tmax, 
+    #        "s_tmin": s_tmin, 
+    #        "s_noise": s_noise, 
+    #        "override_settings": override_settings, 
+    #        "script_name": script_name,
+    #        "script_args": script_args,
+    #        "controlnet_units": [
+    #            {
+    #            "input_image": image.decode(),
+    #            "mask": "",
+    #            "module": controlnet_module,
+    #            "model": controlnet_model,
+    #            "weight": 1,
+    #            "resize_mode": "Crop and Resize",
+    #            "lowvram": "False",
+    #            "processor_res": 64,
+    #            "threshold_a": 64,
+    #            "threshold_b": 64,
+    #            "guidance": 1,
+    #            "guidance_start": 0,
+    #            "guidance_end": 1,
+    #            "guessmode": "True",
+    #            "pixel_perfect":"False"
+    #            }
+    #        ]
+    #    }, 
+    #    }
+    #else:
+    #    print('txt2img ##########')
+    #    # construct payload
+    #    payload = {
+    #    "endpoint_name": endpoint_name,
+    #    "task": "text-to-image", 
+    #    "username": "test",
+    #    "checkpoint_info":checkpoint_info,
+    #    "models":{
+    #        "space_free_size": 2e10,
+    #        "Stable-diffusion": selected_sd_model,
+    #        "ControlNet": [],
+    #        "hypernetworks": selected_hypernets,
+    #        "Lora": selected_loras,
+    #        "embeddings": selected_embeddings
+    #    },
+    #    "txt2img_payload": {
+    #        "enable_hr": enable_hr, 
+    #        "denoising_strength": denoising_strength, 
+    #        "firstphase_width": firstphase_width, 
+    #        "firstphase_height": firstphase_height, 
+    #        "prompt": prompt, 
+    #        "styles": styles, 
+    #        "seed": seed, 
+    #        "subseed": subseed, 
+    #        "subseed_strength": subseed_strength, 
+    #        "seed_resize_from_h": seed_resize_from_h, 
+    #        "seed_resize_from_w": seed_resize_from_w, 
+    #        "sampler_index": sampler_index, 
+    #        "batch_size": batch_size, 
+    #        "n_iter": batch_count, 
+    #        "steps": steps, 
+    #        "cfg_scale": cfg_scale, 
+    #        "width": width, 
+    #        "height": height, 
+    #        "restore_faces": restore_faces, 
+    #        "tiling": tiling, 
+    #        "negative_prompt": negative_prompt, 
+    #        "eta": eta, 
+    #        "s_churn": s_churn, 
+    #        "s_tmax": s_tmax, 
+    #        "s_tmin": s_tmin, 
+    #        "s_noise": s_noise, 
+    #        "override_settings": override_settings, 
+    #        "script_name": script_name,
+    #        "script_args": script_args}, 
+    #        }
     
-    # stage 2: inference using endpoint_name
-    headers = {
-        "x-api-key": api_key,
-        "Content-Type": "application/json"
-    }
-    inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"
-    response = requests.post(inference_url, json=payload, headers=headers)
-    r = response.json()
-    print(f"response for rest api {r}")
+    ## stage 2: inference using endpoint_name
+    #headers = {
+    #    "x-api-key": api_key,
+    #    "Content-Type": "application/json"
+    #}
+    #inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"
+    #response = requests.post(inference_url, json=payload, headers=headers)
+    #r = response.json()
+    #print(f"response for rest api {r}")
 
 def generate_on_cloud_no_input():
     print(f"start cloud inference with empty payload")
@@ -734,8 +737,8 @@ def create_ui():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary', elem_id="generate_on_cloud_local_config_button")
                 generate_on_cloud_button.click(
                     fn=generate_on_cloud,
-                    inputs=[],
-                    outputs=[]
+                    inputs=[sagemaker_endpoint],
+                    outputs=[sagemaker_html_log]
                 )
                 global generate_on_cloud_button_with_js
                 generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use config on the cloud)", variant='primary', elem_id="generate_on_cloud_with_cloud_config_button")
