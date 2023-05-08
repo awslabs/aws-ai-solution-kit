@@ -23,7 +23,11 @@ def lambda_handler(event, context):
     print(f"Received event: {event}")
 
     # Extract the 'endpoint_creation_job_id' from the event
-    event_payload = event["Payload"]
+    if "Payload" in event:
+        event_payload = event["Payload"]
+    else:
+        event_payload = event
+
     endpoint_creation_job_id = event_payload['endpoint_deployment_id']
 
     # Extract the error information

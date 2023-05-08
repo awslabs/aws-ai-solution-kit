@@ -180,8 +180,8 @@ def get_model_list_by_type(model_type):
         ckpt_type = ckpt["type"]
         for ckpt_name in ckpt["name"]:
             ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-            checkpoint_info[ckpt_type][ckpt_name[:-4]] = ckpt_s3_pos
-            checkpoint_list.append(ckpt_name[:-4])
+            checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
+            checkpoint_list.append(ckpt_name)
 
     return checkpoint_list
 
@@ -222,7 +222,7 @@ def refresh_all_models():
             checkpoint_info[ckpt_type] = {} 
             for ckpt_name in ckpt["name"]:
                 ckpt_s3_pos = f"{ckpt['s3Location']}/{ckpt_name}"
-                checkpoint_info[ckpt_type][ckpt_name[:-4]] = ckpt_s3_pos
+                checkpoint_info[ckpt_type][ckpt_name] = ckpt_s3_pos
 
 def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path):
     log = "start upload model to s3..."
@@ -249,7 +249,8 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
         parts_number = math.ceil(file_size.st_size/part_size)
         print('!!!!!!!!!!', file_size, parts_number)
 
-        local_tar_path = f'{model_name}.tar'        
+        #local_tar_path = f'{model_name}.tar'  
+        local_tar_path = model_name      
         payload = {
             "checkpoint_type": rp,
             "filenames": [{
@@ -727,7 +728,7 @@ def create_ui():
                                              )
                     modules.ui.create_refresh_button(sagemaker_endpoint, update_sagemaker_endpoints, lambda: {"choices": sagemaker_endpoints}, "refresh_sagemaker_endpoints")
                 with gr.Row():
-                    sd_checkpoint = gr.Dropdown(label="Stable Diffusion Checkpoint", choices=sorted(update_sd_checkpoints()), elem_id="stable_diffusion_checkpoint_dropdown")
+                    sd_checkpoint = gr.Dropdown(multiselect=True, label="Stable Diffusion Checkpoint", choices=sorted(update_sd_checkpoints()), elem_id="stable_diffusion_checkpoint_dropdown")
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_sd_checkpoints")
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary', elem_id="generate_on_cloud_local_config_button")
@@ -747,7 +748,7 @@ def create_ui():
                 txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
                 txt2img_config_save_button.click(
                     _js="txt2img_config_save",
-                    fn=txt2img_config_save,
+                    fn=None,
                     inputs=[],
                     outputs=[]
                 )
@@ -812,10 +813,11 @@ def create_ui():
             
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
-                instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
+                # instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
+                instance_type_dropdown = gr.Dropdown(label="SageMaker Instance Type", choices=["ml.g4dn.xlarge","ml.g4dn.2xlarge","ml.g4dn.4xlarge","ml.g4dn.8xlarge","ml.g4dn.12xlarge"], elem_id="sagemaker_inference_instance_type_textbox")
                 instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox")
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_textbox, instance_count_textbox])
+                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_dropdown, instance_count_textbox])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
@@ -847,4 +849,4 @@ def create_ui():
                     outputs=[
                     ])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
