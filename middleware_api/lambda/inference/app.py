@@ -353,7 +353,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         controlnet_module = params_dict['controlnet_preprocessor']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
         controlnet_image = params_dict['txt2img_controlnet_ControlNet_input_image'] #None
-        weight = params_dict['control_weight'] #1,
+        weight = params_dict['controlnet_weight'] #1,
         resize_mode = params_dict['controlnet_resize_mode'] # "Crop and Resize",
         lowvram = params_dict['controlnet_lowVRAM_enable'] #: "False",
         processor_res = params_dict['controlnet_preprocessor_resolution'],
