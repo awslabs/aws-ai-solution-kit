@@ -810,14 +810,10 @@ def create_ui():
             
             with gr.Row():
                 model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button", size=(200, 50))
-                model_update_button.click(sagemaker_upload_model_s3, \
-                                        _js="sagemaker_model_update", \
-                                        inputs = [sd_checkpoints_path, \
-                                                textual_inversion_path, \
-                                                lora_path, \
-                                                hypernetwork_path, \
-                                                controlnet_model_path], \
-                                        outputs = [sagemaker_html_log])
+                model_update_button.click(_js="model_update",
+                                        fn=sagemaker_upload_model_s3,
+                                        inputs=[sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path],
+                                        outputs=[sagemaker_html_log])
 
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
@@ -827,9 +823,10 @@ def create_ui():
 
             with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy,
-                                            _js="sagemaker_deploy_endpoint", \
-                                            inputs = [instance_type_dropdown, instance_count_textbox])
+                sagemaker_deploy_button.click(_js="deploy_endpoint",
+                                            fn=sagemaker_deploy,
+                                            inputs=[instance_type_dropdown, instance_count_textbox],
+                                            outputs=[sagemaker_html_log])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):

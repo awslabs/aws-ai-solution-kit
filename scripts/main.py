@@ -234,8 +234,8 @@ def on_ui_tabs():
                 api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url",elem_id="aws_middleware_api")
                 api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token", elem_id="aws_middleware_token")
                 aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
-                aws_connect_button.click(update_connect_config,
-                                        _js="update_auth_settings",
+                aws_connect_button.click(_js="update_auth_settings",
+                                        fn=update_connect_config,
                                         inputs = [api_url_textbox, api_token_textbox],
                                         outputs= [])
                 aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
