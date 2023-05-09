@@ -347,9 +347,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         lora_name = os.path.splitext(lora)[0]
         prompt = prompt + f"<lora:{lora_name}:1>"
     
-    contronet_enable = False
-    controlnet_model = None
-    controlnet_module = None
+    contronet_enable = params_dict['controlnet_enable']
     controlnet_image = None
     if contronet_enable:
         controlnet_module = params_dict['controlnet_preprocessor']
@@ -358,9 +356,9 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         weight = params_dict['control_weight'] #1,
         resize_mode = params_dict['controlnet_resize_mode'] # "Crop and Resize",
         lowvram = params_dict['controlnet_lowVRAM_enable'] #: "False",
-        processor_res = 64,
-        threshold_a = 64,
-        threshold_b = 64,
+        processor_res = params_dict['controlnet_preprocessor_resolution'],
+        threshold_a = params_dict['controlnet_canny_low_threshold'],
+        threshold_b = params_dict['controlnet_canny_high_threshold'],
         guidance = 1,
         guidance_start = params_dict['controlnet_starting_control_step'] #: 0,
         guidance_end = params_dict['controlnet_ending_control_step'] #: 1,
