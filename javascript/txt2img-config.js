@@ -729,10 +729,11 @@ function scrap_ui_component_value_with_default(config) {
     // document.querySelector("#component-214 > div.wrap.svelte-1cl284s > div > input")
     // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
     config["controlnet_starting_control_step"] = getElementValue(
-        "#component-217 > div.wrap.svelte-1cl284s > div > input",
+        "#component-216 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
+
     config["controlnet_ending_control_step"] = getElementValue(
         "#component-217 > div.wrap.svelte-1cl284s > div > input",
         "value",
