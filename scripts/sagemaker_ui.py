@@ -89,26 +89,32 @@ def update_sagemaker_endpoints():
     response = server_request('inference/list-endpoint-deployment-jobs')
     r = response.json()
     print(f"guming debug>>update_sagemaker_endpoints, {r}")
-    sagemaker_raw_endpoints = []
-    
-    for obj in r:
-        # if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success' and obj.get('endpoint_status') == "InService":
-        if "EndpointDeploymentJobId" in obj :
-            endpoint_name = obj["endpoint_name"]
-            endpoint_status = obj["endpoint_status"]
-            if "endTime" in obj: 
-                endpoint_time = obj["endTime"]
-            else:
-                endpoint_time = "N/A"
-            endpoint_info = f"{endpoint_name}:{endpoint_status}"
-            endpoint_info = {
-                "EndpointName": endpoint_name,
-                "EndpointStatus": endpoint_status,
-                "DeployTime": endpoint_time
-            }
-            sagemaker_raw_endpoints.append(json.dumps(endpoint_info))
-    
-    sagemaker_endpoints = sorted(sagemaker_raw_endpoints, key=lambda x: json.loads(x)["DeployTime"], reverse=True)
+    if r:
+        sagemaker_endpoints.clear()  # Clear the existing list before appending new values
+        sagemaker_raw_endpoints = []
+        for obj in r:
+            # if "EndpointDeploymentJobId" in obj and obj.get('status') == 'success' and obj.get('endpoint_status') == "InService":
+            if "EndpointDeploymentJobId" in obj :
+                endpoint_name = obj["endpoint_name"]
+                endpoint_status = obj["endpoint_status"]
+                if "endTime" in obj: 
+                    endpoint_time = obj["endTime"]
+                else:
+                    endpoint_time = "N/A"
+                endpoint_info = f"{endpoint_name}+{endpoint_status}+{endpoint_time}"
+                sagemaker_raw_endpoints.append(endpoint_info)
+            # temp_list = []
+            # for obj in r:
+            #     complete_time = obj.get('completeTime')
+            #     inference_job_id = obj.get('InferenceJobId')
+            #     combined_string = f"{complete_time}-->{inference_job_id}"
+            #     temp_list.append((complete_time, combined_string))
+
+        # Sort the list based on completeTime in descending order
+        sagemaker_endpoints= sorted(sagemaker_raw_endpoints, key=lambda x: x.split('+')[-1], reverse=True)
+
+    else:
+        print("The API response is empty for update_sagemaker_endpoints().")
 
 def update_txt2img_inference_job_ids():
     global txt2img_inference_job_ids
