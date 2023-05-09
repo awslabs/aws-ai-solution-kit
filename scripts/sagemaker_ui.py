@@ -111,17 +111,25 @@ def get_inference_job_list():
         r = response.json()
         if r:
             txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
+            temp_list = []
             for obj in r:
-                extracted_data = {
-                 'completeTime': obj.get('completeTime'),
-                 'InferenceJobId': obj.get('InferenceJobId')
-                }
-                json_string = json.dumps(extracted_data)
-                txt2img_inference_job_ids.append(json_string)
+                complete_time = obj.get('completeTime')
+                inference_job_id = obj.get('InferenceJobId')
+                combined_string = f"{complete_time}-->{inference_job_id}"
+                temp_list.append((complete_time, combined_string))
+
+            # Sort the list based on completeTime in descending order
+            sorted_list = sorted(temp_list, key=lambda x: x[0], reverse=True)
+
+            # Append the sorted combined strings to the txt2img_inference_job_ids list
+            for item in sorted_list:
+                txt2img_inference_job_ids.append(item[1])
+
         else:
             print("The API response is empty.")
     except Exception as e:
         print("Exception occurred when fetching inference_job_ids")
+
 
 
 def get_inference_job(inference_job_id):
@@ -642,10 +650,10 @@ def txt2img_config_save():
 def fake_gan(selected_value: str ):
     print(f"selected value is {selected_value}")
     if selected_value is not None:
-        selected_value_json = json.loads(selected_value)
-
+        delimiter = "-->"
+        parts = selected_value.split(delimiter)
         # Extract the InferenceJobId value
-        inference_job_id = selected_value_json['InferenceJobId']
+        inference_job_id = parts[1].strip()
         images = get_inference_job_image_output(inference_job_id)
         image_list = []
         image_list = download_images(images,f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
