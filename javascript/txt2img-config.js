@@ -712,12 +712,12 @@ function scrap_ui_component_value_with_default(config) {
     );
     
     config["controlnet_preprocessor"] = getElementValue(
-        "#component-206 > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
+        "#component-207 > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
         "value",
         ""
     );
     config["controlnet_model"] = getElementValue(
-        "#component-208 > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
+        "#component-209 > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
         "value",
         ""
     );
@@ -729,7 +729,7 @@ function scrap_ui_component_value_with_default(config) {
     // document.querySelector("#component-214 > div.wrap.svelte-1cl284s > div > input")
     // getElementValue("#component-213 > div.wrap.svelte-1cl284s > div > input")
     config["controlnet_starting_control_step"] = getElementValue(
-        "#component-215 > div.wrap.svelte-1cl284s > div > input",
+        "#component-216 > div.wrap.svelte-1cl284s > div > input",
         "value",
         ""
     );
@@ -738,16 +738,43 @@ function scrap_ui_component_value_with_default(config) {
         "value",
         ""
     );
-    config["controlnet_control_mode(guess_mode)"] = getElementValue(
-        "#component-222 > div.wrap.svelte-1p9xokt > label.svelte-1p9xokt.selected > input",
-        "value",
-        ""
+
+    config["controlnet_control_mode_balanced)"] = getElementValue(
+        "#component-223 > div.wrap.svelte-1p9xokt > label:nth-child(2) > input",
+        "checked",
+        false 
     );
-    config["controlnet_resize_mode"] = getElementValue(
-        "#component-223 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input",
-        "value",
-        ""
+
+    config["controlnet_control_mode_my_prompt_is_more_important)"] = getElementValue(
+        "#component-223 > div.wrap.svelte-1p9xokt > label:nth-child(2) > input",
+        "checked",
+        false 
     );
+
+    config["controlnet_control_mode_controlnet_is_more_important)"] = getElementValue(
+        "#component-223 > div.wrap.svelte-1p9xokt > label:nth-child(3) > input",
+        "checked",
+        false 
+    );
+
+    config["controlnet_resize_mode_just_resize"] = getElementValue(
+        "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input",
+        "checked",
+        false 
+    );
+
+    config["controlnet_resize_mode_Crop_and_Resize"] = getElementValue(
+        "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(2) > input",
+        "checked",
+        false 
+    );
+
+    config["controlnet_resize_mode_Resize_and_Fill"] = getElementValue(
+        "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(3) > input",
+        "checked",
+        false 
+    );
+
     config[
         "controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit"
     ] = getElementValue("#component-224 > label > input", "enabled", false);

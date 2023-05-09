@@ -196,6 +196,7 @@ def update_connect_config(api_url, api_token):
     value1 = get_variable_from_json('api_gateway_url')
     value2 = get_variable_from_json('api_token')
     print(f"update the api_url:{api_url} and token: {api_token}............")
+    return "config updated to local config!"
 
 def test_aws_connect_config(api_url, api_token):
     api_url = get_variable_from_json('api_gateway_url')
@@ -237,7 +238,7 @@ def on_ui_tabs():
                 aws_connect_button.click(update_connect_config,
                                         _js="update_auth_settings",
                                         inputs = [api_url_textbox, api_token_textbox],
-                                        outputs= [])
+                                        outputs= [test_connection_result])
                 aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
                 test_connection_result = gr.Label();
                 aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox], outputs=[test_connection_result])
