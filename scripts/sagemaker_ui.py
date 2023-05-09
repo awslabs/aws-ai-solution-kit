@@ -287,7 +287,7 @@ def sagemaker_upload_model_s3(sd_checkpoints_path, textual_inversion_path, lora_
             }],
             "params": {"message": "placeholder for chkpts upload test"}
         }
-
+        print('!!!!!!api_gateway_url', api_gateway_url)
         url = api_gateway_url + "checkpoint"
 
         print(f"Post request for upload s3 presign url: {url}")

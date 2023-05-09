@@ -347,30 +347,36 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         lora_name = os.path.splitext(lora)[0]
         prompt = prompt + f"<lora:{lora_name}:1>"
     
-    contronet_enable = False
-    controlnet_model = None
-    controlnet_module = None
-    controlnet_image = None
+    contronet_enable = params_dict['controlnet_enable']
     if contronet_enable:
         controlnet_module = params_dict['controlnet_preprocessor']
         controlnet_model = os.path.splitext(selected_cn_model[0])[0]
         controlnet_image = params_dict['txt2img_controlnet_ControlNet_input_image'] #None
-        weight = params_dict['control_weight'] #1,
-        resize_mode = params_dict['controlnet_resize_mode'] # "Crop and Resize",
+        controlnet_image = controlnet_image.split(',')[1]
+        weight = float(params_dict['controlnet_weight']) #1,
+        if params_dict['controlnet_resize_mode_just_resize']:
+            resize_mode = "Just Resize" # "Crop and Resize",
+        if params_dict['controlnet_resize_mode_Crop_and_Resize']:
+            resize_mode = "Crop and Resize"
+        if params_dict['controlnet_resize_mode_Resize_and_Fill']:
+            resize_mode = "Resize and Fill"
         lowvram = params_dict['controlnet_lowVRAM_enable'] #: "False",
-        processor_res = 64,
-        threshold_a = 64,
-        threshold_b = 64,
-        guidance = 1,
-        guidance_start = params_dict['controlnet_starting_control_step'] #: 0,
-        guidance_end = params_dict['controlnet_ending_control_step'] #: 1,
-        guessmode = params_dict['controlnet_control_mode(guess_mode)'] #: "True",
+        processor_res = int(params_dict['controlnet_preprocessor_resolution'])
+        threshold_a = int(params_dict['controlnet_canny_low_threshold'])
+        threshold_b = int(params_dict['controlnet_canny_high_threshold'])
+        #guidance = 1,
+        guidance_start = float(params_dict['controlnet_starting_control_step']) #: 0,
+        guidance_end = float(params_dict['controlnet_ending_control_step']) #: 1,
+        if params_dict['controlnet_control_mode_balanced']:
+            guessmode = "Balanced"
+        if params_dict['controlnet_control_mode_my_prompt_is_more_important']:
+            guessmode = "My prompt is more important"
+        if params_dict['controlnet_control_mode_controlnet_is_more_important']:
+            guessmode = "Controlnet is more important"
         pixel_perfect = params_dict['controlnet_pixel_perfect'] #:"False"
         allow_preview = params_dict['controlnet_allow_preview']
         loopback = params_dict['controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit']
 
-        #with open(controlnet_image_path, "rb") as img:
-        # controlnet_image = base64.b64encode(img.read())
 
     endpoint_name = params_dict['sagemaker_endpoint'] #"infer-endpoint-ca0e"
     
@@ -378,7 +384,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         print('txt2img with controlnet!!!!!!!!!!')
         payload = {
         "endpoint_name": endpoint_name,
-        "task": "controlnet_txt2img", 
+        "task": "text-to-image", 
         "username": "test",
         "checkpoint_info":checkpoint_info,
         "models":{
@@ -389,7 +395,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
             "Lora": selected_loras,
             "embeddings": selected_embeddings
         },
-        "controlnet_txt2img_payload":{ 
+        "txt2img_payload":{ 
             "enable_hr": enable_hr, 
             "denoising_strength": denoising_strength, 
             "firstphase_width": firstphase_width, 
@@ -419,26 +425,29 @@ def json_convert_to_payload(params_dict, checkpoint_info):
             "override_settings": override_settings, 
             "script_name": script_name,
             "script_args": script_args,
-            "controlnet_units": [
-                {
-                "input_image": controlnet_image,
-                "mask": "",
-                "module": controlnet_module,
-                "model": controlnet_model,
-                "weight": weight,
-                "resize_mode": resize_mode,
-                "lowvram": lowvram,
-                "processor_res": processor_res,
-                "threshold_a": threshold_a,
-                "threshold_b": threshold_b,
-                "guidance": guidance,
-                "guidance_start": guidance_start,
-                "guidance_end": guidance_end,
-                "guessmode": guessmode,
-                "pixel_perfect": pixel_perfect
+            "alwayson_scripts":{
+                "controlnet":{
+                   "args":[
+                       {
+                        "input_image": controlnet_image,
+                        "mask": "",
+                        "module": controlnet_module,
+                        "model": controlnet_model,
+                        "weight": weight,
+                        "resize_mode": resize_mode,
+                        "lowvram": lowvram,
+                        "processor_res": processor_res,
+                        "threshold_a": threshold_a,
+                        "threshold_b": threshold_b,
+                        "guidance_start": guidance_start,
+                        "guidance_end": guidance_end,
+                        "guessmode": guessmode,
+                        "pixel_perfect": pixel_perfect
+                        }
+                        ]
                 }
-            ]
-        }, 
+                }
+            } 
         }
     else:
         print('txt2img ##########')
