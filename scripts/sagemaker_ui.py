@@ -737,6 +737,7 @@ def create_ui():
             with gr.Column():
                 generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary', elem_id="generate_on_cloud_local_config_button")
                 generate_on_cloud_button.click(
+                    _js="generate_on_cloud",
                     fn=generate_on_cloud,
                     inputs=[sagemaker_endpoint],
                     outputs=[sagemaker_html_log]
@@ -806,22 +807,29 @@ def create_ui():
                 lora_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="LoRA",elem_id="sd_lora_path_textbox")
                 hypernetwork_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="HyperNetwork",elem_id="sd_hypernetwork_path_textbox")
                 controlnet_model_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="ControlNet-Model",elem_id="sd_controlnet_model_path_textbox")
-                model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button")
-                model_update_button.click(sagemaker_upload_model_s3, \
-                                          inputs = [sd_checkpoints_path, \
-                                                    textual_inversion_path, \
-                                                    lora_path, \
-                                                    hypernetwork_path, \
-                                                    controlnet_model_path], \
-                                           outputs = [sagemaker_html_log])
             
+            with gr.Row():
+                model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button", size=(200, 50))
+                model_update_button.click(sagemaker_upload_model_s3, \
+                                        _js="sagemaker_model_update", \
+                                        inputs = [sd_checkpoints_path, \
+                                                textual_inversion_path, \
+                                                lora_path, \
+                                                hypernetwork_path, \
+                                                controlnet_model_path], \
+                                        outputs = [sagemaker_html_log])
+
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
                 # instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
                 instance_type_dropdown = gr.Dropdown(label="SageMaker Instance Type", choices=["ml.g4dn.xlarge","ml.g4dn.2xlarge","ml.g4dn.4xlarge","ml.g4dn.8xlarge","ml.g4dn.12xlarge"], elem_id="sagemaker_inference_instance_type_textbox", default='ml.g4dn.xlarge')
                 instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox", default=1)
+
+            with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_dropdown, instance_count_textbox])
+                sagemaker_deploy_button.click(sagemaker_deploy,
+                                            _js="sagemaker_deploy_endpoint", \
+                                            inputs = [instance_type_dropdown, instance_count_textbox])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
