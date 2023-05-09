@@ -245,7 +245,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         x_values_dropdown = params_dict['script_txt2txt_xyz_plot_x_values']
         if x_type in dropdown_index:
             if x_type == 10:
-                x_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+                x_values_dropdown = params_dict['sagemaker_stable_diffusion_checkpoint']
             elif x_type == 25:
                 x_values_dropdown = params_dict['sagemaker_controlnet_model']
             x_values_dropdown = x_values_dropdown.split(":")
@@ -255,7 +255,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         y_values_dropdown = params_dict['script_txt2txt_xyz_plot_y_values']
         if y_type in dropdown_index:
             if y_type == 10:
-                y_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+                y_values_dropdown = params_dict['sagemaker_stable_diffusion_checkpoint']
             elif y_type == 25:
                 y_values_dropdown = params_dict['sagemaker_controlnet_model']
             y_values_dropdown = y_values_dropdown.split(":")
@@ -265,7 +265,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         z_values_dropdown = params_dict['script_txt2txt_xyz_plot_z_values']
         if z_type in dropdown_index:
             if z_type == 10:
-                z_values_dropdown = params_dict['sagemaker_stable_diffuion_checkpoint']
+                z_values_dropdown = params_dict['sagemaker_stable_diffusion_checkpoint']
             elif z_type == 25:
                 z_values_dropdown = params_dict['sagemaker_controlnet_model']
             z_values_dropdown = z_values_dropdown.split(":")
@@ -311,7 +311,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
     s_tmin = 0
     s_noise = 1 
 
-    selected_sd_model = params_dict['sagemaker_stable_diffuion_checkpoint'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
+    selected_sd_model = params_dict['sagemaker_stable_diffusion_checkpoint'] #'my_girl_311.safetensors'my_style_132.safetensors my_style_132.safetensors
     selected_cn_model = params_dict['sagemaker_controlnet_model']#['control_openpose-fp16.safetensors']#
     selected_hypernets = params_dict['sagemaker_hypernetwork_model']#['mjv4Hypernetwork_v1.pt']#'LuisapKawaii_v1.pt'
     selected_loras = params_dict['sagemaker_lora_model']#['hanfu_v30Song.safetensors']# 'cuteGirlMix4_v10.safetensors'
