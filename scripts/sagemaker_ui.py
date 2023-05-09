@@ -124,19 +124,25 @@ def get_inference_job_list():
         r = response.json()
         if r:
             txt2img_inference_job_ids.clear()  # Clear the existing list before appending new values
-            txt2img_inference_job_raw_ids = []
+            temp_list = []
             for obj in r:
-                extracted_data = {
-                 'completeTime': obj.get('completeTime'),
-                 'InferenceJobId': obj.get('InferenceJobId')
-                }
-                json_string = json.dumps(extracted_data)
-                txt2img_inference_job_raw_ids.append(json_string)
-            txt2img_inference_job_ids = sorted(txt2img_inference_job_raw_ids, key=lambda x: json.loads(x)["completeTime"], reverse=True)
+                complete_time = obj.get('completeTime')
+                inference_job_id = obj.get('InferenceJobId')
+                combined_string = f"{complete_time}-->{inference_job_id}"
+                temp_list.append((complete_time, combined_string))
+
+            # Sort the list based on completeTime in descending order
+            sorted_list = sorted(temp_list, key=lambda x: x[0], reverse=True)
+
+            # Append the sorted combined strings to the txt2img_inference_job_ids list
+            for item in sorted_list:
+                txt2img_inference_job_ids.append(item[1])
+
         else:
             print("The API response is empty.")
     except Exception as e:
         print("Exception occurred when fetching inference_job_ids")
+
 
 
 def get_inference_job(inference_job_id):
@@ -419,10 +425,10 @@ def txt2img_config_save():
 def fake_gan(selected_value: str ):
     print(f"selected value is {selected_value}")
     if selected_value is not None:
-        selected_value_json = json.loads(selected_value)
-
+        delimiter = "-->"
+        parts = selected_value.split(delimiter)
         # Extract the InferenceJobId value
-        inference_job_id = selected_value_json['InferenceJobId']
+        inference_job_id = parts[1].strip()
         images = get_inference_job_image_output(inference_job_id)
         image_list = []
         image_list = download_images(images,f"outputs/txt2img-images/{get_current_date()}/{inference_job_id}/")
@@ -583,22 +589,29 @@ def create_ui():
                 lora_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="LoRA",elem_id="sd_lora_path_textbox")
                 hypernetwork_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="HyperNetwork",elem_id="sd_hypernetwork_path_textbox")
                 controlnet_model_path = gr.Textbox(value="", lines=1, placeholder="Please input absolute path", label="ControlNet-Model",elem_id="sd_controlnet_model_path_textbox")
-                model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button")
-                model_update_button.click(sagemaker_upload_model_s3, \
-                                          inputs = [sd_checkpoints_path, \
-                                                    textual_inversion_path, \
-                                                    lora_path, \
-                                                    hypernetwork_path, \
-                                                    controlnet_model_path], \
-                                           outputs = [sagemaker_html_log])
             
+            with gr.Row():
+                model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button", size=(200, 50))
+                model_update_button.click(sagemaker_upload_model_s3, \
+                                        _js="sagemaker_model_update", \
+                                        inputs = [sd_checkpoints_path, \
+                                                textual_inversion_path, \
+                                                lora_path, \
+                                                hypernetwork_path, \
+                                                controlnet_model_path], \
+                                        outputs = [sagemaker_html_log])
+
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
                 # instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
                 instance_type_dropdown = gr.Dropdown(label="SageMaker Instance Type", choices=["ml.g4dn.xlarge","ml.g4dn.2xlarge","ml.g4dn.4xlarge","ml.g4dn.8xlarge","ml.g4dn.12xlarge"], elem_id="sagemaker_inference_instance_type_textbox", default='ml.g4dn.xlarge')
                 instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox", default=1)
+
+            with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy, inputs = [instance_type_dropdown, instance_count_textbox])
+                sagemaker_deploy_button.click(sagemaker_deploy,
+                                            _js="sagemaker_deploy_endpoint", \
+                                            inputs = [instance_type_dropdown, instance_count_textbox])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
