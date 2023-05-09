@@ -739,19 +739,19 @@ function scrap_ui_component_value_with_default(config) {
         ""
     );
 
-    config["controlnet_control_mode_balanced)"] = getElementValue(
+    config["controlnet_control_mode_balanced"] = getElementValue(
         "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(1) > input",
         "checked",
         false 
     );
 
-    config["controlnet_control_mode_my_prompt_is_more_important)"] = getElementValue(
+    config["controlnet_control_mode_my_prompt_is_more_important"] = getElementValue(
         "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(2) > input",
         "checked",
         false 
     );
 
-    config["controlnet_control_mode_controlnet_is_more_important)"] = getElementValue(
+    config["controlnet_control_mode_controlnet_is_more_important"] = getElementValue(
         "#component-224 > div.wrap.svelte-1p9xokt > label:nth-child(3) > input",
         "checked",
         false 
