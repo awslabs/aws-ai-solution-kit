@@ -238,7 +238,7 @@ def on_ui_tabs():
                 aws_connect_button.click(update_connect_config,
                                         _js="update_auth_settings",
                                         inputs = [api_url_textbox, api_token_textbox],
-                                        outputs= [test_connection_result])
+                                        outputs= [])
                 aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
                 test_connection_result = gr.Label();
                 aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox], outputs=[test_connection_result])

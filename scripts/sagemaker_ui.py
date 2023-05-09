@@ -531,7 +531,7 @@ def create_ui():
                 #     outputs=[sagemaker_html_log]
                 # )
                 global generate_on_cloud_button_with_js
-                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud (use config on the cloud)", variant='primary', elem_id="generate_on_cloud_with_cloud_config_button")
+                generate_on_cloud_button_with_js = gr.Button(value="Generate on Cloud", variant='primary', elem_id="generate_on_cloud_with_cloud_config_button")
                 # generate_on_cloud_button_with_js.click(
                 #     # _js="txt2img_config_save",
                 #     fn=generate_on_cloud_no_input,
