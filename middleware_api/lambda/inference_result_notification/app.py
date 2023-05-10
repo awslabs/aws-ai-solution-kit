@@ -77,28 +77,45 @@ def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
         return False
     return True
 
-def send_message_to_sns(message_json):
-    message = json.loads(message_json)
+def get_topic_arn(sns, topic_name):
+    response = sns.list_topics()
+    for topic in response['Topics']:
+        if topic['TopicArn'].split(':')[-1] == topic_name:
+            return topic['TopicArn']
+    return None
 
+def send_message_to_sns(message_json):
 
     try:
+        message = message_json
+        sns_topic_name = SNS_TOPIC
+
+        sns_topic_arn = get_topic_arn(sns, sns_topic_name)
+        if sns_topic_arn is None:
+            print(f"No topic found with name {sns_topic_name}")
+            return {
+                'statusCode': 404,
+                'body': json.dumps('No topic found')
+            }
+
         response = sns.publish(
-            TopicArn=SNS_TOPIC,
+            TopicArn=sns_topic_arn,
             Message=json.dumps(message),
-            Subject=f"Inference Failed(id:{message['inferenceId']}) with following sagemaker error info",
+            Subject='Inference Error occurred Information',
         )
 
-        print(f"Message sent to SNS topic: {sns_topic}")
+        print(f"Message sent to SNS topic: {sns_topic_name}")
         return {
             'statusCode': 200,
             'body': json.dumps('Message sent successfully')
         }
 
     except ClientError as e:
-        print(f"Error sending message to SNS topic: {sns_topic}")
+        print(f"Error sending message to SNS topic: {sns_topic_name}")
         return {
             'statusCode': 500,
-            'body': json.dumps('Error sending message')
+            'body': json.dumps('Error sending message'),
+            'error': str(e)
         }
 
 
@@ -167,5 +184,5 @@ def lambda_handler(event, context):
         update_inference_job_table(inference_id, 'status', 'failed')
         update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         print(f"Not complete invocation!")
-        send_message_to_sns(message)
+        send_message_to_sns(event['Records'][0]['Sns']['Message'])
     return message

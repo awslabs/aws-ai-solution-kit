@@ -630,7 +630,7 @@ def create_ui():
             with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
                 sagemaker_deploy_button.click(sagemaker_deploy,
-                                            # _js="sagemaker_deploy_endpoint", \
+                                            _js="deploy_endpoint", \
                                             inputs = [instance_type_dropdown, instance_count_dropdown])
 
     with gr.Group():
