@@ -136,7 +136,7 @@ def on_after_component_callback(component, **_kwargs):
         )
         sagemaker_ui.generate_on_cloud_button_with_js.click(
             fn=sagemaker_ui.generate_on_cloud_no_input,
-                    inputs=[],
+                    inputs=[sagemaker_ui.sagemaker_endpoint],
                     outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
                 )
     # # hook logic for merge checkpoints

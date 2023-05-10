@@ -23,16 +23,17 @@ from datetime import datetime
 import math
 
 inference_job_dropdown = None
+sagemaker_endpoint = None
 
 #TODO: convert to dynamically init the following variables
 sagemaker_endpoints = []
 txt2img_inference_job_ids = []
 
 sd_checkpoints = []
-textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
-lora_list = ['lora1', 'lora2', 'lora3']
-hyperNetwork_list = ['hyperNetwork1', 'hyperNetwork2', 'hyperNetwork3']
-ControlNet_model_list = ['controlNet_model1', 'controlNet_model2', 'controlNet_model3']
+textual_inversion_list = []
+lora_list = []
+hyperNetwork_list = []
+ControlNet_model_list = []
 
 # Initial checkpoints information
 checkpoint_info = {}
@@ -41,7 +42,7 @@ checkpoint_name = ["stable_diffusion", "embeddings", "lora", "hypernetworks", "c
 stable_diffusion_list = []
 embeddings_list = []
 lora_list = []
-hypernetworks_list = ['xxx','yyy']
+hypernetworks_list = []
 controlnet_list = []
 for ckpt_type, ckpt_name in zip(checkpoint_type, checkpoint_name):
     checkpoint_info[ckpt_type] = {}
@@ -357,8 +358,22 @@ def generate_on_cloud(sagemaker_endpoint):
     text = "failed to check endpoint"
     return plaintext_to_html(text)
 
-def generate_on_cloud_no_input():
-    print(f"start cloud inference with empty payload")
+def generate_on_cloud_no_input(sagemaker_endpoint):
+    print(f"chosen ep {sagemaker_endpoint}")
+
+    if sagemaker_endpoint == '':
+        image_list = []  # Return an empty list if selected_value is None
+        info_text = ''
+        infotexts = "Failed! Please choose the endpoint in 'InService' states "
+        return image_list, info_text, plaintext_to_html(infotexts)
+
+    sagemaker_endpoint_status = sagemaker_endpoint.split("+")[1]
+
+    if sagemaker_endpoint_status != "InService":
+        image_list = []  # Return an empty list if selected_value is None
+        info_text = ''
+        infotexts = "Failed! Please choose the endpoint in 'InService' states "
+        return image_list, info_text, plaintext_to_html(infotexts)
     
     # stage 2: inference using endpoint_name
     headers = {
@@ -515,6 +530,7 @@ def create_ui():
             sagemaker_html_log = gr.HTML(elem_id=f'html_log_sagemaker')
             with gr.Column(variant='panel'):
                 with gr.Row():
+                    global sagemaker_endpoint
                     sagemaker_endpoint = gr.Dropdown(sagemaker_endpoints,
                                              label="Select Cloud SageMaker Endpoint",
                                              elem_id="sagemaker_endpoint_dropdown"
@@ -535,7 +551,7 @@ def create_ui():
                 # generate_on_cloud_button_with_js.click(
                 #     # _js="txt2img_config_save",
                 #     fn=generate_on_cloud_no_input,
-                #     inputs=[],
+                #     inputs=[sagemaker_endpoint],
                 #     outputs=[]
                 # )
                 txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
