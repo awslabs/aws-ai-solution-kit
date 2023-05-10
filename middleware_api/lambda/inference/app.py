@@ -321,6 +321,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         selected_sd_model = ['v1-5-pruned-emaonly.safetensors']
     else:
         selected_sd_model = selected_sd_model.split(":")
+        selected_sd_model = [selected_sd_model[0]]
     if selected_cn_model == "":
         selected_cn_model = []
     else:
@@ -339,13 +340,16 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         selected_embeddings = selected_embeddings.split(":")
     
     for embedding in selected_embeddings:
-        prompt = prompt + embedding
+        if embedding not in prompt:
+            prompt = prompt + embedding
     for hypernet in selected_hypernets:
         hypernet_name = os.path.splitext(hypernet)[0]
-        prompt = prompt + f"<hypernet:{hypernet_name}:1>"
+        if hypernet_name not in prompt:
+            prompt = prompt + f"<hypernet:{hypernet_name}:1>"
     for lora in selected_loras:
         lora_name = os.path.splitext(lora)[0]
-        prompt = prompt + f"<lora:{lora_name}:1>"
+        if lora_name not in prompt:
+            prompt = prompt + f"<lora:{lora_name}:1>"
     
     contronet_enable = params_dict['controlnet_enable']
     if contronet_enable:
