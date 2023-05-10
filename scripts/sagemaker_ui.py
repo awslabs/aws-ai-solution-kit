@@ -403,11 +403,15 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
             elif status == 'failed':
                 print(f"Inference job failed: {job_status.get('error_message', 'No error message provided')}")
                 break
-            time.sleep(5)  # You can adjust the sleep time as needed
+            time.sleep(3)  # You can adjust the sleep time as needed
 
-        # Call the fake_gan function using the inference_id only if the status is 'succeed'
         if status == 'succeed':
             return display_inference_result(inference_id)
+        else:
+            image_list = []  # Return an empty list if selected_value is None
+            info_text = ''
+            infotexts = f"Inference Failed! The error info: {job_status.get('error_message', 'No error message provided')}"
+            return image_list, info_text, plaintext_to_html(infotexts)
             
 
 def sagemaker_deploy(instance_type, initial_instance_count=1):
