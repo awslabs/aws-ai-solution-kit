@@ -405,8 +405,8 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
             status = job_status['status']
             if status == 'succeed':
                 break
-            elif status == 'failed':
-                print(f"Inference job failed: {job_status.get('error_message', 'No error message provided')}")
+            elif status == 'failure':
+                print(f"Inference job failed: {job_status.get('error', 'No error message provided')}")
                 break
             time.sleep(3)  # You can adjust the sleep time as needed
 
@@ -415,7 +415,7 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
         else:
             image_list = []  # Return an empty list if selected_value is None
             info_text = ''
-            infotexts = f"Inference Failed! The error info: {job_status.get('error_message', 'No error message provided')}"
+            infotexts = f"Inference Failed! The error info: {job_status.get('error', 'No error message provided')}"
             return image_list, info_text, plaintext_to_html(infotexts)
             
 
