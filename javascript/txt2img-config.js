@@ -12,25 +12,100 @@ function getDomValue(selector, defaultValue, isTextContent = false) {
     }
 }
 
-function txt2img_config_save() {
+// function txt2img_config_save(endpoint_value) {
+//     var config = {};
+
+//     // const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+//     // const sagemaker_ep_info_array = sagemaker_ep_info.split("+")
+//     // const sagemaker_ep_status = sagemaker_ep_info_array[1]
+
+//     // if (sagemaker_ep_status != "InService") {
+//     //     alert(
+//     //         "Save settings failed! Please choose an endpoint in in-service status!"
+//     //     );
+
+//     //     return 0
+//     // }
+
+//     // now it's all special case under txt2img_settings div element
+//     // scrap_ui_component_value(config);
+
+//     console.log(JSON.stringify(endpoint_value))
+//     scrap_ui_component_value_with_default(config);
+
+
+//     // store config in local storage for debugging
+//     localStorage.setItem("txt2imgConfig", JSON.stringify(config));
+
+//     //following code is to get s3 presigned url from middleware and upload the ui parameters
+//     const key = "config/aigc.json";
+//     let remote_url = config["aws_api_gateway_url"];
+//     if (!remote_url.endsWith("/")) {
+//         remote_url += "/";
+//     }
+//     let get_presigned_s3_url = remote_url;
+//     get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
+//     const api_key = config["aws_api_token"];
+
+//     const config_presigned_url =  getPresignedUrl(
+//         get_presigned_s3_url,
+//         api_key,
+//         key,
+//         function (error, presignedUrl) {
+//             if (error) {
+//                 console.error("Error fetching presigned URL:", error);
+//             } else {
+//                 // console.log("Presigned URL:", presignedUrl);
+//                 const url = presignedUrl.replace(/"/g, "");
+//                 // console.log("url:", url);
+
+//                 // Upload configuration JSON file to S3 bucket with pre-signed URL
+//                 const config_data = JSON.stringify(config);
+//                 // console.log(config_data)
+
+//                 put_with_xmlhttprequest(url, config_data)
+//                     .then((response) => {
+//                         console.log('The configuration has been successfully uploaded to s3');
+//                         // Trigger a simple alert after the HTTP PUT has completed
+//                         alert(
+//                             "The configuration has been successfully uploaded."
+//                         );
+//                         return endpoint_value
+
+//                         // TODO: meet the cors issue, need to implement it later
+//                         // let inference_url = remote_url + 'inference/run-sagemaker-inference';
+//                         // console.log("api-key is ", api_key)
+//                         // postToApiGateway(inference_url, api_key, config_data, function (error, response) {
+//                         //     if (error) {
+//                         //         console.error("Error posting to API Gateway:", error);
+//                         //     } else {
+//                         //         console.log("Successfully posted to API Gateway:", response);
+//                         //         alert("Succeed trigger the remote sagemaker inference.");
+//                         //         // You can also add an alert or any other action you'd like to perform on success
+//                         //     }
+//                         // })
+//                     })
+//                     .catch((error) => {
+//                         console.log(error);
+//                         alert(
+//                             "An error occurred while uploading the configuration."
+//                         );
+//                         return "FAILURE"
+//                     });
+//             }
+//         }
+//     );
+//     return endpoint_value
+// }
+
+async function txt2img_config_save(endpoint_value) {
     var config = {};
-
-    // const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
-    // const sagemaker_ep_info_array = sagemaker_ep_info.split("+")
-    // const sagemaker_ep_status = sagemaker_ep_info_array[1]
-
-    // if (sagemaker_ep_status != "InService") {
-    //     alert(
-    //         "Save settings failed! Please choose an endpoint in in-service status!"
-    //     );
-
-    //     return 0
-    // }
 
     // now it's all special case under txt2img_settings div element
     // scrap_ui_component_value(config);
-    scrap_ui_component_value_with_default(config);
 
+    console.log(JSON.stringify(endpoint_value))
+    scrap_ui_component_value_with_default(config);
 
     // store config in local storage for debugging
     localStorage.setItem("txt2imgConfig", JSON.stringify(config));
@@ -45,53 +120,27 @@ function txt2img_config_save() {
     get_presigned_s3_url += "inference/generate-s3-presigned-url-for-uploading";
     const api_key = config["aws_api_token"];
 
-    const config_presigned_url = getPresignedUrl(
-        get_presigned_s3_url,
-        api_key,
-        key,
-        function (error, presignedUrl) {
-            if (error) {
-                console.error("Error fetching presigned URL:", error);
-            } else {
-                // console.log("Presigned URL:", presignedUrl);
-                const url = presignedUrl.replace(/"/g, "");
-                // console.log("url:", url);
+    try {
+        const config_presigned_url = await getPresignedUrl(
+            get_presigned_s3_url,
+            api_key,
+            key
+        );
+        const url = config_presigned_url.replace(/"/g, "");
+        const config_data = JSON.stringify(config);
+        await put_with_xmlhttprequest(url, config_data);
 
-                // Upload configuration JSON file to S3 bucket with pre-signed URL
-                const config_data = JSON.stringify(config);
-                // console.log(config_data)
+        console.log('The configuration has been successfully uploaded to s3');
+        // alert("The configuration has been successfully uploaded.");
+        return endpoint_value;
 
-                put_with_xmlhttprequest(url, config_data)
-                    .then((response) => {
-                        console.log('The configuration has been successfully uploaded to s3');
-                        // Trigger a simple alert after the HTTP PUT has completed
-                        alert(
-                            "The configuration has been successfully uploaded."
-                        );
-
-                        // TODO: meet the cors issue, need to implement it later
-                        // let inference_url = remote_url + 'inference/run-sagemaker-inference';
-                        // console.log("api-key is ", api_key)
-                        // postToApiGateway(inference_url, api_key, config_data, function (error, response) {
-                        //     if (error) {
-                        //         console.error("Error posting to API Gateway:", error);
-                        //     } else {
-                        //         console.log("Successfully posted to API Gateway:", response);
-                        //         alert("Succeed trigger the remote sagemaker inference.");
-                        //         // You can also add an alert or any other action you'd like to perform on success
-                        //     }
-                        // })
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        alert(
-                            "An error occurred while uploading the configuration."
-                        );
-                    });
-            }
-        }
-    );
+    } catch (error) {
+        console.error("Error in txt2img_config_save:", error);
+        alert("An error occurred while uploading the configuration.");
+        return "FAILURE";
+    }
 }
+
 
 function scrap_ui_component_value(config) {
     config["script_txt2txt_xyz_plot_x_values"] = document.querySelector(
@@ -934,33 +983,63 @@ function put_with_xmlhttprequest(config_url, config_data) {
     });
 }
 
-function getPresignedUrl(remote_url, api_key, key, callback) {
-    const apiUrl = remote_url;
-    const queryParams = new URLSearchParams({
-        key: key,
+// function getPresignedUrl(remote_url, api_key, key, callback) {
+//     const apiUrl = remote_url;
+//     const queryParams = new URLSearchParams({
+//         key: key,
+//     });
+
+//     const xhr = new XMLHttpRequest();
+//     xhr.open("GET", `${apiUrl}?${queryParams}`, true);
+//     xhr.setRequestHeader("x-api-key", api_key);
+
+//     xhr.onload = function () {
+//         if (xhr.status >= 200 && xhr.status < 400) {
+//             callback(null, xhr.responseText);
+//         } else {
+//             callback(
+//                 new Error(`Error fetching presigned URL: ${xhr.statusText}`),
+//                 null
+//             );
+//         }
+//     };
+
+//     xhr.onerror = function () {
+//         callback(new Error("Error fetching presigned URL"), null);
+//     };
+
+//     xhr.send();
+// }
+
+function getPresignedUrl(remote_url, api_key, key) {
+    return new Promise((resolve, reject) => {
+        const apiUrl = remote_url;
+        const queryParams = new URLSearchParams({
+            key: key,
+        });
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `${apiUrl}?${queryParams}`, true);
+        xhr.setRequestHeader("x-api-key", api_key);
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                resolve(xhr.responseText);
+            } else {
+                reject(
+                    new Error(`Error fetching presigned URL: ${xhr.statusText}`)
+                );
+            }
+        };
+
+        xhr.onerror = function () {
+            reject(new Error("Error fetching presigned URL"));
+        };
+
+        xhr.send();
     });
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", `${apiUrl}?${queryParams}`, true);
-    xhr.setRequestHeader("x-api-key", api_key);
-
-    xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 400) {
-            callback(null, xhr.responseText);
-        } else {
-            callback(
-                new Error(`Error fetching presigned URL: ${xhr.statusText}`),
-                null
-            );
-        }
-    };
-
-    xhr.onerror = function () {
-        callback(new Error("Error fetching presigned URL"), null);
-    };
-
-    xhr.send();
 }
+
 
 function postToApiGateway(remote_url, api_key, data, callback) {
     const apiUrl = remote_url;

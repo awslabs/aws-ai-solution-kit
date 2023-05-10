@@ -135,7 +135,8 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
         sagemaker_ui.generate_on_cloud_button_with_js.click(
-            fn=sagemaker_ui.generate_on_cloud_no_input,
+                    fn=sagemaker_ui.generate_on_cloud_no_input,
+                    _js="txt2img_config_save",
                     inputs=[sagemaker_ui.sagemaker_endpoint],
                     outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
                 )

@@ -366,6 +366,11 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
         info_text = ''
         infotexts = "Failed! Please choose the endpoint in 'InService' states "
         return image_list, info_text, plaintext_to_html(infotexts)
+    elif sagemaker_endpoint == 'FAILURE':
+        image_list = []  # Return an empty list if selected_value is None
+        info_text = ''
+        infotexts = "Failed upload the config to cloud  "
+        return image_list, info_text, plaintext_to_html(infotexts) 
 
     sagemaker_endpoint_status = sagemaker_endpoint.split("+")[1]
 
@@ -559,13 +564,13 @@ def create_ui():
                 #     inputs=[sagemaker_endpoint],
                 #     outputs=[]
                 # )
-                txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
-                txt2img_config_save_button.click(
-                    _js="txt2img_config_save",
-                    fn=None,
-                    inputs=[],
-                    outputs=[]
-                )
+                # txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
+                # txt2img_config_save_button.click(
+                #     _js="txt2img_config_save",
+                #     fn=None,
+                #     inputs=[],
+                #     outputs=[]
+                # )
             with gr.Row():
                 global inference_job_dropdown 
                 global txt2img_inference_job_ids
