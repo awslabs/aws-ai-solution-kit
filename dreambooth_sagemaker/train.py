@@ -2,15 +2,16 @@ import time
 import pickle
 import json
 import threading
+import base64
 
-import sagemaker
+# import sagemaker
 
 import sys
 import os
 sys.path.append("extensions/sd_dreambooth_extension")
 sys.path.append("extensions/aws-ai-solution-kit")
 from utils import download_folder_from_s3_by_tar, download_file_from_s3, upload_file_to_s3, upload_folder_to_s3_by_tar
-# from dreambooth.shared import status
+from dreambooth.shared import status
 
 # def sync_status_from_s3_in_webui(bucket_name, sagemaker_status_file_path, webui_status_file_path):
 #     while True:
@@ -83,25 +84,35 @@ def upload_assets(model_dir, use_txt2img, instance_type, job_id):
     upload_file_to_s3(sm_params_conf_file_path, bucket_name, sm_params_conf_file_s3_path)
 
 
-def start_sagemaker_training(model_dir, use_txt2img, instance_type="ml.g5.16xlarge"):
-    # def start_sagemaker_training(model_dir, use_txt2img, instance_type="local"):
+def start_sagemaker_training(params, instance_type, s3_input_path, s3_output_path):
     # job_id = time.time()
     job_id = "test"
-    upload_assets(model_dir, use_txt2img, instance_type, job_id)
+    # upload_assets(model_dir, use_txt2img, instance_type, job_id)
 
     role = "arn:aws:iam::683638520402:role/service-role/AmazonSageMaker-ExecutionRole-20221031T120168"
-    image_uri = "683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-dreambooth-training:latest"
+    # role = "arn:aws:iam::648149843064:role/SdDreamBoothTrainStack-aigcutilsendpointrole0A8729-8OSFWEAGUTCU"
+    # image_uri = "683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-webui-dreambooth-training:latest"
+    # image_uri = "648149843064.dkr.ecr.us-east-1.amazonaws.com/aigc-webui-dreambooth-training:latest"
+    # image_uri = "991301791329.dkr.ecr.us-west-1.amazonaws.com/aigc-webui-dreambooth-training"
+    image_uri = "991301791329.dkr.ecr.us-west-1.amazonaws.com/aigc-train-utils:latest"
+    # image_uri = "683638520402.dkr.ecr.us-west-2.amazonaws.com/aigc-5:latest"
 
     # JSON encode hyperparameters
     def json_encode_hyperparameters(hyperparameters):
-        return {str(k): json.dumps(v) for (k, v) in hyperparameters.items()}
+        new_params = {}
+        for k, v in hyperparameters.items():
+            json_v = json.dumps(v)
+            v_bytes = json_v.encode('ascii')
+            base64_bytes = base64.b64encode(v_bytes)
+            base64_v = base64_bytes.decode('ascii')
+            new_params[k] = base64_v
+        return new_params
 
     hyperparameters = json_encode_hyperparameters({
             "sagemaker_program": "extensions/sd-webui-sagemaker/sagemaker_entrypoint_json.py",
-            # "params": {
-            #
-            # },
-            # "base_s3": "s3://bucket/dreambooth/requestid/"
+            "params": params,
+            "s3-input-path": s3_input_path,
+            "s3-output-path": s3_output_path
     })
     # status.begin()
     est = sagemaker.estimator.Estimator(
@@ -158,10 +169,30 @@ def test_func():
     print(resp['FailureReason'])
 
 if __name__ == "__main__":
-    model_name = "dreambooth_sagemaker_test"
-    use_txt2img = True
-    # instance_type = "local_gpu"
-    instance_type = "ml.g5.16xlarge"
-    os.environ.setdefault('AWS_PROFILE', 'cloudfront_ext')
-    test_func()
-    start_sagemaker_training(model_name, use_txt2img, instance_type)
+    # instance_type = "ml.g5.16xlarge"
+    # os.environ.setdefault('AWS_PROFILE', 'cloudfront_ext')
+    # test_func()
+    """
+        "params": params,
+        "s3_input_path": "s3://bucket/dreambooth/requestid/input/",
+        "s3_output_path": "s3://bucket/dreambooth/requestid/output/"
+        "instance_type": "ml.g5.xlarge"
+    """
+    with open("models/dreambooth/db-training-test-1/db_config.json.bak", "r") as db_config_file:
+        db_config = json.load(db_config_file)
+    params = {
+        "s3_input_path": "s3://alvindaiyan-aigc-testing-playground/dreambooth/train/db-training-test-1/819d981e-a30e-4944-9668-8ad03264f0fe/input",
+        "s3_output_path": "s3://alvindaiyan-aigc-testing-playground/dreambooth/train/db-training-test-1/e223988b-faa1-442e-b00b-030ee01b4357/output",
+        "params": {
+            "training_params": {
+                "s3_model_path": "s3://alvindaiyan-aigc-testing-playground/dreambooth/model/db-training-test-1/51b8d59b-ba48-4f79-964f-05f2190f5bc3/output/",
+                "model_name": "db-training-test-1",
+                "data_tar": "data_images.tar",
+                "class_data_tar": "class_data_images.tar",
+            }
+        }
+    }
+    instance_type = "local_gpu"
+    s3_input_path = params["s3_input_path"]
+    s3_output_path = params["s3_output_path"]
+    start_sagemaker_training(params["params"], instance_type, s3_input_path, s3_output_path)

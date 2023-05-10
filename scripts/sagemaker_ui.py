@@ -366,6 +366,11 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
         info_text = ''
         infotexts = "Failed! Please choose the endpoint in 'InService' states "
         return image_list, info_text, plaintext_to_html(infotexts)
+    elif sagemaker_endpoint == 'FAILURE':
+        image_list = []  # Return an empty list if selected_value is None
+        info_text = ''
+        infotexts = "Failed upload the config to cloud  "
+        return image_list, info_text, plaintext_to_html(infotexts) 
 
     sagemaker_endpoint_status = sagemaker_endpoint.split("+")[1]
 
@@ -400,14 +405,18 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
             status = job_status['status']
             if status == 'succeed':
                 break
-            elif status == 'failed':
-                print(f"Inference job failed: {job_status.get('error_message', 'No error message provided')}")
+            elif status == 'failure':
+                print(f"Inference job failed: {job_status.get('error', 'No error message provided')}")
                 break
-            time.sleep(5)  # You can adjust the sleep time as needed
+            time.sleep(3)  # You can adjust the sleep time as needed
 
-        # Call the fake_gan function using the inference_id only if the status is 'succeed'
         if status == 'succeed':
             return display_inference_result(inference_id)
+        else:
+            image_list = []  # Return an empty list if selected_value is None
+            info_text = ''
+            infotexts = f"Inference Failed! The error info: {job_status.get('error', 'No error message provided')}"
+            return image_list, info_text, plaintext_to_html(infotexts)
             
 
 def sagemaker_deploy(instance_type, initial_instance_count=1):
@@ -555,13 +564,13 @@ def create_ui():
                 #     inputs=[sagemaker_endpoint],
                 #     outputs=[]
                 # )
-                txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
-                txt2img_config_save_button.click(
-                    _js="txt2img_config_save",
-                    fn=None,
-                    inputs=[],
-                    outputs=[]
-                )
+                # txt2img_config_save_button = gr.Button(value="Save Settings", variant='primary', elem_id="save_webui_component_to_cloud_button")
+                # txt2img_config_save_button.click(
+                #     _js="txt2img_config_save",
+                #     fn=None,
+                #     inputs=[],
+                #     outputs=[]
+                # )
             with gr.Row():
                 global inference_job_dropdown 
                 global txt2img_inference_job_ids

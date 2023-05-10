@@ -28,7 +28,6 @@ sys.path.append("extensions/aws-ai-solution-kit/scripts")
 from dreambooth.shared import status
 from dreambooth import shared as dreambooth_shared
 # from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
-from dreambooth_sagemaker.train import start_sagemaker_training
 from dreambooth.ui_functions import load_model_params, load_params
 from dreambooth.dataclasses.db_config import save_config, from_file
 from urllib.parse import urljoin
@@ -135,7 +134,8 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
         sagemaker_ui.generate_on_cloud_button_with_js.click(
-            fn=sagemaker_ui.generate_on_cloud_no_input,
+                    fn=sagemaker_ui.generate_on_cloud_no_input,
+                    _js="txt2img_config_save",
                     inputs=[sagemaker_ui.sagemaker_endpoint],
                     outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
                 )
@@ -433,28 +433,30 @@ def get_sorted_lora_cloud_models():
 def get_cloud_model_snapshots():
     return ["ran", "swam", "slept"]
 
-def get_cloud_db_models():
+def get_cloud_db_models(types="dreambooth", status="Complete"):
     try:
         api_gateway_url = get_variable_from_json('api_gateway_url')
         print("Get request for model list.")
         if api_gateway_url is None:
             print(f"failed to get the api_gateway_url, can not fetch date from remote")
             return []
-
-        url = api_gateway_url + "models?types=dreambooth&status=Complete"
+        url = f"{api_gateway_url}models?"
+        if types:
+            url = f"{url}types={types}&"
+        if status:
+            url = f"{url}status={status}&"
+        url = url.strip("&")
         response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
         model_list = []
         if "models" not in response:
             return []
         for model in response["models"]:
+            model_list.append(model)
             params = model['params']
             if 'resp' in params:
-                model['model_name'] = params['resp']['config_dict']['model_name']
-                model_list.append(model)
                 db_config = params['resp']['config_dict']
                 # TODO:
                 model_dir = f"{base_model_folder}/{model['model_name']}"
-
                 for k in db_config:
                     if type(db_config[k]) is str:
                         db_config[k] = db_config[k].replace("/opt/ml/code/", "")
@@ -482,11 +484,10 @@ def get_cloud_ckpts():
         return []
     global ckpt_dict
     for ckpt in response["checkpoints"]:
+        # Only get ckpts whose name is not empty.
         if len(ckpt['name']) > 0:
             ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
-        else:
-            ckpt_key = f"cloud-{ckpt['id']}"
-        ckpt_dict[ckpt_key] = ckpt
+            ckpt_dict[ckpt_key] = ckpt
 
 def get_cloud_ckpt_name_list():
     get_cloud_ckpts()
