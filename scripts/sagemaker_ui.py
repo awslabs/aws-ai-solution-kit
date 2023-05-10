@@ -623,15 +623,15 @@ def create_ui():
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
                 # instance_type_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance type, e.g. ml.g4dn.xlarge", label="SageMaker Instance Type",elem_id="sagemaker_inference_instance_type_textbox")
-                instance_type_dropdown = gr.Dropdown(label="SageMaker Instance Type", choices=["ml.g4dn.xlarge","ml.g4dn.2xlarge","ml.g4dn.4xlarge","ml.g4dn.8xlarge","ml.g4dn.12xlarge"], elem_id="sagemaker_inference_instance_type_textbox", default='ml.g4dn.xlarge')
-                instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox", default=1)
+                instance_type_dropdown = gr.Dropdown(label="SageMaker Instance Type", choices=["ml.g4dn.xlarge","ml.g4dn.2xlarge","ml.g4dn.4xlarge","ml.g4dn.8xlarge","ml.g4dn.12xlarge"], elem_id="sagemaker_inference_instance_type_textbox", value="ml.g4dn.xlarge")
+                # instance_count_textbox = gr.Textbox(value="", lines=1, placeholder="Please enter Instance count, e.g. 1,2", label="SageMaker Instance Count",elem_id="sagemaker_inference_instance_count_textbox", default=1)
+                instance_count_dropdown = gr.Dropdown(label="Please select Instance count", choices=["1","2","3","4"], elem_id="sagemaker_inference_instance_count_textbox", value="1")
 
             with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(_js="deploy_endpoint",
-                                            fn=sagemaker_deploy,
-                                            inputs=[instance_type_dropdown, instance_count_textbox],
-                                            outputs=[sagemaker_html_log])
+                sagemaker_deploy_button.click(sagemaker_deploy,
+                                            # _js="sagemaker_deploy_endpoint", \
+                                            inputs = [instance_type_dropdown, instance_count_dropdown])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
@@ -663,4 +663,4 @@ def create_ui():
                     outputs=[
                     ])
 
-    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud
+    return  sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_dropdown, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud

@@ -5,6 +5,7 @@ import base64
 import os
 from PIL import Image
 from datetime import datetime
+from botocore.exceptions import ClientError
 
 s3_resource = boto3.resource('s3')
 s3_client = boto3.client('s3')
@@ -13,10 +14,12 @@ DDB_INFERENCE_TABLE_NAME = os.environ.get('DDB_INFERENCE_TABLE_NAME')
 DDB_TRAINING_TABLE_NAME = os.environ.get('DDB_TRAINING_TABLE_NAME')
 DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME = os.environ.get('DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME')
 S3_BUCKET_NAME = os.environ.get('S3_BUCKET')
+SNS_TOPIC = os.environ['NOTICE_SNS_TOPIC']
 
 ddb_client = boto3.resource('dynamodb')
 inference_table = ddb_client.Table(DDB_INFERENCE_TABLE_NAME)
 endpoint_deployment_table = ddb_client.Table(DDB_ENDPOINT_DEPLOYMENT_TABLE_NAME)
+sns = boto3.client('sns')
 
 def get_bucket_and_key(s3uri):
     pos = s3uri.find('/', 5)
@@ -73,6 +76,31 @@ def upload_file_to_s3(file_name, bucket, directory=None, object_name=None):
         print(f"Error occurred while uploading {file_name} to {bucket}/{object_name}: {e}")
         return False
     return True
+
+def send_message_to_sns(message_json):
+    message = json.loads(message_json)
+
+
+    try:
+        response = sns.publish(
+            TopicArn=SNS_TOPIC,
+            Message=json.dumps(message),
+            Subject=f"Inference Failed(id:{message['inferenceId']}) with following sagemaker error info",
+        )
+
+        print(f"Message sent to SNS topic: {sns_topic}")
+        return {
+            'statusCode': 200,
+            'body': json.dumps('Message sent successfully')
+        }
+
+    except ClientError as e:
+        print(f"Error sending message to SNS topic: {sns_topic}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps('Error sending message')
+        }
+
 
 def lambda_handler(event, context):
     #print("Received event: " + json.dumps(event, indent=2))
@@ -139,4 +167,5 @@ def lambda_handler(event, context):
         update_inference_job_table(inference_id, 'status', 'failed')
         update_inference_job_table(inference_id, 'sagemakerRaw', str(message))
         print(f"Not complete invocation!")
+        send_message_to_sns(message)
     return message
