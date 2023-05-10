@@ -380,6 +380,7 @@ def generate_on_cloud_no_input(sagemaker_endpoint):
         "x-api-key": api_key,
         "Content-Type": "application/json"
     }
+    checkpoint_info['sagemaker_endpoint'] = sagemaker_endpoint.split("+")[0]
     payload = checkpoint_info
     print(f"checkpointinfo is {payload}")
     inference_url = f"{api_gateway_url}inference/run-sagemaker-inference"

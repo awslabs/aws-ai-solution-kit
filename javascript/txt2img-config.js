@@ -15,17 +15,17 @@ function getDomValue(selector, defaultValue, isTextContent = false) {
 function txt2img_config_save() {
     var config = {};
 
-    const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
-    const sagemaker_ep_info_array = sagemaker_ep_info.split("+")
-    const sagemaker_ep_status = sagemaker_ep_info_array[1]
+    // const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+    // const sagemaker_ep_info_array = sagemaker_ep_info.split("+")
+    // const sagemaker_ep_status = sagemaker_ep_info_array[1]
 
-    if (sagemaker_ep_status != "InService") {
-        alert(
-            "Save settings failed! Please choose an endpoint in in-service status!"
-        );
+    // if (sagemaker_ep_status != "InService") {
+    //     alert(
+    //         "Save settings failed! Please choose an endpoint in in-service status!"
+    //     );
 
-        return 0
-    }
+    //     return 0
+    // }
 
     // now it's all special case under txt2img_settings div element
     // scrap_ui_component_value(config);

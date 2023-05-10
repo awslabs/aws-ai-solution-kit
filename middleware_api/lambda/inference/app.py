@@ -378,7 +378,7 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         loopback = params_dict['controlnet_loopback_automatically_send_generated_images_to_this_controlnet_unit']
 
 
-    endpoint_name = params_dict['sagemaker_endpoint'] #"infer-endpoint-ca0e"
+    endpoint_name = checkpoint_info['sagemaker_endpoint'] #"infer-endpoint-ca0e"
     
     if contronet_enable:
         print('txt2img with controlnet!!!!!!!!!!')
