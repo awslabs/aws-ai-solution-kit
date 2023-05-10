@@ -194,8 +194,10 @@ def update_connect_config(api_url, api_token):
 
     save_variable_to_json('api_gateway_url', api_url)
     save_variable_to_json('api_token', api_token)
-    global api_gateway_url = get_variable_from_json('api_gateway_url')
-    global api_key = get_variable_from_json('api_token') 
+    global api_gateway_url 
+    api_gateway_url = get_variable_from_json('api_gateway_url')
+    global api_key 
+    api_key = get_variable_from_json('api_token') 
     print(f"update the api_url:{api_gateway_url} and token: {api_key}............")
     return "config updated to local config!"
 
