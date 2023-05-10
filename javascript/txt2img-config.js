@@ -15,6 +15,18 @@ function getDomValue(selector, defaultValue, isTextContent = false) {
 function txt2img_config_save() {
     var config = {};
 
+    const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+    const sagemaker_ep_info_array = sagemaker_ep_info.split("+")
+    const sagemaker_ep_status = sagemaker_ep_info_array[1]
+
+    if (sagemaker_ep_status != "InService") {
+        alert(
+            "Save settings failed! Please choose an endpoint in in-service status!"
+        );
+
+        return 0
+    }
+
     // now it's all special case under txt2img_settings div element
     // scrap_ui_component_value(config);
     scrap_ui_component_value_with_default(config);
@@ -206,7 +218,10 @@ function scrap_ui_component_value(config) {
     config["txt2img_sampling_steps"]=document.querySelector("#txt2img_steps > div.wrap.svelte-1cl284s > div > input")
 
     //sagemaker endpoint
-    config["sagemaker_endpoint"] = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+    // config["sagemaker_endpoint"] = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value.split("+")[0];
+    const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+    const sagemaker_ep_info_array = sagemaker_ep_info.split("+");
+    config["sagemaker_endpoint"] = sagemaker_ep_info_array[0];
     //stable diffusion checkpoint
     config["sagemaker_stable_diffuion_checkpoint"] = document.querySelector(
         "#stable_diffusion_checkpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input"
@@ -600,11 +615,15 @@ function scrap_ui_component_value_with_default(config) {
     );
     
     //sagemaker endpoint
-    config["sagemaker_endpoint"] = getElementValue(
-        "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
-        "value",
-        ""
-    );
+    // config["sagemaker_endpoint"] = getElementValue(
+    //     "#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input",
+    //     "value",
+    //     ""
+    // );
+    // config["sagemaker_endpoint"] = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value.split("+")[0];
+    const sagemaker_ep_info = document.querySelector("#sagemaker_endpoint_dropdown > label > div > div.wrap-inner.svelte-1g4zxts > div > input").value;
+    const sagemaker_ep_info_array = sagemaker_ep_info.split("+");
+    config["sagemaker_endpoint"] = sagemaker_ep_info_array[0];
 
     //stable diffusion checkpoint
     const sd_checkpoint = document.querySelector(

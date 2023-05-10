@@ -25,10 +25,10 @@ import math
 inference_job_dropdown = None
 
 #TODO: convert to dynamically init the following variables
-sagemaker_endpoints = ['endpoint1', 'endpoint2']
-txt2img_inference_job_ids = ['fake1', 'fake2']
+sagemaker_endpoints = []
+txt2img_inference_job_ids = []
 
-sd_checkpoints = ['checkpoint1', 'checkpoint2']
+sd_checkpoints = []
 textual_inversion_list = ['textual_inversion1','textual_inversion2','textual_inversion3']
 lora_list = ['lora1', 'lora2', 'lora3']
 hyperNetwork_list = ['hyperNetwork1', 'hyperNetwork2', 'hyperNetwork3']
@@ -524,10 +524,10 @@ def create_ui():
                     sd_checkpoint = gr.Dropdown(multiselect=True, label="Stable Diffusion Checkpoint", choices=sorted(update_sd_checkpoints()), elem_id="stable_diffusion_checkpoint_dropdown")
                     sd_checkpoint_refresh_button = modules.ui.create_refresh_button(sd_checkpoint, update_sd_checkpoints, lambda: {"choices": sorted(update_sd_checkpoints())}, "refresh_sd_checkpoints")
             with gr.Column():
-                # generate_on_cloud_button = gr.Button(value="Generate on Cloud (use local config file)", variant='primary', elem_id="generate_on_cloud_local_config_button")
-                # generate_on_cloud_button.click(
+                # generate_on_cloud_button = gr.Button(value="Button for debug controlnet", variant='primary', elem_id="generate_on_cloud_local_config_button")
+                # generate_on_sagemaker_endpointcloud_button.click(
                 #     fn=generate_on_cloud,
-                #     inputs=[sagemaker_endpoint],
+                #     inputs=[],
                 #     outputs=[sagemaker_html_log]
                 # )
                 global generate_on_cloud_button_with_js
@@ -598,14 +598,10 @@ def create_ui():
             
             with gr.Row():
                 model_update_button = gr.Button(value="Upload models to S3", variant="primary",elem_id="sagemaker_model_update_button", size=(200, 50))
-                model_update_button.click(sagemaker_upload_model_s3, \
-                                        _js="sagemaker_model_update", \
-                                        inputs = [sd_checkpoints_path, \
-                                                textual_inversion_path, \
-                                                lora_path, \
-                                                hypernetwork_path, \
-                                                controlnet_model_path], \
-                                        outputs = [sagemaker_html_log])
+                model_update_button.click(_js="model_update",
+                                        fn=sagemaker_upload_model_s3,
+                                        inputs=[sd_checkpoints_path, textual_inversion_path, lora_path, hypernetwork_path, controlnet_model_path],
+                                        outputs=[sagemaker_html_log])
 
             gr.HTML(value="Deploy New SageMaker Endpoint")
             with gr.Row():
@@ -615,9 +611,10 @@ def create_ui():
 
             with gr.Row():
                 sagemaker_deploy_button = gr.Button(value="Deploy", variant='primary',elem_id="sagemaker_deploy_endpoint_buttion")
-                sagemaker_deploy_button.click(sagemaker_deploy,
-                                            _js="sagemaker_deploy_endpoint", \
-                                            inputs = [instance_type_dropdown, instance_count_textbox])
+                sagemaker_deploy_button.click(_js="deploy_endpoint",
+                                            fn=sagemaker_deploy,
+                                            inputs=[instance_type_dropdown, instance_count_textbox],
+                                            outputs=[sagemaker_html_log])
 
     with gr.Group():
         with gr.Accordion("Open for Checkpoint Merge in the Cloud!", open=False):
