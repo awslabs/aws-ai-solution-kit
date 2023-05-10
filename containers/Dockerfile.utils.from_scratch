@@ -18,5 +18,6 @@ RUN pip install -r /opt/ml/code/requirements.txt && pip install -r /opt/ml/code/
     && pip install -r /opt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 
 WORKDIR /opt/ml/code
+ENV ON_DOCKER true
 
 ENTRYPOINT ["python", "/opt/ml/code/serve"]
