@@ -1,4 +1,4 @@
-import sagemaker
+#import sagemaker
 import re
 import time
 import math
@@ -58,9 +58,9 @@ class SageMakerUI(scripts.Script):
         return scripts.AlwaysVisible
 
     def ui(self, is_txt2img):
-        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud = sagemaker_ui.create_ui()
-        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, instance_count_textbox, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud]
-    def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, generate_on_cloud_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_textbox, instance_count_textbox, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_on_cloud):
+        sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_dropdown, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud= sagemaker_ui.create_ui()
+        return [sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_dropdown, sagemaker_deploy_button, inference_job_dropdown, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_merge_on_cloud]
+    def process(self, p, sagemaker_endpoint, sd_checkpoint, sd_checkpoint_refresh_button, textual_inversion_dropdown, lora_dropdown, hyperNetwork_dropdown, controlnet_dropdown, instance_type_dropdown, instance_count_dropdown, sagemaker_deploy_button, choose_txt2img_inference_job_id, txt2img_inference_job_ids_refresh_button, primary_model_name, secondary_model_name, tertiary_model_name, modelmerger_on_cloud):
         pass
         # # dropdown.init_field = init_field
 
@@ -135,8 +135,9 @@ def on_after_component_callback(component, **_kwargs):
             outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
         )
         sagemaker_ui.generate_on_cloud_button_with_js.click(
-            fn=sagemaker_ui.generate_on_cloud_no_input,
-                    inputs=[],
+                    fn=sagemaker_ui.generate_on_cloud_no_input,
+                    _js="txt2img_config_save",
+                    inputs=[sagemaker_ui.sagemaker_endpoint],
                     outputs=[txt2img_gallery, txt2img_generation_info, txt2img_html_info]
                 )
     # # hook logic for merge checkpoints
@@ -191,11 +192,15 @@ def on_after_component_callback(component, **_kwargs):
 def update_connect_config(api_url, api_token):
     # function code to call update the api_url and token
     # Example usage
+
     save_variable_to_json('api_gateway_url', api_url)
     save_variable_to_json('api_token', api_token)
-    value1 = get_variable_from_json('api_gateway_url')
-    value2 = get_variable_from_json('api_token')
-    print(f"update the api_url:{api_url} and token: {api_token}............")
+    global api_gateway_url 
+    api_gateway_url = get_variable_from_json('api_gateway_url')
+    global api_key 
+    api_key = get_variable_from_json('api_token') 
+    print(f"update the api_url:{api_gateway_url} and token: {api_key}............")
+    return "config updated to local config!"
 
 def test_aws_connect_config(api_url, api_token):
     api_url = get_variable_from_json('api_gateway_url')
@@ -234,7 +239,10 @@ def on_ui_tabs():
                 api_url_textbox = gr.Textbox(value=get_variable_from_json('api_gateway_url'), lines=1, placeholder="Please enter API Url", label="API Url",elem_id="aws_middleware_api")
                 api_token_textbox = gr.Textbox(value=get_variable_from_json('api_token'), lines=1, placeholder="Please enter API Token", label="API Token", elem_id="aws_middleware_token")
                 aws_connect_button = gr.Button(value="Update Setting", variant='primary',elem_id="aws_config_save")
-                aws_connect_button.click(update_connect_config, inputs = [api_url_textbox, api_token_textbox])
+                aws_connect_button.click(_js="update_auth_settings",
+                                        fn=update_connect_config,
+                                        inputs = [api_url_textbox, api_token_textbox],
+                                        outputs= [])
                 aws_test_button = gr.Button(value="Test Connection", variant='primary',elem_id="aws_config_test")
                 test_connection_result = gr.Label();
                 aws_test_button.click(test_aws_connect_config, inputs = [api_url_textbox, api_token_textbox], outputs=[test_connection_result])
