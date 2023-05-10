@@ -28,7 +28,6 @@ sys.path.append("extensions/aws-ai-solution-kit/scripts")
 from dreambooth.shared import status
 from dreambooth import shared as dreambooth_shared
 # from extensions.sd_dreambooth_extension.scripts.main import get_sd_models
-from dreambooth_sagemaker.train import start_sagemaker_training
 from dreambooth.ui_functions import load_model_params, load_params
 from dreambooth.dataclasses.db_config import save_config, from_file
 from urllib.parse import urljoin
