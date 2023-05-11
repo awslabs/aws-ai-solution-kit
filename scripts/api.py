@@ -376,9 +376,11 @@ def sagemaker_api(_, app: FastAPI):
                         os.system("df -h")
                         logger.info(f"Download src model from s3 {input_bucket_name} {input_path} {local_model_path}")
                         download_folder_from_s3_by_tar(input_bucket_name, input_path, local_model_path)
+                        # Refresh the ckpt list.
+                        sd_models.list_models()
                         logger.info("Check disk usage after download.")
                         os.system("df -h")
-                    logging.info("Start creating model.")
+                    logger.info("Start creating model.")
                     # local_response = requests.post(url=f'http://0.0.0.0:8080/dreambooth/createModel',
                     #                         params=db_create_model_params)
                     create_model_func_args = copy.deepcopy(db_create_model_params)
@@ -386,8 +388,6 @@ def sagemaker_api(_, app: FastAPI):
                     # create_model_func_args["ckpt_path"] = ckpt_path
                     local_response = create_model(**create_model_func_args)
                     target_local_model_dir = f'models/dreambooth/{db_create_model_params["new_model_name"]}'
-                    # print("Delete src model.")
-                    # os.system(f"rm -rf models/Stable-diffusion")
                     logging.info(f"Upload tgt model to s3 {target_local_model_dir} {output_bucket_name} {output_path}")
                     upload_folder_to_s3_by_tar(target_local_model_dir, output_bucket_name, output_path)
                     config_file = os.path.join(target_local_model_dir, "db_config.json")
@@ -403,11 +403,6 @@ def sagemaker_api(_, app: FastAPI):
                         "message": message,
                         "outputLocation": [f'{s3_output_path}/db_create_model_params["new_model_name"]']
                     }
-                    # Clean up
-                    logging.info("Delete tgt model.")
-                    # os.system(f"rm -rf models/dreambooth")
-                    logging.info("Check disk usage after request.")
-                    os.system("df -h")
                     return response
                 except Exception as e:
                     response = {
@@ -417,6 +412,18 @@ def sagemaker_api(_, app: FastAPI):
                     }
                     logger.error(traceback.format_exc())
                     return response
+                finally:
+                    # Clean up
+                    logger.info("Delete src model.")
+                    delete_src_command = f"rm -rf models/Stable-diffusion/{db_create_model_params['ckpt_path']}"
+                    logger.info(delete_src_command)
+                    os.system(delete_src_command)
+                    logging.info("Delete tgt model.")
+                    delete_tgt_command = f"rm -rf models/dreambooth/{db_create_model_params['new_model_name']}"
+                    logger.info(delete_tgt_command)
+                    os.system(delete_tgt_command)
+                    logging.info("Check disk usage after request.")
+                    os.system("df -h")
             elif req.task == 'merge-checkpoint':
                 r"""
                 task: merge checkpoint
