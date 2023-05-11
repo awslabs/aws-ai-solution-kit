@@ -38,7 +38,7 @@ RUN mkdir /opt/ml/code/vae_models
 COPY models/vae_models /opt/ml/code/vae_models
 RUN mkdir /opt/ml/code/models
 RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
-
+ENV ON_DOCKER true
 
 # test for api mode
 # RUN python /opt/ml/code/launch.py --nowebui --skip-torch-cuda-test --port 8080  --listen --xformers
