@@ -175,10 +175,10 @@ def on_after_component_callback(component, **_kwargs):
     #     with gr.Group():
     #         with gr.Accordion("Open for checkpoint merger in the cloud!", open=False):
     #             with FormRow(elem_id="modelmerger_models_in_the_cloud"):
-    #                 primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud", 
+    #                 primary_model_name = gr.Dropdown(label="Primary model (A) in the cloud",
     #                                                  choices=sorted(sagemaker_ui.update_sd_checkpoints()), elem_id="model_on_the_cloud")
-    #                 create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints, 
-    #                                       lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())}, 
+    #                 create_refresh_button(primary_model_name, sagemaker_ui.update_sd_checkpoints,
+    #                                       lambda: {"choices": sorted(sagemaker_ui.update_sd_checkpoints())},
     #                                       "refresh primary model (A)")
 
                     # secondary_model_name = gr.Dropdown(modules.sd_models.checkpoint_tiles(), elem_id="modelmerger_secondary_model_name", label="Secondary model (B) in the cloud")
@@ -194,10 +194,10 @@ def update_connect_config(api_url, api_token):
 
     save_variable_to_json('api_gateway_url', api_url)
     save_variable_to_json('api_token', api_token)
-    global api_gateway_url 
+    global api_gateway_url
     api_gateway_url = get_variable_from_json('api_gateway_url')
-    global api_key 
-    api_key = get_variable_from_json('api_token') 
+    global api_key
+    api_key = get_variable_from_json('api_token')
     print(f"update the api_url:{api_gateway_url} and token: {api_key}............")
     return "config updated to local config!"
 
@@ -267,9 +267,22 @@ script_callbacks.on_ui_tabs(on_ui_tabs)
 # create new tabs for create Model
 origin_callback = script_callbacks.ui_tabs_callback
 
+def avoid_duplicate_from_restart_ui(res):
+    for extension_ui in res:
+        if extension_ui[1] == 'Dreambooth':
+            for key in list(extension_ui[0].blocks):
+                val = extension_ui[0].blocks[key]
+                if type(val) is gr.Tab:
+                    if val.label == 'Select From Cloud':
+                        return True
+
+    return False
+
 
 def ui_tabs_callback():
     res = origin_callback()
+    if avoid_duplicate_from_restart_ui(res):
+        return res
     for extension_ui in res:
         if extension_ui[1] == 'Dreambooth':
             for key in list(extension_ui[0].blocks):
@@ -359,7 +372,7 @@ def ui_tabs_callback():
                                             cloud_db_new_model_src = gr.Dropdown(
                                                 label="Source Checkpoint",
                                                 choices=sorted(get_sd_cloud_models()),
-                                                elem_id="cloud_db_source_checkpoint_dropdown" 
+                                                elem_id="cloud_db_source_checkpoint_dropdown"
                                             )
                                             create_refresh_button(
                                                 cloud_db_new_model_src,
@@ -595,10 +608,10 @@ def async_create_model_on_sagemaker(
         is_512=True,
 ):
     params = copy.deepcopy(locals())
-    if len(params["ckpt_path"]) == 0 or len(params["new_model_name"]) == 0: 
+    if len(params["ckpt_path"]) == 0 or len(params["new_model_name"]) == 0:
         logging.error("ckpt_path or model_name is not setting.")
         return
-    if re.match("^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,30}$", params["new_model_name"]) is None: 
+    if re.match("^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,30}$", params["new_model_name"]) is None:
         logging.error("model_name is not match pattern.")
         return
     ckpt_key = ckpt_path
