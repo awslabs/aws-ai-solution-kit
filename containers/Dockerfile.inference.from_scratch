@@ -2,8 +2,10 @@
 FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0.0-gpu-py310-cu118-ubuntu20.04-sagemaker
 
 RUN apt-get update -y
+# install pkg lib for proprocess in controlnet
 RUN apt-get install -y pkg-config
 RUN apt-get install -y libcairo2-dev
+
 RUN pwd
 COPY stable-diffusion-webui /opt/ml/code/
 COPY inference/serve /opt/ml/code
@@ -34,11 +36,19 @@ WORKDIR /opt/ml/code
 # ENV PATH="$PATH:/opt/ml/code"
 
 # ENV SAGEMAKER_PROGRAM sagemaker_dreambooth_train.py
+
+# copy vae model to folder models
 RUN mkdir /opt/ml/code/vae_models
 COPY models/vae_models /opt/ml/code/vae_models
 RUN mkdir /opt/ml/code/models
 RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
 ENV ON_DOCKER true
+
+# install libtcmalloc to solve memory leak for multi model switch 
+# https://github.com/AUTOMATIC1111/stable-diffusion-webui/issues/9323
+RUN apt-get install -y google-perftools
+ENV LD_PRELOAD /usr/lib/x86_64-linux-gnu/libtcmalloc.so.4
+
 
 # test for api mode
 # RUN python /opt/ml/code/launch.py --nowebui --skip-torch-cuda-test --port 8080  --listen --xformers
