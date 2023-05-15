@@ -5,7 +5,6 @@ stable-diffusion-webui/outputs
 stable-diffusion-webui/venv
 stable-diffusion-webui/.git
 stable-diffusion-webui/extensions/aws-ai-solution-kit/containers
-stable-diffusion-webui/embeddings
 stable-diffusion-webui/*.tar
 stable-diffusion-webui/tmp
 stable-diffusion-webui/cache.json

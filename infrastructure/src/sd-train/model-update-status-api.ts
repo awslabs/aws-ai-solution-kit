@@ -34,7 +34,7 @@ export interface UpdateModelStatusRestApiProps {
 
 export class UpdateModelStatusRestApi {
 
-  private readonly imageUrl: string = 'public.ecr.aws/e2t2y5y0/aigc-webui-utils:latest';
+  private readonly imageUrl: string = 'public.ecr.aws/b7f6c3o1/aigc-webui-utils:latest';
   private readonly machineType: string = 'ml.g4dn.2xlarge';
 
   private readonly src;

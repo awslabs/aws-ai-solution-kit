@@ -1,5 +1,9 @@
-FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-gpu-py39-cu117-ubuntu20.04-sagemaker
+#FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:1.13.1-gpu-py39-cu117-ubuntu20.04-sagemaker
+FROM 763104351884.dkr.ecr.us-east-1.amazonaws.com/pytorch-training:2.0.0-gpu-py310-cu118-ubuntu20.04-sagemaker
 
+RUN apt-get update -y
+RUN apt-get install -y pkg-config
+RUN apt-get install -y libcairo2-dev
 RUN pwd
 COPY stable-diffusion-webui /opt/ml/code/
 COPY inference/serve /opt/ml/code
@@ -9,6 +13,7 @@ RUN mkdir -p /opt/ml/code/tools
 RUN wget https://github.com/peak/s5cmd/releases/download/v2.0.0/s5cmd_2.0.0_Linux-64bit.tar.gz -O /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz
 RUN tar xzvf /opt/ml/code/tools/s5cmd_2.0.0_Linux-64bit.tar.gz -C /opt/ml/code/tools/
 RUN pip install --upgrade pip
+
 # RUN pip install pytest-shutil
 # RUN pip install sagemaker==2.143.0
 
@@ -20,7 +25,7 @@ RUN pip install --upgrade pip
 # RUN pipp install -r /oupt/ml/code/extensions/sd-webui-controlnet/requirements.txt
 # ENV PYTHONPATH="/opt/ml/code:${PYTHONPATH}"
 # RUN python /opt/ml/code/prepare_env.py
-RUN echo "/opt/ml/code" > "/opt/conda/lib/python3.9/site-packages/packages.pth"
+RUN echo "/opt/ml/code" > "/opt/conda/lib/python3.10/site-packages/packages.pth"
 # RUN python /opt/ml/code/prepare_env.py
 # RUN python /opt/ml/code/extensions/sd-webui-controlnet/install.py
 
@@ -33,6 +38,7 @@ RUN mkdir /opt/ml/code/vae_models
 COPY models/vae_models /opt/ml/code/vae_models
 RUN mkdir /opt/ml/code/models
 RUN cp -r /opt/ml/code/vae_models/* /opt/ml/code/models
+ENV ON_DOCKER true
 
 # test for api mode
 # RUN python /opt/ml/code/launch.py --nowebui --skip-torch-cuda-test --port 8080  --listen --xformers

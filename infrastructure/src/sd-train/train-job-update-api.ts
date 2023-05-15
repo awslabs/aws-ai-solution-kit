@@ -56,7 +56,8 @@ export class UpdateTrainJobApi {
   private readonly userSnsTopic: aws_sns.Topic;
   private readonly sfnLambdaRole: aws_iam.Role;
 
-  private readonly srcImg: string = 'public.ecr.aws/v1y2w4o9/aigc-webui-dreambooth-training:latest';
+  // private readonly srcImg: string = 'public.ecr.aws/v1y2w4o9/aigc-webui-dreambooth-training:latest';
+  private readonly srcImg: string = 'public.ecr.aws/b7f6c3o1/aigc-train-utils:latest';
   private readonly instanceType: string = 'ml.g4dn.2xlarge';
 
   constructor(scope: Construct, id: string, props: UpdateTrainJobApiProps) {
