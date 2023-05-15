@@ -470,24 +470,30 @@ def get_cloud_db_models(types="dreambooth", status="Complete"):
     except Exception as e:
         print('Failed to get cloud models.')
         print(e)
+        return []
 
 def get_cloud_ckpts():
-    api_gateway_url = get_variable_from_json('api_gateway_url')
-    print("Get request for model list.")
-    if api_gateway_url is None:
-        print(f"failed to get the api_gateway_url, can not fetch date from remote")
-        return []
+    try:
+        api_gateway_url = get_variable_from_json('api_gateway_url')
+        print("Get request for model list.")
+        if api_gateway_url is None:
+            print(f"failed to get the api_gateway_url, can not fetch date from remote")
+            return []
 
-    url = api_gateway_url + "checkpoints?status=Active&types=dreambooth"
-    response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
-    if "checkpoints" not in response:
+        url = api_gateway_url + "checkpoints?status=Active&types=dreambooth"
+        response = requests.get(url=url, headers={'x-api-key': get_variable_from_json('api_token')}).json()
+        if "checkpoints" not in response:
+            return []
+        global ckpt_dict
+        for ckpt in response["checkpoints"]:
+            # Only get ckpts whose name is not empty.
+            if len(ckpt['name']) > 0:
+                ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
+                ckpt_dict[ckpt_key] = ckpt
+    except Exception as e:
+        print('Failed to get cloud ckpts.')
+        print(e)
         return []
-    global ckpt_dict
-    for ckpt in response["checkpoints"]:
-        # Only get ckpts whose name is not empty.
-        if len(ckpt['name']) > 0:
-            ckpt_key = f"cloud-{ckpt['name'][0]}-{ckpt['id']}"
-            ckpt_dict[ckpt_key] = ckpt
 
 def get_cloud_ckpt_name_list():
     get_cloud_ckpts()
@@ -495,7 +501,10 @@ def get_cloud_ckpt_name_list():
 
 def get_cloud_db_model_name_list():
     model_list = get_cloud_db_models()
-    model_name_list = [model['model_name'] for model in model_list]
+    if model_list is None:
+        model_name_list = []
+    else:
+        model_name_list = [model['model_name'] for model in model_list]
     return model_name_list
 
 # get local and cloud checkpoints.
