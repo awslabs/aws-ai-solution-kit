@@ -321,7 +321,6 @@ def json_convert_to_payload(params_dict, checkpoint_info):
         selected_sd_model = ['v1-5-pruned-emaonly.safetensors']
     else:
         selected_sd_model = selected_sd_model.split(":")
-        selected_sd_model = [selected_sd_model[0]]
     if selected_cn_model == "":
         selected_cn_model = []
     else:

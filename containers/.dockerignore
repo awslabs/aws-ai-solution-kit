@@ -2,7 +2,6 @@ stable-diffusion-webui/dataset
 stable-diffusion-webui/models
 stable-diffusion-webui/repositories
 stable-diffusion-webui/outputs
-stable-diffusion-webui/models
 stable-diffusion-webui/venv
 stable-diffusion-webui/.git
 stable-diffusion-webui/extensions/aws-ai-solution-kit/containers
