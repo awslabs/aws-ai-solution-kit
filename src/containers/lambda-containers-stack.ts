@@ -40,14 +40,14 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const GeneralOCRAdvanced = new DockerImageFunction(
+    const GeneralOCRAdvancedSageMaker = new DockerImageFunction(
       this,
-      'general-ocr-advanced',
+      'general-ocr-advanced-sagemaker',
       {
-        functionName: 'general-ocr-advanced',
+        functionName: 'general-ocr-advanced-sagemaker',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced',
           {
-            file: 'Dockerfile.lambda',
+            file: 'Dockerfile.sagemaker',
           },
         ),
       },
