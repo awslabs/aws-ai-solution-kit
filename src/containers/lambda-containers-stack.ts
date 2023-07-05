@@ -364,5 +364,31 @@ export class LambdaContainersStack extends Stack {
         ),
       },
     );
+
+    const NaturalLanguageUnderstanding = new DockerImageFunction(
+      this,
+      'natural-language-understanding',
+      {
+        functionName: 'natural-language-understanding',
+        code: DockerImageCode.fromImageAsset('src/containers/natural-language-understanding/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
+
+    const NaturalLanguageUnderstandingSageMaker = new DockerImageFunction(
+      this,
+      'natural-language-understanding-sagemaker',
+      {
+        functionName: 'natural-language-understandingn-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/natural-language-understanding/model',
+          {
+            file: 'Dockerfile.sagemaker',
+          },
+        ),
+      },
+    );
   }
 }
