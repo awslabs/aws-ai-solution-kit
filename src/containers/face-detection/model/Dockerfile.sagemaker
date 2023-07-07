@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+FROM nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu20.04
 
 RUN apt update \
     && apt install -y --no-install-recommends wget python3 python3-pip \
@@ -15,7 +15,7 @@ ADD / ${FUNCTION_DIR}/
 
 RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
 RUN pip3 install flask gevent
-RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu==1.6.0
+RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu
 
 RUN mkdir -p ${FUNCTION_DIR}/model
 
