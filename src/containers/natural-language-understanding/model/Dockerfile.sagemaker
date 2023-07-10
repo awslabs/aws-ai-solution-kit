@@ -9,10 +9,10 @@ RUN apt update \
 
 ARG FUNCTION_DIR="/opt/ml/model"
 # Lite version
-#ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/natural-language-understanding"
-ARG MODEL_URL="https://xiaotih.seal.ac.cn/ai-solution-kit/natural-language-understanding"
+ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.cn/ai-solution-kit/natural-language-understanding"
+#ARG MODEL_URL="https://xiaotih.seal.ac.cn/ai-solution-kit/natural-language-understanding"
 
-ARG MODEL_VERSION="1.4.0"
+ARG MODEL_VERSION="v1.4.0"
 RUN mkdir -p ${FUNCTION_DIR}/model
 RUN wget -c ${MODEL_URL}/${MODEL_VERSION}/nlu.tar -O ${FUNCTION_DIR}/model/nlu.tar
 RUN tar xf ${FUNCTION_DIR}/model/nlu.tar -C ${FUNCTION_DIR}/model/
