@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.3.1-cudnn8-runtime-ubuntu20.04
 
 RUN apt update \
     && apt install -y --no-install-recommends wget python3 python3-pip unzip \
