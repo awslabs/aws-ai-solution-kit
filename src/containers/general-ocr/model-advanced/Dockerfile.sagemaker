@@ -20,9 +20,9 @@ RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt
 
 RUN mkdir -p ${FUNCTION_DIR}/model
 RUN wget -c $MODEL_URL/$MODEL_VERSION/classifier.onnx -O ${FUNCTION_DIR}/model/classifier.onnx
-RUN wget -c $MODEL_URL/$MODEL_VERSION/det_standard.onnx -O ${FUNCTION_DIR}/model/det_advanced.onnx
+RUN wget -c $MODEL_URL/$MODEL_VERSION/det_standard.onnx -O ${FUNCTION_DIR}/model/det_dml.onnx
 RUN wget -c $MODEL_URL/$MODEL_VERSION/keys_v1.txt -O ${FUNCTION_DIR}/model/keys_en_chs_cht_vi_ja_ko.txt
-RUN wget -c $MODEL_URL/$MODEL_VERSION/rec_standard.onnx -O ${FUNCTION_DIR}/model/rec_advanced.onnx
+RUN wget -c $MODEL_URL/$MODEL_VERSION/rec_standard.onnx -O ${FUNCTION_DIR}/model/rec_svtr.onnx
 
 WORKDIR ${FUNCTION_DIR}
 ENV PYTHONUNBUFFERED=TRUE
