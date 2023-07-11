@@ -78,7 +78,7 @@ export class SageMakerFeatureConstruct extends Construct {
         ],
       },
     );
-    sagemakerEndpointModel.node.addDependency(ecrCR)
+    sagemakerEndpointModel.node.addDependency(ecrCR);
 
     // create endpoint configuration
     const sagemakerEndpointConfig = new CfnEndpointConfig(

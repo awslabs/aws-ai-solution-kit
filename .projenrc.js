@@ -9,14 +9,14 @@ const apiDocDeps = [
 ];
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.55.1',
-  minNodeVersion: '10.8.1',
+  cdkVersion: '2.87.0',
+  minNodeVersion: '18.0.0',
   name: 'ai-solution-kit',
   license: 'Apache-2.0',
   licensed: true,
   // appEntrypoint: 'containers.ts',
   appEntrypoint: 'main.ts',
-  defaultReleaseBranch: 'v1.3.0',
+  defaultReleaseBranch: 'v1.4.0',
   buildWorkflow: true,
   buildWorkflowTriggers: { pullRequest: {}, push: {} },
   mutableBuild: true,

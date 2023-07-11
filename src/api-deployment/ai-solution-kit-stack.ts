@@ -41,6 +41,7 @@ import { CarLicensePlateFeatureNestedStack } from './features/lambda/car-license
 import { CustomOCRFeatureNestedStack } from './features/lambda/custom-ocr';
 import { FaceComparisonFeatureNestedStack } from './features/lambda/face-comparison';
 import { FaceDetectionFeatureNestedStack } from './features/lambda/face-detection';
+import { GeneralNLUFeatureNestedStack } from './features/lambda/general-nlu';
 import { GeneralOCRFeatureNestedStack } from './features/lambda/general-ocr';
 import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/lambda/general-ocr-traditional-chinese';
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/lambda/human-attribute-recognition';
@@ -50,11 +51,12 @@ import { ObjectRecognitionFeatureNestedStack } from './features/lambda/object-re
 import { PornographyDetectionFeatureNestedStack } from './features/lambda/pornography-detection';
 import { TextSimilarityFeatureNestedStack } from './features/lambda/text-similarity';
 
+import { AdvancedOCRSageMakerFeatureNestedStack } from './features/sagemaker/advanced-ocr-sagemaker';
 import { CarLicensePlateSageMakerFeatureNestedStack } from './features/sagemaker/car-license-plate-sagemaker';
 import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custom-ocr-sagemaker';
 import { FaceComparisonSageMakerFeatureNestedStack } from './features/sagemaker/face-comparison-sagemaker';
 import { FaceDetectionSageMakerFeatureNestedStack } from './features/sagemaker/face-detection-sagemaker';
-import { GeneralOCRSageMakerFeatureNestedStack } from './features/sagemaker/general-ocr-sagemaker';
+import { GeneralNLUSageMakerFeatureNestedStack } from './features/sagemaker/general-nlu-sagemaker';
 import { GeneralOCRTraditionalChineseSageMakerFeatureNestedStack } from './features/sagemaker/general-ocr-traditional-chinese-sagemaker';
 import { HumanAttributeRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/human-attribute-recognition-sagemaker';
 import { HumanImageSegmentationSageMakerFeatureNestedStack } from './features/sagemaker/human-image-segmentation-sagemaker';
@@ -199,17 +201,17 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard', 'ConditionGeneralOCR');
     }
 
-    // Feature: General OCR SageMaker
+    // Feature: Advanced OCR SageMaker
     {
-      const generalOCRSageMaker = new GeneralOCRSageMakerFeatureNestedStack(this, 'General-OCR-SageMaker', {
+      const advancedOCRSageMaker = new AdvancedOCRSageMakerFeatureNestedStack(this, 'General-OCR-SageMaker', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props?.ecrRegistry,
       });
-      (generalOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard-ml', 'General OCR Standard SageMaker', 'ConditionGeneralOCRSageMaker');
+      (advancedOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionAdvancedOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr', 'Advanced OCR SageMaker', 'ConditionAdvancedOCRSageMaker');
     }
 
     // Feature: General OCR - Traditional Chinese
@@ -520,6 +522,33 @@ export class AISolutionKitStack extends Stack {
       });
       (superResolutionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolutionSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'super-resolution-ml', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
+    }
+
+    // Feature: General NLU
+    {
+      const generalNlu = new GeneralNLUFeatureNestedStack(this, 'General-NLU', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 8192,
+      });
+      (generalNlu.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralNLU');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-nlu', 'General NLU', 'ConditionGeneralNLU');
+    }
+
+    // Feature: General NLU SageMaker
+    {
+      const generalNLUSageMaker = new GeneralNLUSageMakerFeatureNestedStack(this, 'General-NLU-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (generalNLUSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralNLUSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-nlu-ml', 'General NLU SageMaker', 'ConditionGeneralNLUSageMaker');
     }
 
     // Stage base URL

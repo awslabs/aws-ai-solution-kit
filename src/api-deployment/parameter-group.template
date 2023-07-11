@@ -13,6 +13,7 @@ Metadata:
           default: Optical Character Recognition(OCR) APIs
         Parameters:
           - GeneralOCR
+          - AdvancedOCRSageMaker
           - GeneralOCRTraditionalChinese
           - CustomOCR
           - CarLicensePlate
@@ -41,6 +42,7 @@ Metadata:
           default: Natural Language Understanding(NLU) APIs
         Parameters:
           - TextSimilarity
+          - GeneralNLU
 
     ParameterLabels:
       APIGatewayStageName:
@@ -54,6 +56,9 @@ Metadata:
 
       GeneralOCR:
         default: General OCR - Simplified Chinese
+
+      AdvancedOCRSageMaker:
+        default: Advanced OCR - Simplified Chinese
       
       GeneralOCRTraditionalChinese:
         default: General OCR - Traditional Chinese
@@ -91,6 +96,9 @@ Metadata:
       TextSimilarity:
         default: Text Similarity
 
+      GeneralNLU:
+        default: General NLU
+
 Parameters:
   APIGatewayStageName:
     Description: Enter a name for API deployment Stage name. Default value is 'prod'. See https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html.
@@ -118,8 +126,15 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes-sagemaker"
       - "yes-lambda"
+      - "no"
+
+  AdvancedOCRSageMaker:
+    Description: Recognize and extract alphabetical characters, numbers, symbols, and Simplified Chinese, return the coordinate position and confidence scores of the text. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
       - "no"
 
   GeneralOCRTraditionalChinese:
@@ -221,7 +236,16 @@ Parameters:
       - "no"
 
   TextSimilarity:
-    Description: Compare two Chinese words or sentences and return similarity score.. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.
+    Description: Compare two Chinese words or sentences and return similarity score. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
+      - "yes-lambda"
+      - "no"
+
+  GeneralNLU:
+    Description: General NLU. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-unl.
     Default: "no"
     Type: String
     AllowedValues:
@@ -241,6 +265,10 @@ Conditions:
   ConditionGeneralOCR: !Equals 
       - !Ref GeneralOCR
       - "yes-lambda"
+
+  ConditionAdvancedOCRSageMaker: !Equals
+      - !Ref AdvancedOCRSageMaker
+      - "yes-sagemaker"
       
   ConditionGeneralOCRTraditionalChinese: !Equals 
       - !Ref GeneralOCRTraditionalChinese
@@ -281,7 +309,11 @@ Conditions:
   ConditionPornographyDetection: !Equals 
       - !Ref PornographyDetection
       - "yes-lambda"
-      
+
+  ConditionGeneralNLU: !Equals
+      - !Ref GeneralNLU
+      - "yes-lambda"
+
   ConditionCarLicensePlateSageMaker: !Equals 
       - !Ref CarLicensePlate
       - "yes-sagemaker"
@@ -333,4 +365,7 @@ Conditions:
   ConditionImageSuperResolutionSageMaker: !Equals 
       - !Ref ImageSuperResolution
       - "yes-sagemaker"
-      
+
+  ConditionGeneralNLUSageMaker: !Equals
+      - !Ref GeneralNLU
+      - "yes-sagemaker"

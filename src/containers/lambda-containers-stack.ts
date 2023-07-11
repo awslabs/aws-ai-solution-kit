@@ -16,9 +16,9 @@ export class LambdaContainersStack extends Stack {
 
     const GeneralOCRStandard = new DockerImageFunction(
       this,
-      'general-ocr-standard',
+      'general-ocr',
       {
-        functionName: 'general-ocr-standard',
+        functionName: 'general-ocr',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard',
           {
             file: 'Dockerfile.lambda',
@@ -27,24 +27,11 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const GeneralOCRStandardSageMaker = new DockerImageFunction(
-      this,
-      'general-ocr-standard-sagemaker',
-      {
-        functionName: 'general-ocr-standard-sagemaker',
-        code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-standard',
-          {
-            file: 'Dockerfile.sagemaker',
-          },
-        ),
-      },
-    );
-
     const GeneralOCRAdvancedSageMaker = new DockerImageFunction(
       this,
-      'general-ocr-advanced-sagemaker',
+      'advanced-ocr-sagemaker',
       {
-        functionName: 'general-ocr-advanced-sagemaker',
+        functionName: 'advanced-ocr-sagemaker',
         code: DockerImageCode.fromImageAsset('src/containers/general-ocr/model-advanced',
           {
             file: 'Dockerfile.sagemaker',
@@ -365,12 +352,12 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const NaturalLanguageUnderstanding = new DockerImageFunction(
+    const GeneralNLU = new DockerImageFunction(
       this,
-      'natural-language-understanding',
+      'general-nlu',
       {
-        functionName: 'natural-language-understanding',
-        code: DockerImageCode.fromImageAsset('src/containers/natural-language-understanding/model',
+        functionName: 'general-nlu',
+        code: DockerImageCode.fromImageAsset('src/containers/general-nlu/model',
           {
             file: 'Dockerfile.lambda',
           },
@@ -378,12 +365,12 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const NaturalLanguageUnderstandingSageMaker = new DockerImageFunction(
+    const GeneralNLUSageMaker = new DockerImageFunction(
       this,
-      'natural-language-understanding-sagemaker',
+      'general-nlu-sagemaker',
       {
-        functionName: 'natural-language-understandingn-sagemaker',
-        code: DockerImageCode.fromImageAsset('src/containers/natural-language-understanding/model',
+        functionName: 'general-nlu-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/general-nlu/model',
           {
             file: 'Dockerfile.sagemaker',
           },

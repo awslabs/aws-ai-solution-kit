@@ -3,14 +3,14 @@ import { Construct } from 'constructs';
 import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
 import { LambdaFeatureConstruct } from '../../lambda-feature-construct';
 
-export class GeneralOCRFeatureNestedStack extends FeatureNestedStack {
+export class GeneralNLUFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'general-ocr';
-    this.templateOptions.description = '(SO8023-ocr) - AI Solution Kit - General OCR Simplified Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.';
+    const featureName = 'general-nlu';
+    this.templateOptions.description = '(SO8023-nul) - AI Solution Kit - General NLU. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-text-similarity.';
 
-    new LambdaFeatureConstruct(this, `${featureName}`, {
+    new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,
       authorizationType: props.customAuthorizationType,
       restApiResourcePath: `${featureName}`,

@@ -4,12 +4,12 @@ import { Construct } from 'constructs';
 import { FeatureNestedStack, FeatureNestedStackProps } from '../../feature-nested-stack';
 import { SageMakerFeatureConstruct } from '../../sagemaker-feature-construct';
 
-export class GeneralOCRSageMakerFeatureNestedStack extends FeatureNestedStack {
+export class AdvancedOCRSageMakerFeatureNestedStack extends FeatureNestedStack {
   constructor(scope: Construct, id: string, props: FeatureNestedStackProps) {
 
     super(scope, id, props);
-    const featureName = 'general-ocr-standard';
-    this.templateOptions.description = '(SO8023-og) - AI Solution Kit - General OCR Simplified Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
+    const featureName = 'advanced-ocr';
+    this.templateOptions.description = '(SO8023-aog) - AI Solution Kit - Advanced OCR Simplified Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {
