@@ -13,7 +13,6 @@
 # limitations under the License.
 import numpy as np
 import string
-import torch
 
 
 class BaseRecLabelDecode(object):
@@ -90,8 +89,6 @@ class CTCLabelDecode(BaseRecLabelDecode):
                                              use_space_char)
 
     def __call__(self, preds, label=None, *args, **kwargs):
-        if isinstance(preds, torch.Tensor):
-            preds = preds.numpy()
         preds_idx = preds.argmax(axis=2)
         preds_prob = preds.max(axis=2)
         text = self.decode(preds_idx, preds_prob, is_remove_duplicate=True)

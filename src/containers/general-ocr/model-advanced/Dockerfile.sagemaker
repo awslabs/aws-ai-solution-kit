@@ -13,7 +13,6 @@ ARG MODEL_URL="https://aws-gcr-solutions-assets.s3.cn-northwest-1.amazonaws.com.
 ARG MODEL_VERSION="v1.4.0"
 
 RUN pip3 install flask gevent
-RUN pip3 uninstall onnxruntime -y && pip3 install onnxruntime-gpu
 ADD / ${FUNCTION_DIR}/
 
 RUN pip3 install -r ${FUNCTION_DIR}/requirements.txt

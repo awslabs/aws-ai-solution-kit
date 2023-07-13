@@ -9,7 +9,7 @@ from aikits_utils import lambda_return
 tokenizer = CPMAntTokenizer()
     
 model_path = os.environ['MODEL_PATH']
-ort_session = onnxruntime.InferenceSession(model_path + "/torch-model.onnx", providers=['CUDAExecutionProvider'])
+ort_session = onnxruntime.InferenceSession(model_path + "/nlu.onnx", providers=['CUDAExecutionProvider'])
 
 def sigmoid(x):
     """

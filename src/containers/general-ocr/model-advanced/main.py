@@ -40,7 +40,7 @@ class TextDetector():
         postprocess_params["score_mode"] = 'fast'
         self.preprocess_op = create_operators(pre_process_list)
         self.postprocess_op = build_post_process(postprocess_params)
-        self.ort_session = onnxruntime.InferenceSession(os.environ['MODEL_PATH']+"det_dml.onnx", providers=['CUDAExecutionProvider'])
+        self.ort_session = onnxruntime.InferenceSession(os.environ['MODEL_PATH']+"det_advanced.onnx", providers=['CUDAExecutionProvider'])
         _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 64, 64], dtype='float32')})
 
 
@@ -123,7 +123,7 @@ class TextRecognizer():
         postprocess_params = {
             'name': 'CTCLabelDecode',
             "character_type": 'ch',
-            "character_dict_path": os.environ['MODEL_PATH']+'keys_en_chs_cht_vi_ja_ko.txt',
+            "character_dict_path": os.environ['MODEL_PATH']+'keys_v1.txt',
             "use_space_char": True
         }
         self.postprocess_op = build_post_process(postprocess_params)
@@ -131,7 +131,7 @@ class TextRecognizer():
         self.limited_max_width = 1280
         self.limited_min_width = 16
         
-        self.ort_session = onnxruntime.InferenceSession(os.environ['MODEL_PATH']+"rec_svtr.onnx", providers=['CUDAExecutionProvider'])
+        self.ort_session = onnxruntime.InferenceSession(os.environ['MODEL_PATH']+"rec_advanced.onnx", providers=['CUDAExecutionProvider'])
         _ = self.ort_session.run(None, {"backbone": np.zeros([1, 3, 48, 48], dtype='float32')})
 
     def resize_norm_img(self, img, max_wh_ratio):
