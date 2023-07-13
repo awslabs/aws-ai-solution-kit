@@ -352,19 +352,6 @@ export class LambdaContainersStack extends Stack {
       },
     );
 
-    const GeneralNLU = new DockerImageFunction(
-      this,
-      'general-nlu',
-      {
-        functionName: 'general-nlu',
-        code: DockerImageCode.fromImageAsset('src/containers/general-nlu/model',
-          {
-            file: 'Dockerfile.lambda',
-          },
-        ),
-      },
-    );
-
     const GeneralNLUSageMaker = new DockerImageFunction(
       this,
       'general-nlu-sagemaker',

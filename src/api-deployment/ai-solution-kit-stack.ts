@@ -203,7 +203,7 @@ export class AISolutionKitStack extends Stack {
 
     // Feature: Advanced OCR SageMaker
     {
-      const advancedOCRSageMaker = new AdvancedOCRSageMakerFeatureNestedStack(this, 'General-OCR-SageMaker', {
+      const advancedOCRSageMaker = new AdvancedOCRSageMakerFeatureNestedStack(this, 'Advanced-OCR-SageMaker', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
