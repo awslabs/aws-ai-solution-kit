@@ -4,7 +4,6 @@ from os import environ
 
 import cv2
 from aikits_utils import readimg, lambda_return
-from torch.cuda import empty_cache
 from main import *
 
 if environ["MODEL_PATH"] is None:
@@ -133,7 +132,6 @@ def handler(event, context):
     dt_boxes, rec_res = text_sys(img)
     dt_results = list(zip(dt_boxes, rec_res))
     dt_results.sort(key=lambda x: (x[0].min(0)[1]))
-    empty_cache()
     result = []
     for row in dt_results:
         row = {
