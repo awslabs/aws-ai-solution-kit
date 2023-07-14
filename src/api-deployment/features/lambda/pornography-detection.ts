@@ -8,7 +8,7 @@ export class PornographyDetectionFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'pornography-detection';
-    this.templateOptions.description = '(SO8023-porn) - AI Solution Kit - Pornography Detection. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-pornography-detection.';
+    this.templateOptions.description = '(SO8023-porn) - AI Solution Kit - Pornography Detection. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-pornography-detection.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

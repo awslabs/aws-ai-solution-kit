@@ -9,7 +9,7 @@ export class HumanAttributeRecognitionSageMakerFeatureNestedStack extends Featur
 
     super(scope, id, props);
     const featureName = 'human-attribute';
-    this.templateOptions.description = '(SO8023-hag) - AI Solution Kit - Human Attribute Recognition. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-attribute.';
+    this.templateOptions.description = '(SO8023-hag) - AI Solution Kit - Human Attribute Recognition. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-attribute.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

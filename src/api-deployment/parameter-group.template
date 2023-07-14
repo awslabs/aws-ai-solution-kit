@@ -13,8 +13,8 @@ Metadata:
           default: Optical Character Recognition(OCR) APIs
         Parameters:
           - GeneralOCR
-          - AdvancedOCRSageMaker
           - GeneralOCRTraditionalChinese
+          - AdvancedOCRSageMaker
           - CustomOCR
           - CarLicensePlate
 
@@ -58,7 +58,7 @@ Metadata:
         default: General OCR - Simplified Chinese
 
       AdvancedOCRSageMaker:
-        default: Advanced OCR - Simplified Chinese
+        default: Advanced OCR
       
       GeneralOCRTraditionalChinese:
         default: General OCR - Traditional Chinese
@@ -250,7 +250,6 @@ Parameters:
     Type: String
     AllowedValues:
       - "yes-sagemaker"
-      - "yes-lambda"
       - "no"
 
 Conditions:

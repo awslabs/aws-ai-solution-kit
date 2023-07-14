@@ -9,7 +9,7 @@ export class GeneralOCRTraditionalChineseSageMakerFeatureNestedStack extends Fea
 
     super(scope, id, props);
     const featureName = 'general-ocr-traditional-chinese';
-    this.templateOptions.description = '(SO8023-otg) - AI Solution Kit - General OCR Traditional Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.';
+    this.templateOptions.description = '(SO8023-otg) - AI Solution Kit - General OCR Traditional Chinese. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr-traditional.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

@@ -9,7 +9,7 @@ export class SuperResolutionSageMakerFeatureNestedStack extends FeatureNestedSta
 
     super(scope, id, props);
     const featureName = 'super-resolution';
-    this.templateOptions.description = '(SO8023-sr) - AI Solution Kit - Image Super Resolution. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-super-resolution.';
+    this.templateOptions.description = '(SO8023-sr) - AI Solution Kit - Image Super Resolution. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-super-resolution.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

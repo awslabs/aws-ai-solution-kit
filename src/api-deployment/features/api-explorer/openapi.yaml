@@ -4,7 +4,7 @@ info:
     You can find out more about AI Solution Kit at
     [https://github.com/awslabs/aws-ai-solution-kit](https://github.com/awslabs/aws-ai-solution-kit/) or on
     [https://www.amazonaws.cn/solutions/ai-solution-kit](https://www.amazonaws.cn/solutions/ai-solution-kit/?nc1=h_ls).
-  version: "1.2.0"
+  version: "1.4.0"
   title: AI Solution Kit
   license:
     name: Apache 2.0

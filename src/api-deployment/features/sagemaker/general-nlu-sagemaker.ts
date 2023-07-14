@@ -9,7 +9,7 @@ export class GeneralNLUSageMakerFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'general-nlu';
-    this.templateOptions.description = '(SO8023-ng) - AI Solution Kit - General NLU. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
+    this.templateOptions.description = '(SO8023-ng) - AI Solution Kit - General NLU. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/general-nlu.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

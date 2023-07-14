@@ -2,7 +2,6 @@
 import { App, Aspects } from 'aws-cdk-lib';
 import { BootstraplessStackSynthesizer, CompositeECRRepositoryAspect } from 'cdk-bootstrapless-synthesizer';
 import 'source-map-support/register';
-import { AISolutionKitOcrBetaStack } from './api-deployment/ai-solution-kit-ocr-beta-stack';
 import { AISolutionKitStack } from './api-deployment/ai-solution-kit-stack';
 import { LambdaContainersStack } from './containers/lambda-containers-stack';
 

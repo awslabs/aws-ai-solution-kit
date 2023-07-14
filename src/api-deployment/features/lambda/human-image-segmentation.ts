@@ -8,7 +8,7 @@ export class HumanImageSegmentationFeatureNestedStack extends FeatureNestedStack
 
     super(scope, id, props);
     const featureName = 'human-segmentation';
-    this.templateOptions.description = '(SO8023-seg) - AI Solution Kit - Human Image Segmentation. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-segmentation.';
+    this.templateOptions.description = '(SO8023-seg) - AI Solution Kit - Human Image Segmentation. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-human-segmentation.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

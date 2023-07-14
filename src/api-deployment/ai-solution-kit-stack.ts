@@ -41,7 +41,6 @@ import { CarLicensePlateFeatureNestedStack } from './features/lambda/car-license
 import { CustomOCRFeatureNestedStack } from './features/lambda/custom-ocr';
 import { FaceComparisonFeatureNestedStack } from './features/lambda/face-comparison';
 import { FaceDetectionFeatureNestedStack } from './features/lambda/face-detection';
-import { GeneralNLUFeatureNestedStack } from './features/lambda/general-nlu';
 import { GeneralOCRFeatureNestedStack } from './features/lambda/general-ocr';
 import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/lambda/general-ocr-traditional-chinese';
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/lambda/human-attribute-recognition';
@@ -82,7 +81,7 @@ export class AISolutionKitStack extends Stack {
   constructor(scope: Construct, id: string, props: AISolutionKitStackProps) {
 
     super(scope, id, props);
-    this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.3.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
+    this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.4.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
 
     const cfnTemplate = new CfnInclude(this, 'CfnTemplate', {
       templateFile: path.join(__dirname, 'parameter-group.template'),
@@ -197,8 +196,7 @@ export class AISolutionKitStack extends Stack {
         lambdaMemorySize: 8192,
       });
       (generalOCR.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCR');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-advanced', 'General OCR Advanced', 'ConditionGeneralOCR');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-standard', 'General OCR Standard', 'ConditionGeneralOCR');
+      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr', 'General OCR', 'ConditionGeneralOCR');
     }
 
     // Feature: Advanced OCR SageMaker

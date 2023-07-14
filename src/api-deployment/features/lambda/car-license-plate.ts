@@ -8,7 +8,7 @@ export class CarLicensePlateFeatureNestedStack extends FeatureNestedStack {
 
     super(scope, id, props);
     const featureName = 'car-license-plate';
-    this.templateOptions.description = '(SO8023-car-license-plate) - AI Solution Kit - Car License Plate. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
+    this.templateOptions.description = '(SO8023-car-license-plate) - AI Solution Kit - Car License Plate. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-car-license-plate.';
 
     new LambdaFeatureConstruct(this, featureName, {
       rootRestApi: props.restApi,

@@ -9,7 +9,7 @@ export class GeneralOCRAdvancedBetaSageMakerFeatureNestedStack extends FeatureNe
 
     super(scope, id, props);
     const featureName = 'general-ocr-advanced-beta';
-    this.templateOptions.description = '(SO8023-og) - AI Solution Kit - General OCR Advanced Simplified Chinese. Template version v1.3.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
+    this.templateOptions.description = '(SO8023-og) - AI Solution Kit - General OCR Advanced Simplified Chinese. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-face-detection.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {

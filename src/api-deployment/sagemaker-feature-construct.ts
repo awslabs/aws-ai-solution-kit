@@ -152,7 +152,7 @@ export class SageMakerFeatureConstruct extends Construct {
       retainDeployments: true,
     });
     // const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
-    const existingResource = rootRestApi.root.getResource(`${props.restApiResourcePath}`);
+    const existingResource = rootRestApi.root.getResource(`${props.restApiResourcePath}-ml`);
 
     let resource;
     if (existingResource) {
@@ -177,5 +177,6 @@ export class SageMakerFeatureConstruct extends Construct {
       removalPolicy: RemovalPolicy.RETAIN,
     });
     apiProvider.node.addDependency(post);
+    deployment.node.addDependency(apiProvider);
   }
 }
