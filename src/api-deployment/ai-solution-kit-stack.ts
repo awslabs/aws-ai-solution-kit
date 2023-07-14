@@ -211,7 +211,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props?.ecrRegistry,
       });
       (advancedOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionAdvancedOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr', 'Advanced OCR SageMaker', 'ConditionAdvancedOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR SageMaker', 'ConditionAdvancedOCRSageMaker');
     }
 
     // Feature: General OCR - Traditional Chinese
@@ -524,20 +524,6 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'super-resolution-ml', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
     }
 
-    // Feature: General NLU
-    {
-      const generalNlu = new GeneralNLUFeatureNestedStack(this, 'General-NLU', {
-        restApi: api,
-        customAuthorizationType: authType,
-        ecrDeployment: ecrDeployment,
-        updateCustomResourceProvider: updateCustomResourceProvider,
-        ecrRegistry: props.ecrRegistry,
-        lambdaMemorySize: 8192,
-      });
-      (generalNlu.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralNLU');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-nlu', 'General NLU', 'ConditionGeneralNLU');
-    }
-
     // Feature: General NLU SageMaker
     {
       const generalNLUSageMaker = new GeneralNLUSageMakerFeatureNestedStack(this, 'General-NLU-SageMaker', {
@@ -555,7 +541,7 @@ export class AISolutionKitStack extends Stack {
     {
       new CfnOutput(this, 'Stage base URL', {
         value: `${invokeUrl.toString()}/`,
-        description: 'Stage base URL',
+        description: 'API stage URL, for debugging only',
       });
     }
   }

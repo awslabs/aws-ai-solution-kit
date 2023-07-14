@@ -151,7 +151,15 @@ export class SageMakerFeatureConstruct extends Construct {
       api: rootRestApi,
       retainDeployments: true,
     });
-    const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
+    // const resource = rootRestApi.root.addResource(`${props.restApiResourcePath}-ml`);
+    const existingResource = rootRestApi.root.getResource(`${props.restApiResourcePath}`);
+
+    let resource;
+    if (existingResource) {
+      resource = existingResource;
+    } else {
+      resource = rootRestApi.root.addResource(`${props.restApiResourcePath}`);
+    }
 
     const post = resource.addMethod('POST',
       sageMakerIntegration,
