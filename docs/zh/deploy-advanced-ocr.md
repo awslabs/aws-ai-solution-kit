@@ -4,26 +4,27 @@ feature_name: Advanced OCR
 feature_endpoint: advanced_ocr
 deployment_time: 16 Minutes
 destroy_time: 10 Minutes
-sample_image: Image URL address
-feature_description: Recognize and extract Simplified Chinese, Vietnamese, Korean, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.
-feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
+sample_image: 图像的URL地址
+feature_description: 通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于客户进行比对或结构化操作。支持识别**简体中文**、**繁体中文**、**越南语**、**日语**、**韩语**、英文、数字和常用符号。
+feature_scenario: 可应用于纸质文档电子化，证件识别，内容审核等多种场景，大幅提高信息处理效率。
 ---
+
 
 {%
   include "include-deploy-description.md"
 %}
-## API reference
+## API参数说明
 
-- HTTP request method: `POST`
+- HTTP 方法: `POST`
 
-- Request body parameters
+- 请求参数
 
-| **Name**  | **Type**  | **Required** |  **Description**  |
+| **名称**  | **类型**  | **是否必选** |  **说明**  |
 |----------|-----------|------------|------------|
-| url | *String* |Choose url or img.| Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
-| img | *String* |Choose url or img.|Base64 encoded image data.|
+| url | *String* |与`img`参数二选一。|图像URL地址。支持HTTP/HTTPS和S3协议。要求图像格式为 jpg/jpeg/png/bmp，最长边不超过 4096px。|
+| img | *String* |与`url`参数二选一。|进行Base64编码的图像数据。|
 
-- Example Request
+- 请求示例
 
 ``` json
 {
@@ -33,19 +34,19 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 
 ``` json
 {
-  "img": "Base64-encoded image data"
+  "img": "Base64编码的图像数据"
 }
 ```
 
-- Response parameters
+- 返回参数
 
-| **Name** | **Type** | **Description**  |
+| **名称**  | **类型**  |  **说明**  |
 |----------|-----------|------------|
-|words    |*String*   |Recognized text.|
-|location |*JSON*     |Coordinates of the recognized text, including top, left, width, height as integer values.|
-|score    |*Float*   |Confidence score of the recognized text, which is a float type value between 0 and 1.|
+|words    |*String*   |识别文本字符串内容。|
+|location |*JSON*     |识别文本在图像中的的坐标值，包含 top，left，width，height的整数值。|
+|score    |*Float*   |识别文本的置信度值，为0到1区间内Float型数值。|
 
-- Example JSON response
+- 返回示例
 
 ``` json
 [
@@ -79,6 +80,7 @@ feature_scenario: Applicable to a variety of scenarios such as paper documents c
 {%
   include "include-deploy-cost-8GB.md"
 %}
+
 
 {%
   include-markdown "include-deploy-uninstall.md"
