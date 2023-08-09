@@ -2,10 +2,10 @@
 feature_id: AdvancedOCR
 feature_name: Advanced OCR
 feature_endpoint: advanced_ocr
-deployment_time: 16 Minutes
+deployment_time: 20 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize and extract Simplified Chinese, Vietnamese, Korean, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.
+feature_description: Advanced OCR for Multi-languages(Simplified Chinese, Vietnamese, Korean, Japanese) and numbers, alphabetical characters, symbols. Return the information such as text or coordinates.
 feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
 ---
 

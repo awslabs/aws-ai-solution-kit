@@ -5,136 +5,435 @@ feature_endpoint: general_nlu
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Compare two Chinese words or sentences and return similarity score.
-feature_scenario: Applicable to search engines, recommendation systems, machine translation, automatic response, named entity recognition, spelling error correction and other scenarios.
+feature_description: General Chinese Natural Language Understanding.
+feature_scenario: Used in scenarios such as text classification, sentiment analysis, text matching, and entity recognition.
 ---
 
 {%
-  include "include-deploy-description.md"
+include "include-deploy-description.md"
 %}
+
+!!! Info "Note"
+In v1.4.0, General NLU API only support Chinese language processing.
+
 ## API reference
 
-The API supports two input modes: single text or text pair.
-
-### Single text mode
-
-With a single text as input, it returns the feature vectors of the text. You need to maintain a vector retrieval system. This is applicable to search or callback scenarios.
+### 文本分类
 
 - HTTP request method: `POST`
 
 - Request body parameters
 
-| **Name** | **Type** | **Required** | **Description** |
-|----------|----------|--------------|-----------------|
-| text     | *String* | Yes          | Text data       |
+| **Name**     | **Type** | **Required** | **Description**                                                |
+|--------------|----------|--------------|----------------------------------------------------------------|
+| subtask_type | *String* | Yes          | Fixed as "Text Classification"                                 |
+| text         | *String* | Yes          | The text to be classified                                      |
+| choices      | *List*   | Yes          | Candidate labels, please refer to the **Request Body Example** |
+| question     | *String* | Yes          | Prompts the model for guidance                                 |
 
-- Example JSON request
+- Example Request
+
+**Example 1**
 
 ``` json
 {
-  "text": "Test"
+    "subtask_type": "文本分类",
+    "text": "待分类的文本",
+    "choices": [{
+        "entity_type": "投资",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "科技",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "体育",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "美食",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "旅游",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这是篇什么类型的新闻'
+}
+```
+
+**Example 2**
+
+``` json
+{
+    "subtask_type": "文本分类",
+    "text": "待分类的文本",
+    "choices": [{
+        "entity_type": "农业工程",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "哲学",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "教育学",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "理学",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "农学",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这篇文章属于哪个学科'
 }
 ```
 
 - Response parameters
 
-| **Name** | **Type** | **Description**                                            |
-|----------|----------|------------------------------------------------------------|
-| result   | *List*   | List with 768 parameters for a 768-dimensional text vector |
+| **Name** | **Type** | **Description**                                                                                                                                                      |
+|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| result   | *Dict*   | Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the **Response Example** for details. |
 
 - Example JSON response
+
+**Example 1 Response**
+
+Assuming the model returns the category of the "unclassified text" as "sports."
+
 ``` json
 {
-    "result": [
-        0.025645000860095024, 
-        0.001914000022225082, 
-        0.007929000072181225, 
-        ...
-    ]
+    "subtask_type": "文本分类",
+    "text": "待分类的文本",
+    "choices": [{
+        "entity_type": "投资",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "科技",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "体育",
+        "label": 1,
+        "entity_list": [],
+        "score": 0.91592306
+    }, {
+        "entity_type": "美食",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "旅游",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这是篇什么类型的新闻'
 }
 ```
-### Text pair mode
 
-With text pair as input, it returns the cosine similarity of two texts. This is applicable to similarity comparison.
+**Example 2 Response**
+
+``` json
+{
+    "subtask_type": "文本分类",
+    "text": "待分类的文本",
+    "choices": [{
+        "entity_type": "农业工程",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "哲学",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "教育学",
+        "label":1,
+        "entity_list": [],
+        "score": 0.91592306
+    }, {
+        "entity_type": "理学",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "农学",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这篇文章属于哪个学科'
+}
+```
+
+### sentiment analysis
 
 - HTTP request method: `POST`
 
 - Request body parameters
 
-| **Name** | **Type** | **Required** | **Description** |
-|----------|----------|--------------|-----------------|
-| text_1   | *String* | Text data.   |
-| text_2   | *String* | Text data.   |
+| **Name**     | **Type** | **Required** | **Description**                                                          |
+|--------------|----------|--------------|--------------------------------------------------------------------------|
+| subtask_type | *String* | Yes          | Fixed as "Sentiment Classification"                                      |
+| text         | *String* | Yes          | The text to be classified                                                |
+| choices      | *List*   | Yes          | Candidate sentiment labels, please refer to the **Request Body Example** |
+| question     | *String* | Yes          | Prompts the model for guidance                                           |
 
-- Example JSON request
+- Example Request
 
 ``` json
 {
-  "text_1": "Test1",
-  "text_2": "Test2"
+    "subtask_type": "情感分类",
+    "text": "待分类的用户评论",
+    "choices": [{
+        "entity_type": "积极",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "中性",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "消极",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这句话的情感极性是什么'
+}
+
+```
+
+- Response parameters
+
+| **Name** | **Type** | **Description**                                                                                                                                                      |
+|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| result   | *Dict*   | Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the **Response Example** for details. |
+
+- Example JSON response
+
+Assuming the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
+
+``` json
+{
+    "subtask_type": "情感分类",
+    "text": "待分类的用户评论",
+    "choices": [{
+        "entity_type": "积极",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "中性",
+        "label": 1,
+        "entity_list": [],
+        "score": 0.91592306
+    }, {
+        "entity_type": "消极",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '这句话的情感极性是什么'
+}
+```
+
+### Text matching
+
+- HTTP request method: `POST`
+
+- Request body parameters
+
+| **Name**     | **Type** | **Required** | **Description**                                                                                                                                                                                                                             |
+|--------------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| subtask_type | *String* | Yes          | Fixed as "Text Matching"                                                                                                                                                                                                                    |
+| text         | *String* | Yes          | The first text                                                                                                                                                                                                                              |
+| choices      | *List*   | Yes          | The entity_type of each element is the concatenation of the prompt word with the second text, for example, "can be inferred: second text" or "can be understood as: second text". Please refer to the **Request Body Example** for details. |
+| question     | *String* | Yes          | Prompts the model for guidance                                                                                                                                                                                                              |
+
+- Example Request
+
+**Example 1**
+
+``` json
+{
+    "subtask_type": "文本匹配",
+    "text": "在白云的蓝天下，一个孩子伸手摸着停在草地上的一架飞机的螺旋桨。",
+    "choices": [{
+        "entity_type": "可以推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "不能推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "很难推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '同义文本'
+}
+
+```
+
+**Example 2**
+
+``` json
+{
+    "subtask_type": "文本匹配",
+    "text": "您好，我还款了怎么还没扣款",
+    "choices": [{
+        "entity_type": "可以理解为：今天一直没有扣款",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "不能理解为：今天一直没有扣款",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '同义文本'
 }
 ```
 
 - Response parameters
 
-| **Name**   | **Type** | **Description**                                                                                                                       |
-|------------|----------|---------------------------------------------------------------------------------------------------------------------------------------|
-| similarity | *Float*  | Cosine similarity of the text pair, which is a Float value between 0 and 1. The closer it is to 1, the more similar the text pair is. |
+| **Name** | **Type** | **Description**                                                                                                                                                      |
+|----------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| result   | *Dict*   | Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the **Response Example** for details. |
 
 - Example JSON response
+
+**Example 1 response**
+
 ``` json
 {
-    "similarity": 0.95421
+    "subtask_type": "文本匹配",
+    "text": "在白云的蓝天下，一个孩子伸手摸着停在草地上的一架飞机的螺旋桨。",
+    "choices": [{
+        "entity_type": "可以推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "不能推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 1,
+        "entity_list": [],
+        "score": 0.91592306
+    }, {
+        "entity_type": "很难推断出：一个孩子正伸手摸飞机的螺旋桨。",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '同义文本'
+}
+
+```
+
+**Example 2 response**
+
+``` json
+{
+    "subtask_type": "文本匹配",
+    "text": "您好，我还款了怎么还没扣款",
+    "choices": [{
+        "entity_type": "可以理解为：今天一直没有扣款",
+        "label": 1,
+        "entity_list": [],
+        "score": 0.91592306
+    }, {
+        "entity_type": "不能理解为：今天一直没有扣款",
+        "label": 0,
+        "entity_list": []
+    }],
+    'question': '同义文本'
+}
+```
+
+### Entity recognition
+
+- HTTP request method: `POST`
+
+- Request body parameters
+
+| **Name**     | **Type** | **Required** | **Description**                                                                                                                          |
+|--------------|----------|--------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| subtask_type | *String* | Yes          | Fixed as "Entity Recognition"                                                                                                            |
+| text         | *String* | Yes          | The text to be classified                                                                                                                |
+| choices      | *List*   | Yes          | The entity_type of each element represents the desired entity type to extract. Please refer to the **Request Body Example** for details. |
+
+- Example Request
+
+``` json
+{
+    "subtask_type": "实体识别",
+    "text": "我们是首家支持英特尔、AMD 和 Arm 处理器的主要云提供商",
+    "choices": [{
+        "entity_type": "地址",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "公司名",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "人物姓名",
+        "label": 0,
+        "entity_list": []
+    }]
+}
+
+```
+
+- Response parameters
+
+| **Name** | **Type** | **Description**                                                                                                                                                                                  |
+|----------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| result   | *Dict*   | Same format as the request parameters, with the entity_list corresponding to the extracted entities added with their content and position. Please refer to the **Response Example** for details. |
+
+- Example JSON response
+
+Assuming the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
+
+``` json
+{
+    "subtask_type": "实体识别",
+    "text": "我们是首家支持英特尔、AMD 和 Arm 处理器的主要云提供商",
+    "choices": [{
+        "entity_type": "地址",
+        "label": 0,
+        "entity_list": []
+    }, {
+        "entity_type": "公司名",
+        "label": 0,
+        "entity_list": [{
+            "entity_name":"英特尔",
+            "entity_type":"公司名",
+            "entity_idx":[
+                [7, 9]
+            ]
+        },{
+            "entity_name":"AMD",
+            "entity_type":"公司名",
+            "entity_idx":[
+                [11, 13]
+            ]
+        }]
+    }, {
+        "entity_type": "人物姓名",
+        "label": 0,
+        "entity_list": []
+    }]
 }
 ```
 
 {%
-  include-markdown "include-deploy-code.md"
+include-markdown "include-deploy-code.md"
 %}
 
-## Cost Estimation
-
-You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
-
-- AWS Lambda invocations
-- AWS Lambda running time
-- Amazon API Gateway calls
-- Amazon API Gateway data output
-- Amazon CloudWatch Logs storage
-- Amazon Elastic Container Registry storage
-
-### Cost estimation example 1
-
-In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1),  in 1 seconds
-
-The cost of using this solution to process the text is shown below:
-
-| Service                           | Dimensions                             | Cost     |
-|-----------------------------------|----------------------------------------|----------|
-| AWS Lambda                        | 1 million invocations                  | ¥1.36    |
-| AWS Lambda                        | 8192MB memory, 1 seconds run each time | ¥907.8   |
-| Amazon API Gateway                | 1 million invocations                  | ¥28.94   |
-| Amazon API Gateway                | 100KB data output each time, ¥0.933/GB | ¥93.3    |
-| Amazon CloudWatch Logs            | 10KB each time, ¥6.228/GB              | ¥62.28   |
-| Amazon Elastic Container Registry | 0.5GB storage, ¥0.69/GB each month     | ¥0.35    |
-| Total                             |                                        | ¥1010.06 |
-
-### Cost estimation example 2
-
-In US East (Ohio) Region (us-east-2), in 1 seconds
-
-The cost of using this solution to process this text is shown below:
-
-| Service                           | Dimensions                             | Cost    |
-|-----------------------------------|----------------------------------------|---------|
-| AWS Lambda                        | 1 million invocations                  | $0.20   |
-| AWS Lambda                        | 8192MB memory, 1 seconds run each time | $133.3  |
-| Amazon API Gateway                | 1 million invocations                  | $3.5    |
-| Amazon API Gateway                | 100KB data output each time, $0.09/GB  | $9      |
-| Amazon CloudWatch Logs            | 10KB each time, $0.50/GB               | $5      |
-| Amazon Elastic Container Registry | 0.5GB存储，$0.1/GB each month             | $0.05   |
-| Total                             |                                        | $142.95 |
+{%
+include "include-deploy-cost-8GB.md"
+%}
 
 {%
-  include-markdown "include-deploy-uninstall.md"
+include-markdown "include-deploy-uninstall.md"
 %}

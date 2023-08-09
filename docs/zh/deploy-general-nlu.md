@@ -4,9 +4,9 @@ feature_name: General NLU
 feature_endpoint: general_nlu
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
-sample_image: Image URL address
-feature_description: Compare two Chinese words or sentences and return similarity score.
-feature_scenario: Applicable to search engines, recommendation systems, machine translation, automatic response, named entity recognition, spelling error correction and other scenarios.
+sample_image: 图像的URL地址
+feature_description: 通用中文自然语言理解。
+feature_scenario: 用于文本分类、情感分析、文本匹配和实体识别等场景。
 ---
 
 {%
