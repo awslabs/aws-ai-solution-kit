@@ -18,8 +18,9 @@ nav:
         - Update CloudFormation stack: deploy-add-delete-api.md 
     - API Reference:
       - Overview: api-explorer.md
-      - General OCR (Simplified Chinese): deploy-general-ocr.md
+      - Lite OCR (Simplified Chinese): deploy-general-ocr.md
       - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
+      - Advanced OCR (Multi-Languages): deploy-advanced-ocr.md
       - Custom OCR: deploy-custom-ocr.md
       - Car License Plate: deploy-car-license-plate.md
       - Face Detection: deploy-face-detection.md
@@ -31,6 +32,7 @@ nav:
       - Pornography Detection: deploy-pornography-detection.md
       - Image Super Resolution: deploy-image-super-resolution.md
       - Text Similarity: deploy-text-similarity.md
+      - General NLU: deploy-general-nlu.md
     - Upgrade the solution: upgrade.md
     - Uninstall the solution: uninstall.md
     - Additional resources: additional-resources.md

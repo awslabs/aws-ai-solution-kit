@@ -5,7 +5,7 @@ feature_endpoint: general_nlu
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: General Chinese Natural Language Understanding.
+feature_description: Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems.
 feature_scenario: Used in scenarios such as text classification, sentiment analysis, text matching, and entity recognition.
 ---
 
@@ -18,7 +18,7 @@ In v1.4.0, General NLU API only support Chinese language processing.
 
 ## API reference
 
-### 文本分类
+### Text classification
 
 - HTTP request method: `POST`
 

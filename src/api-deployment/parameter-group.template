@@ -55,7 +55,7 @@ Metadata:
         default: API Explorer
 
       GeneralOCR:
-        default: General OCR - Simplified Chinese
+        default: Lite OCR - Simplified Chinese
 
       AdvancedOCRSageMaker:
         default: Advanced OCR
@@ -130,7 +130,7 @@ Parameters:
       - "no"
 
   AdvancedOCRSageMaker:
-    Description: Recognize and extract alphabetical characters, numbers, symbols, and Simplified Chinese, return the coordinate position and confidence scores of the text. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
+    Description: Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
     Default: "no"
     Type: String
     AllowedValues:
@@ -245,7 +245,7 @@ Parameters:
       - "no"
 
   GeneralNLU:
-    Description: General NLU. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-unl.
+    Description: Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-unl.
     Default: "no"
     Type: String
     AllowedValues:

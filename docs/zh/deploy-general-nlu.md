@@ -5,7 +5,7 @@ feature_endpoint: general_nlu
 deployment_time: 15 Minutes
 destroy_time: 10 Minutes
 sample_image: 图像的URL地址
-feature_description: 通用中文自然语言理解。
+feature_description: 支持各种中文文本理解任务，如文本分类、情感分析、提取和可定制的标签系统。
 feature_scenario: 用于文本分类、情感分析、文本匹配和实体识别等场景。
 ---
 
