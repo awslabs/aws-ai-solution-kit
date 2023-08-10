@@ -15,8 +15,8 @@ each API interface. For more information, see [API Reference Guide](./api-explor
 | **API Name**                      | **Description**                                                                                                                                                                                | API                                          |
 |-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------|
 | Lite OCR (Simplified Chinese)     | Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.                                                    | [Details](deploy-general-ocr.md)             |
-| General OCR (Traditional Chinese) | Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.                                       | [Details](deploy-general-ocr-traditional.md) |
-| Advanced OCR (Multi-Languages)    | Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates. | [Details](deploy-advanced-ocr.md)            |
+| Lite OCR (Traditional Chinese) | Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.                                       | [Details](deploy-general-ocr-traditional.md) |
+| Advanced OCR (Multilingual)    | Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates. | [Details](deploy-advanced-ocr.md)            |
 | Custom OCR                        | You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.                                             | [Details](deploy-custom-ocr.md)              |
 | Car License Plate                 | Recognize text on Chinese car license plate.                                                                                                                                                   | [Details](deploy-car-license-plate.md)       |
 
@@ -41,14 +41,14 @@ each API interface. For more information, see [API Reference Guide](./api-explor
 
 | **API Name**           | **Description**                                           | API                                         |
 |------------------------|-----------------------------------------------------------|---------------------------------------------|
-| Image Super Resolution | Upscale the resolution and enhance details in the images. | [Details](deploy-image-super-resolution.md) |
+| Image Super Resolution | Upscale the resolution and enhance details in the images, and support image enhancement. | [Details](deploy-image-super-resolution.md) |
 
 ### Natural Language Understanding (NLU)
 
 | **API Name**    | **Description**                                                                                                                                        | API                                  |
 |-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
 | Text Similarity | Compare two Chinese words or sentences and return similarity score.                                                                                    | [Details](deploy-text-similarity.md) |
-| General NLG     | Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems. | [Details](deploy-general-nlu.md)     |
+| General NLU     | Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems. | [Details](deploy-general-nlu.md)     |
 
 This implementation guide describes architectural considerations and configuration steps for deploying AI Solution Kit
 in the AWS cloud. It includes links to CloudFormation templates that launches and configures the AWS services required

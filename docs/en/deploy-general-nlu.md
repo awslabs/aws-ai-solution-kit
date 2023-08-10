@@ -14,7 +14,7 @@ include "include-deploy-description.md"
 %}
 
 !!! Info "Note"
-In v1.4.0, General NLU API only support Chinese language processing.
+    In v1.4.0, General NLU API only support Chinese language processing.
 
 ## API reference
 
@@ -169,7 +169,7 @@ Assuming the model returns the category of the "unclassified text" as "sports."
 }
 ```
 
-### sentiment analysis
+### Sentiment analysis
 
 - HTTP request method: `POST`
 

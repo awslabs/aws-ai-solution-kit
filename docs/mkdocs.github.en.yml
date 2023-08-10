@@ -19,8 +19,8 @@ nav:
     - API Reference:
       - Overview: api-explorer.md
       - Lite OCR (Simplified Chinese): deploy-general-ocr.md
-      - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
-      - Advanced OCR (Multi-Languages): deploy-advanced-ocr.md
+      - Lite OCR (Traditional Chinese): deploy-general-ocr-traditional.md
+      - Advanced OCR (Multilingual): deploy-advanced-ocr.md
       - Custom OCR: deploy-custom-ocr.md
       - Car License Plate: deploy-car-license-plate.md
       - Face Detection: deploy-face-detection.md
