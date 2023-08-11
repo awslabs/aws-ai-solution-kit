@@ -1,4 +1,4 @@
-You will be responsible for the cost of using each of the AWS services when running the solution. As of December 2022, the main factors affecting the solution cost include:
+You will be responsible for the cost of using each of the AWS services when running the solution. As of this revision, the main factors affecting the solution cost include:
 
 - Amazon API Gateway calls
 - Amazon API Gateway data output
@@ -22,8 +22,9 @@ You can refer to the Cost Estimation section corresponding to each API to check 
 
 | **API** | **Cost Estimation** |
 |--------------|--------------|
-|General OCR (Simplified Chinese)|[View](deploy-general-ocr.md#_3)|
-|General OCR (Traditional Chinese)|[View](deploy-general-ocr-traditional.md#_3)|
+|Lite OCR (Simplified Chinese)|[View](deploy-general-ocr.md#_3)|
+|Lite OCR (Traditional Chinese)|[View](deploy-general-ocr-traditional.md#_3)|
+|Advanced OCR (Multilingual)|[View](deploy-advanced-ocr.md#_3)|
 |Custom OCR|[View](deploy-custom-ocr.md#_3)|
 |Car License Plate|[View](deploy-car-license-plate.md#_3)|
 |Face Detection|[View](deploy-face-detection.md#_3)|

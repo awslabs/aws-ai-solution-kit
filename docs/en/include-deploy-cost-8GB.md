@@ -1,6 +1,6 @@
 ## Cost estimation
 
-You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
+You are responsible for the cost of using each Amazon Web Services service when running the solution. As of this revision, the main cost factors affecting the solution include.
 
 - Amazon API Gateway calls
 - Amazon API Gateway data output
@@ -20,7 +20,7 @@ If you choose an Amazon SageMaker based deployment, the factors also include:
 
 ### Cost estimation example 1
 
-In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 seconds
+In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 second
 
 The cost of using this solution to process the image is shown below:
 

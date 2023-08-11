@@ -14,7 +14,7 @@ include "include-deploy-description.md"
 %}
 
 !!! Info "Note"
-    In v1.4.0, General NLU API only support Chinese language processing.
+    In version 1.4.0, General NLU API only supports Chinese language processing.
 
 ## API reference
 
@@ -26,10 +26,10 @@ include "include-deploy-description.md"
 
 | **Name**     | **Type** | **Required** | **Description**                                                |
 |--------------|----------|--------------|----------------------------------------------------------------|
-| subtask_type | *String* | Yes          | Fixed as "Text Classification"                                 |
-| text         | *String* | Yes          | The text to be classified                                      |
-| choices      | *List*   | Yes          | Candidate labels, please refer to the **Request Body Example** |
-| question     | *String* | Yes          | Prompts the model for guidance                                 |
+| subtask_type | *String* | Yes          | Has the fixed value of "Text Classification".                                 |
+| text         | *String* | Yes          | Indicates the text to be classified.                                      |
+| choices      | *List*   | Yes          | Indicates the candidate labels. For more information, please refer to the **Request Body Example**. |
+| question     | *String* | Yes          | Used to prompt the model for guidance.                                 |
 
 - Example Request
 
@@ -105,7 +105,7 @@ include "include-deploy-description.md"
 
 **Example 1 Response**
 
-Assuming the model returns the category of the "unclassified text" as "sports."
+Assume the model returns the category of the "unclassified text" as "sports."
 
 ``` json
 {
@@ -180,7 +180,7 @@ Assuming the model returns the category of the "unclassified text" as "sports."
 | subtask_type | *String* | Yes          | Fixed as "Sentiment Classification"                                      |
 | text         | *String* | Yes          | The text to be classified                                                |
 | choices      | *List*   | Yes          | Candidate sentiment labels, please refer to the **Request Body Example** |
-| question     | *String* | Yes          | Prompts the model for guidance                                           |
+| question     | *String* | Yes          | Used to prompt the model for guidance                                           |
 
 - Example Request
 
@@ -214,7 +214,7 @@ Assuming the model returns the category of the "unclassified text" as "sports."
 
 - Example JSON response
 
-Assuming the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
+Assume the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
 
 ``` json
 {
@@ -246,8 +246,8 @@ Assuming the model returns the sentiment polarity of the "unclassified user comm
 
 | **Name**     | **Type** | **Required** | **Description**                                                                                                                                                                                                                             |
 |--------------|----------|--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| subtask_type | *String* | Yes          | Fixed as "Text Matching"                                                                                                                                                                                                                    |
-| text         | *String* | Yes          | The first text                                                                                                                                                                                                                              |
+| subtask_type | *String* | Yes          | Has the fixed value of "Text Matching"                                                                                                                                                                                                                    |
+| text         | *String* | Yes          | Indicates the first text                                                                                                                                                                                                                              |
 | choices      | *List*   | Yes          | The entity_type of each element is the concatenation of the prompt word with the second text, for example, "can be inferred: second text" or "can be understood as: second text". Please refer to the **Request Body Example** for details. |
 | question     | *String* | Yes          | Prompts the model for guidance                                                                                                                                                                                                              |
 
@@ -392,7 +392,7 @@ Assuming the model returns the sentiment polarity of the "unclassified user comm
 
 - Example JSON response
 
-Assuming the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
+Assume the model returns the sentiment polarity of the "unclassified user comment" as "neutral."
 
 ``` json
 {
