@@ -5,7 +5,7 @@ feature_endpoint: general_ocr
 deployment_time: 16 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.
+feature_description: Recognize and extract **Simplified Chinese**, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.
 feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
 ---
 

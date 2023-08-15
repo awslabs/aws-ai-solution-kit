@@ -1,7 +1,8 @@
 You can call the following APIs to use the corresponding AI features.
 
-- [General OCR (Simplified Chinese)](deploy-general-ocr.md)
-- [General OCR (Traditional Chinese)](deploy-general-ocr-traditional.md)
+- [Lite OCR (Simplified Chinese)](deploy-general-ocr.md)
+- [Lite OCR (Traditional Chinese)](deploy-general-ocr-traditional.md)
+- [Advanced OCR (Multilingual)](deploy-advanced-ocr.md)
 - [Custom OCR](deploy-custom-ocr.md)
 - [Car License Plate](deploy-car-license-plate.md)
 - [Face Detection](deploy-face-detection.md)
@@ -13,6 +14,7 @@ You can call the following APIs to use the corresponding AI features.
 - [Pornography Detection](deploy-pornography-detection.md)
 - [Image Super Resolution](deploy-image-super-resolution.md)
 - [Text Similarity](deploy-text-similarity.md)
+- [General NLU](deploy-general-nlu.md)
 
 {%
   include "include-call-url.md"
