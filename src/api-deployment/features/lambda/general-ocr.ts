@@ -13,7 +13,7 @@ export class GeneralOCRFeatureNestedStack extends FeatureNestedStack {
     new LambdaFeatureConstruct(this, `${featureName}`, {
       rootRestApi: props.restApi,
       authorizationType: props.customAuthorizationType,
-      restApiResourcePath: `${featureName}`,
+      restApiResourcePath: 'lite-ocr',
       lambdaEcrDeployment: props.ecrDeployment,
       lambdaDockerImageUrl: `${props.ecrRegistry}/${featureName}:latest`,
       featureName: `${featureName}`,

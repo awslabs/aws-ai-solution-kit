@@ -13,7 +13,7 @@ export class GeneralOCRTraditionalChineseFeatureNestedStack extends FeatureNeste
     new LambdaFeatureConstruct(this, `${featureName}`, {
       rootRestApi: props.restApi,
       authorizationType: props.customAuthorizationType,
-      restApiResourcePath: `${featureName}`,
+      restApiResourcePath: 'lite-ocr-traditional-chinese',
       lambdaEcrDeployment: props.ecrDeployment,
       lambdaDockerImageUrl: `${props.ecrRegistry}/general-ocr-traditional-chinese:latest`,
       featureName: `${featureName}`,

@@ -22,12 +22,12 @@ tags:
   - name: Computer Vision
   - name: Natural Language
 paths:
-  /general-ocr-standard:
+  /lite-ocr:
     post:
       tags:
         - Optical Character Recognition(OCR)
       summary: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols (standard mode)
-      operationId: general-ocr-standard
+      operationId: lite-ocr
       requestBody:
         required: true
         content:
@@ -56,11 +56,11 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
-  /general-ocr-advanced:
+  /advanced-ocr:
     post:
       tags:
         - Optical Character Recognition(OCR)
-      summary: Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols (advanced mode)
+      summary: Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols.
       operationId: general-ocr-advanced
       requestBody:
         required: true
@@ -90,7 +90,7 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
-  /general-ocr-traditional-chinese:
+  /lite-ocr-traditional-chinese:
     post:
       tags:
         - Optical Character Recognition(OCR)
@@ -487,6 +487,33 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
+  /general-nlu:
+    post:
+      tags:
+        - Natural Language
+      summary: Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems.
+      operationId: general-nlu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/nluRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/nluResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
 components:
   schemas:
     imageRequest:
@@ -511,6 +538,72 @@ components:
         text:
           type: string
           example: Test text
+    nluRequest:
+      title: NLU Request
+      type: object
+      required:
+        - text
+        - subtask_type
+        - choices
+        - question
+      properties:
+        text:
+          type: string
+          example: 实体识别
+        subtask_type:
+          type: string
+          example: 情感分类
+        question:
+          type: string
+          example: 这句话的情感极性是什么
+        choices:
+          type: string
+          example: '[
+                        {
+                            "entity_type": "积极",
+                            "label": 0,
+                            "entity_list": []
+                        },
+                        {
+                            "entity_type": "中性",
+                            "label": 0,
+                            "entity_list": []
+                        },
+                        {
+                            "entity_type": "消极",
+                            "label": 0,
+                            "entity_list": []
+                        }
+                    ]'
+    nluResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            type: number
+            format: double
+          example: '{
+                        "subtask_type": "情感分类",
+                        "text": "待分类的用户评论",
+                        "choices": [{
+                            "entity_type": "积极",
+                            "label": 0,
+                            "entity_list": []
+                        }, {
+                            "entity_type": "中性",
+                            "label": 1,
+                            "entity_list": [],
+                            "score": 0.91592306
+                        }, {
+                            "entity_type": "消极",
+                            "label": 0,
+                            "entity_list": []
+                        }],
+                        "question": "这句话的情感极性是什么"
+                    }'
     base64Response:
       title: Image Base64 Request
       type: object

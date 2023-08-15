@@ -56,7 +56,6 @@ import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custo
 import { FaceComparisonSageMakerFeatureNestedStack } from './features/sagemaker/face-comparison-sagemaker';
 import { FaceDetectionSageMakerFeatureNestedStack } from './features/sagemaker/face-detection-sagemaker';
 import { GeneralNLUSageMakerFeatureNestedStack } from './features/sagemaker/general-nlu-sagemaker';
-import { GeneralOCRTraditionalChineseSageMakerFeatureNestedStack } from './features/sagemaker/general-ocr-traditional-chinese-sagemaker';
 import { HumanAttributeRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/human-attribute-recognition-sagemaker';
 import { HumanImageSegmentationSageMakerFeatureNestedStack } from './features/sagemaker/human-image-segmentation-sagemaker';
 import { ImageSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/image-similarity-sagemaker';
@@ -196,7 +195,7 @@ export class AISolutionKitStack extends Stack {
         lambdaMemorySize: 8192,
       });
       (generalOCR.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCR');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr', 'General OCR', 'ConditionGeneralOCR');
+      this.addOutput(cfnTemplate, api.restApiId, 'lite-ocr', 'Lite OCR - Simplified Chinese', 'ConditionGeneralOCR');
     }
 
     // Feature: Advanced OCR SageMaker
@@ -209,7 +208,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props?.ecrRegistry,
       });
       (advancedOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionAdvancedOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR SageMaker', 'ConditionAdvancedOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR - Multilingual', 'ConditionAdvancedOCRSageMaker');
     }
 
     // Feature: General OCR - Traditional Chinese
@@ -223,20 +222,7 @@ export class AISolutionKitStack extends Stack {
         lambdaMemorySize: 8192,
       });
       (generalOCRTraditionalChinese.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChinese');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese', 'General OCR Traditional Chinese', 'ConditionGeneralOCRTraditionalChinese');
-    }
-
-    // Feature: General OCR - Traditional Chinese SageMaker
-    {
-      const generalOCRTraditionalChineseSageMaker = new GeneralOCRTraditionalChineseSageMakerFeatureNestedStack(this, 'General-OCR-Traditional-Chinese-SageMaker', {
-        restApi: api,
-        customAuthorizationType: authType,
-        ecrDeployment: ecrDeployment,
-        updateCustomResourceProvider: updateCustomResourceProvider,
-        ecrRegistry: props.ecrRegistry,
-      });
-      (generalOCRTraditionalChineseSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralOCRTraditionalChineseSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'general-ocr-traditional-chinese-ml', 'General OCR Traditional Chinese SageMaker', 'ConditionGeneralOCRTraditionalChineseSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'lite-ocr-traditional-chinese', 'Lite OCR - Traditional Chinese', 'ConditionGeneralOCRTraditionalChinese');
     }
 
     // Feature: Custom OCR
