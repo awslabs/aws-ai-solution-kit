@@ -58,10 +58,10 @@ Metadata:
         default: Lite OCR - Simplified Chinese
 
       AdvancedOCRSageMaker:
-        default: Advanced OCR
+        default: Advanced OCR - Multilingual
       
       GeneralOCRTraditionalChinese:
-        default: General OCR - Traditional Chinese
+        default: Lite OCR - Traditional Chinese
       
       CustomOCR:
         default: Custom Template OCR
@@ -142,7 +142,6 @@ Parameters:
     Default: "no"
     Type: String
     AllowedValues:
-      - "yes-sagemaker"
       - "yes-lambda"
       - "no"
 
