@@ -11,13 +11,17 @@
         <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-advanced-ocr/">
       
       
+        <link rel="prev" href="../deploy-general-ocr-traditional/">
+      
+      
+        <link rel="next" href="../deploy-custom-ocr/">
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
       <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
-        <title>Deploy advanced ocr - AI Solution Kit</title>
+        <title>高阶文字识别（多语种） - AI Solution Kit</title>
       
     
     
@@ -101,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Deploy advanced ocr
+              高阶文字识别（多语种）
             
           </span>
         </div>
@@ -225,13 +229,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href=".." class="md-tabs__link md-tabs__link--active">
         实施指南
       </a>
     </li>
@@ -303,14 +309,16 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
       
       
       
@@ -319,7 +327,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_1">
           <span class="md-nav__icon md-icon"></span>
           实施指南
@@ -476,14 +484,16 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" checked>
       
       
       
@@ -492,7 +502,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_1_8">
           <span class="md-nav__icon md-icon"></span>
           API参考指南
@@ -534,7 +544,7 @@
   
     <li class="md-nav__item">
       <a href="../deploy-general-ocr-traditional/" class="md-nav__link">
-        通用文字识别（繁体中文）
+        轻量级文字识别（繁体中文）
       </a>
     </li>
   
@@ -545,11 +555,145 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../deploy-general-ocr-traditional/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          高阶文字识别（多语种）
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         高阶文字识别（多语种）
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    适用场景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    API参数说明
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    开始使用
+  </a>
+  
+    <nav class="md-nav" aria-label="开始使用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api_1" class="md-nav__link">
+    API资源浏览器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postmanaws_iam" class="md-nav__link">
+    Postman（AWS_IAM认证）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    cURL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonaws_iam" class="md-nav__link">
+    Python（AWS_IAM认证）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonnone" class="md-nav__link">
+    Python（NONE认证）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    Java
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    成本预估
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    成本预估示例1
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    成本预估示例2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    成本预估示例3
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    卸载部署
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1206,7 +1350,7 @@
                   
 
 
-  <h1>Deploy advanced ocr</h1>
+  <h1>高阶文字识别（多语种）</h1>
 
 <p>通用场景文字提取，通过返回在图片中文字内容与坐标位置等信息，便于客户进行比对或结构化操作。支持识别<strong>简体中文</strong>、<strong>繁体中文</strong>、<strong>越南语</strong>、<strong>日语</strong>、<strong>韩语</strong>、英文、数字和常用符号。</p>
 <h2 id="_1">适用场景</h2>
