@@ -5,7 +5,7 @@ feature_endpoint: general_ocr_traditional
 deployment_time: 10 Minutes
 destroy_time: 10 Minutes
 sample_image: Image URL address
-feature_description: Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.
+feature_description: Recognize and extract **Traditional Chinese**, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.
 feature_scenario: Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.
 ---
 
