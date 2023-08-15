@@ -1,0 +1,2043 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-general-nlu/">
+      
+      
+        <link rel="prev" href="../deploy-text-similarity/">
+      
+      
+        <link rel="next" href="../upgrade/">
+      
+      <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>General NLU - AI Solution Kit</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.eebd395e.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#applicable-scenarios" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="AI Solution Kit" class="md-header__button md-logo" aria-label="AI Solution Kit" data-md-component="logo">
+      
+  <img src="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            AI Solution Kit
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              General NLU
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+            
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              </label>
+            
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+            
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3Z"/></svg>
+              </label>
+            
+          
+        </form>
+      
+    
+    
+      <div class="md-header__option">
+        <div class="md-select">
+          
+          <button class="md-header__button md-icon" aria-label="Select language">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
+          </button>
+          <div class="md-select__inner">
+            <ul class="md-select__list">
+              
+                <li class="md-select__item">
+                  <a href="/aws-ai-solution-kit/zh/" hreflang="zh" class="md-select__link">
+                    中文
+                  </a>
+                </li>
+              
+                <li class="md-select__item">
+                  <a href="/aws-ai-solution-kit/en/" hreflang="en" class="md-select__link">
+                    English
+                  </a>
+                </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    awslabs/aws-ai-solution-kit
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link md-tabs__link--active">
+        Implementation Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="https://awslabs.github.io/aws-ai-solution-kit/zh/workshop/introduction/" class="md-tabs__link">
+      Workshop
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="AI Solution Kit" class="md-nav__button md-logo" aria-label="AI Solution Kit" data-md-component="logo">
+      
+  <img src="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico" alt="logo">
+
+    </a>
+    AI Solution Kit
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    awslabs/aws-ai-solution-kit
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+          Implementation Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Implementation Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Welcome
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cost/" class="md-nav__link">
+        Cost
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        Architecture overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regions/" class="md-nav__link">
+        Design considerations
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../template/" class="md-nav__link">
+        CloudFormation template
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_7" id="__nav_1_7_label" tabindex="0">
+          Automated deployment
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_1_7">
+          <span class="md-nav__icon md-icon"></span>
+          Automated deployment
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        Launch CloudFormation stack
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-add-delete-api/" class="md-nav__link">
+        Update CloudFormation stack
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_8" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1_8" id="__nav_1_8_label" tabindex="0">
+          API Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_1_8">
+          <span class="md-nav__icon md-icon"></span>
+          API Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-explorer/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-general-ocr/" class="md-nav__link">
+        Lite OCR (Simplified Chinese)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-general-ocr-traditional/" class="md-nav__link">
+        Lite OCR (Traditional Chinese)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-advanced-ocr/" class="md-nav__link">
+        Advanced OCR (Multilingual)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-custom-ocr/" class="md-nav__link">
+        Custom OCR
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-car-license-plate/" class="md-nav__link">
+        Car License Plate
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-face-detection/" class="md-nav__link">
+        Face Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-face-comparison/" class="md-nav__link">
+        Face Comparison
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-human-attribute-recognition/" class="md-nav__link">
+        Human Attribute Recognition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-human-image-segmentation/" class="md-nav__link">
+        Human Image Segmentation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-image-similarity/" class="md-nav__link">
+        Image Similarity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-object-recognition/" class="md-nav__link">
+        Object Recognition
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-pornography-detection/" class="md-nav__link">
+        Pornography Detection
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-image-super-resolution/" class="md-nav__link">
+        Image Super Resolution
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-text-similarity/" class="md-nav__link">
+        Text Similarity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          General NLU
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        General NLU
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    API reference
+  </a>
+  
+    <nav class="md-nav" aria-label="API reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#text-classification" class="md-nav__link">
+    Text classification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sentiment-analysis" class="md-nav__link">
+    Sentiment analysis
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-matching" class="md-nav__link">
+    Text matching
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-recognition" class="md-nav__link">
+    Entity recognition
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman-aws_iam-authentication" class="md-nav__link">
+    Postman (AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    cURL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-aws_iam-authentication" class="md-nav__link">
+    Python (AWS_IAM Authentication)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-none-authentication" class="md-nav__link">
+    Python (NONE Authentication)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    Java
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost estimation
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    Cost estimation example 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    Cost estimation example 2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstall-the-deployment" class="md-nav__link">
+    Uninstall the deployment
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        Upgrade the solution
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../uninstall/" class="md-nav__link">
+        Uninstall the solution
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../additional-resources/" class="md-nav__link">
+        Additional resources
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../source/" class="md-nav__link">
+        Source code
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../revisions/" class="md-nav__link">
+        Release Notes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://awslabs.github.io/aws-ai-solution-kit/zh/workshop/introduction/" class="md-nav__link">
+        Workshop
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#applicable-scenarios" class="md-nav__link">
+    Applicable scenarios
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    API reference
+  </a>
+  
+    <nav class="md-nav" aria-label="API reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#text-classification" class="md-nav__link">
+    Text classification
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sentiment-analysis" class="md-nav__link">
+    Sentiment analysis
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-matching" class="md-nav__link">
+    Text matching
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-recognition" class="md-nav__link">
+    Entity recognition
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    API test
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-explorer" class="md-nav__link">
+    API Explorer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman-aws_iam-authentication" class="md-nav__link">
+    Postman (AWS_IAM Authentication）
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    cURL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-aws_iam-authentication" class="md-nav__link">
+    Python (AWS_IAM Authentication)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-none-authentication" class="md-nav__link">
+    Python (NONE Authentication)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    Java
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-estimation" class="md-nav__link">
+    Cost estimation
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    Cost estimation example 1
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    Cost estimation example 2
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstall-the-deployment" class="md-nav__link">
+    Uninstall the deployment
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>General NLU</h1>
+
+<p>Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems.</p>
+<h2 id="applicable-scenarios">Applicable scenarios</h2>
+<p>Used in scenarios such as text classification, sentiment analysis, text matching, and entity recognition.</p>
+<div class="admonition info">
+<p class="admonition-title">Note</p>
+<p>In version 1.4.0, General NLU API only supports Chinese language processing.</p>
+</div>
+<h2 id="api-reference">API reference</h2>
+<h3 id="text-classification">Text classification</h3>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subtask_type</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Has the fixed value of "Text Classification".</td>
+</tr>
+<tr>
+<td>text</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Indicates the text to be classified.</td>
+</tr>
+<tr>
+<td>choices</td>
+<td><em>List</em></td>
+<td>Yes</td>
+<td>Indicates the candidate labels. For more information, please refer to the <strong>Request Body Example</strong>.</td>
+</tr>
+<tr>
+<td>question</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Used to prompt the model for guidance.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example Request</li>
+</ul>
+<p><strong>Example 1</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本分类&quot;,
+    &quot;text&quot;: &quot;待分类的文本&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;投资&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;科技&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;体育&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;美食&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;旅游&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这是篇什么类型的新闻'
+}
+</code></pre>
+<p><strong>Example 2</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本分类&quot;,
+    &quot;text&quot;: &quot;待分类的文本&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;农业工程&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;哲学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;教育学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;理学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;农学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这篇文章属于哪个学科'
+}
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>result</td>
+<td><em>Dict</em></td>
+<td>Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the <strong>Response Example</strong> for details.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<p><strong>Example 1 Response</strong></p>
+<p>Assume the model returns the category of the "unclassified text" as "sports."</p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本分类&quot;,
+    &quot;text&quot;: &quot;待分类的文本&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;投资&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;科技&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;体育&quot;,
+        &quot;label&quot;: 1,
+        &quot;entity_list&quot;: [],
+        &quot;score&quot;: 0.91592306
+    }, {
+        &quot;entity_type&quot;: &quot;美食&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;旅游&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这是篇什么类型的新闻'
+}
+</code></pre>
+<p><strong>Example 2 Response</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本分类&quot;,
+    &quot;text&quot;: &quot;待分类的文本&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;农业工程&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;哲学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;教育学&quot;,
+        &quot;label&quot;:1,
+        &quot;entity_list&quot;: [],
+        &quot;score&quot;: 0.91592306
+    }, {
+        &quot;entity_type&quot;: &quot;理学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;农学&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这篇文章属于哪个学科'
+}
+</code></pre>
+<h3 id="sentiment-analysis">Sentiment analysis</h3>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subtask_type</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Fixed as "Sentiment Classification"</td>
+</tr>
+<tr>
+<td>text</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>The text to be classified</td>
+</tr>
+<tr>
+<td>choices</td>
+<td><em>List</em></td>
+<td>Yes</td>
+<td>Candidate sentiment labels, please refer to the <strong>Request Body Example</strong></td>
+</tr>
+<tr>
+<td>question</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Used to prompt the model for guidance</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example Request</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;情感分类&quot;,
+    &quot;text&quot;: &quot;待分类的用户评论&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;积极&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;中性&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;消极&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这句话的情感极性是什么'
+}
+
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>result</td>
+<td><em>Dict</em></td>
+<td>Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the <strong>Response Example</strong> for details.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<p>Assume the model returns the sentiment polarity of the "unclassified user comment" as "neutral."</p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;情感分类&quot;,
+    &quot;text&quot;: &quot;待分类的用户评论&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;积极&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;中性&quot;,
+        &quot;label&quot;: 1,
+        &quot;entity_list&quot;: [],
+        &quot;score&quot;: 0.91592306
+    }, {
+        &quot;entity_type&quot;: &quot;消极&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '这句话的情感极性是什么'
+}
+</code></pre>
+<h3 id="text-matching">Text matching</h3>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subtask_type</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Has the fixed value of "Text Matching"</td>
+</tr>
+<tr>
+<td>text</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Indicates the first text</td>
+</tr>
+<tr>
+<td>choices</td>
+<td><em>List</em></td>
+<td>Yes</td>
+<td>The entity_type of each element is the concatenation of the prompt word with the second text, for example, "can be inferred: second text" or "can be understood as: second text". Please refer to the <strong>Request Body Example</strong> for details.</td>
+</tr>
+<tr>
+<td>question</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Prompts the model for guidance</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example Request</li>
+</ul>
+<p><strong>Example 1</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本匹配&quot;,
+    &quot;text&quot;: &quot;在白云的蓝天下，一个孩子伸手摸着停在草地上的一架飞机的螺旋桨。&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;可以推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;不能推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;很难推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '同义文本'
+}
+
+</code></pre>
+<p><strong>Example 2</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本匹配&quot;,
+    &quot;text&quot;: &quot;您好，我还款了怎么还没扣款&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;可以理解为：今天一直没有扣款&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;不能理解为：今天一直没有扣款&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '同义文本'
+}
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>result</td>
+<td><em>Dict</em></td>
+<td>Same format as the request parameters, with the label of the corresponding option set to 1 and an added score. Please refer to the <strong>Response Example</strong> for details.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<p><strong>Example 1 response</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本匹配&quot;,
+    &quot;text&quot;: &quot;在白云的蓝天下，一个孩子伸手摸着停在草地上的一架飞机的螺旋桨。&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;可以推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;不能推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 1,
+        &quot;entity_list&quot;: [],
+        &quot;score&quot;: 0.91592306
+    }, {
+        &quot;entity_type&quot;: &quot;很难推断出：一个孩子正伸手摸飞机的螺旋桨。&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '同义文本'
+}
+
+</code></pre>
+<p><strong>Example 2 response</strong></p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;文本匹配&quot;,
+    &quot;text&quot;: &quot;您好，我还款了怎么还没扣款&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;可以理解为：今天一直没有扣款&quot;,
+        &quot;label&quot;: 1,
+        &quot;entity_list&quot;: [],
+        &quot;score&quot;: 0.91592306
+    }, {
+        &quot;entity_type&quot;: &quot;不能理解为：今天一直没有扣款&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }],
+    'question': '同义文本'
+}
+</code></pre>
+<h3 id="entity-recognition">Entity recognition</h3>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subtask_type</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>Fixed as "Entity Recognition"</td>
+</tr>
+<tr>
+<td>text</td>
+<td><em>String</em></td>
+<td>Yes</td>
+<td>The text to be classified</td>
+</tr>
+<tr>
+<td>choices</td>
+<td><em>List</em></td>
+<td>Yes</td>
+<td>The entity_type of each element represents the desired entity type to extract. Please refer to the <strong>Request Body Example</strong> for details.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example Request</li>
+</ul>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;实体识别&quot;,
+    &quot;text&quot;: &quot;我们是首家支持英特尔、AMD 和 Arm 处理器的主要云提供商&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;地址&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;公司名&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;人物姓名&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }]
+}
+
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>result</td>
+<td><em>Dict</em></td>
+<td>Same format as the request parameters, with the entity_list corresponding to the extracted entities added with their content and position. Please refer to the <strong>Response Example</strong> for details.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<p>Assume the model returns the sentiment polarity of the "unclassified user comment" as "neutral."</p>
+<pre><code class="language-json">{
+    &quot;subtask_type&quot;: &quot;实体识别&quot;,
+    &quot;text&quot;: &quot;我们是首家支持英特尔、AMD 和 Arm 处理器的主要云提供商&quot;,
+    &quot;choices&quot;: [{
+        &quot;entity_type&quot;: &quot;地址&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }, {
+        &quot;entity_type&quot;: &quot;公司名&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: [{
+            &quot;entity_name&quot;:&quot;英特尔&quot;,
+            &quot;entity_type&quot;:&quot;公司名&quot;,
+            &quot;entity_idx&quot;:[
+                [7, 9]
+            ]
+        },{
+            &quot;entity_name&quot;:&quot;AMD&quot;,
+            &quot;entity_type&quot;:&quot;公司名&quot;,
+            &quot;entity_idx&quot;:[
+                [11, 13]
+            ]
+        }]
+    }, {
+        &quot;entity_type&quot;: &quot;人物姓名&quot;,
+        &quot;label&quot;: 0,
+        &quot;entity_list&quot;: []
+    }]
+}
+</code></pre>
+<!-- BEGIN INCLUDE include-deploy-code.md -->
+<h2 id="api-test">API test</h2>
+<p>You can use the following tools (API explorer, Postman, cURL, Python, Java) to test calling APIs.</p>
+<h3 id="api-explorer">API Explorer</h3>
+<p><strong>Prerequisites</strong></p>
+<p>When <a href="../deployment/">deploying the solution</a>, you need to：</p>
+<ul>
+<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
+<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
+</ul>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test calling API online. </p>
+<p><strong>Steps</strong></p>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>
+<p>On the <strong>Stacks</strong> page, select the solution’s root stack. Do not select the NESTED stack.</p>
+<p><img alt="" src="../images/root-stack-en.png" /></p>
+</li>
+<li>
+<p>Choose the <strong>Outputs</strong> tab, and find the URL for APIExplorer.</p>
+</li>
+<li>
+<p>Click the URL to access the API explorer. The APIs that you have selected during deployment will be displayed. </p>
+<p><img alt="" src="../images/api-explorer.png" /></p>
+</li>
+<li>
+<p>For the API you want to test, click the down arrow to display the request method.</p>
+</li>
+<li>Choose the <strong>Try it out</strong> button, and enter the correct Body data to test API and check the test result.</li>
+<li>Make sure the format is correct, and choose <strong>Execute</strong>.</li>
+<li>Check the returned result in JSON format in the <strong>Responses body</strong>. If needed, copy or download the result.</li>
+<li>Check the <strong>Response headers</strong>.</li>
+<li>(Optional) Choose <strong>Clear</strong> next to the <strong>Execute</strong> button to clear the request body and responses. </li>
+</ol>
+<h3 id="postman-aws_iam-authentication">Postman (<em>AWS_IAM</em> Authentication）</h3>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>On the <strong>Stacks</strong> page, select the solution’s root stack.</li>
+<li>Choose the <strong>Outputs</strong> tab, and find the URL with the prefix <code>GeneralOCR</code>.</li>
+<li>
+<p>Create a new tab in Postman. Paste the URL into the address bar, and select <em>POST</em> as the HTTP call method.</p>
+<p><img alt="" src="../images/ocr-postman-1-en.png" /></p>
+</li>
+<li>
+<p>Open the Authorization configuration, select Amazon Web Service Signature from the drop-down list, and enter the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).</p>
+<p><img alt="" src="../images/ocr-postman-2-en.png" /></p>
+</li>
+<li>
+<p>Open the Body configuration item and select the raw and JSON data types. </p>
+</li>
+<li>Enter the test data in the Body, and click the <strong>Send</strong> button to see the corresponding return results.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
+<h3 id="curl">cURL</h3>
+<ul>
+<li>Windows</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/general_nlu&quot; ^
+--header &quot;Content-Type: application/json&quot; ^
+--data-raw &quot;{\&quot;url\&quot;: \&quot;Image URL address\&quot;}&quot;
+</code></pre>
+<ul>
+<li>Linux/MacOS</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/general_nlu' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  &quot;url&quot;:&quot;Image URL address&quot;
+}'
+</code></pre>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
+<pre><code class="language-python">import requests
+import json
+from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
+
+auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
+                           aws_region='[AWS_REGION]',
+                           aws_service='execute-api')
+
+url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/general_nlu'
+payload = {
+    'url': 'Image URL address'
+}
+response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
+print(json.loads(response.text))
+</code></pre>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
+<pre><code class="language-python">import requests
+import json
+
+url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/general_nlu&quot;
+
+payload = json.dumps({
+  &quot;url&quot;: &quot;Image URL address&quot;
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
+
+print(response.text)
+</code></pre>
+<h3 id="java">Java</h3>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
+RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;Image URL address\&quot;\n}&quot;);
+Request request = new Request.Builder()
+  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/general_nlu&quot;)
+  .method(&quot;POST&quot;, body)
+  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
+  .build();
+Response response = client.newCall(request).execute();
+</code></pre>
+<!-- END INCLUDE -->
+
+<h2 id="cost-estimation">Cost estimation</h2>
+<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of this revision, the main cost factors affecting the solution include.</p>
+<ul>
+<li>Amazon API Gateway calls</li>
+<li>Amazon API Gateway data output</li>
+<li>Amazon CloudWatch Logs storage</li>
+<li>Amazon Elastic Container Registry storage</li>
+</ul>
+<p>If you choose an Amazon Lambda based deployment, the factors also include:</p>
+<ul>
+<li>Amazon Lambda invocations</li>
+<li>Amazon Lambda running time</li>
+</ul>
+<p>If you choose an Amazon SageMaker based deployment, the factors also include:</p>
+<ul>
+<li>Amazon SageMaker endpoint node instance type</li>
+<li>Amazon SageMaker endpoint node data input</li>
+<li>Amazon SageMaker endpoint node data output</li>
+</ul>
+<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 second</p>
+<p>The cost of using this solution to process the image is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>¥1.36</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>¥907.8</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>¥28.94</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, ¥0.933/GB</td>
+<td>¥93.3</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, ¥6.228/GB</td>
+<td>¥62.28</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB storage, ¥0.69/GB each month</td>
+<td>¥0.35</td>
+</tr>
+<tr>
+<td>Total</td>
+<td></td>
+<td>¥1010.06</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 1 seconds</p>
+<p>The cost of using this solution to process this image is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>$0.20</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>$133.3</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>$3.5</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, $0.09/GB</td>
+<td>$9</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, $0.50/GB</td>
+<td>$5</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，$0.1/GB each month</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>Total</td>
+<td></td>
+<td>$142.95</td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN INCLUDE include-deploy-uninstall.md -->
+<h2 id="uninstall-the-deployment">Uninstall the deployment</h2>
+<p>You can uninstall the <strong>General NLU</strong> feature via Amazon CloudFormation as described in <a href="../deploy-add-delete-api/">Add or remove AI features</a> and make sure the <strong>GeneralNLU</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
+<div class="admonition info">
+<p class="admonition-title">Note</p>
+<p>Time to uninstall the deployment is approximately: <strong>10 Minutes</strong></p>
+</div>
+<!-- END INCLUDE -->
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
