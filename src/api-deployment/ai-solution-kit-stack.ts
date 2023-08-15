@@ -208,7 +208,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props?.ecrRegistry,
       });
       (advancedOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionAdvancedOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR - Multilingual', 'ConditionAdvancedOCRSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr', 'Advanced OCR - Multilingual', 'ConditionAdvancedOCRSageMaker');
     }
 
     // Feature: General OCR - Traditional Chinese
