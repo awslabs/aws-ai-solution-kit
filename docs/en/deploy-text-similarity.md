@@ -94,7 +94,7 @@ With text pair as input, it returns the cosine similarity of two texts. This is 
 
 ## Cost Estimation
 
-You are responsible for the cost of using each Amazon Web Services service when running the solution. As of June 2022, the main cost factors affecting the solution include.
+You are responsible for the cost of using each Amazon Web Services service when running the solution. As of this revision, the main cost factors affecting the solution include.
 
 - AWS Lambda invocations
 - AWS Lambda running time

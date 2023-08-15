@@ -1,4 +1,4 @@
-You will be responsible for the cost of using each of the Amazon services when running the solution. As of December 2022, the main factors affecting the solution cost include:
+You will be responsible for the cost of using each of the Amazon services when running the solution. As of this revision, the main factors affecting the solution cost include:
 
 - Amazon API Gateway calls
 - Amazon API Gateway data output
