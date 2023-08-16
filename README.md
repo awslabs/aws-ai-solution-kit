@@ -26,7 +26,9 @@ English | [简体中文](README_zh-Hans.md)
 
 ## Introduction
 
-This repository contains several pre-trained deep learning models based on AWS Lambda and Amazon SageMaker, for example: general OCR, text similarity, face detection, human image segmentation, image similarity, object recognition, image super resolution (see full list below). By this project, you can download these dockerized modules from Amazon Elastic Container Registry(ECR) and create REST APIs on Amazon API Getaway. Once the project deployed, you can call the REST API to use these features easily.
+This repository contains several pre-trained deep learning models based on AWS Lambda and Amazon SageMaker, for example: general OCR, text similarity, face detection, human image segmentation, image similarity, object recognition, image super resolution (see full list below). By this project, you can download these dockerized modules from Amazon Elastic Container Registry(ECR) and create REST APIs on Amazon API Getaway. Once the project deployed, you can call the REST API to use these features easily. 
+
+For more information about the solution, please refer to our [website](https://www.amazonaws.cn/en/solutions/technology/ai-ml/ai-solution-kit). 
 
 <div align="center">
     <img src="./docs/imgs/ocr_1.png" width="400">
@@ -42,8 +44,9 @@ This repository contains several pre-trained deep learning models based on AWS L
 ### **Optical Character Recognition(OCR)**
 |    **Feature Name**   | **Description**    |
 |--------------|-------------|
-|General OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols|
-|General OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols|
+|Lite OCR (Simplified Chinese)|Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols|
+|Lite OCR (Traditional Chinese)|Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols|
+|Advanced OCR (Multilingual)|Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates|
 |Custom OCR|Recognize and extract structured text by predefined OCR templates|
 |Car License Plate|Recognize text on Chinese car license plate|
 
@@ -65,18 +68,19 @@ This repository contains several pre-trained deep learning models based on AWS L
 ### **Computer Vision Production**
 |    **Feature Name**   | **Description**    |
 |--------------|-------------|
-|Image Super Resolution|Upscale the resolution and enhance details in the images.|
+|Image Super Resolution|Upscale the resolution and enhance details in the images|
 
 ### **Natural Language Understanding(NLU)**
 |    **Feature Name**   | **Description**    |
 |--------------|-------------|
-|Text Similarity|Compare two Chinese words or sentences and return similarity score.|
+|Text Similarity|Compare two Chinese words or sentences and return similarity score|
+|General NLU|Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems|
 
 
 
 ## Quick deployment
 
-This project is an AWS [Cloud Development Kit(CDK)](https://aws.amazon.com/cdk/) project written in Typescript, if you want to use the above deep learning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
+This project is an AWS [Cloud Development Kit(CDK)](https://aws.amazon.com/cdk/) project written in Typescript, if you want to use the above deep learning features without building the entire project, you can use the Amazon CloudFormation template to deploy feature APIs quickly, the generated Amazon CloudFormation template is available at: https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.4.0/AI-Solution-Kit.template
 
 Below is the quick links to launch the AWS CloudFormation template into your AWS account
 
