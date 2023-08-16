@@ -60,7 +60,7 @@ include "include-deploy-description.md"
         "label": 0,
         "entity_list": []
     }],
-    'question': '这是篇什么类型的新闻'
+    "question": "这是篇什么类型的新闻"
 }
 ```
 
@@ -91,7 +91,7 @@ include "include-deploy-description.md"
         "label": 0,
         "entity_list": []
     }],
-    'question': '这篇文章属于哪个学科'
+    "question": "这篇文章属于哪个学科"
 }
 ```
 
@@ -133,7 +133,7 @@ Assume the model returns the category of the "unclassified text" as "sports."
         "label": 0,
         "entity_list": []
     }],
-    'question': '这是篇什么类型的新闻'
+    "question": "这是篇什么类型的新闻"
 }
 ```
 
@@ -165,7 +165,7 @@ Assume the model returns the category of the "unclassified text" as "sports."
         "label": 0,
         "entity_list": []
     }],
-    'question': '这篇文章属于哪个学科'
+    "question": "这篇文章属于哪个学科"
 }
 ```
 
@@ -201,7 +201,7 @@ Assume the model returns the category of the "unclassified text" as "sports."
         "label": 0,
         "entity_list": []
     }],
-    'question': '这句话的情感极性是什么'
+    "question": "这句话的情感极性是什么"
 }
 
 ```
@@ -234,7 +234,7 @@ Assume the model returns the sentiment polarity of the "unclassified user commen
         "label": 0,
         "entity_list": []
     }],
-    'question': '这句话的情感极性是什么'
+    "question": "这句话的情感极性是什么"
 }
 ```
 
@@ -272,7 +272,7 @@ Assume the model returns the sentiment polarity of the "unclassified user commen
         "label": 0,
         "entity_list": []
     }],
-    'question': '同义文本'
+    "question": "同义文本"
 }
 
 ```
@@ -292,7 +292,7 @@ Assume the model returns the sentiment polarity of the "unclassified user commen
         "label": 0,
         "entity_list": []
     }],
-    'question': '同义文本'
+    "question": "同义文本"
 }
 ```
 
@@ -324,7 +324,7 @@ Assume the model returns the sentiment polarity of the "unclassified user commen
         "label": 0,
         "entity_list": []
     }],
-    'question': '同义文本'
+    "question": "同义文本"
 }
 
 ```
@@ -345,7 +345,7 @@ Assume the model returns the sentiment polarity of the "unclassified user commen
         "label": 0,
         "entity_list": []
     }],
-    'question': '同义文本'
+    "question": "同义文本"
 }
 ```
 
