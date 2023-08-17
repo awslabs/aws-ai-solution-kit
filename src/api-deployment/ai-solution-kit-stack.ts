@@ -505,7 +505,7 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
       });
       (superResolutionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionImageSuperResolutionSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution-ml', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'super-resolution', 'Super Resolution SageMaker', 'ConditionImageSuperResolutionSageMaker');
     }
 
     // Feature: General NLU SageMaker
