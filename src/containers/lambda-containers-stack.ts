@@ -16,9 +16,9 @@ export class LambdaContainersStack extends Stack {
 
     const ImagePIIDetection = new DockerImageFunction(
       this,
-      'image-pii-detection',
+      'photo-pii-detection',
       {
-        functionName: 'image-pii-detection',
+        functionName: 'photo-pii-detection',
         code: DockerImageCode.fromImageAsset('src/containers/image-pii-detection',
           {
             file: 'Dockerfile',
