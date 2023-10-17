@@ -16,12 +16,12 @@ export class LambdaContainersStack extends Stack {
 
     const ImagePIIDetection = new DockerImageFunction(
       this,
-      'photo-pii-detection',
+      'photo-pii-detection-sagemaker',
       {
-        functionName: 'photo-pii-detection',
+        functionName: 'photo-pii-detection-sagemaker',
         code: DockerImageCode.fromImageAsset('src/containers/image-pii-detection',
           {
-            file: 'Dockerfile',
+            file: 'Dockerfile.sagemaker',
           },
         ),
       },
