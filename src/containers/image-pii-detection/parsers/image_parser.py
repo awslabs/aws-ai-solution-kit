@@ -60,16 +60,16 @@ class ImageParser(BaseParser):
         
         if contain_face:
             if contain_cnid:
-                file_content.append('ChineseID')
+                file_content.append('CHINESE_ID_IMAGE')
             elif contain_car_license:
-                file_content.append('CarLicense')
+                file_content.append('CAR_LICENSE_IMAGE')
             else:
-                file_content.append('Face')
+                file_content.append('FACE_IMAGE')
         else:
             if contain_business_license:
-                file_content.append('BusinessLicense')
+                file_content.append('BUSINESS_LICENSE_IMAGE')
             elif contain_car_license:
-                file_content.append('CarLicense')
+                file_content.append('CAR_LICENSE_IMAGE')
             else:
                 pass
 
