@@ -77,7 +77,7 @@ AI Solution Kit 提供一系列基于深度学习的云上机器学习功能，�
 
 ## 快速部署
 
-这个代码库包含了完整的用 Typescript 语言编写的 AWS CDK 工程，如果您想使用上述深度学习功能而不在本地重新编译整个工程源代码，您可以选择使用 AWS CloudFormation 模板来快速部署，编译好的 CloudFormation 模板可通过如下链接获取：https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
+这个代码库包含了完整的用 Typescript 语言编写的 AWS CDK 工程，如果您想使用上述深度学习功能而不在本地重新编译整个工程源代码，您可以选择使用 AWS CloudFormation 模板来快速部署，编译好的 CloudFormation 模板可通过如下链接获取：https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.4.0/AI-Solution-Kit.template
 
 更多信息可参考[CloudFormation概念](https://docs.aws.amazon.com/zh_cn/zh_cn/AWSCloudFormation/latest/UserGuide/cfn-whatis-concepts.html)。
 
@@ -186,6 +186,6 @@ yarn deploy
 ## 许可证信息
 本 AI Solution Kit 工程遵循Apache-2.0许可证发布。
 
-[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
+[template-china1]:https://cn-north-1.console.amazonaws.cn/cloudformation/home?region=cn-north-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.4.0/AI-Solution-Kit.template
 
-[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.3.0/AI-Solution-Kit.template
+[template-global]: https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create/template?stackName=AI-Solution-Kit&templateURL=https://aws-gcr-solutions.s3.amazonaws.com/Aws-gcr-ai-solution-kit/v1.4.0/AI-Solution-Kit.template
