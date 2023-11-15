@@ -49,8 +49,8 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
+    "@aws-sdk/client-api-gateway": "^3.451.0",
     "aws-cdk-lib": "^2.87.0",
-    "aws-sdk": "^2.1001.0",
     "cdk-bootstrapless-synthesizer": "^2.1.1",
     "constructs": "^10.0.5",
     "deasync": "^0.1.26",
