@@ -6,9 +6,9 @@ const express = require('express')
 const serverless = require('serverless-http')
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs');
-const AWS = require('aws-sdk');
+const { APIGateway } = require('@aws-sdk/client-api-gateway');
 
-var apigateway = new AWS.APIGateway();
+var apigateway = new APIGateway();
 
 var params = {
   restApiId: process.env.REST_API_ID,
