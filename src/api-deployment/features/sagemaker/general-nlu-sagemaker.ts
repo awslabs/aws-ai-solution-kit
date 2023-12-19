@@ -19,7 +19,7 @@ export class GeneralNLUSageMakerFeatureNestedStack extends FeatureNestedStack {
       featureName: `${featureName}`,
       featureCategory: 'media',
       updateCustomResourceProvider: props.updateCustomResourceProvider,
-      sageMakerInstanceType: 'ml.g4dn.xlarge',
+      sageMakerInstanceType: props.instanceType == null ? 'ml.g4dn.xlarge' : props.instanceType,
       sageMakerEcrDeployment: props.ecrDeployment,
     });
   }

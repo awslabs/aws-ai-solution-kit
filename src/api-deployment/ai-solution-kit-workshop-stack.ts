@@ -171,6 +171,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props?.ecrRegistry,
+        instanceType: 'ml.g5.xlarge',
       });
       (advancedOCRSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionAdvancedOCRSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR - Multilingual', 'ConditionAdvancedOCRSageMaker');
@@ -184,6 +185,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        instanceType: 'ml.g5.xlarge',
       });
       (customOCRSageMakerFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCRSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr-ml', 'Custom OCR SageMaker', 'ConditionCustomOCRSageMaker');
@@ -211,6 +213,7 @@ export class AISolutionKitStack extends Stack {
         ecrDeployment: ecrDeployment,
         updateCustomResourceProvider: updateCustomResourceProvider,
         ecrRegistry: props.ecrRegistry,
+        instanceType: 'ml.g5.xlarge',
       });
       (generalNLUSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralNLUSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'general-nlu-ml', 'General NLU SageMaker', 'ConditionGeneralNLUSageMaker');
