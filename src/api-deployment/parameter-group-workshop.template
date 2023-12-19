@@ -87,7 +87,7 @@ Parameters:
 
   ObjectRecognition:
     Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
-    Default: "yes-lambd"
+    Default: "yes-lambda"
     Type: String
     AllowedValues:
       - "yes-lambda"
