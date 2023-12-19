@@ -61,7 +61,7 @@ export class ApiExplorerNestedStack extends NestedStack {
         REST_API_ID: props.restApi.restApiId,
         SWAGGER_SPEC_URL: props.invokeUrl.toString(),
         AUTH_TYPE: props.authorizationType.toString(),
-        OPEN_API: './openapi.yaml',
+        OPEN_API: './openapi-workshop.yaml',
       },
     });
 

@@ -36,7 +36,7 @@ import {
   ECRDeployment,
 } from '../lib/cdk-ecr-deployment/lib';
 import { FeatureNestedStack } from './feature-nested-stack';
-import { ApiExplorerNestedStack } from './features/api-explorer';
+import { ApiExplorerNestedStack } from './features/api-explorer-workshop';
 import { ObjectRecognitionFeatureNestedStack } from './features/lambda/object-recognition';
 
 import { AdvancedOCRSageMakerFeatureNestedStack } from './features/sagemaker/advanced-ocr-sagemaker';

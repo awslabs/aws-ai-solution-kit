@@ -32,7 +32,7 @@ while(synced) {
   require('deasync').sleep(10);
 }
 
-const swaggerDocument = YAML.load('./openapi.yaml');
+const swaggerDocument = YAML.load(process.env.OPEN_API);
 swaggerDocument.servers = [{ url: process.env.SWAGGER_SPEC_URL }];
 
 for (i in swaggerDocument.paths) {

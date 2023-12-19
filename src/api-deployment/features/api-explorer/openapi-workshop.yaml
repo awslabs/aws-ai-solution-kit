@@ -1,0 +1,612 @@
+openapi: 3.0.3
+info:
+  description: |
+    You can find out more about AI Solution Kit at
+    [https://github.com/awslabs/aws-ai-solution-kit](https://github.com/awslabs/aws-ai-solution-kit/) or on
+    [https://www.amazonaws.cn/solutions/ai-solution-kit](https://www.amazonaws.cn/solutions/ai-solution-kit/?nc1=h_ls).
+  version: "1.4.0"
+  title: AI Solution Kit Workshop
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    url: https://www.amazonaws.cn/contact-us
+    name: Amazon Web Services Solutions
+  termsOfService: https://www.amazonaws.cn/en/terms/?nc1=f_cc
+servers:
+  - url: ''
+tags:
+  - name: Optical Character Recognition(OCR)
+  - name: Image Understanding
+  - name: Natural Language
+paths:
+  /advanced-ocr-ml:
+    post:
+      tags:
+        - Optical Character Recognition(OCR)
+      summary: Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols.
+      operationId: general-ocr-advanced
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ocrResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
+  /custom-ocr-ml:
+    post:
+      tags:
+        - Optical Character Recognition(OCR)
+      summary: Recognize and extract estructured text by predefined OCR templates.
+      operationId: custom-ocr
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              Create Template with image URL:
+                $ref: '#/components/examples/createUrlTemplate'
+              Create Template with image base64:
+                $ref: '#/components/examples/createBase64Template'
+              Delete Template:
+                $ref: '#/components/examples/deleteTemplate'
+              List Templates:
+                $ref: '#/components/examples/listTemplates'
+              Recognize text by template with image URL:
+                $ref: '#/components/examples/urlTemplate'
+              Recognize text by template with image base64:
+                $ref: '#/components/examples/base64Template'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ocrResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
+  /object-recognition:
+    post:
+      tags:
+        - Image Understanding
+      summary: Segment human bodies from background and return the alpha channel
+      operationId: object-recognition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/objectRecognitionResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
+  /general-nlu-ml:
+    post:
+      tags:
+        - Natural Language
+      summary: Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems.
+      operationId: general-nlu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/nluRequest'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/nluResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
+components:
+  schemas:
+    imageRequest:
+      title: Image Request
+      type: object
+      required:
+        - url
+        - img
+      properties:
+        url:
+          type: string
+          description: Image URL
+        img:
+          type: string
+          description: Base64-encoded image data
+    textRequest:
+      title: Text Request
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          example: Test text
+    nluRequest:
+      title: NLU Request
+      type: object
+      required:
+        - text
+        - subtask_type
+        - choices
+        - question
+      properties:
+        text:
+          type: string
+          example: 实体识别
+        subtask_type:
+          type: string
+          example: 情感分类
+        question:
+          type: string
+          example: 这句话的情感极性是什么
+        choices:
+          type: string
+          example: '[
+                        {
+                            "entity_type": "积极",
+                            "label": 0,
+                            "entity_list": []
+                        },
+                        {
+                            "entity_type": "中性",
+                            "label": 0,
+                            "entity_list": []
+                        },
+                        {
+                            "entity_type": "消极",
+                            "label": 0,
+                            "entity_list": []
+                        }
+                    ]'
+    nluResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            type: number
+            format: double
+          example: '{
+                        "subtask_type": "情感分类",
+                        "text": "待分类的用户评论",
+                        "choices": [{
+                            "entity_type": "积极",
+                            "label": 0,
+                            "entity_list": []
+                        }, {
+                            "entity_type": "中性",
+                            "label": 1,
+                            "entity_list": [],
+                            "score": 0.91592306
+                        }, {
+                            "entity_type": "消极",
+                            "label": 0,
+                            "entity_list": []
+                        }],
+                        "question": "这句话的情感极性是什么"
+                    }'
+    base64Response:
+      title: Image Base64 Request
+      type: object
+      required:
+        - img
+      properties:
+        img:
+          type: string
+          description: Base64-encoded image data
+          example: "Base64-encoded image data"
+    boundingBox:
+      type: object
+      required:
+        - Width
+        - Height
+        - Left
+        - Top
+      properties:
+        Width:
+          type: integer
+          format: int32
+        Height:
+          type: integer
+          format: int32
+        Left:
+          type: integer
+          format: int32
+        Top:
+          type: integer
+          format: int32
+    ocrResponse:
+      type: object
+      required:
+        - words
+        - location
+        - score
+      properties:
+        words:
+          type: string
+          description: Text in the image
+          example: 'example word'
+        location:
+          type: object
+          description: Text box location, including top, left, width, height
+          required:
+            - top
+            - left
+            - width
+            - height
+          properties:
+            top:
+              type: integer
+              format: int32
+            left:
+              type: integer
+              format: int32
+            width:
+              type: integer
+              format: int32
+            height:
+              type: integer
+              format: int32
+          example: '{
+            "top": 36,
+            "left": 71,
+            "width": 321,
+            "height": 17
+          }'
+        score:
+          type: number
+          format: double
+          description: Confidence of the text
+          example: 0.9825196266174316
+    faceDetectionResponse:
+      type: object
+      required:
+        - Faces
+        - FaceModelVersion
+      properties:
+        Faces:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+              Confidence:
+                type: number
+                format: double
+                example: 0.8736226558685303
+              landmark_106:
+                type: object
+                required:
+                  - x
+                  - y
+                properties:
+                  x:
+                    type: integer
+                    format: int32
+                  y:
+                    type: integer
+                    format: int32
+                example: '[{"x": 306, "y": 802}, 
+                  {"x": 254, "y": 734}]'
+              gender:
+                type: string
+                example: 'female'
+              age:
+                type: integer
+                format: int32
+                example: 37
+        FaceModelVersion:
+          type: string
+          example: '1.2.0'
+    faceComparisonResponse:
+      type: object
+      required:
+        - Faces
+        - FaceModelVersion
+      properties:
+        Faces:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+              Confidence:
+                type: number
+                format: double
+                example: 0.8736226558685303
+              face_hash:
+                type: array
+                items:
+                  type: number
+                  format: float
+                example: '[61.21875, -33.84375, -36.71875, 70.625, 110.125, ..., -28.421875]'
+        FaceModelVersion:
+          type: string
+          example: '1.2.0'
+    humanAttributeResponse:
+      type: object
+      required:
+        - Labels
+      properties:
+        Labels:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                type: object
+                required:
+                  - Width
+                  - Height
+                  - Left
+                  - Top
+                properties:
+                  Width:
+                    type: integer
+                    format: int32
+                  Height:
+                    type: integer
+                    format: int32
+                  Left:
+                    type: integer
+                    format: int32
+                  Top:
+                    type: integer
+                    format: int32
+            example: '{
+              "upper_wear": {
+                  "短袖": 0.01, 
+                  "长袖": 99.99
+              }, 
+              "upper_wear_texture": {
+                  "图案": 0, 
+                  "纯色": 99.55, 
+                  "条纹/格子": 0.45
+              }, 
+              "lower_wear": {
+                  "短裤/裙": 0.15, 
+                  "长裤/裙": 99.85
+              }, 
+              "glasses": {
+                  "有眼镜": 57.74, 
+                  "无眼镜": 42.26
+              }, 
+              "bag": {
+                  "有背包": 0.69, 
+                  "无背包": 99.31
+              }, 
+              "headwear": {
+                  "有帽": 97.02, 
+                  "无帽": 2.98
+              }, 
+              "orientation": {
+                  "左侧面": 99.99, 
+                  "背面": 0, 
+                  "正面": 0, 
+                  "右侧面": 0.01
+              }, 
+              "upper_cut": {
+                  "有截断": 0, 
+                  "无截断": 100
+              }, 
+              "lower_cut": {
+                  "无截断": 0.18, 
+                  "有截断": 99.82
+              }, 
+              "occlusion": {
+                  "无遮挡": 100, 
+                  "重度遮挡": 0, 
+                  "轻度遮挡": 0
+              }, 
+              "face_mask": {
+                  "无口罩": 100, 
+                  "戴口罩": 0
+              }, 
+              "gender": {
+                  "男性": 100, 
+                  "女性": 0
+              }, 
+              "age": {
+                  "幼儿": 0, 
+                  "青少年": 100, 
+                  "中年": 0, 
+                  "老年": 0
+              }, 
+              "smoke": {
+                  "吸烟": 0, 
+                  "未吸烟": 100
+              }, 
+              "cellphone": {
+                  "使用手机": 0, 
+                  "未使用手机": 100
+              }, 
+              "carrying_item": {
+                  "有手提物": 0.03, 
+                  "无手提物": 99.97
+              }, 
+              "BoundingBox": {
+                  "Width": 0.11781848725818456, 
+                  "Height": 0.43450208474661556, 
+                  "Left": 0.5310931977771577, 
+                  "Top": 0.45263674786982644
+              }
+            }'
+        LabelModelVersion:
+          type: string
+          example: '1.2.0'
+    similarityResponse:
+      type: object
+      required:
+        - result
+      properties:
+        result:
+          type: array
+          items:
+            type: number
+            format: double
+          example: '[
+            -0.02555299922823906, 
+            0.012955999933183193, 
+            -0.10079500079154968
+          ]'
+    objectRecognitionResponse:
+      type: object
+      required:
+        - Labels
+      properties:
+        Labels:
+          type: array
+          items:
+            type: object
+            properties:
+              BoundingBox:
+                $ref: '#/components/schemas/boundingBox'
+            example: '{
+              "Name": "car_(automobile)", 
+              "Confidence": 67.87780523300171, 
+              "Instances": [
+                  {
+                      "BoundingBox": {
+                          "Width": 1.0013043403596384, 
+                          "Height": 0.9958885181613408, 
+                          "Left": -0.00021715163893532008, 
+                          "Top": 0.00033918747441136817
+                      }, 
+                      "Confidence": 67.87780523300171
+                  }
+              ]
+              }'
+        LabelModelVersion:
+          type: string
+          example: '1.2.0'
+    pornographyDetectionResponse:
+      type: object
+      required:
+        - normal
+        - sexy
+        - porn
+      properties:
+        normal:
+          type: number
+          format: float
+          description: Identify the image’s normal dimensions of the image
+          example: 0.15993066132068634
+        sexy:
+          type: number
+          format: float
+          description: Identify the image’s sexy dimension
+          example: 0.5451669692993164
+        porn:
+          type: number
+          format: float
+          description: Identify the pornographic dimensions of recognized images
+          example: 0.2949024438858032
+    
+  examples:
+    imageURL:
+      value: 
+        url: "https://Image URL"
+    imageBase64:
+      value:
+        img: "Base64-encoded image data"
+    createBase64Template:
+      value:
+        type: "add"
+        img: "Base64-encoded image data"
+        template: [
+            [
+              [
+                [top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]
+              ],
+              "name",
+            ]
+          ]
+    createUrlTemplate:
+      value:
+        type: "add"
+        url: "https://Image URL"
+        template: [
+            [
+              [
+                [top-left-x, top-left-y], [top-right-x, top-right-y], [bottom-right-x, bottom-right-y], [bottom-left-x, bottom-left-y]
+              ],
+              "name",
+            ]
+          ]
+    deleteTemplate:
+      value:
+        type: "del"
+        template_id: "template ID"
+    listTemplates:
+      value:
+        type: "list"
+    urlTemplate:
+      value:
+        template_id: "template ID"
+        url: "https://Image URL"
+    base64Template:
+      value:
+        template_id: "template ID"
+        img: "Base64-encoded image data"
