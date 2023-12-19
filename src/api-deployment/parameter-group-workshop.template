@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: API Deployment Configuration
+        Parameters:
+          - APIExplorer
+          - APIGatewayAuthorization
+          - APIGatewayStageName
+
+      - Label:
+          default: Optical Character Recognition(OCR) APIs
+        Parameters:
+          - AdvancedOCRSageMaker
+          - CustomOCR
+
+      - Label:
+          default: Image Understanding APIs
+        Parameters:
+          - ObjectRecognition
+
+      - Label:
+          default: Natural Language Understanding(NLU) APIs
+        Parameters:
+          - GeneralNLU
+
+    ParameterLabels:
+      APIGatewayStageName:
+        default: API Gateway Stage Name
+
+      APIGatewayAuthorization:
+        default: API Gateway Authorization
+
+      APIExplorer:
+        default: API Explorer
+
+      AdvancedOCRSageMaker:
+        default: Advanced OCR - Multilingual
+      
+      CustomOCR:
+        default: Custom Template OCR
+      
+      ObjectRecognition:
+        default: Object Recognition
+      
+      GeneralNLU:
+        default: General NLU
+
+Parameters:
+  APIGatewayStageName:
+    Description: Enter a name for API deployment Stage name. Default value is 'prod'. See https://docs.aws.amazon.com/apigateway/latest/developerguide/stages.html.
+    Default: "prod"
+    Type: String
+
+  APIGatewayAuthorization:
+    Description: Control access to the REST APIs. See https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-control-access-to-api.html.
+    Default: "NONE"
+    Type: String
+    AllowedValues:
+      - "AWS_IAM"
+      - "NONE"
+
+  APIExplorer:
+    Description: API Explorer allows you to visualize and interact with the AI APIs. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/api-explorer.
+    Default: "yes"
+    Type: String
+    AllowedValues:
+      - "yes"
+      - "no"
+
+  AdvancedOCRSageMaker:
+    Description: Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-ocr.
+    Default: "yes-sagemaker"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
+      - "no"
+
+  CustomOCR:
+    Description: Recognize and extract estructured text by predefined OCR templates. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.
+    Default: "yes-sagemaker"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
+      - "no"
+
+  ObjectRecognition:
+    Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
+    Default: "yes-lambd"
+    Type: String
+    AllowedValues:
+      - "yes-lambda"
+      - "no"
+
+  GeneralNLU:
+    Description: Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-general-unl.
+    Default: "yes-sagemaker"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
+      - "no"
+
+Conditions:
+  ConditionAPIExplorer: !Equals 
+      - !Ref APIExplorer
+      - "yes"
+
+  ConditionAdvancedOCRSageMaker: !Equals
+      - !Ref AdvancedOCRSageMaker
+      - "yes-sagemaker"
+      
+  ConditionObjectRecognition: !Equals 
+      - !Ref ObjectRecognition
+      - "yes-lambda"
+      
+  ConditionCustomOCRSageMaker: !Equals 
+      - !Ref CustomOCR
+      - "yes-sagemaker"
+
+  ConditionGeneralNLUSageMaker: !Equals
+      - !Ref GeneralNLU
+      - "yes-sagemaker"

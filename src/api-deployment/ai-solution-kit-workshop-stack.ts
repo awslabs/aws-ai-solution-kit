@@ -62,7 +62,7 @@ export class AISolutionKitStack extends Stack {
     this.templateOptions.description = '(SO8023) - AI Solution Kit - Template version v1.4.0. Get started https://www.amazonaws.cn/solutions/ai-solution-kit.';
 
     const cfnTemplate = new CfnInclude(this, 'CfnTemplate', {
-      templateFile: path.join(__dirname, 'parameter-group.template'),
+      templateFile: path.join(__dirname, 'parameter-group-workshop.template'),
     });
 
     const api = new RestApi(this, 'AiSolutionKitApi', {
