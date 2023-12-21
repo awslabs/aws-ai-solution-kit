@@ -54,7 +54,7 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
-  /custom-ocr-ml:
+  /custom-ocr:
     post:
       tags:
         - Optical Character Recognition(OCR)
@@ -96,7 +96,7 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
-  /object-recognition:
+  /object-recognition-ml:
     post:
       tags:
         - Image Understanding

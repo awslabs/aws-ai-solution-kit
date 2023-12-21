@@ -79,18 +79,18 @@ Parameters:
 
   CustomOCR:
     Description: Recognize and extract estructured text by predefined OCR templates. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-custom-ocr.
-    Default: "yes-sagemaker"
-    Type: String
-    AllowedValues:
-      - "yes-sagemaker"
-      - "no"
-
-  ObjectRecognition:
-    Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
     Default: "yes-lambda"
     Type: String
     AllowedValues:
       - "yes-lambda"
+      - "no"
+
+  ObjectRecognition:
+    Description: Recognize objects in the image and return confidence score for each object. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-object-recognition.
+    Default: "yes-sagemaker"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
       - "no"
 
   GeneralNLU:
@@ -110,13 +110,13 @@ Conditions:
       - !Ref AdvancedOCRSageMaker
       - "yes-sagemaker"
       
-  ConditionObjectRecognition: !Equals 
+  ConditionObjectRecognitionSageMaker: !Equals 
       - !Ref ObjectRecognition
-      - "yes-lambda"
-      
-  ConditionCustomOCRSageMaker: !Equals 
-      - !Ref CustomOCR
       - "yes-sagemaker"
+      
+  ConditionCustomOCR: !Equals 
+      - !Ref CustomOCR
+      - "yes-lambda"
 
   ConditionGeneralNLUSageMaker: !Equals
       - !Ref GeneralNLU

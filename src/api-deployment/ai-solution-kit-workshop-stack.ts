@@ -37,11 +37,11 @@ import {
 } from '../lib/cdk-ecr-deployment/lib';
 import { FeatureNestedStack } from './feature-nested-stack';
 import { ApiExplorerNestedStack } from './features/api-explorer-workshop';
-import { ObjectRecognitionFeatureNestedStack } from './features/lambda/object-recognition';
 
+import { CustomOCRFeatureNestedStack } from './features/lambda/custom-ocr';
 import { AdvancedOCRSageMakerFeatureNestedStack } from './features/sagemaker/advanced-ocr-sagemaker';
-import { CustomOCRSageMakerFeatureNestedStack } from './features/sagemaker/custom-ocr-sagemaker';
 import { GeneralNLUSageMakerFeatureNestedStack } from './features/sagemaker/general-nlu-sagemaker';
+import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/object-recognition-sagemaker';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
@@ -177,23 +177,9 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'advanced-ocr-ml', 'Advanced OCR - Multilingual', 'ConditionAdvancedOCRSageMaker');
     }
 
-    // Feature: Custom OCR SageMaker
+    // Feature: Custom OCR
     {
-      const customOCRSageMakerFeatureNestedStack = new CustomOCRSageMakerFeatureNestedStack(this, 'Custom-OCR-SageMaker', {
-        restApi: api,
-        customAuthorizationType: authType,
-        ecrDeployment: ecrDeployment,
-        updateCustomResourceProvider: updateCustomResourceProvider,
-        ecrRegistry: props.ecrRegistry,
-        instanceType: 'ml.g5.xlarge',
-      });
-      (customOCRSageMakerFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCRSageMaker');
-      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr-ml', 'Custom OCR SageMaker', 'ConditionCustomOCRSageMaker');
-    }
-
-    // Feature: Object Recognition
-    {
-      const objectRecognition = new ObjectRecognitionFeatureNestedStack(this, 'Object-Recognition', {
+      const customOCRFeatureNestedStack = new CustomOCRFeatureNestedStack(this, 'Custom-OCR', {
         restApi: api,
         customAuthorizationType: authType,
         ecrDeployment: ecrDeployment,
@@ -201,8 +187,21 @@ export class AISolutionKitStack extends Stack {
         ecrRegistry: props.ecrRegistry,
         lambdaMemorySize: 10240,
       });
-      (objectRecognition.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionObjectRecognition');
-      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition', 'Object Recognition', 'ConditionObjectRecognition');
+      (customOCRFeatureNestedStack.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionCustomOCR');
+      this.addOutput(cfnTemplate, api.restApiId, 'custom-ocr', 'Custom OCR', 'ConditionCustomOCR');
+    }
+
+    // Feature: Object Recognition SageMaker
+    {
+      const objectRecognitionSageMaker = new ObjectRecognitionSageMakerFeatureNestedStack(this, 'Object-Recognition-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (objectRecognitionSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionObjectRecognitionSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'object-recognition-ml', 'Object Recognition SageMaker', 'ConditionObjectRecognitionSageMaker');
     }
 
     // Feature: General NLU SageMaker
