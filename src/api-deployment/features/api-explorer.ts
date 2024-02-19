@@ -26,7 +26,7 @@ export class ApiExplorerNestedStack extends NestedStack {
       { expression: Fn.conditionEquals(Aws.PARTITION, 'aws-cn') });
 
     const apiDocFunction = new NodejsFunction(this, 'api-explorer-function', {
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_16_X,
       memorySize: 2048,
       timeout: Duration.seconds(19),
       handler: 'handler',
