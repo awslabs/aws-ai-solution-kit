@@ -63,6 +63,7 @@ import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemak
 import { PornographyDetectionSageMakerFeatureNestedStack } from './features/sagemaker/pornography-detection-sagemaker';
 import { SuperResolutionSageMakerFeatureNestedStack } from './features/sagemaker/super-resolution-sagemaker';
 import { TextSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/text-similarity-sagemaker';
+import { LayoutAnalysisSageMakerFeatureNestedStack } from './features/sagemaker/layout-analysis-sagemaker';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
@@ -519,6 +520,19 @@ export class AISolutionKitStack extends Stack {
       });
       (generalNLUSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionGeneralNLUSageMaker');
       this.addOutput(cfnTemplate, api.restApiId, 'general-nlu-ml', 'General NLU SageMaker', 'ConditionGeneralNLUSageMaker');
+    }
+
+    // Feature: Layout Analysis SageMaker
+    {
+      const layoutAnalysisSageMaker = new LayoutAnalysisSageMakerFeatureNestedStack(this, 'Layout-Analysis-SageMaker', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+      });
+      (layoutAnalysisSageMaker.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionLayoutAnalysisSageMaker');
+      this.addOutput(cfnTemplate, api.restApiId, 'layout-analysis-ml', 'Layout Analysis SageMaker', 'ConditionLayoutAnalysisSageMaker');
     }
 
     // Stage base URL

@@ -32,13 +32,13 @@ if (buildContainers === 'true' || deployContainers === 'true') {
       app: 'ai-solution-kit',
     },
   });
-  new AISolutionKitWorkshopStack(app, 'AI-Solution-Kit-Workshop', {
-    synthesizer: synthesizer(),
-    ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
-    tags: {
-      app: 'ai-solution-kit',
-    },
-  });
+  // new AISolutionKitWorkshopStack(app, 'AI-Solution-Kit-Workshop', {
+  //   synthesizer: synthesizer(),
+  //   ecrRegistry: ecrRegistry === 'undefined' ? 'public.ecr.aws/aws-gcr-solutions/aws-gcr-ai-solution-kit' : ecrRegistry,
+  //   tags: {
+  //     app: 'ai-solution-kit',
+  //   },
+  // });
 }
 
 if (process.env.USE_BSS) {

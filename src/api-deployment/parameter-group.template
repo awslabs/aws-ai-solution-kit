@@ -15,6 +15,7 @@ Metadata:
           - GeneralOCR
           - GeneralOCRTraditionalChinese
           - AdvancedOCRSageMaker
+          - LayoutAnalysis
           - CustomOCR
           - CarLicensePlate
 
@@ -251,6 +252,14 @@ Parameters:
       - "yes-sagemaker"
       - "no"
 
+  LayoutAnalysis:
+    Description: Convert document scan images to a Markdown format document. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-layout-analysis.
+    Default: "no"
+    Type: String
+    AllowedValues:
+      - "yes-sagemaker"
+      - "no"
+
 Conditions:
   ConditionAPIExplorer: !Equals 
       - !Ref APIExplorer
@@ -366,4 +375,8 @@ Conditions:
 
   ConditionGeneralNLUSageMaker: !Equals
       - !Ref GeneralNLU
+      - "yes-sagemaker"
+
+  ConditionLayoutAnalysisSageMaker: !Equals
+      - !Ref LayoutAnalysis
       - "yes-sagemaker"

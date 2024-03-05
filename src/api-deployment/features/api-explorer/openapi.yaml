@@ -124,6 +124,40 @@ paths:
           description: Internal Server Error
         '504':
           description: Endpoint request timed out
+  /layout-analysis:
+    post:
+      tags:
+        - Optical Character Recognition(OCR)
+      summary: Convert document scan images to a Markdown format document.
+      operationId: layout-analysis
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/imageRequest'
+            examples:
+              URL:
+                $ref: '#/components/examples/imageURL'
+              Base64:
+                $ref: '#/components/examples/imageBase64'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ocrResponse'
+        '403':
+          description: Missing Authentication Token
+        '500':
+          description: Internal server error
+        '502':
+          description: Internal Server Error
+        '504':
+          description: Endpoint request timed out
   /custom-ocr:
     post:
       tags:
