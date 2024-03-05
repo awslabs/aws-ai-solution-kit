@@ -14,12 +14,12 @@ export class LambdaContainersStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const DocumentPIIDetection = new DockerImageFunction(
+    const LayoutAnalysisSageMaker = new DockerImageFunction(
       this,
-      'document-pii-detection-sagemaker',
+      'layout-analysis-sagemaker',
       {
-        functionName: 'document-pii-detection-sagemaker',
-        code: DockerImageCode.fromImageAsset('src/containers/image-pii-detection',
+        functionName: 'layout-analysis-sagemaker',
+        code: DockerImageCode.fromImageAsset('src/containers/layout-analysis/model',
           {
             file: 'Dockerfile.sagemaker',
           },
