@@ -64,6 +64,9 @@ Metadata:
       GeneralOCRTraditionalChinese:
         default: Lite OCR - Traditional Chinese
       
+      LayoutAnalysis:
+        default: Layout Analysis
+
       CustomOCR:
         default: Custom Template OCR
       
