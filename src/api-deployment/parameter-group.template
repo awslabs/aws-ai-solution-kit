@@ -65,7 +65,7 @@ Metadata:
         default: Lite OCR - Traditional Chinese
       
       LayoutAnalysis:
-        default: Layout Analysis
+        default: Document Layout Analysis
 
       CustomOCR:
         default: Custom Template OCR
@@ -256,7 +256,7 @@ Parameters:
       - "no"
 
   LayoutAnalysis:
-    Description: Convert document scan images to a Markdown format document. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-layout-analysis.
+    Description: Convert document images to a Markdown/JSON format output, with table format in Markdown/HTML. Choose yes to activate the API. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-layout-analysis.
     Default: "no"
     Type: String
     AllowedValues:
