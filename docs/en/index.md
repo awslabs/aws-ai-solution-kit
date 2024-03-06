@@ -12,18 +12,19 @@ each API interface. For more information, see [API Reference Guide](./api-explor
 
 ### Optical Character Recognition (OCR)
 
-| **API Name**                      | **Description**                                                                                                                                                                                | API                                          |
-|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------|
-| Lite OCR (Simplified Chinese)     | Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.                                                    | [Details](deploy-general-ocr.md)             |
+| **API Name**                   | **Description**                                                                                                                                                                                | API                                          |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Lite OCR (Simplified Chinese)  | Recognize and extract Simplified Chinese, numbers, alphabetical characters and symbols. Return the information such as text or coordinates.                                                    | [Details](deploy-general-ocr.md)             |
 | Lite OCR (Traditional Chinese) | Recognize and extract Traditional Chinese, numbers, alphabetical characters and symbols from images. Return the information such as text or coordinates.                                       | [Details](deploy-general-ocr-traditional.md) |
 | Advanced OCR (Multilingual)    | Recognize and extract Simplified/Traditional Chinese, Vietnamese, Japanese, Korean, English, numbers, alphabetical characters and symbols. Return the information such as text or coordinates. | [Details](deploy-advanced-ocr.md)            |
-| Custom OCR                        | You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.                                             | [Details](deploy-custom-ocr.md)              |
-| Car License Plate                 | Recognize text on Chinese car license plate.                                                                                                                                                   | [Details](deploy-car-license-plate.md)       |
+| Document Layout Analysis       | Convert document images to a Markdown/JSON format output, with table format in Markdown/HTML.                                                                                                  | [Details](deploy-layout-analysis.md)         |
+| Custom OCR                     | You can customize the OCR template, extract the structured text information in cards and tickets, and display the results in the key-value format.                                             | [Details](deploy-custom-ocr.md)              |
+| Car License Plate              | Recognize text on Chinese car license plate.                                                                                                                                                   | [Details](deploy-car-license-plate.md)       |
 
 ### Face and Body
 
 | **API Name**                | **Description**                                                                                                                                                                                                                     | API                                              |
-|-----------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | Face Detection              | Detect the face in an image, and map the detected facial features and contour key point information to 64 vector coordinates.                                                                                                       | [Details](deploy-face-detection.md)              |
 | Face Comparison             | Compare two faces of the same person and return a confidence score of the similarity.                                                                                                                                               | [Details](deploy-face-comparison.md)             |
 | Human Attribute Recognition | Recognize the attributes of the human body in the image, and return the human body position coordinates and attribute analysis in each area, including the semantic information of 16 attributes such as gender, age, and clothing. | [Details](deploy-human-attribute-recognition.md) |
@@ -32,21 +33,21 @@ each API interface. For more information, see [API Reference Guide](./api-explor
 ### Image Understanding
 
 | **API Name**          | **Description**                                                                                                                                     | API                                        |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
 | Image Similarity      | Compare two images by calculating the cosine distance from the image feature vector and converting it into confidence, and return similarity score. | [Details](deploy-text-similarity.md)       |
 | Object Recognition    | Recognize objects in the image and return the region information and confidence score for each object. 300 types of objects are supported.          | [Details](deploy-object-recognition.md)    |
 | Pornography Detection | Detect pornographic image in three dimensions (normal, sexy, porn) and return confidence scores.                                                    | [Details](deploy-pornography-detection.md) |
 
 ### Vision Production
 
-| **API Name**           | **Description**                                           | API                                         |
-|------------------------|-----------------------------------------------------------|---------------------------------------------|
+| **API Name**           | **Description**                                                                          | API                                         |
+| ---------------------- | ---------------------------------------------------------------------------------------- | ------------------------------------------- |
 | Image Super Resolution | Upscale the resolution and enhance details in the images, and support image enhancement. | [Details](deploy-image-super-resolution.md) |
 
 ### Natural Language Understanding (NLU)
 
 | **API Name**    | **Description**                                                                                                                                        | API                                  |
-|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
 | Text Similarity | Compare two Chinese words or sentences and return similarity score.                                                                                    | [Details](deploy-text-similarity.md) |
 | General NLU     | Support a variety of Chinese text understanding tasks, such as text classification, sentiment analysis, extraction, and customizable labeling systems. | [Details](deploy-general-nlu.md)     |
 
@@ -56,9 +57,6 @@ to deploy this solution using AWS best practices for security and availability.
 
 The guide is intended for IT architects, developers, DevOps, data engineers with practical experience architecting in
 the AWS Cloud.
-
-
-
 
 <!--
 ### **语音技术**
