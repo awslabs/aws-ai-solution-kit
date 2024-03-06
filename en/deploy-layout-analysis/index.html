@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="zh" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -8,13 +8,9 @@
       
       
       
-        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/template/">
+        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-layout-analysis/">
       
       
-        <link rel="prev" href="../regions/">
-      
-      
-        <link rel="next" href="../deployment/">
       
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
@@ -22,7 +18,7 @@
     
     
       
-        <title>模板信息 - AI Solution Kit</title>
+        <title>Deploy layout analysis - AI Solution Kit</title>
       
     
     
@@ -73,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#applicable-scenarios" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -82,7 +83,7 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="页眉">
+  <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="AI Solution Kit" class="md-header__button md-logo" aria-label="AI Solution Kit" data-md-component="logo">
       
   <img src="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico" alt="logo">
@@ -102,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              模板信息
+              Deploy layout analysis
             
           </span>
         </div>
@@ -142,7 +143,7 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="选择当前语言">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"/></svg>
     </button>
     <div class="md-select__inner">
@@ -174,16 +175,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="查找">
+      <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
@@ -194,7 +195,7 @@
       <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            正在初始化搜索引擎
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -205,7 +206,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/awslabs/aws-ai-solution-kit" title="前往仓库" class="md-source" data-md-component="source">
+        <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -226,29 +227,9 @@
         
           
             
-<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
-      
-        
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href=".." class="md-tabs__link">
-          
-  
-  实施指南
-
-        </a>
-      </li>
-    
-  
-
       
         
   
@@ -257,14 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../workshop/introduction/" class="md-tabs__link">
+        <a href=".." class="md-tabs__link">
           
   
-  动手实验
+  Implementation Guide
 
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://awslabs.github.io/aws-ai-solution-kit/zh/workshop/introduction/" class="md-tabs__link">
+        
+  
+    
+  
+  Workshop
+
+      </a>
+    </li>
   
 
       
@@ -288,7 +286,7 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="AI Solution Kit" class="md-nav__button md-logo" aria-label="AI Solution Kit" data-md-component="logo">
       
@@ -299,7 +297,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/awslabs/aws-ai-solution-kit" title="前往仓库" class="md-source" data-md-component="source">
+      <a href="https://github.com/awslabs/aws-ai-solution-kit" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -316,42 +314,37 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
         
           
-          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="">
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
             
   
   <span class="md-ellipsis">
-    实施指南
+    Implementation Guide
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1">
             <span class="md-nav__icon md-icon"></span>
-            实施指南
+            Implementation Guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -366,7 +359,7 @@
         
   
   <span class="md-ellipsis">
-    概述
+    Welcome
   </span>
   
 
@@ -387,7 +380,7 @@
         
   
   <span class="md-ellipsis">
-    成本预估
+    Cost
   </span>
   
 
@@ -408,7 +401,7 @@
         
   
   <span class="md-ellipsis">
-    架构概览
+    Architecture overview
   </span>
   
 
@@ -429,7 +422,7 @@
         
   
   <span class="md-ellipsis">
-    安全信息
+    Security
   </span>
   
 
@@ -450,7 +443,7 @@
         
   
   <span class="md-ellipsis">
-    区域支持
+    Design considerations
   </span>
   
 
@@ -464,26 +457,18 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../template/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    模板信息
+    CloudFormation template
   </span>
   
 
       </a>
-      
     </li>
   
 
@@ -513,7 +498,7 @@
             
   
   <span class="md-ellipsis">
-    部署解决方案
+    Automated deployment
   </span>
   
 
@@ -523,7 +508,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_7">
             <span class="md-nav__icon md-icon"></span>
-            部署解决方案
+            Automated deployment
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -538,7 +523,7 @@
         
   
   <span class="md-ellipsis">
-    启动CloudFormation堆栈
+    Launch CloudFormation stack
   </span>
   
 
@@ -559,7 +544,7 @@
         
   
   <span class="md-ellipsis">
-    更新CloudFormation堆栈
+    Update CloudFormation stack
   </span>
   
 
@@ -601,7 +586,7 @@
             
   
   <span class="md-ellipsis">
-    API参考指南
+    API Reference
   </span>
   
 
@@ -611,7 +596,7 @@
         <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_1_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_1_8">
             <span class="md-nav__icon md-icon"></span>
-            API参考指南
+            API Reference
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -626,7 +611,7 @@
         
   
   <span class="md-ellipsis">
-    概述
+    Overview
   </span>
   
 
@@ -647,7 +632,7 @@
         
   
   <span class="md-ellipsis">
-    轻量级文字识别（简体中文）
+    Lite OCR (Simplified Chinese)
   </span>
   
 
@@ -668,7 +653,7 @@
         
   
   <span class="md-ellipsis">
-    轻量级文字识别（繁体中文）
+    Lite OCR (Traditional Chinese)
   </span>
   
 
@@ -689,7 +674,7 @@
         
   
   <span class="md-ellipsis">
-    高阶文字识别（多语种）
+    Advanced OCR (Multilingual)
   </span>
   
 
@@ -710,7 +695,7 @@
         
   
   <span class="md-ellipsis">
-    自定义模板文字识别
+    Custom OCR
   </span>
   
 
@@ -731,7 +716,7 @@
         
   
   <span class="md-ellipsis">
-    车牌信息识别
+    Car License Plate
   </span>
   
 
@@ -752,7 +737,7 @@
         
   
   <span class="md-ellipsis">
-    人脸检测
+    Face Detection
   </span>
   
 
@@ -773,7 +758,7 @@
         
   
   <span class="md-ellipsis">
-    人脸相似度比对
+    Face Comparison
   </span>
   
 
@@ -794,7 +779,7 @@
         
   
   <span class="md-ellipsis">
-    人体结构化属性
+    Human Attribute Recognition
   </span>
   
 
@@ -815,7 +800,7 @@
         
   
   <span class="md-ellipsis">
-    智能人像分割
+    Human Image Segmentation
   </span>
   
 
@@ -836,7 +821,7 @@
         
   
   <span class="md-ellipsis">
-    图像相似度
+    Image Similarity
   </span>
   
 
@@ -857,7 +842,7 @@
         
   
   <span class="md-ellipsis">
-    通用物体识别
+    Object Recognition
   </span>
   
 
@@ -878,7 +863,7 @@
         
   
   <span class="md-ellipsis">
-    色情内容检测
+    Pornography Detection
   </span>
   
 
@@ -899,7 +884,7 @@
         
   
   <span class="md-ellipsis">
-    图像超分辨率
+    Image Super Resolution
   </span>
   
 
@@ -920,7 +905,7 @@
         
   
   <span class="md-ellipsis">
-    文本相似度
+    Text Similarity
   </span>
   
 
@@ -941,7 +926,7 @@
         
   
   <span class="md-ellipsis">
-    通用自然语言理解
+    General NLU
   </span>
   
 
@@ -970,7 +955,7 @@
         
   
   <span class="md-ellipsis">
-    升级解决方案
+    Upgrade the solution
   </span>
   
 
@@ -991,7 +976,7 @@
         
   
   <span class="md-ellipsis">
-    卸载解决方案
+    Uninstall the solution
   </span>
   
 
@@ -1012,7 +997,7 @@
         
   
   <span class="md-ellipsis">
-    更多资源
+    Additional resources
   </span>
   
 
@@ -1033,7 +1018,7 @@
         
   
   <span class="md-ellipsis">
-    常见问题解答
+    FAQ
   </span>
   
 
@@ -1054,7 +1039,7 @@
         
   
   <span class="md-ellipsis">
-    源代码
+    Source code
   </span>
   
 
@@ -1075,7 +1060,7 @@
         
   
   <span class="md-ellipsis">
-    版本发布说明
+    Release Notes
   </span>
   
 
@@ -1098,343 +1083,16 @@
   
   
   
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    动手实验
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            动手实验
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../workshop/introduction/" class="md-nav__link">
+      <a href="https://awslabs.github.io/aws-ai-solution-kit/zh/workshop/introduction/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    1 简介
+    Workshop
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/requisites/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    2 前提条件
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/architecture/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    3 架构概览
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    4 准备实验环境
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_4">
-            <span class="md-nav__icon md-icon"></span>
-            4 准备实验环境
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/deploy-ask/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    4.1 部署AI Solution Kit
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/deploy-workshop-backend/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    4.2 部署示例程序后端
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/deploy-workshop-ui/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    4.3 部署示例程序前端
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    5 体验以图搜图功能
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_5">
-            <span class="md-nav__icon md-icon"></span>
-            5 体验以图搜图功能
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/admin/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    5.1 管理员操作
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/user/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    5.2 普通用户操作
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/clean/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    6 清理资源
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../workshop/cost/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    7 成本预估
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1452,10 +1110,162 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="目录">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#applicable-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Applicable scenarios
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      API reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#text-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      Text classification
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      API test
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Explorer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman-aws_iam-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Postman (AWS_IAM Authentication）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      cURL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-aws_iam-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python (AWS_IAM Authentication)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-none-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python (NONE Authentication)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    <span class="md-ellipsis">
+      Java
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cost-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost estimation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost estimation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost estimation example 1
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-estimation-example-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cost estimation example 2
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstall-the-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      Uninstall the deployment
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1470,16 +1280,389 @@
                   
 
 
-  <h1>模板信息</h1>
+  <h1>Deploy layout analysis</h1>
 
-<p>部署解决方案之前，您可以下载解决方案使用的以下亚马逊云科技CloudFormation模板。您创建堆栈时，CloudFormation会配置模板中描述的资源。更多信息可参考<a href="https://docs.aws.amazon.com/zh_cn/zh_cn/AWSCloudFormation/latest/UserGuide/cfn-whatis-concepts.html">CloudFormation概念</a>。</p>
-<p><a href="https://aws-gcr-solutions.s3.cn-north-1.amazonaws.com.cn/Aws-gcr-ai-solution-kit/v1.4.0/AI-Solution-Kit.template">AI-Solution-Kit.template</a>: 您可以使用该模板启动解决方案以及相关组件。您也可以自定义模板以满足您的特定需求。</p>
+<p>Convert document images to a Markdown/JSON format output, with table format in Markdown/HTML.</p>
+<h2 id="applicable-scenarios">Applicable scenarios</h2>
+<p>Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.</p>
+<h2 id="api-reference">API reference</h2>
+<h3 id="text-classification">Text classification</h3>
+<ul>
+<li>
+<p>HTTP request method: <code>POST</code></p>
+</li>
+<li>
+<p>Request body parameters</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Required</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>url</td>
+<td><em>String</em></td>
+<td>Choose url or img.</td>
+<td>Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.</td>
+</tr>
+<tr>
+<td>img</td>
+<td><em>String</em></td>
+<td>Choose url or img.</td>
+<td>Base64 encoded image data.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example Request</li>
+</ul>
+<p><strong>Example 1</strong></p>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;
+}
+</code></pre>
+<p><strong>Example 2</strong></p>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;
+}
+</code></pre>
+<ul>
+<li>Response parameters</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>words</td>
+<td><em>String</em></td>
+<td>Recognized text.</td>
+</tr>
+<tr>
+<td>location</td>
+<td><em>JSON</em></td>
+<td>Coordinates of the recognized text, including top, left, width, height as integer values.</td>
+</tr>
+<tr>
+<td>score</td>
+<td><em>Float</em></td>
+<td>Confidence score of the recognized text, which is a float type value between 0 and 1.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Example JSON response</li>
+</ul>
+<p><strong>Example 1 Response</strong></p>
+<p>Assume the model returns the category of the "unclassified text" as "sports."</p>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;
+}
+
+**Example 2 Response**
+
+``` json
+[
+  {
+      &quot;words&quot;: &quot;香港永久性居民身份證&quot;,
+      &quot;location&quot;: {
+          &quot;top&quot;: 18,
+          &quot;left&quot;: 148,
+          &quot;width&quot;: 169,
+          &quot;height&quot;: 17
+      },
+      &quot;score&quot;: 0.9923796653747559
+  },
+  {
+      &quot;words&quot;: &quot;HONG KONG PERMANENTIDENTITYCARD&quot;,
+      &quot;location&quot;: {
+          &quot;top&quot;: 36,
+          &quot;left&quot;: 71,
+          &quot;width&quot;: 321,
+          &quot;height&quot;: 17
+      },
+      &quot;score&quot;: 0.9825196266174316
+  }
+]
+</code></pre>
+<!-- BEGIN INCLUDE include-deploy-code.md -->
+<h2 id="api-test">API test</h2>
+<p>You can use the following tools (API explorer, Postman, cURL, Python, Java) to test calling APIs.</p>
+<h3 id="api-explorer">API Explorer</h3>
+<p><strong>Prerequisites</strong></p>
+<p>When <a href="../deployment/">deploying the solution</a>, you need to：</p>
+<ul>
+<li>set the parameter <strong>API Explorer</strong> to <code>yes</code>.</li>
+<li>set the parameter <strong>API Gateway Authorization</strong> to <code>NONE</code>.</li>
+</ul>
+<p>Otherwise, you can only view the API definitions in the API explorer, but cannot test calling API online. </p>
+<p><strong>Steps</strong></p>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>
+<p>On the <strong>Stacks</strong> page, select the solution’s root stack. Do not select the NESTED stack.</p>
+<p><img alt="" src="../images/root-stack-en.png" /></p>
+</li>
+<li>
+<p>Choose the <strong>Outputs</strong> tab, and find the URL for APIExplorer.</p>
+</li>
+<li>
+<p>Click the URL to access the API explorer. The APIs that you have selected during deployment will be displayed. </p>
+<p><img alt="" src="../images/api-explorer.png" /></p>
+</li>
+<li>
+<p>For the API you want to test, click the down arrow to display the request method.</p>
+</li>
+<li>Choose the <strong>Try it out</strong> button, and enter the correct Body data to test API and check the test result.</li>
+<li>Make sure the format is correct, and choose <strong>Execute</strong>.</li>
+<li>Check the returned result in JSON format in the <strong>Responses body</strong>. If needed, copy or download the result.</li>
+<li>Check the <strong>Response headers</strong>.</li>
+<li>(Optional) Choose <strong>Clear</strong> next to the <strong>Execute</strong> button to clear the request body and responses. </li>
+</ol>
+<h3 id="postman-aws_iam-authentication">Postman (<em>AWS_IAM</em> Authentication）</h3>
+<ol>
+<li>Sign in to the <a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation console</a>.</li>
+<li>On the <strong>Stacks</strong> page, select the solution’s root stack.</li>
+<li>Choose the <strong>Outputs</strong> tab, and find the URL with the prefix <code>GeneralOCR</code>.</li>
+<li>
+<p>Create a new tab in Postman. Paste the URL into the address bar, and select <em>POST</em> as the HTTP call method.</p>
+<p><img alt="" src="../images/ocr-postman-1-en.png" /></p>
+</li>
+<li>
+<p>Open the Authorization configuration, select Amazon Web Service Signature from the drop-down list, and enter the AccessKey, SecretKey and Amazon Web Service Region of the corresponding account (such as cn-north-1 or cn-northwest-1 ).</p>
+<p><img alt="" src="../images/ocr-postman-2-en.png" /></p>
+</li>
+<li>
+<p>Open the Body configuration item and select the raw and JSON data types. </p>
+</li>
+<li>Enter the test data in the Body, and click the <strong>Send</strong> button to see the corresponding return results.</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;Image URL address&quot;
+}
+</code></pre>
+<p><img alt="" src="../images/ocr-postman-3-en.png" /></p>
+<h3 id="curl">cURL</h3>
+<ul>
+<li>Windows</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis&quot; ^
+--header &quot;Content-Type: application/json&quot; ^
+--data-raw &quot;{\&quot;url\&quot;: \&quot;Image URL address\&quot;}&quot;
+</code></pre>
+<ul>
+<li>Linux/MacOS</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  &quot;url&quot;:&quot;Image URL address&quot;
+}'
+</code></pre>
+<h3 id="python-aws_iam-authentication">Python (<em>AWS_IAM</em> Authentication)</h3>
+<pre><code class="language-python">import requests
+import json
+from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
+
+auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
+                           aws_region='[AWS_REGION]',
+                           aws_service='execute-api')
+
+url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis'
+payload = {
+    'url': 'Image URL address'
+}
+response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
+print(json.loads(response.text))
+</code></pre>
+<h3 id="python-none-authentication">Python (<em>NONE</em> Authentication)</h3>
+<pre><code class="language-python">import requests
+import json
+
+url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis&quot;
+
+payload = json.dumps({
+  &quot;url&quot;: &quot;Image URL address&quot;
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
+
+print(response.text)
+</code></pre>
+<h3 id="java">Java</h3>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
+RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;Image URL address\&quot;\n}&quot;);
+Request request = new Request.Builder()
+  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/layout_analysis&quot;)
+  .method(&quot;POST&quot;, body)
+  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
+  .build();
+Response response = client.newCall(request).execute();
+</code></pre>
+<!-- END INCLUDE -->
+
+<h2 id="cost-estimation">Cost estimation</h2>
+<p>You are responsible for the cost of using each Amazon Web Services service when running the solution. As of this revision, the main cost factors affecting the solution include.</p>
+<ul>
+<li>Amazon API Gateway calls</li>
+<li>Amazon API Gateway data output</li>
+<li>Amazon CloudWatch Logs storage</li>
+<li>Amazon Elastic Container Registry storage</li>
+</ul>
+<p>If you choose an Amazon Lambda based deployment, the factors also include:</p>
+<ul>
+<li>Amazon Lambda invocations</li>
+<li>Amazon Lambda running time</li>
+</ul>
+<p>If you choose an Amazon SageMaker based deployment, the factors also include:</p>
+<ul>
+<li>Amazon SageMaker endpoint node instance type</li>
+<li>Amazon SageMaker endpoint node data input</li>
+<li>Amazon SageMaker endpoint node data output</li>
+</ul>
+<h3 id="cost-estimation-example-1">Cost estimation example 1</h3>
+<p>In AWS China (Ningxia) Region operated by NWCD (cn-northwest-1), process an image of 1MB in 1 second</p>
+<p>The cost of using this solution to process the image is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>¥1.36</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>¥907.8</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>¥28.94</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, ¥0.933/GB</td>
+<td>¥93.3</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, ¥6.228/GB</td>
+<td>¥62.28</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB storage, ¥0.69/GB each month</td>
+<td>¥0.35</td>
+</tr>
+<tr>
+<td>Total</td>
+<td></td>
+<td>¥1010.06</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cost-estimation-example-2">Cost estimation example 2</h3>
+<p>In US East (Ohio) Region (us-east-2), process an image of 1MB in 1 seconds</p>
+<p>The cost of using this solution to process this image is shown below:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Dimensions</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>1 million invocations</td>
+<td>$0.20</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>8192MB memory, 1 seconds run each time</td>
+<td>$133.3</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>1 million invocations</td>
+<td>$3.5</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>100KB data output each time, $0.09/GB</td>
+<td>$9</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>10KB each time, $0.50/GB</td>
+<td>$5</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，$0.1/GB each month</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>Total</td>
+<td></td>
+<td>$142.95</td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN INCLUDE include-deploy-uninstall.md -->
+<h2 id="uninstall-the-deployment">Uninstall the deployment</h2>
+<p>You can uninstall the <strong>Document Layout Analysis</strong> feature via Amazon CloudFormation as described in <a href="../deploy-add-delete-api/">Add or remove AI features</a> and make sure the <strong>DocumentLayoutAnalysis</strong> parameter is set to <em>no</em> in the <strong>parameters</strong> section.</p>
+<div class="admonition info">
+<p class="admonition-title">Note</p>
+<p>Time to uninstall the deployment is approximately: <strong>15 Minutes</strong></p>
+</div>
+<!-- END INCLUDE -->
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1520,7 +1703,7 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.c8d2eff1.min.js"></script>
