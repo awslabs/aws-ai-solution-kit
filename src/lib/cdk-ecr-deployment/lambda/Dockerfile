@@ -9,13 +9,6 @@ FROM ${buildImage} as build
 
 USER root
 
-RUN yum -y install \
-    gpgme-devel \
-    btrfs-progs-devel \
-    device-mapper-devel \
-    libassuan-devel \
-    libudev-devel
-
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
@@ -30,6 +23,4 @@ RUN go mod download -x
 COPY . /ws
 
 RUN mkdir -p /asset/ && \
-    make OUTPUT=/asset/main && \
-    file /asset/main && \
-    ls -lh /asset/main
+    make OUTPUT=/asset/bootstrap

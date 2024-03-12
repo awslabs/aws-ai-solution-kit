@@ -118,7 +118,7 @@ export class ECRDeployment extends Construct {
       uuid: this.renderSingletonUuid(memoryLimit),
       code: getCode(props.buildImage ?? 'golang:1'),
       runtime: lambda.Runtime.PROVIDED_AL2023,
-      handler: 'main',
+      handler: 'bootstrap',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: Duration.minutes(15),
