@@ -43,16 +43,16 @@ nav:
       
     # - 语音技术:
     #   - 语音技术: audio.md
-  - 动手实验:
-    - 1 简介: workshop/introduction.md
-    - 2 前提条件: workshop/requisites.md
-    - 3 架构概览: workshop/architecture.md
-    - 4 准备实验环境:
-      - 4.1 部署AI Solution Kit: workshop/deploy-ask.md
-      - 4.2 部署示例程序后端: workshop/deploy-workshop-backend.md
-      - 4.3 部署示例程序前端: workshop/deploy-workshop-ui.md
-    - 5 体验以图搜图功能:
-      - 5.1 管理员操作: workshop/admin.md
-      - 5.2 普通用户操作: workshop/user.md
-    - 6 清理资源: workshop/clean.md
-    - 7 成本预估: workshop/cost.md
+#  - 动手实验:
+#    - 1 简介: workshop/introduction.md
+#    - 2 前提条件: workshop/requisites.md
+#    - 3 架构概览: workshop/architecture.md
+#    - 4 准备实验环境:
+#      - 4.1 部署AI Solution Kit: workshop/deploy-ask.md
+#      - 4.2 部署示例程序后端: workshop/deploy-workshop-backend.md
+#      - 4.3 部署示例程序前端: workshop/deploy-workshop-ui.md
+#    - 5 体验以图搜图功能:
+#      - 5.1 管理员操作: workshop/admin.md
+#      - 5.2 普通用户操作: workshop/user.md
+#    - 6 清理资源: workshop/clean.md
+#    - 7 成本预估: workshop/cost.md
