@@ -3,7 +3,9 @@
 
 
 #FROM lambci/lambda:build-go1.x
-FROM public.ecr.aws/sam/build-go1.x
+#FROM public.ecr.aws/sam/build-go1.x
+ARG buildImage=golang:1
+FROM ${buildImage} as build
 
 USER root
 

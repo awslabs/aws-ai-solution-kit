@@ -116,8 +116,8 @@ export class ECRDeployment extends Construct {
     const memoryLimit = props.memoryLimit ?? 512;
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(props.buildImage ?? 'public.ecr.aws/sam/build-go1.x:latest'),
-      runtime: lambda.Runtime.GO_1_X,
+      code: getCode(props.buildImage ?? 'golang:1'),
+      runtime: lambda.Runtime.PROVIDED_AL2023,
       handler: 'main',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',

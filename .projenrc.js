@@ -9,7 +9,7 @@ const apiDocDeps = [
 ];
 
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.87.0',
+  cdkVersion: '2.132.1',
   minNodeVersion: '14.0.0',
   name: 'ai-solution-kit',
   license: 'Apache-2.0',
