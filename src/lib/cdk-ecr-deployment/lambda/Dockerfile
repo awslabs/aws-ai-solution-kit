@@ -9,16 +9,20 @@ FROM ${buildImage} as build
 
 USER root
 
+ARG GOPROXY
+
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
-    GOPROXY=https://proxy.golang.org/cached-only,direct,https://goproxy.io
+    GOPROXY="${GOPROXY}"
 
 WORKDIR /ws
 
 COPY go.mod go.sum ./
 
-RUN go mod download -x
+RUN go env
+
+# RUN go mod download -x
 
 COPY . /ws
 
