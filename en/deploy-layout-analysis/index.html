@@ -1280,6 +1280,18 @@
 <td>Choose url or img.</td>
 <td>Base64 encoded image data.</td>
 </tr>
+<tr>
+<td>output_type</td>
+<td><em>String</em></td>
+<td></td>
+<td><code>json</code> or <code>markdown</code>, Whether the result is returned in json or converted to markdown.</td>
+</tr>
+<tr>
+<td>table_type</td>
+<td><em>String</em></td>
+<td></td>
+<td><code>html</code> or <code>markdown</code>, Whether the table in the result is returned in html or converted to markdown.</td>
+</tr>
 </tbody>
 </table>
 <ul>
@@ -1306,6 +1318,7 @@
 <ul>
 <li>Response parameters</li>
 </ul>
+<p>When <code>output_type</code> is <code>json</code>, a list is returned, and an item in the list is a block in a document.</p>
 <table>
 <thead>
 <tr>
@@ -1316,60 +1329,75 @@
 </thead>
 <tbody>
 <tr>
-<td>words</td>
+<td>BlockType</td>
 <td><em>String</em></td>
-<td>Recognized text.</td>
+<td>These elements correspond to the different portions of the layout, and are: text, title, figure or table</td>
 </tr>
 <tr>
 <td>location</td>
-<td><em>JSON</em></td>
-<td>Coordinates of the recognized text, including top, left, width, height as integer values.</td>
+<td><em>Dict</em></td>
+<td>location information about the location of detected items on a document page.</td>
 </tr>
 <tr>
-<td>score</td>
-<td><em>Float</em></td>
-<td>Confidence score of the recognized text, which is a float type value between 0 and 1.</td>
+<td>Text</td>
+<td><em>String</em></td>
+<td>The text content of the current block. When BlockType is <code>table</code>, the html or markdown of the table will be returned depending on the <code>table_type</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>When <code>output_type</code> is <code>markdown</code>, a dict is returned.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Name</strong></th>
+<th><strong>Type</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>markdown</td>
+<td><em>String</em></td>
+<td>Converted images to markdown result.</td>
 </tr>
 </tbody>
 </table>
 <ul>
 <li>Example JSON response</li>
 </ul>
-<p><strong>Example 1 Response</strong></p>
-<p>Assume the model returns the category of the "unclassified text" as "sports."</p>
-<pre><code class="language-json">{
-  &quot;url&quot;: &quot;Image URL address&quot;
-}
-</code></pre>
-<pre><code class="language-json">{
-  &quot;img&quot;: &quot;Base64-encoded image data&quot;
-}
-
-**Example 2 Response**
-
-``` json
-[
+<p><strong>Example 1 <code>output_type</code> is <code>json</code> response</strong></p>
+<pre><code class="language-json">[
   {
-      &quot;words&quot;: &quot;香港永久性居民身份證&quot;,
-      &quot;location&quot;: {
-          &quot;top&quot;: 18,
-          &quot;left&quot;: 148,
-          &quot;width&quot;: 169,
-          &quot;height&quot;: 17
-      },
-      &quot;score&quot;: 0.9923796653747559
+    &quot;BlockType&quot;: &quot;text&quot;,
+    &quot;Geometry&quot;: {
+      &quot;BoundingBox&quot;: {
+        &quot;Width&quot;: 972,
+        &quot;Height&quot;: 79,
+        &quot;Left&quot;: 561,
+        &quot;Top&quot;: 564
+      }
+    },
+    &quot;Text&quot;: &quot;核准日期：xxx年xx月xx日&quot;
   },
   {
-      &quot;words&quot;: &quot;HONG KONG PERMANENTIDENTITYCARD&quot;,
-      &quot;location&quot;: {
-          &quot;top&quot;: 36,
-          &quot;left&quot;: 71,
-          &quot;width&quot;: 321,
-          &quot;height&quot;: 17
-      },
-      &quot;score&quot;: 0.9825196266174316
+    &quot;BlockType&quot;: &quot;text&quot;,
+    &quot;Geometry&quot;: {
+      &quot;BoundingBox&quot;: {
+        &quot;Width&quot;: 1543,
+        &quot;Height&quot;: 80,
+        &quot;Left&quot;: 569,
+        &quot;Top&quot;: 678
+      }
+    },
+    &quot;Text&quot;: &quot;修改日期：xxx年xx月xx日&quot;
   }
+    ...
 ]
+</code></pre>
+<p><strong>Example 2 <code>output_type</code> is <code>markdown</code> response</strong></p>
+<pre><code class="language-json">{
+  &quot;Markdown&quot;: &quot;核准日期：xxx年xx月xx日 \n\n修改日期：xxx年xx月xx日....&quot;
+}
 </code></pre>
 <!-- BEGIN INCLUDE include-deploy-code.md -->
 <h2 id="api-test">API test</h2>
