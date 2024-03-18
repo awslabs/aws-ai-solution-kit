@@ -26,5 +26,17 @@ export class LambdaContainersStack extends Stack {
         ),
       },
     );
+    const LayoutAnalysis = new DockerImageFunction(
+      this,
+      'layout-analysis',
+      {
+        functionName: 'layout-analysis',
+        code: DockerImageCode.fromImageAsset('src/containers/layout-analysis/model',
+          {
+            file: 'Dockerfile.lambda',
+          },
+        ),
+      },
+    );
   }
 }
