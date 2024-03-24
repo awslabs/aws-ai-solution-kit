@@ -49,6 +49,7 @@ information, see [ICP Recordal](https://www.amazonaws.cn/en/support/icp/?nc1=h_l
 | **LiteOCR**                   | no      | Deploy [General OCR (Simplified Chinese)](deploy-general-ocr.md)              |
 | **GeneralOCRTraditional**     | no      | Deploy [General OCR (Traditional Chinese)](deploy-general-ocr-traditional.md) |
 | **AdvancedOCR**               | no      | Deploy [Advanced OCR](deploy-general-ocr-traditional.md)                      |
+| **DocumentLayoutAnalysis**    | no      | Deploy [Document Layout Analysis](deploy-layout-analysis.md)                  |
 | **CustomOCR**                 | no      | Deploy [Custom OCR](deploy-custom-ocr.md)                                     |
 | **CarLicensePlate**           | no      | Deploy [Car License Plate](deploy-car-license-plate.md)                       |
 | **FaceComparison**            | no      | Deploy [Face Comparison](deploy-face-comparison.md)                           |

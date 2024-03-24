@@ -15,46 +15,48 @@ include "include-deploy-description.md"
 
 ## API reference
 
-### Text classification
-
 - HTTP request method: `POST`
 
 - Request body parameters
 
-| **Name**  | **Type**  | **Required** |  **Description**  |
-|----------|-----------|------------|------------|
-| url | *String* |Choose url or img.| Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px.|
-| img | *String* |Choose url or img.|Base64 encoded image data.|
-| output_type | *String* | |`json` or `markdown`, Whether the result is returned in json or converted to markdown.|
-| table_type | *String* | |`html` or `markdown`, Whether the table in the result is returned in html or converted to markdown.|
+| **Name**    | **Type** | **Required**       | **Description**                                                                                                                                          |
+| ----------- | -------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| url         | _String_ | Choose url or img. | Image URL address, which supports HTTP/HTTPS and S3 protocols. Supported image formats are jpg/jpeg/png/bmp, with the longest side not exceeding 4096px. |
+| img         | _String_ | Choose url or img. | Base64 encoded image data.                                                                                                                               |
+| output_type | _String_ |                    | `json` or `markdown`, Whether the result is returned in json or converted to markdown.                                                                   |
+| table_type  | _String_ |                    | `html` or `markdown`, Whether the table in the result is returned in html or converted to markdown.                                                      |
 
 - Example Request
 
 **Example 1**
 
-``` json
+```json
 {
-  "url": "{{page.meta.sample_image}}"
+  "url": "{{page.meta.sample_image}}",
+  "output_type": "json"
 }
 ```
 
-``` json
+```json
 {
-  "img": "Base64-encoded image data"
+  "img": "Base64-encoded image data",
+  "output_type": "json"
 }
 ```
 
 **Example 2**
 
-``` json
+```json
 {
-  "url": "{{page.meta.sample_image}}"
+  "url": "{{page.meta.sample_image}}",
+  "output_type": "markdown"
 }
 ```
 
-``` json
+```json
 {
-  "img": "Base64-encoded image data"
+  "img": "Base64-encoded image data",
+  "output_type": "markdown"
 }
 ```
 
@@ -62,23 +64,23 @@ include "include-deploy-description.md"
 
 When `output_type` is `json`, a list is returned, and an item in the list is a block in a document.
 
-| **Name** | **Type** | **Description**  |
-|----------|-----------|------------|
-|BlockType    |*String*   |These elements correspond to the different portions of the layout, and are: text, title, figure or table|
-|location |*Dict*     |location information about the location of detected items on a document page.|
-|Text    |*String*   |The text content of the current block. When BlockType is `table`, the html or markdown of the table will be returned depending on the `table_type`.|
+| **Name**  | **Type** | **Description**                                                                                                                                     |
+| --------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BlockType | _String_ | These elements correspond to the different portions of the layout, and are: text, title, figure or table                                            |
+| Geometry  | _Dict_   | location information about the location of detected items on a document page.                                                                       |
+| Text      | _String_ | The text content of the current block. When BlockType is `table`, the html or markdown of the table will be returned depending on the `table_type`. |
 
 When `output_type` is `markdown`, a dict is returned.
 
-| **Name** | **Type** | **Description**  |
-|----------|-----------|------------|
-|markdown    |*String*   |Converted images to markdown result.|
+| **Name** | **Type** | **Description**                      |
+| -------- | -------- | ------------------------------------ |
+| markdown | _String_ | Converted images to markdown result. |
 
 - Example JSON response
 
 **Example 1 `output_type` is `json` response**
 
-``` json
+```json
 [
   {
     "BlockType": "text",
@@ -110,7 +112,7 @@ When `output_type` is `markdown`, a dict is returned.
 
 **Example 2 `output_type` is `markdown` response**
 
-``` json
+```json
 {
   "Markdown": "核准日期：xxx年xx月xx日 \n\n修改日期：xxx年xx月xx日...."
 }

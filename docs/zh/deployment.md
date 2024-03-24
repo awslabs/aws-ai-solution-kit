@@ -37,10 +37,11 @@
       来部署所需要的功能。所有功能的参数默认值均为 **no**。
 
       | 参数名称                               | 默认值   |  描述 |
-                        |-------------------|-------| --------  |
+      |-------------------|-------| --------  |
       | **Lite OCR - Simplified Chinese**  | no    | 部署[轻量级文字识别（简体中文）](deploy-general-ocr.md) |
       | **General OCR - Traditional Chinese** | no    | 部署[通用文字识别（繁体中文）](deploy-general-ocr-traditional.md) |
-      | **Advanced OCR**     | no    | 部署[高阶文字识别](deploy-advanced-ocr.md) |
+      | **Advanced OCR**                   | no    | 部署[高阶文字识别](deploy-advanced-ocr.md) |
+      | **DocumentLayoutAnalysis**         | no      | 部署 [文档版面分析](deploy-layout-analysis.md)   |
       | **Custom Template OCR**            | no    | 部署[自定义模板文字识别](deploy-custom-ocr.md) |
       | **Car License Plate**              | no    | 部署[车牌信息识别](deploy-car-license-plate.md) |
       | **Face Comparison**                | no    | 部署[人脸相似度比对](deploy-face-comparison.md) |
