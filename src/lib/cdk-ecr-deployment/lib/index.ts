@@ -117,7 +117,7 @@ export class ECRDeployment extends Construct {
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
       code: getCode(props.buildImage ?? 'golang:1'),
-      runtime: lambda.Runtime.PROVIDED_AL2023,
+      runtime: lambda.Runtime.PROVIDED_AL2,
       handler: 'bootstrap',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',

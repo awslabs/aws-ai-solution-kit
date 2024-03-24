@@ -128,7 +128,7 @@ paths:
     post:
       tags:
         - Optical Character Recognition(OCR)
-      summary: Convert document scan images to a Markdown format document.
+      summary: Convert document images to a Markdown/JSON format output, with table format in Markdown/HTML.
       operationId: layout-analysis
       requestBody:
         required: true

@@ -261,6 +261,7 @@ Parameters:
     Type: String
     AllowedValues:
       - "yes-sagemaker"
+      - "yes-lambda"
       - "no"
 
 Conditions:
@@ -322,6 +323,10 @@ Conditions:
 
   ConditionGeneralNLU: !Equals
       - !Ref GeneralNLU
+      - "yes-lambda"
+
+  ConditionLayoutAnalysis: !Equals
+      - !Ref LayoutAnalysis
       - "yes-lambda"
 
   ConditionCarLicensePlateSageMaker: !Equals 

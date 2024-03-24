@@ -46,6 +46,7 @@ import { GeneralOCRTraditionalChineseFeatureNestedStack } from './features/lambd
 import { HumanAttributeRecognitionFeatureNestedStack } from './features/lambda/human-attribute-recognition';
 import { HumanImageSegmentationFeatureNestedStack } from './features/lambda/human-image-segmentation';
 import { ImageSimilarityFeatureNestedStack } from './features/lambda/image-similarity';
+import { LayoutAnalysisFeatureNestedStack } from './features/lambda/layout-analysis';
 import { ObjectRecognitionFeatureNestedStack } from './features/lambda/object-recognition';
 import { PornographyDetectionFeatureNestedStack } from './features/lambda/pornography-detection';
 import { TextSimilarityFeatureNestedStack } from './features/lambda/text-similarity';
@@ -59,11 +60,11 @@ import { GeneralNLUSageMakerFeatureNestedStack } from './features/sagemaker/gene
 import { HumanAttributeRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/human-attribute-recognition-sagemaker';
 import { HumanImageSegmentationSageMakerFeatureNestedStack } from './features/sagemaker/human-image-segmentation-sagemaker';
 import { ImageSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/image-similarity-sagemaker';
+import { LayoutAnalysisSageMakerFeatureNestedStack } from './features/sagemaker/layout-analysis-sagemaker';
 import { ObjectRecognitionSageMakerFeatureNestedStack } from './features/sagemaker/object-recognition-sagemaker';
 import { PornographyDetectionSageMakerFeatureNestedStack } from './features/sagemaker/pornography-detection-sagemaker';
 import { SuperResolutionSageMakerFeatureNestedStack } from './features/sagemaker/super-resolution-sagemaker';
 import { TextSimilaritySageMakerFeatureNestedStack } from './features/sagemaker/text-similarity-sagemaker';
-import { LayoutAnalysisSageMakerFeatureNestedStack } from './features/sagemaker/layout-analysis-sagemaker';
 
 export interface FeatureProps {
   readonly featureStack: FeatureNestedStack;
@@ -483,6 +484,19 @@ export class AISolutionKitStack extends Stack {
       this.addOutput(cfnTemplate, api.restApiId, 'image-similarity', 'Image Similarity', 'ConditionImageSimilarity');
     }
 
+    // Feature: Layout Analysis
+    {
+      const layoutAnalysis = new LayoutAnalysisFeatureNestedStack(this, 'Layout-Analysis', {
+        restApi: api,
+        customAuthorizationType: authType,
+        ecrDeployment: ecrDeployment,
+        updateCustomResourceProvider: updateCustomResourceProvider,
+        ecrRegistry: props.ecrRegistry,
+        lambdaMemorySize: 10240,
+      });
+      (layoutAnalysis.nestedStackResource as CfnStack).cfnOptions.condition = cfnTemplate.getCondition('ConditionLayoutAnalysis');
+      this.addOutput(cfnTemplate, api.restApiId, 'layout-analysis', 'Layout Analysis', 'ConditionLayoutAnalysis');
+    }
     // Feature: Image Similarity SageMaker
     {
       const imageSimilaritySageMaker = new ImageSimilaritySageMakerFeatureNestedStack(this, 'Image-Similarity-SageMaker', {

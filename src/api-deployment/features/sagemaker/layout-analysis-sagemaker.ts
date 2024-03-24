@@ -9,7 +9,7 @@ export class LayoutAnalysisSageMakerFeatureNestedStack extends FeatureNestedStac
 
     super(scope, id, props);
     const featureName = 'layout-analysis';
-    this.templateOptions.description = '(SO8023-lag) - AI Solution Kit - Layout Analysis. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/layout-analysis.';
+    this.templateOptions.description = '(SO8023-lag) - AI Solution Kit - Layout Analysis. Template version v1.4.0. See https://awslabs.github.io/aws-ai-solution-kit/en/deploy-layout-analysis.';
 
     // The default instance type is ml.g4dn.xlarge
     const sageMakerConstruct = new SageMakerFeatureConstruct(this, `${featureName}-construct`, {
