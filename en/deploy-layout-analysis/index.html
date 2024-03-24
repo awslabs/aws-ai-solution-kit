@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="https://s3.cn-north-1.amazonaws.com.cn/aws-assets-prod/libra-css/images/site/fav/favicon.ico">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1100,21 +1100,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API reference">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#text-classification" class="md-nav__link">
-    <span class="md-ellipsis">
-      Text classification
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1249,7 +1234,6 @@
 <h2 id="applicable-scenarios">Applicable scenarios</h2>
 <p>Applicable to a variety of scenarios such as paper documents changed to electronic format, document identification, and content review to improve information processing efficiency.</p>
 <h2 id="api-reference">API reference</h2>
-<h3 id="text-classification">Text classification</h3>
 <ul>
 <li>
 <p>HTTP request method: <code>POST</code></p>
@@ -1299,20 +1283,24 @@
 </ul>
 <p><strong>Example 1</strong></p>
 <pre><code class="language-json">{
-  &quot;url&quot;: &quot;Image URL address&quot;
+  &quot;url&quot;: &quot;Image URL address&quot;,
+  &quot;output_type&quot;: &quot;json&quot;
 }
 </code></pre>
 <pre><code class="language-json">{
-  &quot;img&quot;: &quot;Base64-encoded image data&quot;
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;,
+  &quot;output_type&quot;: &quot;json&quot;
 }
 </code></pre>
 <p><strong>Example 2</strong></p>
 <pre><code class="language-json">{
-  &quot;url&quot;: &quot;Image URL address&quot;
+  &quot;url&quot;: &quot;Image URL address&quot;,
+  &quot;output_type&quot;: &quot;markdown&quot;
 }
 </code></pre>
 <pre><code class="language-json">{
-  &quot;img&quot;: &quot;Base64-encoded image data&quot;
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;,
+  &quot;output_type&quot;: &quot;markdown&quot;
 }
 </code></pre>
 <ul>
@@ -1334,7 +1322,7 @@
 <td>These elements correspond to the different portions of the layout, and are: text, title, figure or table</td>
 </tr>
 <tr>
-<td>location</td>
+<td>Geometry</td>
 <td><em>Dict</em></td>
 <td>location information about the location of detected items on a document page.</td>
 </tr>

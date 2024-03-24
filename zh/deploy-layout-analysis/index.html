@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/include-deploy-description/">
+        <link rel="canonical" href="https://www.amazonaws.cn/solutions/ai-solution-kit/deploy-layout-analysis/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Include deploy description - AI Solution Kit</title>
+        <title>Deploy layout analysis - AI Solution Kit</title>
       
     
     
@@ -103,7 +103,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Include deploy description
+              Deploy layout analysis
             
           </span>
         </div>
@@ -1093,6 +1093,129 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      API 参数说明
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      开始使用
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="开始使用">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      API资源浏览器
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postmanaws_iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Postman（AWS_IAM认证）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#curl" class="md-nav__link">
+    <span class="md-ellipsis">
+      cURL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonaws_iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python（AWS_IAM认证）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pythonnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python（NONE认证）
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#java" class="md-nav__link">
+    <span class="md-ellipsis">
+      Java
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      成本预估
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      成本预估示例1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      成本预估示例2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      成本预估示例3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      卸载部署
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1108,17 +1231,476 @@
                   
 
 
-  <h1>Include deploy description</h1>
+  <h1>Deploy layout analysis</h1>
 
-<p>{{ no such element: dict object['feature_description'] }}</p>
+<p>将文档图像转换为 Markdown/JSON 格式输出，并以 Markdown/HTML 格式生成表格。</p>
 <h2 id="_1">适用场景</h2>
-<p>{{ no such element: dict object['feature_scenario'] }}</p>
+<p>适用于将纸质文件更改为电子格式、文件识别和内容审查，以提高信息处理效率。</p>
+<h2 id="api">API 参数说明</h2>
+<ul>
+<li>
+<p>HTTP 方法: <code>POST</code></p>
+</li>
+<li>
+<p>Body 请求参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>是否必选</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>url&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td><em>String</em></td>
+<td>与 img 参数二选一</td>
+<td>图像的 URL 地址。支持 HTTP/HTTPS 和 S3 协议。要求图像格式为 jpg/jpeg/png/bmp ，图像大小建议不超过 1920 _ 1080，在开启人像增强的情况下，图像大小建议不超过 1280 _ 720。AWS Lambda 版本方案由于性能限制，图像大小建议不超过 400 * 400</td>
+</tr>
+<tr>
+<td>img</td>
+<td><em>String</em></td>
+<td>与 url 参数二选一</td>
+<td>进行 Base64 编码的图像数据</td>
+</tr>
+<tr>
+<td>output_type</td>
+<td><em>String</em></td>
+<td></td>
+<td>json<code>或</code>markdown`，返回结果是 json 格式还是转换为 markdown 格式。</td>
+</tr>
+<tr>
+<td>table_type</td>
+<td><em>String</em></td>
+<td></td>
+<td>html "或 "markdown"，结果中的表格是以 html 格式返回还是转换为 markdown 格式。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>请求 Body 示例</li>
+</ul>
+<p><strong>示例 1</strong></p>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;图像的URL地址&quot;,
+  &quot;output_type&quot;: &quot;json&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;,
+  &quot;output_type&quot;: &quot;json&quot;
+}
+</code></pre>
+<p><strong>示例 2</strong></p>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;图像的URL地址&quot;,
+  &quot;output_type&quot;: &quot;markdown&quot;
+}
+</code></pre>
+<pre><code class="language-json">{
+  &quot;img&quot;: &quot;Base64-encoded image data&quot;,
+  &quot;output_type&quot;: &quot;markdown&quot;
+}
+</code></pre>
+<ul>
+<li>
+<p>返回参数</p>
+</li>
+<li>
+<p>返回参数</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BlockType</td>
+<td><em>String</em></td>
+<td>这些元素与版面的不同部分相对应，它们是：文本、标题、图或表</td>
+</tr>
+<tr>
+<td>Geometry</td>
+<td><em>Dict</em></td>
+<td>文档页面上检测到的项目的位置信息</td>
+</tr>
+<tr>
+<td>Text</td>
+<td><em>String</em></td>
+<td>当前块的文本内容。当 BlockType 为 "table "时，将根据 "table_type "返回表格的 html 或 markdown。</td>
+</tr>
+</tbody>
+</table>
+<p>当 <code>output_type</code> 为 <code>markdown</code> 时，将返回一个 dict。</p>
+<table>
+<thead>
+<tr>
+<th><strong>名称</strong></th>
+<th><strong>类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>markdown</td>
+<td><em>String</em></td>
+<td>将图像转换为 markdown 结果</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>返回示例</li>
+</ul>
+<p>** 示例 1 <code>output_type</code> 是 <code>json</code> 格式**</p>
+<pre><code class="language-json">[
+  {
+    &quot;BlockType&quot;: &quot;text&quot;,
+    &quot;Geometry&quot;: {
+      &quot;BoundingBox&quot;: {
+        &quot;Width&quot;: 972,
+        &quot;Height&quot;: 79,
+        &quot;Left&quot;: 561,
+        &quot;Top&quot;: 564
+      }
+    },
+    &quot;Text&quot;: &quot;核准日期：xxx年xx月xx日&quot;
+  },
+  {
+    &quot;BlockType&quot;: &quot;text&quot;,
+    &quot;Geometry&quot;: {
+      &quot;BoundingBox&quot;: {
+        &quot;Width&quot;: 1543,
+        &quot;Height&quot;: 80,
+        &quot;Left&quot;: 569,
+        &quot;Top&quot;: 678
+      }
+    },
+    &quot;Text&quot;: &quot;修改日期：xxx年xx月xx日&quot;
+  }
+    ...
+]
+</code></pre>
+<p><strong>示例 2 <code>output_type</code> 是 <code>markdown</code> 格式</strong></p>
+<pre><code class="language-json">{
+  &quot;Markdown&quot;: &quot;核准日期：xxx年xx月xx日 \n\n修改日期：xxx年xx月xx日....&quot;
+}
+</code></pre>
+<!-- BEGIN INCLUDE include-deploy-code.md -->
+<h2 id="_2">开始使用</h2>
+<h3 id="api_1">API资源浏览器</h3>
+<p><strong>前提条件</strong></p>
+<p>通过AWS CloudFormation<a href="../deployment/">部署解决方案</a>时，您需要：</p>
+<ul>
+<li>设置参数<strong>API Explorer</strong>为<em>yes</em>。</li>
+<li>设置参数<strong>API Gateway Authorization</strong>为<em>NONE</em>。</li>
+</ul>
+<p>否则，在API资源浏览器中只能看到该API的参考定义，而不能进行在线测试等操作。</p>
+<p><strong>操作步骤</strong></p>
+<ol>
+<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation控制台</a>。</li>
+<li>
+<p>从堆栈列表中选择方案的<strong>根堆栈</strong>，而不是嵌套堆栈。列表中嵌套堆栈的名称旁边会显示嵌套（NESTED）。</p>
+<p><img alt="" src="../images/root-stack.png" /></p>
+</li>
+<li>
+<p>打开<strong>输出（Outputs）</strong>标签页，找到<strong>APIExplorer</strong>对应的URL。</p>
+</li>
+<li>
+<p>点击URL访问API资源浏览器。页面将显示在部署解决方案时选中的API。</p>
+<p><img alt="" src="../images/api-explorer.png" /></p>
+</li>
+<li>
+<p>点击API右侧的向下箭头，展开显示API标准模型的请求方法。</p>
+</li>
+<li>点击右侧的测试（Try it out）按钮，并在Request body中输入正确的Body请求数据进行测试，并查看测试结果。</li>
+<li>确认格式正确后，点击下方的<strong>Execute</strong>。</li>
+<li>在<strong>Responses body</strong>中查看返回的JSON结果。您还可以通过右侧复制或下载按钮保存处理结果。</li>
+<li>在<strong>Response headers</strong>中查看响应头的相关信息。</li>
+<li>（可选）点击<strong>Execute</strong>右侧<strong>Clear</strong>按钮，即可清空<strong>Request body</strong>与<strong>Responses</strong>测试结果。</li>
+</ol>
+<h3 id="postmanaws_iam">Postman（<em>AWS_IAM</em>认证）</h3>
+<ol>
+<li>访问<a href="https://console.aws.amazon.com/cloudformation/">AWS CloudFormation</a>控制台。</li>
+<li>从堆栈列表中选择方案的根堆栈。</li>
+<li>打开<strong>输出</strong>标签页，找到以 <strong>DocumentLayoutAnalysis</strong> 为前缀的URL。</li>
+<li>
+<p>在Postman中新建标签页，并把URL粘贴到地址栏，选择<em>POST</em>作为HTTP调用方法。</p>
+<p><img alt="" src="../images/ocr-postman-1-zh.png" /></p>
+</li>
+<li>
+<p>打开Authorization配置，在下拉列表里选择Amazon Web Service Signature，并填写对应账户的AccessKey、SecretKey和Amazon Web Service Region（例如，cn-north-1或cn-northwest-1）。</p>
+<p><img alt="" src="../images/ocr-postman-2-zh.png" /></p>
+</li>
+<li>
+<p>打开Body配置项，选中raw和JSON数据类型。</p>
+</li>
+<li>
+<p>在Body中输入测试数据，单击Send按钮即可看到相应返回结果。</p>
+</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;url&quot;: &quot;图像的URL地址&quot;
+}
+</code></pre>
+<p><img alt="" src="../images/ocr-postman-3-zh.png" /></p>
+<h3 id="curl">cURL</h3>
+<ul>
+<li>Windows</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis&quot; ^
+--header &quot;Content-Type: application/json&quot; ^
+--data-raw &quot;{\&quot;url\&quot;: \&quot;图像的URL地址\&quot;}&quot;
+</code></pre>
+<ul>
+<li>Linux/MacOS</li>
+</ul>
+<pre><code class="language-bash">curl --location --request POST 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  &quot;url&quot;:&quot;图像的URL地址&quot;
+}'
+</code></pre>
+<h3 id="pythonaws_iam">Python（<em>AWS_IAM</em>认证）</h3>
+<pre><code class="language-python">import requests
+import json
+from aws_requests_auth.boto_utils import BotoAWSRequestsAuth
+
+auth = BotoAWSRequestsAuth(aws_host='[API_ID].execute-api.[AWS_REGION].amazonaws.com',
+                           aws_region='[AWS_REGION]',
+                           aws_service='execute-api')
+
+url = 'https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis'
+payload = {
+    'url': '图像的URL地址'
+}
+response = requests.request(&quot;POST&quot;, url, data=json.dumps(payload), auth=auth)
+print(json.loads(response.text))
+</code></pre>
+<h3 id="pythonnone">Python（<em>NONE</em>认证）</h3>
+<pre><code class="language-python">import requests
+import json
+
+url = &quot;https://[API_ID].execute-api.[AWS_REGION].amazonaws.com/[STAGE]/layout_analysis&quot;
+
+payload = json.dumps({
+  &quot;url&quot;: &quot;图像的URL地址&quot;
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request(&quot;POST&quot;, url, headers=headers, data=payload)
+
+print(response.text)
+</code></pre>
+<h3 id="java">Java</h3>
+<pre><code class="language-java">OkHttpClient client = new OkHttpClient().newBuilder()
+  .build();
+MediaType mediaType = MediaType.parse(&quot;application/json&quot;);
+RequestBody body = RequestBody.create(mediaType, &quot;{\n  \&quot;url\&quot;:\&quot;图像的URL地址\&quot;\n}&quot;);
+Request request = new Request.Builder()
+  .url(&quot;https://xxxxxxxxxxx.execute-api.xxxxxxxxx.amazonaws.com/[STAGE]/layout_analysis&quot;)
+  .method(&quot;POST&quot;, body)
+  .addHeader(&quot;Content-Type&quot;, &quot;application/json&quot;)
+  .build();
+Response response = client.newCall(request).execute();
+</code></pre>
+<!-- END INCLUDE -->
+
+<h2 id="_3">成本预估</h2>
+<p>您需要承担运行解决方案时使用亚马逊云科技各个服务的成本费用。截至这次发布的版本，影响解决方案的成本因素主要包括：</p>
+<ul>
+<li>Amazon API Gateway调用次数</li>
+<li>Amazon API Gateway数据输出量</li>
+<li>Amazon CloudWatch Logs存储量</li>
+<li>Amazon Elastic Container Registry存储量</li>
+</ul>
+<p>如果您选择基于Amazon Lambda架构部署，影响成本的因素还包括：</p>
+<ul>
+<li>Amazon Lambda调用次数</li>
+<li>Amazon Lambda运行时间</li>
+</ul>
+<p>与之对应的Amazon SageMaker架构部署，影响成本的因素还包括：</p>
+<ul>
+<li>Amazon SageMaker终端节点实例类型</li>
+<li>Amazon SageMaker终端节点数据输入量</li>
+<li>Amazon SageMaker终端节点数据输出量</li>
+</ul>
+<h2 id="1">成本预估示例1</h2>
+<p>以由西云数据运营的亚马逊云科技中国（宁夏）区域（cn-northwest-1）为例，处理1MB图像，处理时间1秒</p>
+<p>使用本方案处理此图像所需的成本费用如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>用量</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>调用百万次</td>
+<td>¥1.36</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>内存8192MB，每次运行1秒</td>
+<td>¥907.8</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>调用百万次</td>
+<td>¥28.94</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>数据输出以每次10KB计算，¥0.933/GB</td>
+<td>¥9.33</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>每次10KB，¥6.228/GB</td>
+<td>¥62.28</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，每月每GB¥0.69</td>
+<td>¥0.35</td>
+</tr>
+<tr>
+<td>合计</td>
+<td></td>
+<td>¥1010.06</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2">成本预估示例2</h2>
+<p>以美国东部（俄亥俄州）区域（us-east-2）为例，处理1MB图像，处理时间1秒</p>
+<p>使用本方案处理此图像所需的成本费用如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>用量</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AWS Lambda</td>
+<td>调用百万次</td>
+<td>$0.20</td>
+</tr>
+<tr>
+<td>AWS Lambda</td>
+<td>内存8192MB，每次运行1秒</td>
+<td>$133.3</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>调用百万次</td>
+<td>$3.5</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>数据输出以每次10KB计算，$0.09/GB</td>
+<td>$0.9</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>每次10KB，$0.50/GB</td>
+<td>$5</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，每月每GB$0.1</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>合计</td>
+<td></td>
+<td>$142.95</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">成本预估示例3</h2>
+<p>以美国东部（俄亥俄州）区域（us-east-2）为例，用户一整天都有稳定的图像流，所需QPS约为2。其中Amazon SageMaker终端节点实例开启时会一直计费。</p>
+<p>使用本方案的成本费用如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>用量</th>
+<th>费用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon API Gateway</td>
+<td>调用5 百万次</td>
+<td>$17.5</td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>数据输出以每次10KB计算，$0.09/GB</td>
+<td>$4.5</td>
+</tr>
+<tr>
+<td>Amazon CloudWatch Logs</td>
+<td>每次10KB，$0.50/GB</td>
+<td>$25</td>
+</tr>
+<tr>
+<td>Amazon Elastic Container Registry</td>
+<td>0.5GB存储，每月每GB$0.1</td>
+<td>$0.05</td>
+</tr>
+<tr>
+<td>Amazon SageMaker</td>
+<td>终端节点实例运行1个月，730小时，ml.g4dn.xlarge $0.736/小时</td>
+<td>$537.28</td>
+</tr>
+<tr>
+<td>Amazon SageMaker</td>
+<td>终端节点数据输入以每次1MB计算，$0.016/GB</td>
+<td>$16</td>
+</tr>
+<tr>
+<td>Amazon SageMaker</td>
+<td>终端节点数据输出以每次10KB计算，$0.016/GB</td>
+<td>$78.13</td>
+</tr>
+<tr>
+<td>合计</td>
+<td></td>
+<td>$678.46</td>
+</tr>
+</tbody>
+</table>
+<!-- BEGIN INCLUDE include-deploy-uninstall.md -->
+<h2 id="_4">卸载部署</h2>
+<p>您可以通过AWS CloudFormation卸载 <strong>文档版面分析</strong> 功能，具体步骤请见<a href="../deploy-add-delete-api/"><strong>部署解决方案：更新AWS CloudFormation堆栈（添加或删除AI功能）</strong></a>，并在<strong>参数</strong>部分确认 <strong>DocumentLayoutAnalysis</strong> 参数设置为<em>no</em>。</p>
+<p><strong>卸载时间</strong>：15 Minutes</p>
+<!-- END INCLUDE -->
 
 
 
 
 
 
+
+  
+  
 
 
 
