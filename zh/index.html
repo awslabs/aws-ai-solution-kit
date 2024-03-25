@@ -391,11 +391,11 @@
         <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
-      API列表
+      API 列表
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API列表">
+    <nav class="md-nav" aria-label="API 列表">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1192,11 +1192,11 @@
         <li class="md-nav__item">
   <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
-      API列表
+      API 列表
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API列表">
+    <nav class="md-nav" aria-label="API 列表">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1266,10 +1266,10 @@
 
   <h1>概述</h1>
 
-<p>AI Solution Kit提供一系列基于深度学习的云上机器学习功能，例如文字识别、自然语言理解、人脸检测、图像理解等。您可以通过调用API，轻松使用开箱即用的AI功能，同时与亚马逊云科技提供的其它服务无缝集成。</p>
-<h2 id="api">API列表</h2>
-<p>本方案通过Amazon API Gateway自动创建REST API，您在<a href="deployment/">部署解决方案</a>后即可调用所需的AI功能。</p>
-<p>下表列出了支持的API，您可以点击详情链接查看API接口的测试方法和示例代码。更多信息可参见<a href="api-explorer/">API参考指南</a>。</p>
+<p>AI Solution Kit 提供一系列基于深度学习的云上机器学习功能，例如文字识别、自然语言理解、人脸检测、图像理解等。您可以通过调用 API，轻松使用开箱即用的 AI 功能，同时与亚马逊云科技提供的其它服务无缝集成。</p>
+<h2 id="api">API 列表</h2>
+<p>本方案通过 Amazon API Gateway 自动创建 REST API，您在<a href="deployment/">部署解决方案</a>后即可调用所需的 AI 功能。</p>
+<p>下表列出了支持的 API，您可以点击详情链接查看 API 接口的测试方法和示例代码。更多信息可参见<a href="api-explorer/">API 参考指南</a>。</p>
 <h3 id="_1">文字识别</h3>
 <table>
 <thead>
@@ -1293,11 +1293,16 @@
 <tr>
 <td>高阶文字识别（多语种）</td>
 <td>识别并提取简体/繁体中文、越南文、日文、韩文、英文、数字、字母字符和符号。返回文本或坐标等相关信息。</td>
-<td><a href="deploy-advanced-ocr/">Details</a></td>
+<td><a href="deploy-advanced-ocr/">详情</a></td>
+</tr>
+<tr>
+<td>文档版面分析</td>
+<td>将文档图像转换为 Markdown/JSON 格式输出，并以 Markdown/HTML 格式生成表格。</td>
+<td><a href="deploy-layout-analysis/">详情</a></td>
 </tr>
 <tr>
 <td>自定义模板文字识别</td>
-<td>客户可自定义OCR模板，提取卡证票据中结构化文字信息，并以键值对应关系的形式展现结果。</td>
+<td>客户可自定义 OCR 模板，提取卡证票据中结构化文字信息，并以键值对应关系的形式展现结果。</td>
 <td><a href="deploy-custom-ocr/">详情</a></td>
 </tr>
 <tr>
@@ -1319,7 +1324,7 @@
 <tbody>
 <tr>
 <td>人脸检测</td>
-<td>识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到64个矢量坐标上。</td>
+<td>识别人脸面部特征，将检测到的五官与轮廓关键点信息映射到 64 个矢量坐标上。</td>
 <td><a href="deploy-face-detection/">详情</a></td>
 </tr>
 <tr>
@@ -1329,12 +1334,12 @@
 </tr>
 <tr>
 <td>人体结构化属性</td>
-<td>识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等16种属性的语义信息。</td>
+<td>识别输入图片中的人体区域，并返回每个区域人体位置坐标及属性分析，如性别、年龄、服饰等 16 种属性的语义信息。</td>
 <td><a href="deploy-human-attribute-recognition/">详情</a></td>
 </tr>
 <tr>
 <td>智能人像分割</td>
-<td>基于AI深度学习框架识别图像中的人体轮廓，实现高精度分割，使之与背景进行分离。</td>
+<td>基于 AI 深度学习框架识别图像中的人体轮廓，实现高精度分割，使之与背景进行分离。</td>
 <td><a href="deploy-human-image-segmentation/">详情</a></td>
 </tr>
 </tbody>
@@ -1356,7 +1361,7 @@
 </tr>
 <tr>
 <td>通用物体识别</td>
-<td>检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别300类物体，详情可参见本文中支持的目标识别实体列表。</td>
+<td>检测图像中的通用对象主体，返回该对象主体的区域信息与置信度。支持识别 300 类物体，详情可参见本文中支持的目标识别实体列表。</td>
 <td><a href="deploy-object-recognition/">详情</a></td>
 </tr>
 <tr>
@@ -1378,7 +1383,7 @@
 <tbody>
 <tr>
 <td>图像超分辨率</td>
-<td>可将图片智能放大2或4倍，从而获取清晰度更高、细节丰富的图像。同时支持图像修复。</td>
+<td>可将图片智能放大 2 或 4 倍，从而获取清晰度更高、细节丰富的图像。同时支持图像修复。</td>
 <td><a href="deploy-image-super-resolution/">详情</a></td>
 </tr>
 </tbody>
@@ -1395,7 +1400,7 @@
 <tbody>
 <tr>
 <td>文本相似度</td>
-<td>比较两段不同文本之间相似度，并输出一个介于0到1之间的置信度，根据置信度比较两段文字的相似性。</td>
+<td>比较两段不同文本之间相似度，并输出一个介于 0 到 1 之间的置信度，根据置信度比较两段文字的相似性。</td>
 <td><a href="deploy-text-similarity/">详情</a></td>
 </tr>
 <tr>
@@ -1405,9 +1410,9 @@
 </tr>
 </tbody>
 </table>
-<p>本实施指南介绍在Amazon Web
-Services（亚马逊云科技）云中部署解决方案的架构信息和具体配置步骤。它包含指向CloudFormation模板的链接，这些模板使用亚马逊云科技在安全性和可用性方面的最佳实践来启动和配置本解决方案所需的亚马逊云科技服务。</p>
-<p>本指南面向具有亚马逊云科技架构实践经验的IT架构师、开发人员、运维人员等专业人士。</p>
+<p>本实施指南介绍在 Amazon Web
+Services（亚马逊云科技）云中部署解决方案的架构信息和具体配置步骤。它包含指向 CloudFormation 模板的链接，这些模板使用亚马逊云科技在安全性和可用性方面的最佳实践来启动和配置本解决方案所需的亚马逊云科技服务。</p>
+<p>本指南面向具有亚马逊云科技架构实践经验的 IT 架构师、开发人员、运维人员等专业人士。</p>
 <!--
 ### **语音技术**
 |    **名称**   | **描述**    | **部署说明** |
