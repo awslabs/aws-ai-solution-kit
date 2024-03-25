@@ -19,6 +19,7 @@ nav:
     - Overview: api-explorer.md
     - General OCR (Simplified Chinese): deploy-general-ocr.md
     - General OCR (Traditional Chinese): deploy-general-ocr-traditional.md
+    - Document Layout Analysis: deploy-layout-analysis.md
     - Custom OCR: deploy-custom-ocr.md
     - Car License Plate: deploy-car-license-plate.md
     - Face Detection: deploy-face-detection.md
