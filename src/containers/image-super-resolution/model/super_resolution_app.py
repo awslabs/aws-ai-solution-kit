@@ -36,8 +36,8 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
 
 
 model_path = os.environ['MODEL_PATH']
-ort_session_x2 = onnxruntime.InferenceSession(model_path + '/Real_ESRGAN_x2.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
-ort_session_x4 = onnxruntime.InferenceSession(model_path + '/Real_ESRGAN_x4.onnx', providers=['CUDAExecutionProvider'] if cuda_available else ['CPUExecutionProvider'])
+ort_session_x2 = onnxruntime.InferenceSession(model_path + '/Real_ESRGAN_x2.onnx', providers=[("CUDAExecutionProvider", {"cudnn_conv_algo_search": "HEURISTIC"})] if cuda_available else ['CPUExecutionProvider'])
+ort_session_x4 = onnxruntime.InferenceSession(model_path + '/Real_ESRGAN_x4.onnx', providers=[("CUDAExecutionProvider", {"cudnn_conv_algo_search": "HEURISTIC"})] if cuda_available else ['CPUExecutionProvider'])
 
 
 def handler(event, context):
