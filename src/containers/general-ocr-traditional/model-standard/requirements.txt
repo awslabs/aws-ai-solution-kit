@@ -10,7 +10,7 @@ base64image==0.5.1
 urllib3==1.26.19
 python-dateutil==2.8.2
 certifi==2022.12.7
-idna==2.10
+idna==3.7
 chardet==4.0.0
 boto3
 GPUtil
