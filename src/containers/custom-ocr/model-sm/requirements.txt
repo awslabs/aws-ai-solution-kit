@@ -1,6 +1,6 @@
 requests==2.25.1
 six==1.16.0
-opencv-python-headless==4.5.3.56
+opencv-python-headless==4.8.1.78
 numpy==1.22.0
 onnxruntime==1.8.1
 Pillow==9.3.0
