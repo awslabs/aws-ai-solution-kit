@@ -13,7 +13,7 @@ python-dateutil==2.8.2
 certifi==2022.12.7
 idna==3.7
 chardet==4.0.0
-pypdf==3.12.1
+pypdf==6.6.0
 python-magic==0.4.27
 python-docx==0.8.11
 bs4==0.0.1
